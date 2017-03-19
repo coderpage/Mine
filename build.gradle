@@ -1,0 +1,54 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.2'
+    }
+}
+
+ext {
+    appVersion = file("${rootDir}/version.txt").text.trim();
+
+    minSdkVersion = 19
+    targetSdkVersion = 25
+    compileSdkVersion = 25
+    buildToolsVersion = '24.0.1'
+    androidSupportVersion = '25.1.0'
+    appCompat = "com.android.support:appcompat-v7:${androidSupportVersion}"
+    supportV4 = "com.android.support:support-v4:${androidSupportVersion}"
+    design = "com.android.support:design:${androidSupportVersion}"
+    supportAnnotation = "com.android.support:support-annotations:${androidSupportVersion}"
+    eventBus = 'org.greenrobot:eventbus:3.0.0'
+    recyclerview = "com.android.support:recyclerview-v7:${androidSupportVersion}"
+
+    retrofit = 'com.squareup.retrofit2:retrofit:2.0.0'
+    retrofitConverterGson = 'com.squareup.retrofit2:converter-gson:2.0.0'
+    okhttp3InterceptorLogging = 'com.squareup.okhttp3:logging-interceptor:3.2.0'
+
+    testRunner = 'com.android.support.test:runner:0.5'
+    testRules = 'com.android.support.test:rules:0.5'
+    testEspresso = 'com.android.support.test.espresso:espresso-core:2.2.2'
+    testUiautomator = 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
+
+    junit = 'junit:junit:4.12'
+    robolectric = 'org.robolectric:robolectric:3.0'
+    robolectricV4 = 'org.robolectric:shadows-support-v4:3.0'
+    mockito = 'org.mockito:mockito-core:1.9.5'
+    powerMockito = 'org.powermock:powermock-api-mockito:1.6.4'
+    powerMock = 'org.powermock:powermock-module-junit4:1.6.4'
+    powerMockRule = 'org.powermock:powermock-module-junit4-rule:1.6.4'
+    powerMockXStream = 'org.powermock:powermock-classloading-xstream:1.6.4'
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

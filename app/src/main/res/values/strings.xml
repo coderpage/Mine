@@ -1,0 +1,62 @@
+<resources>
+    <string name="app_name">我的</string>
+    <string name="toolbar_title_tally">我的.账本</string>
+    <string name="toolbar_title_tally_add_record">记一笔</string>
+    <string name="tally_add_record">记一笔</string>
+    <string name="tally_amount_cny">￥%s</string>
+    <string name="tally_sum_of_amount_month">本月账单总额</string>
+
+    <string name="tyOther">其他</string>
+    <string name="tyFoodAndBeverage">餐饮</string>
+    <string name="tyTraffic">交通</string>
+    <string name="tyShopping">购物</string>
+    <string name="tyClothes">服饰</string>
+    <string name="tyDailyNecessities">日用品</string>
+    <string name="tyEntertainment">娱乐</string>
+    <string name="tyFoodIngredients">食材</string>
+    <string name="tySnacks">零食</string>
+    <string name="tyTobaccoAnTea">烟酒茶</string>
+    <string name="tyStudy">学习</string>
+    <string name="tyMedical">医疗</string>
+    <string name="tyHouse">住房</string>
+    <string name="tyWaterElectricityCoal">水电煤</string>
+    <string name="tyCommunication">通讯</string>
+    <string name="tyTheFavorPattern">人情往来</string>
+
+    <string name="tyIcOther">Other</string>
+    <string name="tyIcCanYin">CanYin</string>
+    <string name="tyIcJiaoTong">JiaoTong</string>
+    <string name="tyIcGouWu">GouWu</string>
+    <string name="tyIcFuShi">FuShi</string>
+    <string name="tyIcRiYongPin">RiYongPin</string>
+    <string name="tyIcYuLe">YuLe</string>
+    <string name="tyIcShiCai">ShiCai</string>
+    <string name="tyIcLingShi">LingShi</string>
+    <string name="tyIcYanJiuCha">YanJiuCha</string>
+    <string name="tyIcXueXi">XueXi</string>
+    <string name="tyIcYiLiao">YiLiao</string>
+    <string name="tyIcZhuFang">ZhuFang</string>
+    <string name="tyIcShuiDianMei">ShuiDianMei</string>
+    <string name="tyIcTongXun">TongXun</string>
+    <string name="tyIcRenQing">RenQing</string>
+
+    <string name="cancel">取消</string>
+    <string name="confirm">确定</string>
+
+    <string name="num_0">0</string>
+    <string name="num_1">1</string>
+    <string name="num_2">2</string>
+    <string name="num_3">3</string>
+    <string name="num_4">4</string>
+    <string name="num_5">5</string>
+    <string name="num_6">6</string>
+    <string name="num_7">7</string>
+    <string name="num_8">8</string>
+    <string name="num_9">9</string>
+    <string name="num_clean_to_0">清零</string>
+    <string name="symbol_plus">+</string>
+    <string name="symbol_reduce">-</string>
+    <string name="symbol_dot">.</string>
+    <string name="ok">OK</string>
+
+</resources>

@@ -1,0 +1,60 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="actionBarSize">@dimen/toolbar_height</item>
+    </style>
+
+
+    <style name="TextAppearance" parent="TextAppearance.AppCompat"/>
+
+    <style name="TextAppearance.TallyNumInputItem" parent="TextAppearance">
+        <item name="android:background">@drawable/bg_tally_num_input_item</item>
+        <item name="android:clickable">true</item>
+        <item name="android:layout_margin">0.5dp</item>
+    </style>
+
+    <style name="TextAppearance.Headline" parent="TextAppearance">
+        <item name="android:textColor">@color/appTextColorPrimary</item>
+        <item name="android:textSize">@dimen/app_text_size_large</item>
+    </style>
+
+    <style name="TextAppearance.Toolbar" parent="TextAppearance">
+        <item name="android:textColor">@color/appTextColorPrimary</item>
+        <item name="android:textSize">@dimen/app_text_size_large</item>
+    </style>
+
+    <style name="Widget" parent="android:Widget"/>
+
+    <style name="Widget.Btn" parent="Widget">
+        <item name="android:background">@drawable/bg_common_btn</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/app_text_size_medium</item>
+    </style>
+
+    <style name="Widget.Card" parent="Widget">
+        <item name="android:background">@drawable/bg_touchable_white</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="Widget.HeaderBar" parent="Widget">
+        <item name="android:background">?colorPrimary</item>
+        <item name="android:elevation">@dimen/headerbar_elevation</item>
+    </style>
+
+    <style name="Widget.Toolbar" parent="Widget">
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+    </style>
+
+    <style name="Divider">
+        <item name="android:background">@color/divider</item>
+        <item name="android:layout_height">1px</item>
+    </style>
+
+
+</resources>

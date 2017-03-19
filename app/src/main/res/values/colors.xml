@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#ffffffff</color>
+    <color name="black">#ff000000</color>
+    <color name="grey">#ffaaaaaa</color>
+    <color name="transparent">#00000000</color>
+    <color name="background">#f5f5f9</color>
+
+    <color name="colorPrimary">@color/white</color>
+    <color name="colorPrimaryDark">#b0b0b0</color>
+    <color name="colorAccent">#0F956F</color>
+    <color name="appTextColorPrimary">#333333</color>
+    <color name="appBgBtnNormal">@color/colorAccent</color>
+    <color name="appBgBtnPressed">#008560</color>
+    <color name="appBgBtnDisabled">#99aaaaaa</color>
+
+    <color name="divider">#dcdcdc</color>
+    <color name="colorHint">#66000000</color>
+
+</resources>

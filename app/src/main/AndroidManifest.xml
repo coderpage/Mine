@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="com.coderpage.mine"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:name=".MineApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity android:name=".app.tally.ui.activity.TallActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".app.tally.ui.activity.TallyExpenseAddActivity"
+            android:screenOrientation="portrait">
+
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN"/>-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--</intent-filter>-->
+        </activity>
+
+        <!-- 账单数据库 provider -->
+        <provider
+            android:name=".app.tally.provider.TallyProvider"
+            android:authorities="com.coderpage.mine.apps.tally"
+            android:exported="false"
+            android:label="@string/app_name"
+            android:syncable="true"/>
+
+
+    </application>
+
+</manifest>

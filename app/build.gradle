@@ -1,0 +1,49 @@
+apply plugin: 'com.android.application'
+
+///**
+// * 通过版本号生成 build version code
+// */
+//int generateBuildVersionCode() {
+//    String appVersion = rootProject.appVersion
+//    String buildCodeStr = appVersion.replace('.', '')
+//    while (buildCodeStr.startsWith("0")) {
+//        buildCodeStr.replaceFirst("0", "")
+//    }
+//    return Integer.parseInt(buildCodeStr)
+//}
+
+//int buildVersionCode = generateBuildVersionCode()
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
+    defaultConfig {
+        applicationId "com.coderpage.mine"
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode 1
+        versionName rootProject.appVersion
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    buildToolsVersion '25.0.0'
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile project(':framework')
+    compile rootProject.appCompat
+    compile rootProject.recyclerview
+    compile rootProject.design
+
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+    testCompile rootProject.junit
+}
