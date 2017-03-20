@@ -2,6 +2,7 @@
 <RelativeLayout
     android:id="@+id/activity_tally_expense_add"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,21 +14,20 @@
         style="@style/Widget.Toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/white"
-        android:elevation="2dp">
+        android:background="@color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <ImageView
+            <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/ivClose"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center_vertical"
-                android:background="@drawable/ic_close"
-                android:clickable="true"/>
+                android:clickable="true"
+                app:srcCompat="@drawable/ic_close"/>
 
             <TextView
                 style="@style/TextAppearance.Toolbar"
@@ -45,7 +45,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar">
+        android:layout_below="@id/toolbar"
+        android:foreground="@drawable/header_shadow">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -64,7 +65,7 @@
                     android:layout_gravity="center_vertical|left"
                     android:paddingStart="@dimen/padding_normal">
 
-                    <ImageView
+                    <android.support.v7.widget.AppCompatImageView
                         android:id="@+id/ivCategoryIcon"
                         android:layout_width="30dp"
                         android:layout_height="30dp"

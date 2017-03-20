@@ -5,12 +5,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatImageView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +48,7 @@ public class TallyExpenseAddActivity extends BaseActivity {
     TextView mAmountTv;
     TextView mCategoryName;
     TextView mDateTv;
-    ImageView mCategoryIcon;
+    AppCompatImageView mCategoryIcon;
     GridView mCategoryGv;
     NumInputView mNumInputView;
 
@@ -57,7 +57,7 @@ public class TallyExpenseAddActivity extends BaseActivity {
     private HashMap<String, Integer> mCategoryIconMap;
     private final List<CategoryItem> mCategoryItems = new ArrayList<>();
     private Calendar mExpenseDate = Calendar.getInstance();
-    private SimpleDateFormat mDateFormat = new SimpleDateFormat("YYYY/MM/dd", Locale.getDefault());
+    private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
     private CategoryItem mCategory;
     private float mAmount;
     private String mAmountFormat;
@@ -73,7 +73,7 @@ public class TallyExpenseAddActivity extends BaseActivity {
     private void initView() {
         mAmountTv = ((TextView) findViewById(R.id.tvAmount));
 
-        mCategoryIcon = ((ImageView) findViewById(R.id.ivCategoryIcon));
+        mCategoryIcon = ((AppCompatImageView) findViewById(R.id.ivCategoryIcon));
         mCategoryName = ((TextView) findViewById(R.id.tvCategoryName));
 
         mCategoryGv = ((GridView) findViewById(R.id.gvCategoryIcon));
@@ -111,7 +111,7 @@ public class TallyExpenseAddActivity extends BaseActivity {
             mCategoryPickerAdapter.notifyDataSetChanged();
             mAmountTv.setText(String.format(mAmountFormat, mAmount));
             if (mCategory != null) {
-                mCategoryIcon.setBackground(mCategory.getIcon());
+                mCategoryIcon.setImageResource(mCategory.getIcon());
                 mCategoryName.setText(mCategory.getName());
             }
 
@@ -135,7 +135,7 @@ public class TallyExpenseAddActivity extends BaseActivity {
             String icon = cursor.getString(cursor.getColumnIndex(TallyContract.Category.ICON));
             int order = cursor.getInt(cursor.getColumnIndex(TallyContract.Category.ORDER));
             CategoryItem item = new CategoryItem();
-            item.setIcon(getDrawableSelf(mCategoryIconMap.get(icon)));
+            item.setIcon(mCategoryIconMap.get(icon));
             item.setId(id);
             item.setName(name);
             item.setOrder(order);
@@ -159,8 +159,7 @@ public class TallyExpenseAddActivity extends BaseActivity {
                 values.put(TallyContract.Expense.DESC, "");
                 values.put(TallyContract.Expense.TIME, item.getTime());
 
-                Uri uri = getContentResolver().insert(TallyContract.Expense.CONTENT_URI, values);
-                LogUtils.LOGE(TAG, String.valueOf(uri));
+                getContentResolver().insert(TallyContract.Expense.CONTENT_URI, values);
                 EventBus.getDefault().post(new EventRecordAdd(item));
             }
         };
@@ -200,7 +199,8 @@ public class TallyExpenseAddActivity extends BaseActivity {
             ImageView icon = ((ImageView) convertView.findViewById(R.id.ivIcon));
             TextView name = ((TextView) convertView.findViewById(R.id.tvName));
 
-            icon.setBackgroundDrawable(item.getIcon());
+            icon.setImageResource(item.getIcon());
+
             name.setText(item.getName());
 
             return convertView;
@@ -211,9 +211,8 @@ public class TallyExpenseAddActivity extends BaseActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             mCategory = mCategoryItems.get(position);
-            mCategoryIcon.setBackground(mCategory.getIcon());
+            mCategoryIcon.setImageResource(mCategory.getIcon());
             mCategoryName.setText(mCategory.getName());
-
         }
     };
 

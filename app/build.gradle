@@ -1,18 +1,5 @@
 apply plugin: 'com.android.application'
 
-///**
-// * 通过版本号生成 build version code
-// */
-//int generateBuildVersionCode() {
-//    String appVersion = rootProject.appVersion
-//    String buildCodeStr = appVersion.replace('.', '')
-//    while (buildCodeStr.startsWith("0")) {
-//        buildCodeStr.replaceFirst("0", "")
-//    }
-//    return Integer.parseInt(buildCodeStr)
-//}
-
-//int buildVersionCode = generateBuildVersionCode()
 android {
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion rootProject.buildToolsVersion
@@ -20,18 +7,31 @@ android {
         applicationId "com.coderpage.mine"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 1
+        versionCode 10
         versionName rootProject.appVersion
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary true
     }
+    signingConfigs {
+        release {
+            keyAlias rootProject.keyAlias
+            keyPassword rootProject.keyPassword
+            storeFile file(rootProject.keyStore)
+            storePassword rootProject.storePassword
+        }
+    }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    buildToolsVersion '25.0.0'
+    lintOptions {
+        checkReleaseBuilds true
+        abortOnError false
+    }
+
 }
 
 dependencies {

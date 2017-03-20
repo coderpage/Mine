@@ -9,6 +9,12 @@ buildscript {
     }
 }
 
+def props = new Properties()
+props.load(new FileInputStream("${rootDir}/local.properties"))
+props.each { key, val ->
+    project.ext.set(key, val)
+}
+
 ext {
     appVersion = file("${rootDir}/version.txt").text.trim();
 

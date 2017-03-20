@@ -4,7 +4,7 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <ImageView
+    <android.support.v7.widget.AppCompatImageView
         android:id="@+id/ivIcon"
         android:layout_width="24dp"
         android:layout_height="24dp"

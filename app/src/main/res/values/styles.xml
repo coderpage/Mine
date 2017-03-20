@@ -26,6 +26,7 @@
     <style name="TextAppearance.Toolbar" parent="TextAppearance">
         <item name="android:textColor">@color/appTextColorPrimary</item>
         <item name="android:textSize">@dimen/app_text_size_large</item>
+        <!--<item name="android:foreground">@drawable/header_shadow</item>-->
     </style>
 
     <style name="Widget" parent="android:Widget"/>
@@ -41,10 +42,10 @@
         <item name="android:clickable">true</item>
     </style>
 
-    <style name="Widget.HeaderBar" parent="Widget">
-        <item name="android:background">?colorPrimary</item>
-        <item name="android:elevation">@dimen/headerbar_elevation</item>
-    </style>
+    <!--<style name="Widget.HeaderBar" parent="Widget">-->
+        <!--<item name="android:background">?colorPrimary</item>-->
+        <!--<item name="android:elevation">@dimen/headerbar_elevation</item>-->
+    <!--</style>-->
 
     <style name="Widget.Toolbar" parent="Widget">
         <item name="android:background">?attr/colorPrimary</item>

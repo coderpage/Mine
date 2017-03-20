@@ -1,7 +1,5 @@
 package com.coderpage.mine.app.tally.ui.activity;
 
-import android.graphics.drawable.Drawable;
-
 /**
  * @author abner-l. 2017-03-05
  */
@@ -10,7 +8,7 @@ public class CategoryItem {
 
     private long id;
     private String name;
-    private Drawable icon;
+    private int icon;
     private int order;
 
     public long getId() {
@@ -29,11 +27,11 @@ public class CategoryItem {
         this.name = name;
     }
 
-    public Drawable getIcon() {
+    public int getIcon() {
         return icon;
     }
 
-    public void setIcon(Drawable icon) {
+    public void setIcon(int icon) {
         this.icon = icon;
     }
 

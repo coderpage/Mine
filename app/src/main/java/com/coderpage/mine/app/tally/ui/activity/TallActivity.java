@@ -7,12 +7,12 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.coderpage.mine.R;
@@ -158,7 +158,7 @@ public class TallActivity extends BaseActivity {
         }
 
         class MViewHolder extends RecyclerView.ViewHolder {
-            private ImageView mCategoryIcon;
+            private AppCompatImageView mCategoryIcon;
             private TextView mAmountTv;
             private TextView mTimeTv;
             private TextView mCategoryNameTv;
@@ -168,7 +168,7 @@ public class TallActivity extends BaseActivity {
                 mAmountTv = ((TextView) view.findViewById(R.id.tvAmount));
                 mTimeTv = ((TextView) view.findViewById(R.id.tvTime));
                 mCategoryNameTv = ((TextView) view.findViewById(R.id.tvCategoryName));
-                mCategoryIcon = ((ImageView) view.findViewById(R.id.ivCategoryIcon));
+                mCategoryIcon = ((AppCompatImageView) view.findViewById(R.id.ivCategoryIcon));
             }
 
             private void setAmount(String amount) {
@@ -177,7 +177,7 @@ public class TallActivity extends BaseActivity {
             }
 
             private void setCategoryIcon(@DrawableRes int iconResId) {
-                mCategoryIcon.setBackgroundResource(iconResId);
+                mCategoryIcon.setImageResource(iconResId);
             }
 
             private void setTime(long time) {
