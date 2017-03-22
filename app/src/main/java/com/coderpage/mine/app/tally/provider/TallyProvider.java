@@ -133,7 +133,6 @@ public class TallyProvider extends ContentProvider {
 
         switch (matchingUriEnum) {
             case EXPENSE:
-            case CATEGORY:
                 return builder.table(matchingUriEnum.table);
             default: {
                 throw new UnsupportedOperationException("Unknown uri for " + uri);

@@ -5,6 +5,7 @@
     <color name="grey">#ffaaaaaa</color>
     <color name="transparent">#00000000</color>
     <color name="background">#f5f5f9</color>
+    <color name="dark_icon">#333333</color>
 
     <color name="colorPrimary">@color/white</color>
     <color name="colorPrimaryDark">#b0b0b0</color>

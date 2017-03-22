@@ -3,6 +3,7 @@ package com.coderpage.mine.app.tally.ui.activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -26,11 +27,14 @@ import com.coderpage.framework.utils.LogUtils;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.ExpenseItem;
 import com.coderpage.mine.app.tally.common.event.EventRecordAdd;
+import com.coderpage.mine.app.tally.common.event.EventRecordUpdate;
 import com.coderpage.mine.app.tally.provider.TallyContract;
 import com.coderpage.mine.app.tally.ui.widget.NumInputView;
 import com.coderpage.mine.app.tally.utils.CategoryPicUtils;
 import com.coderpage.mine.app.tally.utils.DatePickUtils;
 import com.coderpage.mine.ui.BaseActivity;
+import com.coderpage.mine.ui.widget.DrawShadowFrameLayout;
+import com.coderpage.mine.utils.UIUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -43,7 +47,7 @@ import java.util.Locale;
 
 public class TallyExpenseAddActivity extends BaseActivity {
     private static final String TAG = LogUtils.makeLogTag(TallyExpenseAddActivity.class);
-    private static final String EXTRA_RECORD_ID = "extraRecordId";
+    public static final String EXTRA_RECORD_ID = "extraRecordId";
 
     TextView mAmountTv;
     TextView mCategoryName;
@@ -61,16 +65,19 @@ public class TallyExpenseAddActivity extends BaseActivity {
     private CategoryItem mCategory;
     private float mAmount;
     private String mAmountFormat;
+    private long mExpenseId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tally_expense_add);
+        setTitle(R.string.toolbar_title_tally_add_record);
         mAmountFormat = getString(R.string.tally_amount_cny);
         initView();
     }
 
     private void initView() {
+
         mAmountTv = ((TextView) findViewById(R.id.tvAmount));
 
         mCategoryIcon = ((AppCompatImageView) findViewById(R.id.ivCategoryIcon));
@@ -89,16 +96,47 @@ public class TallyExpenseAddActivity extends BaseActivity {
 
         mDateTv.setText(mDateFormat.format(mExpenseDate.getTime()));
         mDateTv.setOnClickListener(mOnclickListener);
-        findViewById(R.id.ivClose).setOnClickListener(mOnclickListener);
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+        setToolbarAsClose((View v) -> finish());
         new DataInitTask().execute();
     }
 
-    private class DataInitTask extends AsyncTask {
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        int actionBarSize = UIUtils.calculateActionBarSize(this);
+        DrawShadowFrameLayout drawShadowFrameLayout =
+                (DrawShadowFrameLayout) findViewById(R.id.main_content);
+        if (drawShadowFrameLayout != null) {
+            drawShadowFrameLayout.setShadowTopOffset(actionBarSize);
+        }
+        setContentTopClearance(actionBarSize);
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            mExpenseId = intent.getLongExtra(EXTRA_RECORD_ID, -1);
+        }
+    }
+
+    private void setContentTopClearance(int clearance) {
+        View view = findViewById(R.id.lyContainer);
+        if (view != null) {
+            view.setPadding(view.getPaddingLeft(), clearance,
+                    view.getPaddingRight(), view.getPaddingBottom());
+        }
+    }
+
+    private class DataInitTask extends AsyncTask<Object, Object, Object> {
         @Override
         protected Object doInBackground(Object[] params) {
             loadCategoryData();
@@ -114,15 +152,39 @@ public class TallyExpenseAddActivity extends BaseActivity {
                 mCategoryIcon.setImageResource(mCategory.getIcon());
                 mCategoryName.setText(mCategory.getName());
             }
-
         }
     }
 
     private void loadDefaultData() {
-        mAmount = 0.0F;
-        if (!mCategoryItems.isEmpty()) {
-            mCategory = mCategoryItems.get(0);
+        if (mExpenseId == -1) {
+            mAmount = 0.0F;
+            if (!mCategoryItems.isEmpty()) {
+                mCategory = mCategoryItems.get(0);
+            }
+        } else {
+            Cursor cursor = getContentResolver().query(
+                    TallyContract.Expense.CONTENT_URI, null,
+                    TallyContract.Expense._ID + "=" + mExpenseId, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                long categoryId = cursor.getLong(cursor.getColumnIndex(TallyContract.Expense.CATEGORY_ID));
+                float amount = cursor.getFloat(cursor.getColumnIndex(TallyContract.Expense.AMOUNT));
+                String categoryName = cursor.getString(cursor.getColumnIndex(TallyContract.Expense.CATEGORY));
+                String desc = cursor.getString(cursor.getColumnIndex(TallyContract.Expense.DESC));
+                long time = cursor.getLong(cursor.getColumnIndex(TallyContract.Expense.TIME));
+                String categoryIcon = cursor.getString(cursor.getColumnIndex(TallyContract.Category.ICON));
+
+                mAmount = amount;
+                mCategory = new CategoryItem();
+                mCategory.setIcon(mCategoryIconMap.get(categoryIcon));
+                mCategory.setId(categoryId);
+                mCategory.setName(categoryName);
+                mExpenseDate = Calendar.getInstance();
+                mExpenseDate.setTimeInMillis(time);
+
+                cursor.close();
+            }
         }
+
     }
 
     private void loadCategoryData() {
@@ -149,21 +211,31 @@ public class TallyExpenseAddActivity extends BaseActivity {
     }
 
     private void insertRecord(final ExpenseItem item) {
-        Runnable insertTask = new Runnable() {
-            @Override
-            public void run() {
-                ContentValues values = new ContentValues();
-                values.put(TallyContract.Expense.AMOUNT, item.getAmount());
-                values.put(TallyContract.Expense.CATEGORY_ID, item.getCategoryId());
-                values.put(TallyContract.Expense.CATEGORY, item.getCategoryName());
-                values.put(TallyContract.Expense.DESC, "");
-                values.put(TallyContract.Expense.TIME, item.getTime());
+        AsyncTask.execute(() -> {
+            ContentValues values = new ContentValues();
+            values.put(TallyContract.Expense.AMOUNT, item.getAmount());
+            values.put(TallyContract.Expense.CATEGORY_ID, item.getCategoryId());
+            values.put(TallyContract.Expense.CATEGORY, item.getCategoryName());
+            values.put(TallyContract.Expense.DESC, "");
+            values.put(TallyContract.Expense.TIME, item.getTime());
 
-                getContentResolver().insert(TallyContract.Expense.CONTENT_URI, values);
-                EventBus.getDefault().post(new EventRecordAdd(item));
-            }
-        };
-        AsyncTask.execute(insertTask);
+            getContentResolver().insert(TallyContract.Expense.CONTENT_URI, values);
+            EventBus.getDefault().post(new EventRecordAdd(item));
+        });
+    }
+
+    private void updateRecord(final ExpenseItem item) {
+        AsyncTask.execute(() -> {
+            ContentValues values = new ContentValues();
+            values.put(TallyContract.Expense.AMOUNT, item.getAmount());
+            values.put(TallyContract.Expense.CATEGORY_ID, item.getCategoryId());
+            values.put(TallyContract.Expense.CATEGORY, item.getCategoryName());
+            values.put(TallyContract.Expense.DESC, "");
+            values.put(TallyContract.Expense.TIME, item.getTime());
+
+            getContentResolver().update(TallyContract.Expense.CONTENT_URI, values, TallyContract.Expense._ID + "=" + item.getId(), null);
+            EventBus.getDefault().post(new EventRecordUpdate(item));
+        });
     }
 
     private class CategoryPickerAdapter extends BaseAdapter {
@@ -237,9 +309,6 @@ public class TallyExpenseAddActivity extends BaseActivity {
                         }
                     });
                     break;
-                case R.id.ivClose:
-                    finish();
-                    break;
             }
         }
     };
@@ -250,11 +319,17 @@ public class TallyExpenseAddActivity extends BaseActivity {
             switch (code) {
                 case KeyEvent.KEYCODE_ENTER:
                     ExpenseItem item = new ExpenseItem();
+                    item.setId(mExpenseId);
                     item.setAmount(mAmount);
                     item.setCategoryName(mCategory.getName());
                     item.setCategoryId(mCategory.getId());
                     item.setTime(mExpenseDate.getTimeInMillis());
-                    insertRecord(item);
+                    if (mExpenseId == -1) {
+                        insertRecord(item);
+                    } else {
+                        updateRecord(item);
+                    }
+
                     finish();
                     break;
             }

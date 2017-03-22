@@ -1,29 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:fitsSystemWindows="true"
-              android:orientation="vertical">
-
-    <android.support.v7.widget.Toolbar
-        style="@style/Widget.Toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/white">
-
-        <TextView
-            style="@style/TextAppearance.Toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:text="@string/toolbar_title_tally"/>
-
-    </android.support.v7.widget.Toolbar>
+<com.coderpage.mine.ui.widget.DrawShadowFrameLayout
+    android:id="@+id/main_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    app:shadowDrawable="@drawable/header_shadow">
 
     <FrameLayout
+        android:id="@+id/lyContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:foreground="@drawable/header_shadow">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -75,4 +64,11 @@
 
     </FrameLayout>
 
-</LinearLayout>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/Widget.Toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"/>
+
+</com.coderpage.mine.ui.widget.DrawShadowFrameLayout>

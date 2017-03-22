@@ -1,9 +1,10 @@
 package com.coderpage.mine.app.tally.ui.activity;
 
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
@@ -18,10 +19,15 @@ import android.widget.TextView;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.ExpenseItem;
 import com.coderpage.mine.app.tally.common.event.EventRecordAdd;
+import com.coderpage.mine.app.tally.common.event.EventRecordDelete;
+import com.coderpage.mine.app.tally.common.event.EventRecordUpdate;
 import com.coderpage.mine.app.tally.provider.TallyContract;
 import com.coderpage.mine.app.tally.utils.CategoryPicUtils;
 import com.coderpage.mine.app.tally.utils.TimeUtils;
 import com.coderpage.mine.ui.BaseActivity;
+import com.coderpage.mine.ui.widget.ButtonGroupDialog;
+import com.coderpage.mine.ui.widget.DrawShadowFrameLayout;
+import com.coderpage.mine.utils.UIUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -41,7 +47,7 @@ import java.util.Locale;
 
 public class TallActivity extends BaseActivity {
 
-    RecyclerView mToadyRecordsRecycler;
+    RecyclerView mHistoryRecordsRecycler;
     MToadyRecordAdapter mAdapter;
     TextView mSumOfMonthAmountTv;
 
@@ -56,6 +62,7 @@ public class TallActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tally);
+        setTitle(R.string.toolbar_title_tally);
         mCategoryIconResMap = CategoryPicUtils.getCategoryIconResMap(getApplicationContext());
         mAmountFormat = getString(R.string.tally_amount_cny);
 
@@ -64,10 +71,10 @@ public class TallActivity extends BaseActivity {
     }
 
     private void initView() {
-        mToadyRecordsRecycler = ((RecyclerView) findViewById(R.id.recyclerHistoryRecord));
-        mToadyRecordsRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mHistoryRecordsRecycler = ((RecyclerView) findViewById(R.id.recyclerHistoryRecord));
+        mHistoryRecordsRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mAdapter = new MToadyRecordAdapter();
-        mToadyRecordsRecycler.setAdapter(mAdapter);
+        mHistoryRecordsRecycler.setAdapter(mAdapter);
         mSumOfMonthAmountTv = ((TextView) findViewById(R.id.tvMonthAmount));
 
         findViewById(R.id.btnAddRecord).setOnClickListener(mOnClickListener);
@@ -77,6 +84,26 @@ public class TallActivity extends BaseActivity {
     public void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         queryRecordAndInitData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        int actionBarSize = UIUtils.calculateActionBarSize(this);
+        DrawShadowFrameLayout drawShadowFrameLayout =
+                (DrawShadowFrameLayout) findViewById(R.id.main_content);
+        if (drawShadowFrameLayout != null) {
+            drawShadowFrameLayout.setShadowTopOffset(actionBarSize);
+        }
+        setContentTopClearance(actionBarSize);
+    }
+
+    private void setContentTopClearance(int clearance) {
+        View view = findViewById(R.id.lyContainer);
+        if (view != null) {
+            view.setPadding(view.getPaddingLeft(), clearance,
+                    view.getPaddingRight(), view.getPaddingBottom());
+        }
     }
 
     @Override
@@ -151,17 +178,15 @@ public class TallActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(MToadyRecordAdapter.MViewHolder holder, int position) {
             ExpenseItem expenseItem = mTodayRecordList.get(position);
-            holder.setAmount(String.valueOf(expenseItem.getAmount()));
-            holder.setCategoryName(expenseItem.getCategoryName());
-            holder.setTime(expenseItem.getTime());
-            holder.setCategoryIcon(expenseItem.getCategoryIconResId());
+            holder.setExpense(expenseItem);
         }
 
-        class MViewHolder extends RecyclerView.ViewHolder {
+        class MViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
             private AppCompatImageView mCategoryIcon;
             private TextView mAmountTv;
             private TextView mTimeTv;
             private TextView mCategoryNameTv;
+            private ExpenseItem mExpense;
 
             MViewHolder(View view) {
                 super(view);
@@ -169,6 +194,43 @@ public class TallActivity extends BaseActivity {
                 mTimeTv = ((TextView) view.findViewById(R.id.tvTime));
                 mCategoryNameTv = ((TextView) view.findViewById(R.id.tvCategoryName));
                 mCategoryIcon = ((AppCompatImageView) view.findViewById(R.id.ivCategoryIcon));
+                view.setOnLongClickListener(this);
+            }
+
+            @Override
+            public boolean onLongClick(View v) {
+                if (mExpense == null) return true;
+
+                ButtonGroupDialog dialog = new ButtonGroupDialog(TallActivity.this);
+                dialog.setCancelable(true);
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.addItem(R.string.delete, new ButtonGroupDialog.OnItemClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, View v) {
+                        deleteExpense(mExpense.getId());
+                        dialog.dismiss();
+                    }
+                });
+                dialog.addItem(R.string.modify, new ButtonGroupDialog.OnItemClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, View v) {
+                        Intent intent = new Intent(TallActivity.this, TallyExpenseAddActivity.class);
+                        intent.putExtra(TallyExpenseAddActivity.EXTRA_RECORD_ID, mExpense.getId());
+                        startActivity(intent);
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+                return true;
+            }
+
+            private void setExpense(ExpenseItem expense) {
+                mExpense = expense;
+                if (mExpense == null) return;
+                setAmount(String.valueOf(mExpense.getAmount()));
+                setCategoryName(mExpense.getCategoryName());
+                setTime(mExpense.getTime());
+                setCategoryIcon(mExpense.getCategoryIconResId());
             }
 
             private void setAmount(String amount) {
@@ -190,42 +252,21 @@ public class TallActivity extends BaseActivity {
         }
     }
 
-    public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
-        private int left;
-        private int top;
-        private int right;
-        private int bottom;
-
-
-        public SpacesItemDecoration(int left, int top, int right, int bottom) {
-            this.left = left;
-            this.top = top;
-            this.right = right;
-            this.bottom = bottom;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view,
-                                   RecyclerView parent, RecyclerView.State state) {
-            outRect.left = left;
-            outRect.right = right;
-            outRect.bottom = bottom;
-
-            if (parent.getChildLayoutPosition(view) == 0)
-                outRect.top = top;
-        }
+    private void deleteExpense(final long id) {
+        AsyncTask.execute(() -> {
+            getContentResolver()
+                    .delete(TallyContract.Expense.CONTENT_URI, TallyContract.Expense._ID + "=" + id, null);
+            EventBus.getDefault().post(new EventRecordDelete(null));
+        });
     }
 
-    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            int id = v.getId();
-            switch (id) {
-                case R.id.btnAddRecord:
-                    Intent intent = new Intent(TallActivity.this, TallyExpenseAddActivity.class);
-                    startActivity(intent);
-                    break;
-            }
+    private View.OnClickListener mOnClickListener = (View v) -> {
+        int id = v.getId();
+        switch (id) {
+            case R.id.btnAddRecord:
+                Intent intent = new Intent(TallActivity.this, TallyExpenseAddActivity.class);
+                startActivity(intent);
+                break;
         }
     };
 
@@ -234,4 +275,13 @@ public class TallActivity extends BaseActivity {
         queryRecordAndInitData();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventRecordUpdate(EventRecordUpdate event) {
+        queryRecordAndInitData();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventRecordDelete(EventRecordDelete event) {
+        queryRecordAndInitData();
+    }
 }

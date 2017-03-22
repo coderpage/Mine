@@ -1,52 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/activity_tally_expense_add"
+<com.coderpage.mine.ui.widget.DrawShadowFrameLayout
+    android:id="@+id/main_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    app:shadowDrawable="@drawable/header_shadow"
     tools:context="com.coderpage.mine.app.tally.ui.activity.TallyExpenseAddActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        style="@style/Widget.Toolbar"
+    <FrameLayout
+        android:id="@+id/lyContainer"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/white">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical">
 
-            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/ivClose"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center_vertical"
-                android:clickable="true"
-                app:srcCompat="@drawable/ic_close"/>
-
-            <TextView
-                style="@style/TextAppearance.Toolbar"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/padding_normal"
-                android:gravity="center_vertical"
-                android:text="@string/toolbar_title_tally_add_record"/>
+                android:layout_height="45dp"
+                android:background="@color/white">
+
+                <include
+                    layout="@layout/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_gravity="top"/>
+
+                <TextView
+                    android:id="@+id/tvDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/padding_normal"
+                    android:clickable="true"
+                    android:gravity="center"/>
+
+                <include
+                    layout="@layout/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_gravity="bottom"/>
+            </FrameLayout>
+
+            <com.coderpage.mine.app.tally.ui.widget.NumInputView
+                android:id="@+id/numInputView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:elevation="4dp"
+                android:orientation="vertical"/>
+
         </LinearLayout>
-
-
-    </android.support.v7.widget.Toolbar>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
-        android:foreground="@drawable/header_shadow">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -108,51 +118,20 @@
                 android:verticalSpacing="@dimen/spacing_normal"/>
 
         </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:orientation="vertical">
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:background="@color/white">
-
-                <include
-                    layout="@layout/divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_gravity="top"/>
-
-                <TextView
-                    android:id="@+id/tvDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/padding_normal"
-                    android:clickable="true"
-                    android:gravity="center"/>
-
-                <include
-                    layout="@layout/divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_gravity="bottom"/>
-            </FrameLayout>
-
-            <com.coderpage.mine.app.tally.ui.widget.NumInputView
-                android:id="@+id/numInputView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:elevation="4dp"
-                android:orientation="vertical"/>
-
-        </LinearLayout>
     </FrameLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-</RelativeLayout>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/Widget.Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white"/>
+
+    </LinearLayout>
+
+</com.coderpage.mine.ui.widget.DrawShadowFrameLayout>

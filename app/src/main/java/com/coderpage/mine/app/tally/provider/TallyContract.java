@@ -1,7 +1,6 @@
 package com.coderpage.mine.app.tally.provider;
 
 import android.net.Uri;
-import android.provider.BaseColumns;
 
 /**
  * @author abner-l. 2017-02-12
@@ -22,6 +21,8 @@ public class TallyContract {
      * 消费记录表字段
      */
     interface ExpenseColumns {
+        /** 消费记录 ID */
+        String _ID = "expense_id";
         /** 分类 ID */
         String CATEGORY_ID = "category_id";
         /** 金额 */
@@ -38,6 +39,8 @@ public class TallyContract {
      * 消费记录分类表字段
      */
     interface CategoryColumns {
+        /** 分类记录 ID */
+        String _ID = "category_id";
         /** 分类名称 */
         String NAME = "category_name";
         /** 图标 */
@@ -69,7 +72,7 @@ public class TallyContract {
     private static final String PATH_EXPENSE = "expense";
     private static final String PATH_CATEGORY = "category";
 
-    public static class Expense implements ExpenseColumns, BaseColumns {
+    public static class Expense implements ExpenseColumns {
         public static final String CONTENT_TYPE_ID = "expense";
 
         public static final Uri CONTENT_URI =
@@ -80,7 +83,7 @@ public class TallyContract {
         }
     }
 
-    public static class Category implements CategoryColumns, BaseColumns {
+    public static class Category implements CategoryColumns {
         public static final String CONTENT_TYPE_ID = "category";
 
         public static final Uri CONTENT_URI =

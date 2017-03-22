@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/lyBtnItem"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/bg_common_button"
+              android:clickable="true"
+              android:minHeight="48dp"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvBtnText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/padding_normal"
+        android:layout_weight="1.0"
+        android:gravity="center_vertical"
+        android:textColor="@color/appTextColorPrimary"
+        android:textSize="@dimen/app_text_size_medium"/>
+
+    <View
+        android:id="@+id/viewDivider"
+        style="@style/Divider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+</LinearLayout>

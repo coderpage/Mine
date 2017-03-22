@@ -28,7 +28,7 @@ public class TallyDatabase extends SQLiteOpenHelper {
         String EXPENSE = "expense";
 
         String EXPENSE_JOIN_CATEGORY = "expense "
-                + "LEFT OUTER JOIN category ON expense.category_id=category._id";
+                + "LEFT OUTER JOIN category ON expense.category_id=category.category_id";
     }
 
     public TallyDatabase(Context context) {

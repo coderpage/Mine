@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">我的</string>
-    <string name="toolbar_title_tally">我的.账本</string>
+    <string name="toolbar_title_tally">我的.记账本</string>
     <string name="toolbar_title_tally_add_record">记一笔</string>
     <string name="tally_add_record">记一笔</string>
     <string name="tally_amount_cny">￥%s</string>
     <string name="tally_sum_of_amount_month">本月账单总额</string>
+    <string name="delete">删除</string>
+    <string name="modify">修改</string>
 
     <string name="tyOther">其他</string>
     <string name="tyFoodAndBeverage">餐饮</string>
