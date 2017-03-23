@@ -5,11 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.view.KeyEvent;
@@ -18,19 +15,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.CalendarView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.coderpage.framework.utils.LogUtils;
 import com.coderpage.mine.R;
-import com.coderpage.mine.app.tally.ExpenseItem;
 import com.coderpage.mine.app.tally.common.event.EventRecordAdd;
 import com.coderpage.mine.app.tally.common.event.EventRecordUpdate;
+import com.coderpage.mine.app.tally.data.CategoryIconHelper;
+import com.coderpage.mine.app.tally.data.CategoryItem;
+import com.coderpage.mine.app.tally.data.ExpenseItem;
 import com.coderpage.mine.app.tally.provider.TallyContract;
 import com.coderpage.mine.app.tally.ui.widget.NumInputView;
-import com.coderpage.mine.app.tally.utils.CategoryPicUtils;
 import com.coderpage.mine.app.tally.utils.DatePickUtils;
 import com.coderpage.mine.ui.BaseActivity;
 import com.coderpage.mine.ui.widget.DrawShadowFrameLayout;
@@ -41,7 +38,6 @@ import org.greenrobot.eventbus.EventBus;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -58,7 +54,6 @@ public class TallyExpenseAddActivity extends BaseActivity {
 
     private CategoryPickerAdapter mCategoryPickerAdapter;
 
-    private HashMap<String, Integer> mCategoryIconMap;
     private final List<CategoryItem> mCategoryItems = new ArrayList<>();
     private Calendar mExpenseDate = Calendar.getInstance();
     private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
@@ -71,7 +66,7 @@ public class TallyExpenseAddActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tally_expense_add);
-        setTitle(R.string.toolbar_title_tally_add_record);
+        setTitle(R.string.tally_toolbar_title_add_record);
         mAmountFormat = getString(R.string.tally_amount_cny);
         initView();
     }
@@ -152,6 +147,7 @@ public class TallyExpenseAddActivity extends BaseActivity {
                 mCategoryIcon.setImageResource(mCategory.getIcon());
                 mCategoryName.setText(mCategory.getName());
             }
+            mDateTv.setText(mDateFormat.format(mExpenseDate.getTime()));
         }
     }
 
@@ -175,7 +171,7 @@ public class TallyExpenseAddActivity extends BaseActivity {
 
                 mAmount = amount;
                 mCategory = new CategoryItem();
-                mCategory.setIcon(mCategoryIconMap.get(categoryIcon));
+                mCategory.setIcon(CategoryIconHelper.resId(categoryIcon));
                 mCategory.setId(categoryId);
                 mCategory.setName(categoryName);
                 mExpenseDate = Calendar.getInstance();
@@ -188,7 +184,6 @@ public class TallyExpenseAddActivity extends BaseActivity {
     }
 
     private void loadCategoryData() {
-        mCategoryIconMap = CategoryPicUtils.getCategoryIconResMap(getApplicationContext());
         Cursor cursor = getContentResolver().query(TallyContract.Category.CONTENT_URI, null, null, null, "category_order DESC");
         if (cursor == null) return;
         while (cursor.moveToNext()) {
@@ -197,7 +192,7 @@ public class TallyExpenseAddActivity extends BaseActivity {
             String icon = cursor.getString(cursor.getColumnIndex(TallyContract.Category.ICON));
             int order = cursor.getInt(cursor.getColumnIndex(TallyContract.Category.ORDER));
             CategoryItem item = new CategoryItem();
-            item.setIcon(mCategoryIconMap.get(icon));
+            item.setIcon(CategoryIconHelper.resId(icon));
             item.setId(id);
             item.setName(name);
             item.setOrder(order);
@@ -206,9 +201,6 @@ public class TallyExpenseAddActivity extends BaseActivity {
         cursor.close();
     }
 
-    private Drawable getDrawableSelf(@DrawableRes int res) {
-        return getResources().getDrawable(res);
-    }
 
     private void insertRecord(final ExpenseItem item) {
         AsyncTask.execute(() -> {
@@ -297,7 +289,7 @@ public class TallyExpenseAddActivity extends BaseActivity {
                     DatePickUtils.showDatePickDialog(TallyExpenseAddActivity.this, new DatePickUtils.OnDatePickListener() {
 
                         @Override
-                        public void onDatePick(DialogInterface dialog, @NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                        public void onDatePick(DialogInterface dialog, int year, int month, int dayOfMonth) {
                             Calendar calendar = Calendar.getInstance();
                             calendar.set(year, month, dayOfMonth);
                             mExpenseDate = calendar;

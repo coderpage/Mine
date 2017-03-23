@@ -12,17 +12,19 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.coderpage.mine.R;
-import com.coderpage.mine.app.tally.ExpenseItem;
 import com.coderpage.mine.app.tally.common.event.EventRecordAdd;
 import com.coderpage.mine.app.tally.common.event.EventRecordDelete;
 import com.coderpage.mine.app.tally.common.event.EventRecordUpdate;
+import com.coderpage.mine.app.tally.data.CategoryIconHelper;
+import com.coderpage.mine.app.tally.data.ExpenseItem;
 import com.coderpage.mine.app.tally.provider.TallyContract;
-import com.coderpage.mine.app.tally.utils.CategoryPicUtils;
 import com.coderpage.mine.app.tally.utils.TimeUtils;
 import com.coderpage.mine.ui.BaseActivity;
 import com.coderpage.mine.ui.widget.ButtonGroupDialog;
@@ -36,7 +38,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -56,14 +57,12 @@ public class TallActivity extends BaseActivity {
     float mSumOfMonthAmount = 0.0F;
 
     private List<ExpenseItem> mTodayRecordList = new ArrayList<>();
-    private HashMap<String, Integer> mCategoryIconResMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tally);
-        setTitle(R.string.toolbar_title_tally);
-        mCategoryIconResMap = CategoryPicUtils.getCategoryIconResMap(getApplicationContext());
+        setTitle(R.string.tally_toolbar_title_main);
         mAmountFormat = getString(R.string.tally_amount_cny);
 
         initView();
@@ -107,6 +106,24 @@ public class TallActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.mine_tally, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.menu_refresh:
+                startActivity(new Intent(this, AboutActivity.class));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
         super.onDestroy();
@@ -139,7 +156,7 @@ public class TallActivity extends BaseActivity {
                     item.setCategoryName(categoryName);
                     item.setDesc(desc);
                     item.setTime(time);
-                    item.setCategoryIconResId(mCategoryIconResMap.get(categoryIcon));
+                    item.setCategoryIconResId(CategoryIconHelper.resId(categoryIcon));
 
                     mTodayRecordList.add(item);
 

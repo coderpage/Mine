@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
     app:shadowDrawable="@drawable/header_shadow">
 
     <FrameLayout
@@ -14,25 +13,32 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:paddingBottom="65dp">
 
-            <include
-                layout="@layout/tally_content_month_info"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_gravity="top"
-                android:layout_marginTop="16dp"/>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerHistoryRecord"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_normal"
-                android:paddingBottom="76dp"/>
-        </LinearLayout>
+                android:orientation="vertical">
+
+                <include
+                    layout="@layout/tally_content_month_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="top"
+                    android:layout_marginTop="16dp"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerHistoryRecord"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_normal"
+                    />
+            </LinearLayout>
+
+        </ScrollView>
 
 
         <FrameLayout

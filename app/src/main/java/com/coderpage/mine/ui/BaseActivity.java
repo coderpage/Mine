@@ -40,22 +40,17 @@ public abstract class BaseActivity extends AppCompatActivity {
         return mToolbar;
     }
 
-
     protected void setToolbarAsBack(View.OnClickListener clickListener) {
-        // Initialise the toolbar
         getToolbar();
 
         mToolbar.setNavigationIcon(R.drawable.ic_back);
-//        mToolbar.setNavigationContentDescription(R.string.close_and_go_back);
         mToolbar.setNavigationOnClickListener(clickListener);
     }
 
     protected void setToolbarAsClose(View.OnClickListener clickListener) {
-        // Initialise the toolbar
         getToolbar();
 
         mToolbar.setNavigationIcon(R.drawable.ic_close);
-//        mToolbar.setNavigationContentDescription(R.string.close_and_go_back);
         mToolbar.setNavigationOnClickListener(clickListener);
     }
 

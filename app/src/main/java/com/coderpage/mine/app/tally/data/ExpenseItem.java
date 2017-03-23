@@ -1,4 +1,4 @@
-package com.coderpage.mine.app.tally;
+package com.coderpage.mine.app.tally.data;
 
 /**
  * @author abner-l. 2017-02-03

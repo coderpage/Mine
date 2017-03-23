@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <declare-styleable name="BaseTheme">
+        <attr name="popupItemBackground" format="reference"/>
+    </declare-styleable>
+
+    <!-- DrawShadowFrameLayout 可以在指定的位置显示阴影效果 -->
     <declare-styleable name="DrawShadowFrameLayout">
         <attr name="shadowVisible" format="boolean"/>
         <attr name="shadowDrawable" format="reference"/>
     </declare-styleable>
+
 </resources>

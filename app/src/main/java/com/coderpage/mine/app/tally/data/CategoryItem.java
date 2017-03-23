@@ -1,4 +1,4 @@
-package com.coderpage.mine.app.tally.ui.activity;
+package com.coderpage.mine.app.tally.data;
 
 /**
  * @author abner-l. 2017-03-05
@@ -6,8 +6,11 @@ package com.coderpage.mine.app.tally.ui.activity;
 
 public class CategoryItem {
 
+    /** 分类 ID，{@link com.coderpage.mine.app.tally.provider.TallyContract.Category#_ID} */
     private long id;
+    /** 分类名称，{@link com.coderpage.mine.app.tally.provider.TallyContract.Category#NAME} */
     private String name;
+    /** 分类 */
     private int icon;
     private int order;
 

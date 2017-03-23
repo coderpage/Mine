@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.coderpage.mine.R;
+import com.coderpage.mine.app.tally.data.CategoryIconHelper;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -63,22 +64,23 @@ public class TallyDatabase extends SQLiteOpenHelper {
 
     private void initDb(SQLiteDatabase db) {
         HashMap<String, String> nameAndIconPairs = new LinkedHashMap<>();
-        nameAndIconPairs.put(mContext.getString(R.string.tyOther), mContext.getString(R.string.tyIcOther));
-        nameAndIconPairs.put(mContext.getString(R.string.tyFoodAndBeverage), mContext.getString(R.string.tyIcCanYin));
-        nameAndIconPairs.put(mContext.getString(R.string.tyTraffic), mContext.getString(R.string.tyIcJiaoTong));
-        nameAndIconPairs.put(mContext.getString(R.string.tyShopping), mContext.getString(R.string.tyIcGouWu));
-        nameAndIconPairs.put(mContext.getString(R.string.tyClothes), mContext.getString(R.string.tyIcFuShi));
-        nameAndIconPairs.put(mContext.getString(R.string.tyDailyNecessities), mContext.getString(R.string.tyIcRiYongPin));
-        nameAndIconPairs.put(mContext.getString(R.string.tyEntertainment), mContext.getString(R.string.tyIcYuLe));
-        nameAndIconPairs.put(mContext.getString(R.string.tyFoodIngredients), mContext.getString(R.string.tyIcShiCai));
-        nameAndIconPairs.put(mContext.getString(R.string.tySnacks), mContext.getString(R.string.tyIcLingShi));
-        nameAndIconPairs.put(mContext.getString(R.string.tyTobaccoAnTea), mContext.getString(R.string.tyIcYanJiuCha));
-        nameAndIconPairs.put(mContext.getString(R.string.tyStudy), mContext.getString(R.string.tyIcXueXi));
-        nameAndIconPairs.put(mContext.getString(R.string.tyMedical), mContext.getString(R.string.tyIcYiLiao));
-        nameAndIconPairs.put(mContext.getString(R.string.tyHouse), mContext.getString(R.string.tyIcZhuFang));
-        nameAndIconPairs.put(mContext.getString(R.string.tyWaterElectricityCoal), mContext.getString(R.string.tyIcShuiDianMei));
-        nameAndIconPairs.put(mContext.getString(R.string.tyCommunication), mContext.getString(R.string.tyIcTongXun));
-        nameAndIconPairs.put(mContext.getString(R.string.tyTheFavorPattern), mContext.getString(R.string.tyIcRenQing));
+
+        nameAndIconPairs.put(mContext.getString(R.string.tyOther), CategoryIconHelper.IC_NAME_OTHER);
+        nameAndIconPairs.put(mContext.getString(R.string.tyFoodAndBeverage), CategoryIconHelper.IC_NAME_CAN_YIN);
+        nameAndIconPairs.put(mContext.getString(R.string.tyTraffic), CategoryIconHelper.IC_NAME_JIAO_TONG);
+        nameAndIconPairs.put(mContext.getString(R.string.tyShopping), CategoryIconHelper.IC_NAME_GOU_WU);
+        nameAndIconPairs.put(mContext.getString(R.string.tyClothes), CategoryIconHelper.IC_NAME_FU_SHI);
+        nameAndIconPairs.put(mContext.getString(R.string.tyDailyNecessities), CategoryIconHelper.IC_NAME_RI_YONG_PIN);
+        nameAndIconPairs.put(mContext.getString(R.string.tyEntertainment), CategoryIconHelper.IC_NAME_YU_LE);
+        nameAndIconPairs.put(mContext.getString(R.string.tyFoodIngredients), CategoryIconHelper.IC_NAME_SHI_CAI);
+        nameAndIconPairs.put(mContext.getString(R.string.tySnacks), CategoryIconHelper.IC_NAME_LING_SHI);
+        nameAndIconPairs.put(mContext.getString(R.string.tyTobaccoAnTea), CategoryIconHelper.IC_NAME_YAN_JIU_CHA);
+        nameAndIconPairs.put(mContext.getString(R.string.tyStudy), CategoryIconHelper.IC_NAME_XUE_XI);
+        nameAndIconPairs.put(mContext.getString(R.string.tyMedical), CategoryIconHelper.IC_NAME_YI_LIAO);
+        nameAndIconPairs.put(mContext.getString(R.string.tyHouse), CategoryIconHelper.IC_NAME_ZHU_FANG);
+        nameAndIconPairs.put(mContext.getString(R.string.tyWaterElectricityCoal), CategoryIconHelper.IC_NAME_SHUI_DIAN_MEI);
+        nameAndIconPairs.put(mContext.getString(R.string.tyCommunication), CategoryIconHelper.IC_NAME_TONG_XUN);
+        nameAndIconPairs.put(mContext.getString(R.string.tyTheFavorPattern), CategoryIconHelper.IC_NAME_REN_QING);
 
         db.beginTransaction();
         for (Map.Entry<String, String> entry : nameAndIconPairs.entrySet()) {

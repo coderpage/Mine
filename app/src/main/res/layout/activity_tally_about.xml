@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.coderpage.mine.ui.widget.DrawShadowFrameLayout
+    android:id="@+id/main_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    app:shadowDrawable="@drawable/header_shadow"
+    tools:context=".app.tally.ui.activity.AboutActivity">
+
+    <ScrollView
+        android:id="@+id/lyContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvAboutMain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_normal"
+                android:layout_marginTop="@dimen/spacing_normal"
+                android:paddingBottom="@dimen/padding_micro"
+                android:paddingLeft="@dimen/spacing_normal"
+                android:paddingRight="@dimen/padding_normal"
+                android:paddingTop="@dimen/padding_micro"
+                android:textSize="@dimen/app_text_size_medium"
+                tools:text="@string/tally_about_main"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <include layout="@layout/toolbar"/>
+
+</com.coderpage.mine.ui.widget.DrawShadowFrameLayout>

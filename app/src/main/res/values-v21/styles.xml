@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Tally" parent="Theme.Base">
+        <item name="popupItemBackground">@drawable/popup_item_background</item>
+    </style>
+
+</resources>

@@ -36,7 +36,6 @@ android {
         checkReleaseBuilds true
         abortOnError false
     }
-
 }
 
 dependencies {
@@ -45,6 +44,8 @@ dependencies {
     compile rootProject.appCompat
     compile rootProject.recyclerview
     compile rootProject.design
+    compile 'com.prolificinteractive:material-calendarview:1.4.3'
+    compile 'com.tencent.bugly:crashreport:2.5.0'
 
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'

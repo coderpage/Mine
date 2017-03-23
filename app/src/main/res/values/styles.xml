@@ -1,13 +1,24 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="FrameworkRoot.Theme" parent="Theme.AppCompat.Light.NoActionBar"/>
+
+    <style name="FrameworkRoot.Widget" parent="Theme.AppCompat.NoActionBar"/>
+
+    <style name="Theme" parent="FrameworkRoot.Theme"/>
+
+    <style name="Theme.Base" parent="Theme">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowBackground">@color/background</item>
+
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
         <item name="actionBarSize">@dimen/toolbar_height</item>
+
+        <item name="android:windowBackground">@color/background</item>
     </style>
+
+    <style name="Theme.Tally" parent="Theme.Base"/>
 
 
     <style name="TextAppearance" parent="TextAppearance.AppCompat"/>
@@ -42,10 +53,9 @@
         <item name="android:clickable">true</item>
     </style>
 
-    <!--<style name="Widget.HeaderBar" parent="Widget">-->
-    <!--<item name="android:background">?colorPrimary</item>-->
-    <!--<item name="android:elevation">@dimen/headerbar_elevation</item>-->
-    <!--</style>-->
+    <style name="Widget.Tally.PopupMenu" parent="Widget.AppCompat.Light.PopupMenu">
+        <item name="android:dropDownSelector">?popupItemBackground</item>
+    </style>
 
     <style name="Widget.Toolbar" parent="Widget">
         <item name="android:background">?attr/colorPrimary</item>

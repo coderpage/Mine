@@ -3,6 +3,7 @@ package com.coderpage.mine;
 import android.app.Application;
 
 import com.coderpage.framework.Framework;
+import com.tencent.bugly.crashreport.CrashReport;
 
 /**
  * @author abner-l. 2017-02-05
@@ -15,6 +16,7 @@ public class MineApp extends Application {
     public void onCreate() {
         super.onCreate();
         Framework.onAppOnCreate();
+        CrashReport.initCrashReport(getApplicationContext(), Constants.BUGLY_APP_ID, BuildConfig.DEBUG);
     }
 
 }
