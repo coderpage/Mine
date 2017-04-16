@@ -86,10 +86,10 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
                 }
                 long editedExpenseId = args.getLong(EXTRA_EXPENSE_ID);
                 queryExpenseByIdAsync(editedExpenseId, (item) -> {
-                    mEditedExpenseItem = item;
-                    if (mEditedExpenseItem == null) {
+                    if (item == null) {
                         callback.onError(action);
                     } else {
+                        mEditedExpenseItem = item;
                         callback.onModelUpdated(MainModel.this, action);
                     }
                 });

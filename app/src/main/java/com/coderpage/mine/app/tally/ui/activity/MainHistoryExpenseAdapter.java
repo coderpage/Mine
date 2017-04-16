@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static com.coderpage.framework.utils.LogUtils.LOGE;
+import static com.coderpage.framework.utils.LogUtils.LOGI;
+
 /**
  * @author abner-l. 2017-04-13
  * @since 0.2.0
@@ -147,7 +150,10 @@ public class MainHistoryExpenseAdapter extends RecyclerView.Adapter<MainHistoryE
     }
 
     public void refreshItem(ExpenseItem item) {
-        if (item == null) return;
+        if (item == null) {
+            LOGE(TAG, "can't notify item changed with null value");
+            return;
+        }
         int position = -1;
         for (int i = 0; i < mExpenseItemList.size(); i++) {
             ExpenseItem item1 = mExpenseItemList.get(i);
@@ -164,6 +170,9 @@ public class MainHistoryExpenseAdapter extends RecyclerView.Adapter<MainHistoryE
         }
         if (position != -1) {
             notifyItemChanged(position);
+        } else {
+            LOGE(TAG, "can't notify item changed: id=" + item.getId()
+                    + " category=" + item.getCategoryName() + " amount=" + item.getAmount());
         }
     }
 

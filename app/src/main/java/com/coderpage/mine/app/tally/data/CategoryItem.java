@@ -1,5 +1,9 @@
 package com.coderpage.mine.app.tally.data;
 
+import android.database.Cursor;
+
+import com.coderpage.mine.app.tally.provider.TallyContract;
+
 /**
  * @author abner-l. 2017-03-05
  */
@@ -13,6 +17,19 @@ public class CategoryItem {
     /** 分类 */
     private int icon;
     private int order;
+
+    public static CategoryItem fromCursor(Cursor cursor) {
+        long id = cursor.getLong(cursor.getColumnIndex(TallyContract.Category._ID));
+        String name = cursor.getString(cursor.getColumnIndex(TallyContract.Category.NAME));
+        String icon = cursor.getString(cursor.getColumnIndex(TallyContract.Category.ICON));
+        int order = cursor.getInt(cursor.getColumnIndex(TallyContract.Category.ORDER));
+        CategoryItem item = new CategoryItem();
+        item.setIcon(CategoryIconHelper.resId(icon));
+        item.setId(id);
+        item.setName(name);
+        item.setOrder(order);
+        return item;
+    }
 
     public long getId() {
         return id;

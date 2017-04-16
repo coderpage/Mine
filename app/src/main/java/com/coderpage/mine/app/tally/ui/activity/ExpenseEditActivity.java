@@ -1,34 +1,26 @@
 package com.coderpage.mine.app.tally.ui.activity;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.coderpage.framework.UpdatableView;
 import com.coderpage.framework.utils.LogUtils;
 import com.coderpage.mine.R;
-import com.coderpage.mine.app.tally.eventbus.EventRecordAdd;
-import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
 import com.coderpage.mine.app.tally.data.CategoryIconHelper;
 import com.coderpage.mine.app.tally.data.CategoryItem;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
-import com.coderpage.mine.app.tally.provider.ProviderUtils;
-import com.coderpage.mine.app.tally.provider.TallyContract;
+import com.coderpage.mine.app.tally.eventbus.EventRecordAdd;
+import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
 import com.coderpage.mine.app.tally.ui.widget.NumInputView;
 import com.coderpage.mine.app.tally.utils.DatePickUtils;
 import com.coderpage.mine.ui.BaseActivity;
@@ -38,12 +30,15 @@ import com.coderpage.mine.utils.UIUtils;
 import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 
-public class ExpenseEditActivity extends BaseActivity {
+import static com.coderpage.mine.app.tally.ui.activity.ExpenseEditModel.EditUserActionEnum.RELOAD;
+import static com.coderpage.mine.app.tally.ui.activity.ExpenseEditModel.EditUserActionEnum.SAVE_DATA;
+
+public class ExpenseEditActivity extends BaseActivity
+        implements UpdatableView<ExpenseEditModel,
+        ExpenseEditModel.EditQueryEnum, ExpenseEditModel.EditUserActionEnum> {
     private static final String TAG = LogUtils.makeLogTag(ExpenseEditActivity.class);
     public static final String EXTRA_RECORD_ID = "extraRecordId";
 
@@ -56,7 +51,7 @@ public class ExpenseEditActivity extends BaseActivity {
 
     private CategoryPickerAdapter mCategoryPickerAdapter;
 
-    private final List<CategoryItem> mCategoryItems = new ArrayList<>();
+    //    private final List<CategoryItem> mCategoryItems = new ArrayList<>();
     private Calendar mExpenseDate = Calendar.getInstance();
     private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
     private CategoryItem mCategory;
@@ -64,17 +59,22 @@ public class ExpenseEditActivity extends BaseActivity {
     private String mAmountFormat;
     private long mExpenseId = -1;
 
+    private UserActionListener mUserActionListener;
+    private ExpenseEditPresenter mPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tally_expense_add);
         setTitle(R.string.tally_toolbar_title_add_record);
-        mAmountFormat = getString(R.string.tally_amount_cny);
+
+        initData();
         initView();
+        initPresenter();
     }
 
     private void initView() {
-
+        mAmountFormat = getString(R.string.tally_amount_cny);
         mAmountTv = ((TextView) findViewById(R.id.tvAmount));
 
         mCategoryIcon = ((AppCompatImageView) findViewById(R.id.ivCategoryIcon));
@@ -95,17 +95,30 @@ public class ExpenseEditActivity extends BaseActivity {
         mDateTv.setOnClickListener(mOnclickListener);
     }
 
+    private void initPresenter() {
+        mPresenter = new ExpenseEditPresenter(
+                new ExpenseEditModel(getContext()),
+                this, ExpenseEditModel.EditUserActionEnum.values(),
+                ExpenseEditModel.EditQueryEnum.values());
+        mPresenter.loadInitialQueries();
+    }
+
+    private void initData() {
+        Intent intent = getIntent();
+        if (intent != null) {
+            mExpenseId = intent.getLongExtra(EXTRA_RECORD_ID, -1);
+        }
+    }
+
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         setToolbarAsClose((View v) -> finish());
-        new DataInitTask().execute();
-    }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
+        // 刷新界面
+        Bundle args = new Bundle(1);
+        args.putLong(ExpenseEditModel.EXTRA_EXPENSE_ID, mExpenseId);
+        mUserActionListener.onUserAction(RELOAD, args);
     }
 
     @Override
@@ -118,11 +131,6 @@ public class ExpenseEditActivity extends BaseActivity {
             drawShadowFrameLayout.setShadowTopOffset(actionBarSize);
         }
         setContentTopClearance(actionBarSize);
-
-        Intent intent = getIntent();
-        if (intent != null) {
-            mExpenseId = intent.getLongExtra(EXTRA_RECORD_ID, -1);
-        }
     }
 
     private void setContentTopClearance(int clearance) {
@@ -133,151 +141,10 @@ public class ExpenseEditActivity extends BaseActivity {
         }
     }
 
-    private class DataInitTask extends AsyncTask<Object, Object, Object> {
-        @Override
-        protected Object doInBackground(Object[] params) {
-            loadCategoryData();
-            loadDefaultData();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            mCategoryPickerAdapter.notifyDataSetChanged();
-            mAmountTv.setText(String.format(mAmountFormat, mAmount));
-            if (mCategory != null) {
-                mCategoryIcon.setImageResource(mCategory.getIcon());
-                mCategoryName.setText(mCategory.getName());
-            }
-            mDateTv.setText(mDateFormat.format(mExpenseDate.getTime()));
-        }
-    }
-
-    private void loadDefaultData() {
-        if (mExpenseId == -1) {
-            mAmount = 0.0F;
-            if (!mCategoryItems.isEmpty()) {
-                mCategory = mCategoryItems.get(0);
-            }
-        } else {
-            Cursor cursor = getContentResolver().query(
-                    TallyContract.Expense.CONTENT_URI, null,
-                    TallyContract.Expense._ID + "=" + mExpenseId, null, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                long categoryId = cursor.getLong(cursor.getColumnIndex(TallyContract.Expense.CATEGORY_ID));
-                float amount = cursor.getFloat(cursor.getColumnIndex(TallyContract.Expense.AMOUNT));
-                String categoryName = cursor.getString(cursor.getColumnIndex(TallyContract.Expense.CATEGORY));
-                String desc = cursor.getString(cursor.getColumnIndex(TallyContract.Expense.DESC));
-                long time = cursor.getLong(cursor.getColumnIndex(TallyContract.Expense.TIME));
-                String categoryIcon = cursor.getString(cursor.getColumnIndex(TallyContract.Category.ICON));
-
-                mAmount = amount;
-                mCategory = new CategoryItem();
-                mCategory.setIcon(CategoryIconHelper.resId(categoryIcon));
-                mCategory.setId(categoryId);
-                mCategory.setName(categoryName);
-                mExpenseDate = Calendar.getInstance();
-                mExpenseDate.setTimeInMillis(time);
-
-                cursor.close();
-            }
-        }
-
-    }
-
-    private void loadCategoryData() {
-        Cursor cursor = getContentResolver().query(TallyContract.Category.CONTENT_URI, null, null, null, "category_order DESC");
-        if (cursor == null) return;
-        while (cursor.moveToNext()) {
-            long id = cursor.getLong(cursor.getColumnIndex(TallyContract.Category._ID));
-            String name = cursor.getString(cursor.getColumnIndex(TallyContract.Category.NAME));
-            String icon = cursor.getString(cursor.getColumnIndex(TallyContract.Category.ICON));
-            int order = cursor.getInt(cursor.getColumnIndex(TallyContract.Category.ORDER));
-            CategoryItem item = new CategoryItem();
-            item.setIcon(CategoryIconHelper.resId(icon));
-            item.setId(id);
-            item.setName(name);
-            item.setOrder(order);
-            mCategoryItems.add(item);
-        }
-        cursor.close();
-    }
-
-
-    private void insertRecord(final ExpenseItem item) {
-        AsyncTask.execute(() -> {
-            ContentValues values = new ContentValues();
-            values.put(TallyContract.Expense.AMOUNT, item.getAmount());
-            values.put(TallyContract.Expense.CATEGORY_ID, item.getCategoryId());
-            values.put(TallyContract.Expense.CATEGORY, item.getCategoryName());
-            values.put(TallyContract.Expense.DESC, "");
-            values.put(TallyContract.Expense.TIME, item.getTime());
-
-            Uri uri = getContentResolver().insert(TallyContract.Expense.CONTENT_URI, values);
-            item.setId(ProviderUtils.parseIdFromUri(uri));
-            EventBus.getDefault().post(new EventRecordAdd(item));
-        });
-    }
-
-    private void updateRecord(final ExpenseItem item) {
-        AsyncTask.execute(() -> {
-            ContentValues values = new ContentValues();
-            values.put(TallyContract.Expense.AMOUNT, item.getAmount());
-            values.put(TallyContract.Expense.CATEGORY_ID, item.getCategoryId());
-            values.put(TallyContract.Expense.CATEGORY, item.getCategoryName());
-            values.put(TallyContract.Expense.DESC, "");
-            values.put(TallyContract.Expense.TIME, item.getTime());
-
-            getContentResolver().update(TallyContract.Expense.CONTENT_URI, values, TallyContract.Expense._ID + "=" + item.getId(), null);
-            EventBus.getDefault().post(new EventRecordUpdate(item));
-        });
-    }
-
-    private class CategoryPickerAdapter extends BaseAdapter {
-
-        LayoutInflater mInflater;
-
-        CategoryPickerAdapter(Context context) {
-            mInflater = LayoutInflater.from(context);
-        }
-
-        @Override
-        public int getCount() {
-            return mCategoryItems.size();
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return mCategoryItems.get(position);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.tally_grid_item_category, null);
-            }
-            CategoryItem item = mCategoryItems.get(position);
-
-            ImageView icon = ((ImageView) convertView.findViewById(R.id.ivIcon));
-            TextView name = ((TextView) convertView.findViewById(R.id.tvName));
-
-            icon.setImageResource(item.getIcon());
-
-            name.setText(item.getName());
-
-            return convertView;
-        }
-    }
-
     AdapterView.OnItemClickListener mCategorySelectListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            mCategory = mCategoryItems.get(position);
+            mCategory = mCategoryPickerAdapter.getCategoryItems().get(position);
             mCategoryIcon.setImageResource(mCategory.getIcon());
             mCategoryName.setText(mCategory.getName());
         }
@@ -313,19 +180,14 @@ public class ExpenseEditActivity extends BaseActivity {
         public void onKeyClick(int code) {
             switch (code) {
                 case KeyEvent.KEYCODE_ENTER:
-                    ExpenseItem item = new ExpenseItem();
-                    item.setId(mExpenseId);
-                    item.setAmount(mAmount);
-                    item.setCategoryName(mCategory.getName());
-                    item.setCategoryId(mCategory.getId());
-                    item.setTime(mExpenseDate.getTimeInMillis());
-                    if (mExpenseId == -1) {
-                        insertRecord(item);
-                    } else {
-                        updateRecord(item);
-                    }
-
-                    finish();
+                    Bundle args = new Bundle();
+                    args.putLong(ExpenseEditModel.EXTRA_EXPENSE_ID, mExpenseId);
+                    args.putFloat(ExpenseEditModel.EXTRA_EXPENSE_AMOUNT, mAmount);
+                    args.putLong(ExpenseEditModel.EXTRA_EXPENSE_CATEGORY_ID, mCategory.getId());
+                    args.putString(ExpenseEditModel.EXTRA_EXPENSE_CATEGORY, mCategory.getName());
+                    args.putString(ExpenseEditModel.EXTRA_EXPENSE_DESC, "");
+                    args.putLong(ExpenseEditModel.EXTRA_EXPENSE_TIME, mExpenseDate.getTimeInMillis());
+                    mUserActionListener.onUserAction(SAVE_DATA, args);
                     break;
             }
         }
@@ -336,4 +198,74 @@ public class ExpenseEditActivity extends BaseActivity {
             mAmountTv.setText(String.format(mAmountFormat, mAmount));
         }
     };
+
+
+    @Override
+    public void displayData(ExpenseEditModel model, ExpenseEditModel.EditQueryEnum query) {
+        switch (query) {
+            case LOAD_CATEGORY:
+                mCategoryPickerAdapter.refreshData(model.getCategoryItemList());
+                break;
+        }
+    }
+
+    @Override
+    public void displayErrorMessage(ExpenseEditModel.EditQueryEnum query) {
+
+    }
+
+    @Override
+    public void displayUserActionResult(ExpenseEditModel model,
+                                        Bundle args,
+                                        ExpenseEditModel.EditUserActionEnum userAction,
+                                        boolean success) {
+        switch (userAction) {
+            case RELOAD:
+                if (success) {
+                    ExpenseItem item = model.getExpenseItem();
+                    mAmount = item.getAmount();
+                    if (mCategory == null) {
+                        mCategory = new CategoryItem();
+                    }
+                    mCategory.setIcon(CategoryIconHelper.resId(item.getCategoryName()));
+                    mCategory.setId(item.getCategoryId());
+                    mCategory.setName(item.getCategoryName());
+                    mExpenseDate = Calendar.getInstance();
+                    mExpenseDate.setTimeInMillis(item.getTime());
+
+                    mAmountTv.setText(String.format(mAmountFormat, mAmount));
+                    if (mCategory != null) {
+                        mCategoryIcon.setImageResource(mCategory.getIcon());
+                        mCategoryName.setText(mCategory.getName());
+                    }
+                    mDateTv.setText(mDateFormat.format(mExpenseDate.getTime()));
+                }
+                break;
+            case SAVE_DATA:
+                if (success) {
+                    if (mExpenseId > 0) {
+                        EventBus.getDefault().post(new EventRecordUpdate(model.getExpenseItem()));
+                    } else {
+                        EventBus.getDefault().post(new EventRecordAdd(model.getExpenseItem()));
+                    }
+                    finish();
+                }
+                break;
+        }
+    }
+
+    @Override
+    public Uri getDataUri(ExpenseEditModel.EditQueryEnum query) {
+        return null;
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public void addListener(UserActionListener listener) {
+        mUserActionListener = listener;
+    }
 }
