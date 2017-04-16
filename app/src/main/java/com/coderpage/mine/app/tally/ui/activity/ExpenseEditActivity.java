@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,11 +22,12 @@ import android.widget.TextView;
 
 import com.coderpage.framework.utils.LogUtils;
 import com.coderpage.mine.R;
-import com.coderpage.mine.app.tally.common.event.EventRecordAdd;
-import com.coderpage.mine.app.tally.common.event.EventRecordUpdate;
+import com.coderpage.mine.app.tally.eventbus.EventRecordAdd;
+import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
 import com.coderpage.mine.app.tally.data.CategoryIconHelper;
 import com.coderpage.mine.app.tally.data.CategoryItem;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
+import com.coderpage.mine.app.tally.provider.ProviderUtils;
 import com.coderpage.mine.app.tally.provider.TallyContract;
 import com.coderpage.mine.app.tally.ui.widget.NumInputView;
 import com.coderpage.mine.app.tally.utils.DatePickUtils;
@@ -41,8 +43,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class TallyExpenseAddActivity extends BaseActivity {
-    private static final String TAG = LogUtils.makeLogTag(TallyExpenseAddActivity.class);
+public class ExpenseEditActivity extends BaseActivity {
+    private static final String TAG = LogUtils.makeLogTag(ExpenseEditActivity.class);
     public static final String EXTRA_RECORD_ID = "extraRecordId";
 
     TextView mAmountTv;
@@ -211,7 +213,8 @@ public class TallyExpenseAddActivity extends BaseActivity {
             values.put(TallyContract.Expense.DESC, "");
             values.put(TallyContract.Expense.TIME, item.getTime());
 
-            getContentResolver().insert(TallyContract.Expense.CONTENT_URI, values);
+            Uri uri = getContentResolver().insert(TallyContract.Expense.CONTENT_URI, values);
+            item.setId(ProviderUtils.parseIdFromUri(uri));
             EventBus.getDefault().post(new EventRecordAdd(item));
         });
     }
@@ -286,7 +289,7 @@ public class TallyExpenseAddActivity extends BaseActivity {
             int id = v.getId();
             switch (id) {
                 case R.id.tvDate:
-                    DatePickUtils.showDatePickDialog(TallyExpenseAddActivity.this, new DatePickUtils.OnDatePickListener() {
+                    DatePickUtils.showDatePickDialog(ExpenseEditActivity.this, new DatePickUtils.OnDatePickListener() {
 
                         @Override
                         public void onDatePick(DialogInterface dialog, int year, int month, int dayOfMonth) {

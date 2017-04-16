@@ -1,4 +1,4 @@
-package com.coderpage.mine.app.tally.common.event;
+package com.coderpage.mine.app.tally.eventbus;
 
 import com.coderpage.mine.app.tally.data.ExpenseItem;
 

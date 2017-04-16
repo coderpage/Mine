@@ -1,14 +1,14 @@
-package com.coderpage.mine.app.tally.common.event;
+package com.coderpage.mine.app.tally.eventbus;
 
 import com.coderpage.mine.app.tally.data.ExpenseItem;
 
 /**
  * @author abner-l. 2017-03-19
  */
-public class EventRecordDelete {
+public class EventRecordUpdate {
     private final ExpenseItem mExpenseItem;
 
-    public EventRecordDelete(ExpenseItem expenseItem) {
+    public EventRecordUpdate(ExpenseItem expenseItem) {
         mExpenseItem = expenseItem;
     }
 

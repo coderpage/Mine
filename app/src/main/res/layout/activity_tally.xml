@@ -13,32 +13,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:paddingBottom="65dp">
 
-            <LinearLayout
+            <include
+                layout="@layout/tally_content_month_info"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_gravity="top"
+                android:layout_marginTop="16dp"/>
+
+            <com.coderpage.mine.app.tally.ui.widget.LoadMoreRecyclerView
+                android:id="@+id/recyclerHistoryRecord"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <include
-                    layout="@layout/tally_content_month_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_gravity="top"
-                    android:layout_marginTop="16dp"/>
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerHistoryRecord"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_normal"
-                    />
-            </LinearLayout>
-
-        </ScrollView>
+                android:layout_marginTop="@dimen/spacing_normal"
+                />
+        </LinearLayout>
 
 
         <FrameLayout

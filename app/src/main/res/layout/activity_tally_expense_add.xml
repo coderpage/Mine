@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     app:shadowDrawable="@drawable/header_shadow"
-    tools:context="com.coderpage.mine.app.tally.ui.activity.TallyExpenseAddActivity">
+    tools:context="com.coderpage.mine.app.tally.ui.activity.ExpenseEditActivity">
 
     <FrameLayout
         android:id="@+id/lyContainer"

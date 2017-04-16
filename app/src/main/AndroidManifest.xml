@@ -17,7 +17,7 @@
         android:theme="@style/Theme.Tally">
 
         <activity
-            android:name=".app.tally.ui.activity.TallActivity"
+            android:name=".app.tally.ui.activity.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Tally">
             <intent-filter>
@@ -28,7 +28,7 @@
         </activity>
 
         <activity
-            android:name=".app.tally.ui.activity.TallyExpenseAddActivity"
+            android:name=".app.tally.ui.activity.ExpenseEditActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Tally">
         </activity>
