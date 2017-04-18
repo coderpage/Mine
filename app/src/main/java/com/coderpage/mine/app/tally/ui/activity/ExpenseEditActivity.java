@@ -10,6 +10,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -48,10 +49,10 @@ public class ExpenseEditActivity extends BaseActivity
     AppCompatImageView mCategoryIcon;
     GridView mCategoryGv;
     NumInputView mNumInputView;
+    EditText mDescEt;
 
     private CategoryPickerAdapter mCategoryPickerAdapter;
 
-    //    private final List<CategoryItem> mCategoryItems = new ArrayList<>();
     private Calendar mExpenseDate = Calendar.getInstance();
     private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
     private CategoryItem mCategory;
@@ -90,6 +91,7 @@ public class ExpenseEditActivity extends BaseActivity
         mCategoryGv.setAdapter(mCategoryPickerAdapter);
 
         mDateTv = ((TextView) findViewById(R.id.tvDate));
+        mDescEt = (EditText) findViewById(R.id.etDesc);
 
         mDateTv.setText(mDateFormat.format(mExpenseDate.getTime()));
         mDateTv.setOnClickListener(mOnclickListener);
@@ -185,8 +187,9 @@ public class ExpenseEditActivity extends BaseActivity
                     args.putFloat(ExpenseEditModel.EXTRA_EXPENSE_AMOUNT, mAmount);
                     args.putLong(ExpenseEditModel.EXTRA_EXPENSE_CATEGORY_ID, mCategory.getId());
                     args.putString(ExpenseEditModel.EXTRA_EXPENSE_CATEGORY, mCategory.getName());
-                    args.putString(ExpenseEditModel.EXTRA_EXPENSE_DESC, "");
+                    args.putString(ExpenseEditModel.EXTRA_EXPENSE_DESC, mDescEt.getText().toString());
                     args.putLong(ExpenseEditModel.EXTRA_EXPENSE_TIME, mExpenseDate.getTimeInMillis());
+                    args.putString(ExpenseEditModel.EXTRA_EXPENSE_DESC, mDescEt.getText().toString());
                     mUserActionListener.onUserAction(SAVE_DATA, args);
                     break;
             }
@@ -239,6 +242,7 @@ public class ExpenseEditActivity extends BaseActivity
                         mCategoryName.setText(mCategory.getName());
                     }
                     mDateTv.setText(mDateFormat.format(mExpenseDate.getTime()));
+                    mDescEt.setText(item.getDesc());
                 }
                 break;
             case SAVE_DATA:

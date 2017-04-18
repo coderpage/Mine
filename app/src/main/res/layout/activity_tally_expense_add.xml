@@ -32,15 +32,34 @@
                     android:layout_height="1px"
                     android:layout_gravity="top"/>
 
-                <TextView
-                    android:id="@+id/tvDate"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/padding_normal"
-                    android:clickable="true"
-                    android:gravity="center"/>
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/etDesc"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="@dimen/padding_normal"
+                        android:background="@color/transparent"
+                        android:gravity="start|center_vertical"
+                        android:hint="@string/tally_expense_note"
+                        android:textColor="@color/appTextColorPrimary"
+                        android:textSize="@dimen/app_text_size_medium"/>
+
+                    <TextView
+                        android:id="@+id/tvDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/padding_normal"
+                        android:layout_marginRight="@dimen/padding_normal"
+                        android:clickable="true"
+                        android:gravity="center"/>
+                </LinearLayout>
 
                 <include
                     layout="@layout/divider"
@@ -73,7 +92,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|left"
-                    android:paddingStart="@dimen/padding_normal">
+                    android:paddingLeft="@dimen/padding_normal">
 
                     <android.support.v7.widget.AppCompatImageView
                         android:id="@+id/ivCategoryIcon"

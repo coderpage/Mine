@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.coderpage.framework.utils.LogUtils.LOGE;
-import static com.coderpage.framework.utils.LogUtils.LOGI;
 
 /**
  * @author abner-l. 2017-04-13
@@ -72,6 +71,7 @@ public class MainHistoryExpenseAdapter extends RecyclerView.Adapter<MainHistoryE
         private TextView mAmountTv;
         private TextView mTimeTv;
         private TextView mCategoryNameTv;
+        private TextView mDescTv;
         private ExpenseItem mExpense;
 
         ExpenseItemViewHolder(View view) {
@@ -79,6 +79,7 @@ public class MainHistoryExpenseAdapter extends RecyclerView.Adapter<MainHistoryE
             mAmountTv = ((TextView) view.findViewById(R.id.tvAmount));
             mTimeTv = ((TextView) view.findViewById(R.id.tvTime));
             mCategoryNameTv = ((TextView) view.findViewById(R.id.tvCategoryName));
+            mDescTv = ((TextView) view.findViewById(R.id.tvRecordDec));
             mCategoryIcon = ((AppCompatImageView) view.findViewById(R.id.ivCategoryIcon));
             view.setOnLongClickListener(this);
         }
@@ -119,6 +120,7 @@ public class MainHistoryExpenseAdapter extends RecyclerView.Adapter<MainHistoryE
             setCategoryName(mExpense.getCategoryName());
             setTime(mExpense.getTime());
             setCategoryIcon(mExpense.getCategoryIconResId());
+            setDesc(mExpense.getDesc());
         }
 
         private void setAmount(String amount) {
@@ -136,6 +138,10 @@ public class MainHistoryExpenseAdapter extends RecyclerView.Adapter<MainHistoryE
 
         private void setCategoryName(String categoryName) {
             mCategoryNameTv.setText(categoryName);
+        }
+
+        private void setDesc(String desc) {
+            mDescTv.setText(desc);
         }
     }
 

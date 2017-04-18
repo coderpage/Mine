@@ -1,6 +1,6 @@
 <resources>
     <!-- app name -->
-    <string name="app_name">我的</string>
+    <string name="app_name">我的记账本</string>
     <string name="delete">删除</string>
     <string name="modify">修改</string>
 
@@ -16,6 +16,7 @@
     <string name="tally_amount_cny">￥%s</string>
     <string name="tally_sum_of_amount_month">本月账单总额</string>
     <string name="tally_calendar_title_format" formatted="false">%d年%d月</string>
+    <string name="tally_expense_note">备注</string>
     <string name="tally_toolbar_title_about">关于</string>
     <string name="tally_about_main"><![CDATA[
         <h3>%s版</h3>
@@ -28,9 +29,6 @@
 
         <h5>市场上已经有那么多同类应用，你还写个毛？</h5>
         无聊。
-
-        <h5>源代码给看么？</h5>
-        代码写的太丑，不怕眼瞎就去吧 <u>https://github.com/coderpage/Mine</u>
 
         <h5>发现 bug 怎么办？</h5>
         给我发邮件 <u>codenobug@163.com</u>
