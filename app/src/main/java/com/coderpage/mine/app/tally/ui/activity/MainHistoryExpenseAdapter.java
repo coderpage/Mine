@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -141,7 +142,12 @@ public class MainHistoryExpenseAdapter extends RecyclerView.Adapter<MainHistoryE
         }
 
         private void setDesc(String desc) {
-            mDescTv.setText(desc);
+            if (TextUtils.isEmpty(desc)) {
+                mDescTv.setVisibility(View.GONE);
+            } else {
+                mDescTv.setVisibility(View.VISIBLE);
+                mDescTv.setText(desc);
+            }
         }
     }
 

@@ -30,8 +30,8 @@
         <activity
             android:name=".app.tally.ui.activity.ExpenseEditActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/Theme.Tally">
+            android:theme="@style/Theme.Tally"
+            android:windowSoftInputMode="adjustPan">
         </activity>
 
         <activity
