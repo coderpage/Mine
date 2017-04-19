@@ -8,7 +8,7 @@ android {
         applicationId "com.coderpage.mine"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 10
+        versionCode 20
         versionName rootProject.appVersion
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary true
