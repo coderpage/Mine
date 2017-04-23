@@ -22,6 +22,7 @@ import com.coderpage.mine.ui.BaseActivity;
 import com.coderpage.mine.ui.widget.DrawShadowFrameLayout;
 import com.coderpage.mine.utils.UIUtils;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -279,11 +280,13 @@ public class MainActivity extends BaseActivity
         PieData pieData = new PieData(pieDataSet);
         mPieChart.setData(pieData);
         mPieChart.setDescription(null);
-        mPieChart.setEntryLabelTextSize(9f);
-        mPieChart.getLegend().setEnabled(false);
-//        mPieChart.getLegend().setOrientation(Legend.LegendOrientation.VERTICAL);
-//        mPieChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
-//        mPieChart.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.CENTER);
+//        mPieChart.setEntryLabelTextSize(9f);
+        mPieChart.setCenterTextSize(20f);
+        mPieChart.setDrawEntryLabels(false);
+        mPieChart.getLegend().setEnabled(true);
+        mPieChart.getLegend().setOrientation(Legend.LegendOrientation.VERTICAL);
+        mPieChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        mPieChart.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.CENTER);
 
         mPieChart.invalidate();
     }
