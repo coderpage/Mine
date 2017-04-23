@@ -38,6 +38,7 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
     private volatile float mMonthTotal = 0.0f;
     private volatile ExpenseItem mNewAddExpenseItem;
     private volatile ExpenseItem mEditedExpenseItem;
+    private List<ExpenseItem> mCurrentMonthExpenseItemList = new ArrayList<>();
     private List<ExpenseItem> mInitExpenseItemList = new ArrayList<>();
     private List<ExpenseItem> mLoadMoreExpenseItemList = new ArrayList<>();
 
@@ -59,8 +60,14 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
     public void deliverUserAction(MainUserActionEnum action, @Nullable Bundle args, UserActionCallback callback) {
         switch (action) {
             case RELOAD_MONTH_TOTAL:
-                reloadMonthTotalAsync((monthTotal) -> {
-                    mMonthTotal = monthTotal;
+                reloadMonthTotalAsync((monthRecords) -> {
+                    float amountTotal = 0.0F;
+                    for (ExpenseItem item : monthRecords) {
+                        amountTotal += item.getAmount();
+                    }
+                    mMonthTotal = amountTotal;
+                    mCurrentMonthExpenseItemList.clear();
+                    mCurrentMonthExpenseItemList.addAll(monthRecords);
                     callback.onModelUpdated(MainModel.this, action);
                 });
                 break;
@@ -132,8 +139,14 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
     public void requestData(MainQueryEnum query, DataQueryCallback callback) {
         switch (query) {
             case MONTH_TOTAL:
-                reloadMonthTotalAsync((monthTotal) -> {
-                    mMonthTotal = monthTotal;
+                reloadMonthTotalAsync((monthRecords) -> {
+                    float amountTotal = 0.0F;
+                    for (ExpenseItem item : monthRecords) {
+                        amountTotal += item.getAmount();
+                    }
+                    mMonthTotal = amountTotal;
+                    mCurrentMonthExpenseItemList.clear();
+                    mCurrentMonthExpenseItemList.addAll(monthRecords);
                     callback.onModelUpdated(MainModel.this, query);
                 });
                 break;
@@ -181,18 +194,17 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
         }.executeOnExecutor(AsyncTaskExecutor.executor());
     }
 
-    public void reloadMonthTotalAsync(SimpleCallback<Float> callback) {
-        new AsyncTask<Void, Void, Float>() {
-            @Override
-            protected Float doInBackground(Void... params) {
-                return calculateMonthTotalExpense();
-            }
+    public void reloadMonthTotalAsync(SimpleCallback<List<ExpenseItem>> callback) {
+        Calendar monthStartCalendar = Calendar.getInstance();
+        monthStartCalendar.set(Calendar.DAY_OF_MONTH, 1);
+        monthStartCalendar.set(Calendar.HOUR_OF_DAY, 0);
+        monthStartCalendar.set(Calendar.MINUTE, 0);
+        monthStartCalendar.set(Calendar.SECOND, 0);
+        long monthStartDate = monthStartCalendar.getTimeInMillis();
 
-            @Override
-            protected void onPostExecute(Float aFloat) {
-                callback.success(aFloat);
-            }
-        }.executeOnExecutor(AsyncTaskExecutor.executor());
+        String selection = TallyContract.Expense.TIME + ">=?";
+        String[] selectionArgs = new String[]{String.valueOf(monthStartDate)};
+        queryExpenseAsync(selection, selectionArgs, null, callback);
     }
 
     public void queryExpenseByIdAsync(long expenseId, SimpleCallback<ExpenseItem> callback) {
@@ -250,6 +262,10 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
         return mEditedExpenseItem;
     }
 
+    public List<ExpenseItem> getCurrentMonthExpenseItemList() {
+        return mCurrentMonthExpenseItemList;
+    }
+
     private ExpenseItem queryExpenseItemById(long id) {
         Cursor cursor = mContext.getContentResolver().query(
                 TallyContract.Expense.CONTENT_URI,
@@ -294,7 +310,7 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
     }
 
     public enum MainQueryEnum implements QueryEnum {
-        MONTH_TOTAL(0, new String[]{TallyContract.Expense.AMOUNT}),
+        MONTH_TOTAL(0, null),
         EXPENSE_INIT(1, null);
 
         private int id;

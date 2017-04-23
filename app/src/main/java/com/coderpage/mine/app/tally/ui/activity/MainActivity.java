@@ -2,6 +2,7 @@ package com.coderpage.mine.app.tally.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +21,10 @@ import com.coderpage.mine.app.tally.ui.widget.LoadMoreRecyclerView;
 import com.coderpage.mine.ui.BaseActivity;
 import com.coderpage.mine.ui.widget.DrawShadowFrameLayout;
 import com.coderpage.mine.utils.UIUtils;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -27,6 +32,9 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.coderpage.framework.utils.LogUtils.LOGI;
 
@@ -49,6 +57,8 @@ public class MainActivity extends BaseActivity
     LoadMoreRecyclerView mHistoryRecordsRecycler;
     TextView mSumOfMonthAmountTv;
     MainHistoryExpenseAdapter mAllExpenseAdapter;
+
+    PieChart mPieChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +93,8 @@ public class MainActivity extends BaseActivity
         mSumOfMonthAmountTv = ((TextView) findViewById(R.id.tvMonthAmount));
 
         findViewById(R.id.btnAddRecord).setOnClickListener(mOnClickListener);
+
+        mPieChart = (PieChart) findViewById(R.id.chartCurrentMonth);
     }
 
     private void initPresenter() {
@@ -172,6 +184,7 @@ public class MainActivity extends BaseActivity
                 String format = String.format(
                         mAmountFormat, mAmountDecimalFormat.format(model.getMonthTotal()));
                 mSumOfMonthAmountTv.setText(format);
+                reDrawPieChart(model.getCurrentMonthExpenseItemList());
                 break;
             case EXPENSE_INIT:
                 mAllExpenseAdapter.refreshData(model.getInitExpenseItemList());
@@ -201,6 +214,7 @@ public class MainActivity extends BaseActivity
                     String format = String.format(
                             mAmountFormat, mAmountDecimalFormat.format(model.getMonthTotal()));
                     mSumOfMonthAmountTv.setText(format);
+                    reDrawPieChart(model.getCurrentMonthExpenseItemList());
                 }
                 break;
             case EXPENSE_EDITED:
@@ -223,6 +237,55 @@ public class MainActivity extends BaseActivity
                 mPresenter.setOnLoadMore(false);
                 break;
         }
+    }
+
+    private void reDrawPieChart(List<ExpenseItem> items) {
+        Map<String, Float> getMountByCategoryName = new HashMap<>();
+        for (ExpenseItem item : items) {
+            Float amount = getMountByCategoryName.get(item.getCategoryName());
+            if (amount == null) {
+                amount = item.getAmount();
+            } else {
+                amount += item.getAmount();
+            }
+            getMountByCategoryName.put(item.getCategoryName(), amount);
+        }
+        List<PieEntry> pieEntryList = new ArrayList<>();
+        for (Map.Entry<String, Float> entry : getMountByCategoryName.entrySet()) {
+            pieEntryList.add(new PieEntry(entry.getValue(), entry.getKey()));
+        }
+
+        PieDataSet pieDataSet = new PieDataSet(pieEntryList, "");
+        Resources resources = getResources();
+        pieDataSet.setColors(
+                resources.getColor(R.color.categoryColor1),
+                resources.getColor(R.color.categoryColor2),
+                resources.getColor(R.color.categoryColor3),
+                resources.getColor(R.color.categoryColor4),
+                resources.getColor(R.color.categoryColor5),
+                resources.getColor(R.color.categoryColor6),
+                resources.getColor(R.color.categoryColor7),
+                resources.getColor(R.color.categoryColor8),
+                resources.getColor(R.color.categoryColor9),
+                resources.getColor(R.color.categoryColor10),
+                resources.getColor(R.color.categoryColor11),
+                resources.getColor(R.color.categoryColor12),
+                resources.getColor(R.color.categoryColor13),
+                resources.getColor(R.color.categoryColor14),
+                resources.getColor(R.color.categoryColor15),
+                resources.getColor(R.color.categoryColor16),
+                resources.getColor(R.color.categoryColor17),
+                resources.getColor(R.color.categoryColor18));
+        PieData pieData = new PieData(pieDataSet);
+        mPieChart.setData(pieData);
+        mPieChart.setDescription(null);
+        mPieChart.setEntryLabelTextSize(9f);
+        mPieChart.getLegend().setEnabled(false);
+//        mPieChart.getLegend().setOrientation(Legend.LegendOrientation.VERTICAL);
+//        mPieChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+//        mPieChart.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.CENTER);
+
+        mPieChart.invalidate();
     }
 
     @Override
