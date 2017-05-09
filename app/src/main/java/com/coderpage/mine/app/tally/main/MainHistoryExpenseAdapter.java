@@ -1,4 +1,4 @@
-package com.coderpage.mine.app.tally.ui.activity;
+package com.coderpage.mine.app.tally.main;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -14,7 +14,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.coderpage.framework.UpdatableView;
-import com.coderpage.framework.utils.LogUtils;
+import com.coderpage.mine.app.tally.edit.ExpenseEditActivity;
+import com.coderpage.utils.LogUtils;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
 import com.coderpage.mine.app.tally.utils.TimeUtils;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static com.coderpage.framework.utils.LogUtils.LOGE;
+import static com.coderpage.utils.LogUtils.LOGE;
 
 /**
  * @author abner-l. 2017-04-13

@@ -9,6 +9,14 @@
 
     <!--  toolbar title of tally main activity -->
     <string name="tally_toolbar_title_main">我的.记账本</string>
+    <string name="tally_toolbar_title_about">关于</string>
+    <string name="tally_toolbar_title_chart">图表分析</string>
+
+    <!-- tally chart activity -->
+    <string name="tally_switch_2_daily_expense">切换日消费情况</string>
+    <string name="tally_switch_2_monthly_expense">切换月消费情况</string>
+    <string name="tally_month_info_format" formatted="false">%s/%d</string>
+    <string name="tally_month_expense_tip_format">%d月消费情况</string>
 
     <!-- toolbar title of tall expense record add activity -->
     <string name="tally_toolbar_title_add_record">记一笔</string>
@@ -17,7 +25,6 @@
     <string name="tally_sum_of_amount_month">本月账单总额</string>
     <string name="tally_calendar_title_format" formatted="false">%d年%d月</string>
     <string name="tally_expense_note">备注</string>
-    <string name="tally_toolbar_title_about">关于</string>
     <string name="tally_about_main"><![CDATA[
         <h3>%s版</h3>
 

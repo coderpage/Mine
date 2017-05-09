@@ -20,6 +20,7 @@
             android:paddingBottom="65dp">
 
             <include
+                android:id="@+id/lyMonthInfo"
                 layout="@layout/tally_content_month_info"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"

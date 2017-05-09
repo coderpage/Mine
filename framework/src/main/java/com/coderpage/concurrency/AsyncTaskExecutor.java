@@ -1,6 +1,6 @@
-package com.coderpage.framework.concurrency;
+package com.coderpage.concurrency;
 
-import com.coderpage.framework.utils.LogUtils;
+import com.coderpage.utils.LogUtils;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;

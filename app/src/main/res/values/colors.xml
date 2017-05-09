@@ -39,4 +39,6 @@
     <color name="categoryColor17">#7f8b36</color>
     <color name="categoryColor18">#b5a353</color>
 
+    <color name="chartLine">#FF5722</color>
+
 </resources>

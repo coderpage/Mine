@@ -8,7 +8,7 @@ import android.os.Bundle;
  * @author abner-l. 2017-01-22
  */
 
-public class LifeController {
+public class LifeCycle {
 
     public void onCreate(Context context, Bundle savedInstanceState) {
     }

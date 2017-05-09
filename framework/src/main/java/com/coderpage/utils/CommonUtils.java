@@ -1,4 +1,4 @@
-package com.coderpage.framework.utils;
+package com.coderpage.utils;
 
 /**
  * @author abner-l. 2017-02-05

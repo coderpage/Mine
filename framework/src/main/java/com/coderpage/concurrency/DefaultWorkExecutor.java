@@ -1,4 +1,4 @@
-package com.coderpage.framework.concurrency;
+package com.coderpage.concurrency;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;

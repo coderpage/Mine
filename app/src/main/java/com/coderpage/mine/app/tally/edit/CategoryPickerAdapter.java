@@ -1,4 +1,4 @@
-package com.coderpage.mine.app.tally.ui.activity;
+package com.coderpage.mine.app.tally.edit;
 
 import android.content.Context;
 import android.view.LayoutInflater;

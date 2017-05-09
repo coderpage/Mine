@@ -1,4 +1,4 @@
-package com.coderpage.mine.app.tally.ui.activity;
+package com.coderpage.mine.app.tally.about;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,7 +23,6 @@ public class AboutActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tally_about);
-        setTitle(R.string.tally_toolbar_title_about);
         TextView aboutMainTv = ((TextView) findViewById(R.id.tvAboutMain));
         Spanned spanned = Html.fromHtml(getString(R.string.tally_about_main, BuildConfig.VERSION_NAME));
         aboutMainTv.setText(spanned);

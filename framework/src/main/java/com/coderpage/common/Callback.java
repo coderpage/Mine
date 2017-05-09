@@ -1,4 +1,6 @@
-package com.coderpage.framework;
+package com.coderpage.common;
+
+import com.coderpage.framework.SimpleCallback;
 
 /**
  * @author abner-l. 2017-01-22

@@ -1,4 +1,4 @@
-package com.coderpage.framework.utils;
+package com.coderpage.utils;
 
 import android.util.Log;
 

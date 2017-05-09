@@ -3,8 +3,8 @@ package com.coderpage.framework;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import static com.coderpage.framework.utils.LogUtils.LOGI;
-import static com.coderpage.framework.utils.LogUtils.makeLogTag;
+import static com.coderpage.utils.LogUtils.LOGI;
+import static com.coderpage.utils.LogUtils.makeLogTag;
 
 /**
  * @author abner-l. 2017-04-13

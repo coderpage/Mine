@@ -1,4 +1,4 @@
-package com.coderpage.mine.app.tally.ui.activity;
+package com.coderpage.mine.app.tally.main;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +12,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.coderpage.framework.UpdatableView;
-import com.coderpage.framework.utils.LogUtils;
+import com.coderpage.mine.app.tally.about.AboutActivity;
+import com.coderpage.mine.app.tally.chart.ChartActivity;
+import com.coderpage.mine.app.tally.edit.ExpenseEditActivity;
+import com.coderpage.utils.LogUtils;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
 import com.coderpage.mine.app.tally.eventbus.EventRecordAdd;
@@ -37,7 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.coderpage.framework.utils.LogUtils.LOGI;
+import static com.coderpage.utils.LogUtils.LOGI;
 
 /**
  * @author abner-l. 2017-01-23
@@ -65,7 +68,6 @@ public class MainActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tally);
-        setTitle(R.string.tally_toolbar_title_main);
         mAmountFormat = getString(R.string.tally_amount_cny);
         initView();
         initPresenter();
@@ -94,6 +96,7 @@ public class MainActivity extends BaseActivity
         mSumOfMonthAmountTv = ((TextView) findViewById(R.id.tvMonthAmount));
 
         findViewById(R.id.btnAddRecord).setOnClickListener(mOnClickListener);
+        findViewById(R.id.lyMonthInfo).setOnClickListener(mOnClickListener);
 
         mPieChart = (PieChart) findViewById(R.id.chartCurrentMonth);
     }
@@ -158,6 +161,10 @@ public class MainActivity extends BaseActivity
             case R.id.btnAddRecord:
                 Intent intent = new Intent(MainActivity.this, ExpenseEditActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.lyMonthInfo:
+                Intent chartIntent = new Intent(MainActivity.this, ChartActivity.class);
+                startActivity(chartIntent);
                 break;
         }
     };

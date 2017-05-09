@@ -1,4 +1,4 @@
-package com.coderpage.mine.app.tally.ui.activity;
+package com.coderpage.mine.app.tally.edit;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,7 +12,7 @@ import com.coderpage.framework.Model;
 import com.coderpage.framework.QueryEnum;
 import com.coderpage.framework.SimpleCallback;
 import com.coderpage.framework.UserActionEnum;
-import com.coderpage.framework.concurrency.AsyncTaskExecutor;
+import com.coderpage.concurrency.AsyncTaskExecutor;
 import com.coderpage.mine.app.tally.data.CategoryIconHelper;
 import com.coderpage.mine.app.tally.data.CategoryItem;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
@@ -22,8 +22,8 @@ import com.coderpage.mine.app.tally.provider.TallyContract;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.coderpage.framework.utils.LogUtils.LOGE;
-import static com.coderpage.framework.utils.LogUtils.makeLogTag;
+import static com.coderpage.utils.LogUtils.LOGE;
+import static com.coderpage.utils.LogUtils.makeLogTag;
 
 /**
  * @author abner-l. 2017-04-16

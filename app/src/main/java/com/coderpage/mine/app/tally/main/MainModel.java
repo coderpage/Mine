@@ -1,4 +1,4 @@
-package com.coderpage.mine.app.tally.ui.activity;
+package com.coderpage.mine.app.tally.main;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -10,8 +10,8 @@ import com.coderpage.framework.Model;
 import com.coderpage.framework.QueryEnum;
 import com.coderpage.framework.SimpleCallback;
 import com.coderpage.framework.UserActionEnum;
-import com.coderpage.framework.concurrency.AsyncTaskExecutor;
-import com.coderpage.framework.utils.LogUtils;
+import com.coderpage.concurrency.AsyncTaskExecutor;
+import com.coderpage.utils.LogUtils;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
 import com.coderpage.mine.app.tally.provider.TallyContract;
 
@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import static com.coderpage.framework.utils.LogUtils.LOGE;
-import static com.coderpage.mine.app.tally.ui.activity.MainModel.MainQueryEnum.MONTH_TOTAL;
+import static com.coderpage.utils.LogUtils.LOGE;
+import static com.coderpage.mine.app.tally.main.MainModel.MainQueryEnum.MONTH_TOTAL;
 
 /**
  * @author abner-l. 2017-04-12

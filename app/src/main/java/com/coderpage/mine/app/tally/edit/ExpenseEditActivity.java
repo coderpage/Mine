@@ -1,4 +1,4 @@
-package com.coderpage.mine.app.tally.ui.activity;
+package com.coderpage.mine.app.tally.edit;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,7 +15,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.coderpage.framework.UpdatableView;
-import com.coderpage.framework.utils.LogUtils;
+import com.coderpage.utils.LogUtils;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.data.CategoryIconHelper;
 import com.coderpage.mine.app.tally.data.CategoryItem;
@@ -33,9 +33,6 @@ import org.greenrobot.eventbus.EventBus;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
-
-import static com.coderpage.mine.app.tally.ui.activity.ExpenseEditModel.EditUserActionEnum.RELOAD;
-import static com.coderpage.mine.app.tally.ui.activity.ExpenseEditModel.EditUserActionEnum.SAVE_DATA;
 
 public class ExpenseEditActivity extends BaseActivity
         implements UpdatableView<ExpenseEditModel,
@@ -120,7 +117,7 @@ public class ExpenseEditActivity extends BaseActivity
         // 刷新界面
         Bundle args = new Bundle(1);
         args.putLong(ExpenseEditModel.EXTRA_EXPENSE_ID, mExpenseId);
-        mUserActionListener.onUserAction(RELOAD, args);
+        mUserActionListener.onUserAction(ExpenseEditModel.EditUserActionEnum.RELOAD, args);
     }
 
     @Override
@@ -190,7 +187,7 @@ public class ExpenseEditActivity extends BaseActivity
                     args.putString(ExpenseEditModel.EXTRA_EXPENSE_DESC, mDescEt.getText().toString());
                     args.putLong(ExpenseEditModel.EXTRA_EXPENSE_TIME, mExpenseDate.getTimeInMillis());
                     args.putString(ExpenseEditModel.EXTRA_EXPENSE_DESC, mDescEt.getText().toString());
-                    mUserActionListener.onUserAction(SAVE_DATA, args);
+                    mUserActionListener.onUserAction(ExpenseEditModel.EditUserActionEnum.SAVE_DATA, args);
                     break;
             }
         }
