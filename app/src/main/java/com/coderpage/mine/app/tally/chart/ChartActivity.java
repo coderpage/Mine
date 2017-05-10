@@ -60,6 +60,7 @@ public class ChartActivity extends BaseActivity implements
     private TextView mMonthTv;
     private TextView mLineChartMonthExpenseTipTv;
     private TextView mLineChartMonthDailySwitcherTv;
+    private TextView mMonthTotalTv;
     private PieChart mPieChart;
     private PopupWindow mMonthSwitchPopupWindow;
 
@@ -80,6 +81,7 @@ public class ChartActivity extends BaseActivity implements
         mMonthTv = (TextView) findViewById(R.id.tvMonth);
         mLineChartMonthExpenseTipTv = (TextView) findViewById(R.id.tvMonthExpenseTip);
         mLineChartMonthDailySwitcherTv = (TextView) findViewById(R.id.tvMonthDailyChartSwitcher);
+        mMonthTotalTv = (TextView) findViewById(R.id.tvMonthExpenseTotal);
         mPieChart = (PieChart) findViewById(R.id.pieChart);
         setupPieChart();
 
@@ -123,7 +125,6 @@ public class ChartActivity extends BaseActivity implements
 
     private void setupPieChart() {
         mPieChart.setDescription(null);
-//        mPieChart.setEntryLabelTextSize(9f);
         mPieChart.setCenterTextSize(20f);
         mPieChart.setDrawEntryLabels(false);
         mPieChart.setHighlightPerTapEnabled(true);
@@ -233,6 +234,9 @@ public class ChartActivity extends BaseActivity implements
                 }
                 showDailyExpenseLineChart(entries);
                 reDrawPieChart(model.getMonthExpenseList());
+                float monthTotal = caculateMonthTotal(model.getMonthExpenseList());
+                mMonthTotalTv.setText(
+                        getString(R.string.tally_amount_cny, String.valueOf(monthTotal)));
                 break;
         }
     }
@@ -263,6 +267,10 @@ public class ChartActivity extends BaseActivity implements
                     }
                     showDailyExpenseLineChart(entries);
                     reDrawPieChart(model.getMonthExpenseList());
+
+                    float monthTotal = caculateMonthTotal(model.getMonthExpenseList());
+                    mMonthTotalTv.setText(
+                            getString(R.string.tally_amount_cny, String.valueOf(monthTotal)));
                 }
                 break;
         }
@@ -271,6 +279,14 @@ public class ChartActivity extends BaseActivity implements
     @Override
     public void displayErrorMessage(ChartModel.ChartQueryEnum query) {
 
+    }
+
+    private float caculateMonthTotal(List<ExpenseItem> itemList) {
+        float total = 0.0f;
+        for (ExpenseItem item : itemList) {
+            total += item.getAmount();
+        }
+        return total;
     }
 
     private void showMonthTipViews(int year, int month) {
