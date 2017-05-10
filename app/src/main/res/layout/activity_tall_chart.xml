@@ -26,6 +26,11 @@
 
                 <include layout="@layout/tally_content_month_linechart"/>
 
+                <include
+                    layout="@layout/tally_content_month_piechart"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_normal"/>
             </LinearLayout>
         </ScrollView>
 

@@ -1,6 +1,7 @@
 package com.coderpage.mine.app.tally.chart;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,21 +19,29 @@ import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.chart.data.DailyExpense;
 import com.coderpage.mine.app.tally.chart.data.Month;
+import com.coderpage.mine.app.tally.data.ExpenseItem;
 import com.coderpage.mine.ui.BaseActivity;
 import com.coderpage.mine.ui.widget.DrawShadowFrameLayout;
 import com.coderpage.mine.utils.UIUtils;
 import com.coderpage.utils.AndroidUtils;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import static com.coderpage.mine.R.id.lineChart;
 import static com.coderpage.mine.app.tally.chart.ChartModel.ChartQueryEnum;
@@ -51,7 +60,8 @@ public class ChartActivity extends BaseActivity implements
     private TextView mMonthTv;
     private TextView mLineChartMonthExpenseTipTv;
     private TextView mLineChartMonthDailySwitcherTv;
-    PopupWindow mMonthSwitchPopupWindow;
+    private PieChart mPieChart;
+    private PopupWindow mMonthSwitchPopupWindow;
 
     private Presenter mPresenter;
     private UserActionListener mUserActionListener;
@@ -70,6 +80,8 @@ public class ChartActivity extends BaseActivity implements
         mMonthTv = (TextView) findViewById(R.id.tvMonth);
         mLineChartMonthExpenseTipTv = (TextView) findViewById(R.id.tvMonthExpenseTip);
         mLineChartMonthDailySwitcherTv = (TextView) findViewById(R.id.tvMonthDailyChartSwitcher);
+        mPieChart = (PieChart) findViewById(R.id.pieChart);
+        setupPieChart();
 
         mLineChartMonthDailySwitcherTv.setOnClickListener(mOnClickListener);
         findViewById(R.id.ivMonthSwitch).setOnClickListener(mOnClickListener);
@@ -107,6 +119,68 @@ public class ChartActivity extends BaseActivity implements
         mLineChart.getAxisRight().setEnabled(false);
         mLineChart.setDragEnabled(false);
         mLineChart.setScaleEnabled(false);
+    }
+
+    private void setupPieChart() {
+        mPieChart.setDescription(null);
+//        mPieChart.setEntryLabelTextSize(9f);
+        mPieChart.setCenterTextSize(20f);
+        mPieChart.setDrawEntryLabels(false);
+        mPieChart.setHighlightPerTapEnabled(true);
+        mPieChart.getLegend().setEnabled(true);
+        mPieChart.getLegend().setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        mPieChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        mPieChart.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+    }
+
+    private void reDrawPieChart(List<ExpenseItem> items) {
+        Map<String, Float> getMountByCategoryName = new HashMap<>();
+        for (ExpenseItem item : items) {
+            Float amount = getMountByCategoryName.get(item.getCategoryName());
+            if (amount == null) {
+                amount = item.getAmount();
+            } else {
+                amount += item.getAmount();
+            }
+            getMountByCategoryName.put(item.getCategoryName(), amount);
+        }
+        List<PieEntry> pieEntryList = new ArrayList<>();
+        for (Map.Entry<String, Float> entry : getMountByCategoryName.entrySet()) {
+            pieEntryList.add(new PieEntry(entry.getValue(), entry.getKey()));
+        }
+
+        PieDataSet pieDataSet = new PieDataSet(pieEntryList, "");
+        Resources resources = getResources();
+        pieDataSet.setColors(
+                resources.getColor(R.color.categoryColor1),
+                resources.getColor(R.color.categoryColor2),
+                resources.getColor(R.color.categoryColor3),
+                resources.getColor(R.color.categoryColor4),
+                resources.getColor(R.color.categoryColor5),
+                resources.getColor(R.color.categoryColor6),
+                resources.getColor(R.color.categoryColor7),
+                resources.getColor(R.color.categoryColor8),
+                resources.getColor(R.color.categoryColor9),
+                resources.getColor(R.color.categoryColor10),
+                resources.getColor(R.color.categoryColor11),
+                resources.getColor(R.color.categoryColor12),
+                resources.getColor(R.color.categoryColor13),
+                resources.getColor(R.color.categoryColor14),
+                resources.getColor(R.color.categoryColor15),
+                resources.getColor(R.color.categoryColor16),
+                resources.getColor(R.color.categoryColor17),
+                resources.getColor(R.color.categoryColor18));
+
+        pieDataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+        pieDataSet.setValueLinePart1Length(0.4f);
+        pieDataSet.setValueLinePart2Length(0.8f);
+        pieDataSet.setValueLineColor(getResources().getColor(R.color.colorHint));
+        pieDataSet.setValueTextColor(getResources().getColor(R.color.appTextColorPrimary));
+        pieDataSet.setValueTextSize(9);
+
+        PieData pieData = new PieData(pieDataSet);
+        mPieChart.setData(pieData);
+        mPieChart.animateY(1400, Easing.EasingOption.EaseInOutQuart);
     }
 
     private void showDailyExpenseLineChart(List<Entry> entries) {
@@ -158,6 +232,7 @@ public class ChartActivity extends BaseActivity implements
                     entries.add(new Entry(expense.getDayOfMonth(), expense.getExpense()));
                 }
                 showDailyExpenseLineChart(entries);
+                reDrawPieChart(model.getMonthExpenseList());
                 break;
         }
     }
@@ -187,6 +262,7 @@ public class ChartActivity extends BaseActivity implements
                         entries.add(new Entry(expense.getDayOfMonth(), expense.getExpense()));
                     }
                     showDailyExpenseLineChart(entries);
+                    reDrawPieChart(model.getMonthExpenseList());
                 }
                 break;
         }
