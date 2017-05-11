@@ -243,7 +243,7 @@ public class ChartActivity extends BaseActivity implements
                 }
                 showDailyExpenseLineChart(entries);
                 reDrawPieChart(model.getMonthExpenseList());
-                float monthTotal = caculateMonthTotal(model.getMonthExpenseList());
+                float monthTotal = calculateMonthTotal(model.getMonthExpenseList());
                 mMonthTotalTv.setText(
                         getString(R.string.tally_amount_cny, String.valueOf(monthTotal)));
                 mMonthCategoryAdapter.refreshData(model.getMonthCategoryExpenseList());
@@ -278,7 +278,7 @@ public class ChartActivity extends BaseActivity implements
                     showDailyExpenseLineChart(entries);
                     reDrawPieChart(model.getMonthExpenseList());
 
-                    float monthTotal = caculateMonthTotal(model.getMonthExpenseList());
+                    float monthTotal = calculateMonthTotal(model.getMonthExpenseList());
                     mMonthTotalTv.setText(
                             getString(R.string.tally_amount_cny, String.valueOf(monthTotal)));
                     mMonthCategoryAdapter.refreshData(model.getMonthCategoryExpenseList());
@@ -292,7 +292,7 @@ public class ChartActivity extends BaseActivity implements
 
     }
 
-    private float caculateMonthTotal(List<ExpenseItem> itemList) {
+    private float calculateMonthTotal(List<ExpenseItem> itemList) {
         float total = 0.0f;
         for (ExpenseItem item : itemList) {
             total += item.getAmount();

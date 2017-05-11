@@ -21,6 +21,7 @@ import com.coderpage.mine.app.tally.chart.data.Month;
 import com.coderpage.mine.app.tally.chart.data.MonthCategoryExpense;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
 import com.coderpage.mine.app.tally.provider.TallyContract;
+import com.coderpage.mine.app.tally.utils.TimeUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -76,7 +77,7 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
                         mMonthExpenseList.clear();
                         mMonthExpenseList.addAll(items);
                         mMonthDailyExpenseList.clear();
-                        mMonthDailyExpenseList.addAll(generateDailyExpense(items));
+                        mMonthDailyExpenseList.addAll(generateDailyExpense(year, month, items));
                         mMonthCategoryExpenseList.clear();
                         mMonthCategoryExpenseList.addAll(
                                 generateMonthCategoryList(year, month, items));
@@ -126,7 +127,7 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
                         mMonthExpenseList.clear();
                         mMonthExpenseList.addAll(items);
                         mMonthDailyExpenseList.clear();
-                        mMonthDailyExpenseList.addAll(generateDailyExpense(items));
+                        mMonthDailyExpenseList.addAll(generateDailyExpense(year, month, items));
                         mMonthCategoryExpenseList.clear();
                         mMonthCategoryExpenseList.addAll(
                                 generateMonthCategoryList(year, month, items));
@@ -210,9 +211,12 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
         }.executeOnExecutor(AsyncTaskExecutor.executor());
     }
 
-    private List<DailyExpense> generateDailyExpense(List<ExpenseItem> list) {
+    private List<DailyExpense> generateDailyExpense(int year, int month, List<ExpenseItem> list) {
         SparseArray<DailyExpense> dailyExpenseSparseArray = new SparseArray<>(31);
         Calendar calendar = Calendar.getInstance();
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH) + 1;
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
         for (ExpenseItem item : list) {
             calendar.setTimeInMillis(item.getTime());
             int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -225,12 +229,21 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
             expense.setExpense(expense.getExpense() + item.getAmount());
         }
 
-        List<DailyExpense> results = new ArrayList<>(31);
-        for (int i = 0; i < 32; i++) {
+        int daysOfMonth;
+        if (currentYear == year && currentMonth == month) {
+            daysOfMonth = currentDay;
+        } else {
+            daysOfMonth = TimeUtils.getDaysTotalOfMonth(year, month);
+        }
+        List<DailyExpense> results = new ArrayList<>(daysOfMonth);
+        for (int i = 1; i <= daysOfMonth; i++) {
             DailyExpense expense = dailyExpenseSparseArray.get(i, null);
-            if (expense != null) {
-                results.add(expense);
+            if (expense == null) {
+                expense = new DailyExpense();
+                expense.setDayOfMonth(i);
+                expense.setExpense(0);
             }
+            results.add(expense);
         }
         return results;
     }
