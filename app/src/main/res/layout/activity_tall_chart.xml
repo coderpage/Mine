@@ -10,31 +10,51 @@
     app:shadowDrawable="@drawable/header_shadow"
     tools:context=".app.tally.chart.ChartActivity">
 
-    <FrameLayout
+    <android.support.v4.widget.NestedScrollView
         android:id="@+id/lyContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <include layout="@layout/tally_content_month_linechart"/>
+
+            <include
+                layout="@layout/tally_content_month_piechart"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_normal"/>
 
-                <include layout="@layout/tally_content_month_linechart"/>
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_normal"
+                android:background="@color/white">
 
-                <include
-                    layout="@layout/tally_content_month_piechart"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerCategoryExpense"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding_normal"/>
-            </LinearLayout>
-        </ScrollView>
+                    android:layout_height="wrap_content"/>
 
-    </FrameLayout>
+                <View
+                    style="@style/Divider"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1px"
+                    android:layout_gravity="top"/>
+
+                <View
+                    style="@style/Divider"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1px"
+                    android:layout_gravity="bottom"/>
+            </FrameLayout>
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"

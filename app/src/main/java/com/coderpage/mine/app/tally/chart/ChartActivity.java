@@ -5,6 +5,8 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +65,8 @@ public class ChartActivity extends BaseActivity implements
     private TextView mMonthTotalTv;
     private PieChart mPieChart;
     private PopupWindow mMonthSwitchPopupWindow;
+    private RecyclerView mCategoryMonthRecycler;
+    private MonthCategoryExpenseAdapter mMonthCategoryAdapter;
 
     private Presenter mPresenter;
     private UserActionListener mUserActionListener;
@@ -83,6 +87,11 @@ public class ChartActivity extends BaseActivity implements
         mLineChartMonthDailySwitcherTv = (TextView) findViewById(R.id.tvMonthDailyChartSwitcher);
         mMonthTotalTv = (TextView) findViewById(R.id.tvMonthExpenseTotal);
         mPieChart = (PieChart) findViewById(R.id.pieChart);
+        mCategoryMonthRecycler = (RecyclerView) findViewById(R.id.recyclerCategoryExpense);
+        mCategoryMonthRecycler.setLayoutManager(
+                new LinearLayoutManager(ChartActivity.this, LinearLayoutManager.VERTICAL, false));
+        mMonthCategoryAdapter = new MonthCategoryExpenseAdapter(ChartActivity.this);
+        mCategoryMonthRecycler.setAdapter(mMonthCategoryAdapter);
         setupPieChart();
 
         mLineChartMonthDailySwitcherTv.setOnClickListener(mOnClickListener);
@@ -237,6 +246,7 @@ public class ChartActivity extends BaseActivity implements
                 float monthTotal = caculateMonthTotal(model.getMonthExpenseList());
                 mMonthTotalTv.setText(
                         getString(R.string.tally_amount_cny, String.valueOf(monthTotal)));
+                mMonthCategoryAdapter.refreshData(model.getMonthCategoryExpenseList());
                 break;
         }
     }
@@ -271,6 +281,7 @@ public class ChartActivity extends BaseActivity implements
                     float monthTotal = caculateMonthTotal(model.getMonthExpenseList());
                     mMonthTotalTv.setText(
                             getString(R.string.tally_amount_cny, String.valueOf(monthTotal)));
+                    mMonthCategoryAdapter.refreshData(model.getMonthCategoryExpenseList());
                 }
                 break;
         }

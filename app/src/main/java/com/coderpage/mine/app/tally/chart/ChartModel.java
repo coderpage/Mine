@@ -18,11 +18,14 @@ import com.coderpage.framework.QueryEnum;
 import com.coderpage.framework.UserActionEnum;
 import com.coderpage.mine.app.tally.chart.data.DailyExpense;
 import com.coderpage.mine.app.tally.chart.data.Month;
+import com.coderpage.mine.app.tally.chart.data.MonthCategoryExpense;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
 import com.coderpage.mine.app.tally.provider.TallyContract;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.coderpage.utils.LogUtils.LOGI;
@@ -43,6 +46,7 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
     private List<Month> mMonthList = new ArrayList<>();
     private List<ExpenseItem> mMonthExpenseList = new ArrayList<>();
     private List<DailyExpense> mMonthDailyExpenseList = new ArrayList<>();
+    private List<MonthCategoryExpense> mMonthCategoryExpenseList = new ArrayList<>();
 
     ChartModel(Context context) {
         mContext = context;
@@ -73,6 +77,9 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
                         mMonthExpenseList.addAll(items);
                         mMonthDailyExpenseList.clear();
                         mMonthDailyExpenseList.addAll(generateDailyExpense(items));
+                        mMonthCategoryExpenseList.clear();
+                        mMonthCategoryExpenseList.addAll(
+                                generateMonthCategoryList(year, month, items));
                         callback.onModelUpdated(ChartModel.this, query);
                     }
 
@@ -120,6 +127,9 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
                         mMonthExpenseList.addAll(items);
                         mMonthDailyExpenseList.clear();
                         mMonthDailyExpenseList.addAll(generateDailyExpense(items));
+                        mMonthCategoryExpenseList.clear();
+                        mMonthCategoryExpenseList.addAll(
+                                generateMonthCategoryList(year, month, items));
                         callback.onModelUpdated(ChartModel.this, action);
                     }
 
@@ -140,11 +150,15 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
         return mMonthDailyExpenseList;
     }
 
-    public List<ExpenseItem> getMonthExpenseList() {
+    List<ExpenseItem> getMonthExpenseList() {
         return mMonthExpenseList;
     }
 
-    public Month getDisplayMonth() {
+    List<MonthCategoryExpense> getMonthCategoryExpenseList() {
+        return mMonthCategoryExpenseList;
+    }
+
+    Month getDisplayMonth() {
         return mDisplayMonth;
     }
 
@@ -221,75 +235,43 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
         return results;
     }
 
-    private void loadMonthDailyExpense(int year,
-                                       int month,
-                                       Callback<List<DailyExpense>, IError> callback) {
-        LOGI(TAG, "load " + year + "/" + month + " daily expense");
-        new AsyncTask<Void, Void, List<DailyExpense>>() {
-            @Override
-            protected List<DailyExpense> doInBackground(Void... params) {
-                Calendar monthStartCalendar = Calendar.getInstance();
-                monthStartCalendar.set(Calendar.YEAR, year);
-                // month -1 的原因是, Calendar MONTH 从 0 开始计数，即 0 是一月
-                monthStartCalendar.set(Calendar.MONTH, month - 1);
-                monthStartCalendar.set(Calendar.DAY_OF_MONTH, 1);
-                monthStartCalendar.set(Calendar.HOUR_OF_DAY, 0);
-                monthStartCalendar.set(Calendar.MINUTE, 0);
-                monthStartCalendar.set(Calendar.SECOND, 0);
+    private List<MonthCategoryExpense> generateMonthCategoryList(int year,
+                                                                 int month,
+                                                                 List<ExpenseItem> list) {
+        List<MonthCategoryExpense> result = new ArrayList<>();
 
-                long monthStartDate = monthStartCalendar.getTimeInMillis();
-                monthStartCalendar.set(Calendar.MONTH, month);
-                long nextMonthStartDate = monthStartCalendar.getTimeInMillis();
+        HashMap<Long, MonthCategoryExpense> getMonthCategoryExpenseByCid = new HashMap<>();
 
-                String selection = TallyContract.Expense.TIME + ">=? " +
-                        "AND " + TallyContract.Expense.TIME + "<?";
-                String[] selectionArgs = new String[]{
-                        String.valueOf(monthStartDate),
-                        String.valueOf(nextMonthStartDate)};
-                String order = "expense_time DESC";
-                Cursor cursor = mContext.getContentResolver().query(
-                        TallyContract.Expense.CONTENT_URI,
-                        null,
-                        selection,
-                        selectionArgs,
-                        order);
-                if (cursor == null) {
-                    return new ArrayList<>(0);
-                }
-                List<ExpenseItem> items = new ArrayList<>(cursor.getCount());
-                while (cursor.moveToNext()) {
-                    items.add(ExpenseItem.fromCursor(cursor));
-                }
-                cursor.close();
-                SparseArray<DailyExpense> dailyExpenseSparseArray = new SparseArray<>(31);
-                Calendar calendar = Calendar.getInstance();
-                for (ExpenseItem item : items) {
-                    calendar.setTimeInMillis(item.getTime());
-                    int day = calendar.get(Calendar.DAY_OF_MONTH);
-                    DailyExpense expense = dailyExpenseSparseArray.get(day, null);
-                    if (expense == null) {
-                        expense = new DailyExpense();
-                        dailyExpenseSparseArray.put(day, expense);
-                    }
-                    expense.setDayOfMonth(day);
-                    expense.setExpense(expense.getExpense() + item.getAmount());
-                }
+        float monthExpenseTotal = 0.0f;
+        for (ExpenseItem item : list) {
+            long cid = item.getCategoryId();
+            MonthCategoryExpense expense = getMonthCategoryExpenseByCid.get(cid);
+            if (expense == null) {
+                expense = new MonthCategoryExpense();
+                getMonthCategoryExpenseByCid.put(cid, expense);
 
-                List<DailyExpense> results = new ArrayList<>(31);
-                for (int i = 0; i < 32; i++) {
-                    DailyExpense expense = dailyExpenseSparseArray.get(i, null);
-                    if (expense != null) {
-                        results.add(expense);
-                    }
-                }
-                return results;
+                expense.setMonth(new Month(year, month));
+                expense.setCategoryId(cid);
+                expense.setCategoryIcon(item.getCategoryIconResId());
+                expense.setCategoryName(item.getCategoryName());
             }
-
-            @Override
-            protected void onPostExecute(List<DailyExpense> dailyExpenses) {
-                callback.success(dailyExpenses);
+            expense.setCategoryExpenseTotal(expense.getCategoryExpenseTotal() + item.getAmount());
+            monthExpenseTotal += item.getAmount();
+        }
+        result.addAll(getMonthCategoryExpenseByCid.values());
+        Collections.sort(result, (o1, o2) -> {
+            if (o1.getCategoryExpenseTotal() > o2.getCategoryExpenseTotal()) {
+                return -1;
             }
-        }.executeOnExecutor(AsyncTaskExecutor.executor());
+            if (o1.getCategoryExpenseTotal() < o2.getCategoryExpenseTotal()) {
+                return 1;
+            }
+            return 0;
+        });
+        for (MonthCategoryExpense expense : result) {
+            expense.setMonthExpenseTotal(monthExpenseTotal);
+        }
+        return result;
     }
 
     private void loadMonthArray(Callback<List<Month>, IError> callback) {
