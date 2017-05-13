@@ -6,11 +6,13 @@
 
     <!-- Menu item open About Activity -->
     <string name="description_about">关于</string>
+    <string name="menu_tally_expense_records">消费记录</string>
 
     <!--  toolbar title of tally main activity -->
     <string name="tally_toolbar_title_main">我的.记账本</string>
     <string name="tally_toolbar_title_about">关于</string>
     <string name="tally_toolbar_title_chart">图表分析</string>
+    <string name="tally_toolbar_title_records">消费记录</string>
 
     <!-- tally chart activity -->
     <string name="tally_switch_2_daily_expense">切换日消费情况</string>

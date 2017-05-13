@@ -15,6 +15,7 @@ import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.app.tally.about.AboutActivity;
 import com.coderpage.mine.app.tally.chart.ChartActivity;
 import com.coderpage.mine.app.tally.edit.ExpenseEditActivity;
+import com.coderpage.mine.app.tally.records.RecordsActivity;
 import com.coderpage.utils.LogUtils;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
@@ -142,8 +143,11 @@ public class MainActivity extends BaseActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.menu_refresh:
+            case R.id.menu_about:
                 startActivity(new Intent(this, AboutActivity.class));
+                break;
+            case R.id.menu_expense_records:
+                startActivity(new Intent(this, RecordsActivity.class));
                 break;
         }
         return super.onOptionsItemSelected(item);

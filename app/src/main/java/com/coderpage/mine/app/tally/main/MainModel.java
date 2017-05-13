@@ -6,21 +6,20 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.coderpage.concurrency.AsyncTaskExecutor;
 import com.coderpage.framework.Model;
 import com.coderpage.framework.QueryEnum;
 import com.coderpage.framework.SimpleCallback;
 import com.coderpage.framework.UserActionEnum;
-import com.coderpage.concurrency.AsyncTaskExecutor;
-import com.coderpage.utils.LogUtils;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
 import com.coderpage.mine.app.tally.provider.TallyContract;
+import com.coderpage.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import static com.coderpage.utils.LogUtils.LOGE;
-import static com.coderpage.mine.app.tally.main.MainModel.MainQueryEnum.MONTH_TOTAL;
 
 /**
  * @author abner-l. 2017-04-12
@@ -30,8 +29,8 @@ import static com.coderpage.mine.app.tally.main.MainModel.MainQueryEnum.MONTH_TO
 public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainUserActionEnum> {
     private static final String TAG = LogUtils.makeLogTag(MainModel.class);
 
-    public static final String EXTRA_EXPENSE_ID = "extra_expense_id";
-    public static final String EXTRA_LOAD_MORE_START_DATE = "extra_load_more_start_date";
+    static final String EXTRA_EXPENSE_ID = "extra_expense_id";
+    static final String EXTRA_LOAD_MORE_START_DATE = "extra_load_more_start_date";
 
     private Context mContext;
 
@@ -42,7 +41,7 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
     private List<ExpenseItem> mInitExpenseItemList = new ArrayList<>();
     private List<ExpenseItem> mLoadMoreExpenseItemList = new ArrayList<>();
 
-    public MainModel(Context context) {
+    MainModel(Context context) {
         mContext = context;
     }
 
@@ -165,8 +164,8 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
 
     }
 
-    public void queryExpenseAsync(String selection, String[] selectionArgs,
-                                  String order, SimpleCallback<List<ExpenseItem>> callback) {
+    void queryExpenseAsync(String selection, String[] selectionArgs,
+                           String order, SimpleCallback<List<ExpenseItem>> callback) {
         new AsyncTask<Void, Void, List<ExpenseItem>>() {
             @Override
             protected List<ExpenseItem> doInBackground(Void... params) {
@@ -194,7 +193,7 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
         }.executeOnExecutor(AsyncTaskExecutor.executor());
     }
 
-    public void reloadMonthTotalAsync(SimpleCallback<List<ExpenseItem>> callback) {
+    void reloadMonthTotalAsync(SimpleCallback<List<ExpenseItem>> callback) {
         Calendar monthStartCalendar = Calendar.getInstance();
         monthStartCalendar.set(Calendar.DAY_OF_MONTH, 1);
         monthStartCalendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -207,7 +206,7 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
         queryExpenseAsync(selection, selectionArgs, null, callback);
     }
 
-    public void queryExpenseByIdAsync(long expenseId, SimpleCallback<ExpenseItem> callback) {
+    void queryExpenseByIdAsync(long expenseId, SimpleCallback<ExpenseItem> callback) {
         new AsyncTask<Void, Void, ExpenseItem>() {
             @Override
             protected ExpenseItem doInBackground(Void... params) {
@@ -222,7 +221,7 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
         }.executeOnExecutor(AsyncTaskExecutor.executor());
     }
 
-    public void deleteExpenseByIdAsync(long expenseId, SimpleCallback<Integer> callback) {
+    void deleteExpenseByIdAsync(long expenseId, SimpleCallback<Integer> callback) {
         new AsyncTask<Void, Void, Integer>() {
             @Override
             protected Integer doInBackground(Void... params) {
@@ -242,27 +241,27 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
     /**
      * @return 返回本月消费总额
      */
-    public float getMonthTotal() {
+    float getMonthTotal() {
         return mMonthTotal;
     }
 
-    public List<ExpenseItem> getInitExpenseItemList() {
+    List<ExpenseItem> getInitExpenseItemList() {
         return mInitExpenseItemList;
     }
 
-    public List<ExpenseItem> getLoadMoreExpenseItemList() {
+    List<ExpenseItem> getLoadMoreExpenseItemList() {
         return mLoadMoreExpenseItemList;
     }
 
-    public ExpenseItem getNewAddExpenseItem() {
+    ExpenseItem getNewAddExpenseItem() {
         return mNewAddExpenseItem;
     }
 
-    public ExpenseItem getEditedExpenseItem() {
+    ExpenseItem getEditedExpenseItem() {
         return mEditedExpenseItem;
     }
 
-    public List<ExpenseItem> getCurrentMonthExpenseItemList() {
+    List<ExpenseItem> getCurrentMonthExpenseItemList() {
         return mCurrentMonthExpenseItemList;
     }
 
@@ -283,33 +282,7 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
         return item;
     }
 
-    private float calculateMonthTotalExpense() {
-        Calendar monthStartCalendar = Calendar.getInstance();
-        monthStartCalendar.set(Calendar.DAY_OF_MONTH, 1);
-        monthStartCalendar.set(Calendar.HOUR_OF_DAY, 0);
-        monthStartCalendar.set(Calendar.MINUTE, 0);
-        monthStartCalendar.set(Calendar.SECOND, 0);
-        long monthStartDate = monthStartCalendar.getTimeInMillis();
-
-        Cursor cursor = mContext.getContentResolver().query(
-                TallyContract.Expense.CONTENT_URI, MONTH_TOTAL.projection,
-                TallyContract.Expense.TIME + ">=?",
-                new String[]{String.valueOf(monthStartDate)},
-                null);
-        if (cursor == null) {
-            return 0.0F;
-        }
-        float amountTotal = 0.0F;
-        while (cursor.moveToNext()) {
-            float amount = cursor.getFloat(cursor.getColumnIndex(TallyContract.Expense.AMOUNT));
-            amountTotal += amount;
-        }
-        cursor.close();
-
-        return amountTotal;
-    }
-
-    public enum MainQueryEnum implements QueryEnum {
+    enum MainQueryEnum implements QueryEnum {
         MONTH_TOTAL(0, null),
         EXPENSE_INIT(1, null);
 
