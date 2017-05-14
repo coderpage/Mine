@@ -30,16 +30,12 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
     private static final String TAG = LogUtils.makeLogTag(MainModel.class);
 
     static final String EXTRA_EXPENSE_ID = "extra_expense_id";
-    static final String EXTRA_LOAD_MORE_START_DATE = "extra_load_more_start_date";
 
     private Context mContext;
 
     private volatile float mMonthTotal = 0.0f;
-    private volatile ExpenseItem mNewAddExpenseItem;
-    private volatile ExpenseItem mEditedExpenseItem;
     private List<ExpenseItem> mCurrentMonthExpenseItemList = new ArrayList<>();
-    private List<ExpenseItem> mInitExpenseItemList = new ArrayList<>();
-    private List<ExpenseItem> mLoadMoreExpenseItemList = new ArrayList<>();
+    private List<ExpenseItem> mTodayExpenseList = new ArrayList<>();
 
     MainModel(Context context) {
         mContext = context;
@@ -70,36 +66,6 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
                     callback.onModelUpdated(MainModel.this, action);
                 });
                 break;
-            case NEW_EXPENSE_CREATED:
-                if (args == null || !args.containsKey(EXTRA_EXPENSE_ID)) {
-                    LOGE(TAG, "action " + action.getId() + " request args with " + EXTRA_EXPENSE_ID);
-                    return;
-                }
-                long expenseId = args.getLong(EXTRA_EXPENSE_ID);
-                queryExpenseByIdAsync(expenseId, (item) -> {
-                    mNewAddExpenseItem = item;
-                    if (mNewAddExpenseItem == null) {
-                        callback.onError(action);
-                    } else {
-                        callback.onModelUpdated(MainModel.this, action);
-                    }
-                });
-                break;
-            case EXPENSE_EDITED:
-                if (args == null || !args.containsKey(EXTRA_EXPENSE_ID)) {
-                    LOGE(TAG, "action " + action.getId() + " request args with " + EXTRA_EXPENSE_ID);
-                    return;
-                }
-                long editedExpenseId = args.getLong(EXTRA_EXPENSE_ID);
-                queryExpenseByIdAsync(editedExpenseId, (item) -> {
-                    if (item == null) {
-                        callback.onError(action);
-                    } else {
-                        mEditedExpenseItem = item;
-                        callback.onModelUpdated(MainModel.this, action);
-                    }
-                });
-                break;
             case EXPENSE_DELETE:
                 if (args == null || !args.containsKey(EXTRA_EXPENSE_ID)) {
                     LOGE(TAG, "action " + action.getId() + " request args with " + EXTRA_EXPENSE_ID);
@@ -114,20 +80,19 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
                     }
                 });
                 break;
-            case LOAD_MORE:
-                if (args == null || !args.containsKey(EXTRA_LOAD_MORE_START_DATE)) {
-                    LOGE(TAG, "action " + action.getId()
-                            + " request args with " + EXTRA_LOAD_MORE_START_DATE);
-                    return;
-                }
-                long loadMoreStartDate = args.getLong(EXTRA_LOAD_MORE_START_DATE);
+            case REFRESH_TODAY_EXPENSE:
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                long todayStartTime = calendar.getTimeInMillis();
                 queryExpenseAsync(
-                        TallyContract.Expense.TIME + "<?",
-                        new String[]{String.valueOf(loadMoreStartDate)},
-                        "expense_time DESC LIMIT 15",
+                        TallyContract.Expense.TIME + ">=?",
+                        new String[]{String.valueOf(todayStartTime)},
+                        "expense_time DESC",
                         (result) -> {
-                            mLoadMoreExpenseItemList.clear();
-                            mLoadMoreExpenseItemList.addAll(result);
+                            mTodayExpenseList.clear();
+                            mTodayExpenseList.addAll(result);
                             callback.onModelUpdated(MainModel.this, action);
                         });
                 break;
@@ -150,11 +115,20 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
                 });
                 break;
             case EXPENSE_INIT:
-                queryExpenseAsync(null, null, "expense_time DESC LIMIT 15", (result) -> {
-                    mInitExpenseItemList.clear();
-                    mInitExpenseItemList.addAll(result);
-                    callback.onModelUpdated(MainModel.this, query);
-                });
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                long todayStartTime = calendar.getTimeInMillis();
+                queryExpenseAsync(
+                        TallyContract.Expense.TIME + ">=?",
+                        new String[]{String.valueOf(todayStartTime)},
+                        "expense_time DESC",
+                        (result) -> {
+                            mTodayExpenseList.clear();
+                            mTodayExpenseList.addAll(result);
+                            callback.onModelUpdated(MainModel.this, query);
+                        });
                 break;
         }
     }
@@ -164,7 +138,7 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
 
     }
 
-    void queryExpenseAsync(String selection, String[] selectionArgs,
+   private void queryExpenseAsync(String selection, String[] selectionArgs,
                            String order, SimpleCallback<List<ExpenseItem>> callback) {
         new AsyncTask<Void, Void, List<ExpenseItem>>() {
             @Override
@@ -193,7 +167,7 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
         }.executeOnExecutor(AsyncTaskExecutor.executor());
     }
 
-    void reloadMonthTotalAsync(SimpleCallback<List<ExpenseItem>> callback) {
+   private void reloadMonthTotalAsync(SimpleCallback<List<ExpenseItem>> callback) {
         Calendar monthStartCalendar = Calendar.getInstance();
         monthStartCalendar.set(Calendar.DAY_OF_MONTH, 1);
         monthStartCalendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -204,21 +178,6 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
         String selection = TallyContract.Expense.TIME + ">=?";
         String[] selectionArgs = new String[]{String.valueOf(monthStartDate)};
         queryExpenseAsync(selection, selectionArgs, null, callback);
-    }
-
-    void queryExpenseByIdAsync(long expenseId, SimpleCallback<ExpenseItem> callback) {
-        new AsyncTask<Void, Void, ExpenseItem>() {
-            @Override
-            protected ExpenseItem doInBackground(Void... params) {
-                return queryExpenseItemById(expenseId);
-            }
-
-            @Override
-            protected void onPostExecute(ExpenseItem item) {
-                callback.success(item);
-                mNewAddExpenseItem = item;
-            }
-        }.executeOnExecutor(AsyncTaskExecutor.executor());
     }
 
     void deleteExpenseByIdAsync(long expenseId, SimpleCallback<Integer> callback) {
@@ -245,24 +204,12 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
         return mMonthTotal;
     }
 
-    List<ExpenseItem> getInitExpenseItemList() {
-        return mInitExpenseItemList;
-    }
-
-    List<ExpenseItem> getLoadMoreExpenseItemList() {
-        return mLoadMoreExpenseItemList;
-    }
-
-    ExpenseItem getNewAddExpenseItem() {
-        return mNewAddExpenseItem;
-    }
-
-    ExpenseItem getEditedExpenseItem() {
-        return mEditedExpenseItem;
-    }
-
     List<ExpenseItem> getCurrentMonthExpenseItemList() {
         return mCurrentMonthExpenseItemList;
+    }
+
+    List<ExpenseItem> getTodayExpenseList() {
+        return mTodayExpenseList;
     }
 
     private ExpenseItem queryExpenseItemById(long id) {
@@ -307,10 +254,8 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
 
     public enum MainUserActionEnum implements UserActionEnum {
         RELOAD_MONTH_TOTAL(1),
-        EXPENSE_EDITED(2),
-        EXPENSE_DELETE(3),
-        NEW_EXPENSE_CREATED(4),
-        LOAD_MORE(5);
+        EXPENSE_DELETE(2),
+        REFRESH_TODAY_EXPENSE(3);
 
         private int id;
 

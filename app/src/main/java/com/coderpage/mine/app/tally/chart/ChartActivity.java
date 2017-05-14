@@ -88,8 +88,12 @@ public class ChartActivity extends BaseActivity implements
         mMonthTotalTv = (TextView) findViewById(R.id.tvMonthExpenseTotal);
         mPieChart = (PieChart) findViewById(R.id.pieChart);
         mCategoryMonthRecycler = (RecyclerView) findViewById(R.id.recyclerCategoryExpense);
-        mCategoryMonthRecycler.setLayoutManager(
-                new LinearLayoutManager(ChartActivity.this, LinearLayoutManager.VERTICAL, false));
+        LinearLayoutManager linearLayoutManager =
+                new LinearLayoutManager(ChartActivity.this, LinearLayoutManager.VERTICAL, false);
+        linearLayoutManager.setSmoothScrollbarEnabled(true);
+        mCategoryMonthRecycler.setLayoutManager(linearLayoutManager);
+        mCategoryMonthRecycler.setHasFixedSize(true);
+        mCategoryMonthRecycler.setNestedScrollingEnabled(false);
         mMonthCategoryAdapter = new MonthCategoryExpenseAdapter(ChartActivity.this);
         mCategoryMonthRecycler.setAdapter(mMonthCategoryAdapter);
         setupPieChart();
@@ -141,6 +145,7 @@ public class ChartActivity extends BaseActivity implements
         mPieChart.getLegend().setOrientation(Legend.LegendOrientation.HORIZONTAL);
         mPieChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         mPieChart.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        mPieChart.getLegend().setWordWrapEnabled(true);
     }
 
     private void reDrawPieChart(List<ExpenseItem> items) {

@@ -7,42 +7,57 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_height="300dp"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left|center_vertical"
-            android:layout_marginLeft="@dimen/padding_normal"
-            android:orientation="vertical">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:paddingLeft="@dimen/padding_normal"
+            android:paddingTop="@dimen/padding_normal">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/tally_sum_of_amount_month"
-                android:textColor="@color/appTextColorPrimary"
-                android:textSize="@dimen/app_text_size_medium"/>
+                android:layout_gravity="left|center_vertical"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvMonthAmount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_normal"
-                android:gravity="center"
-                android:textColor="@color/appTextColorPrimary"
-                android:textSize="26dp"/>
-        </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left|center_vertical"
+                    android:text="@string/tally_sum_of_amount_month"
+                    android:textColor="@color/appTextColorSecondary"
+                    android:textSize="@dimen/app_text_size_medium"/>
+
+                <TextView
+                    android:id="@+id/tvMonthAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left|center_vertical"
+                    android:textColor="@color/appTextColorPrimary"
+                    android:textSize="32dp"/>
+            </LinearLayout>
+
+        </FrameLayout>
+
+
+        <View
+            style="@style/Divider"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginBottom="@dimen/padding_micro"
+            android:layout_marginTop="@dimen/padding_micro"
+            android:paddingLeft="@dimen/padding_normal"
+            android:paddingRight="@dimen/padding_normal"/>
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/chartCurrentMonth"
-            android:layout_width="0dp"
-            android:layout_height="150dp"
-            android:layout_gravity="center_vertical|end"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/padding_normal"
-            android:layout_marginRight="@dimen/padding_normal"
-            android:layout_weight="1"/>
+            android:layout_marginRight="@dimen/padding_normal"/>
 
     </LinearLayout>
 

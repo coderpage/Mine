@@ -35,10 +35,17 @@
                 android:layout_marginTop="@dimen/padding_normal"
                 android:background="@color/white">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerCategoryExpense"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:descendantFocusability="blocksDescendants">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyclerCategoryExpense"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
 
                 <View
                     style="@style/Divider"

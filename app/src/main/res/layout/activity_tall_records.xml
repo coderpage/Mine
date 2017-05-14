@@ -16,7 +16,7 @@
         android:layout_height="match_parent">
 
         <com.coderpage.mine.app.tally.ui.widget.LoadMoreRecyclerView
-            android:id="@+id/recyclerHistoryRecord"
+            android:id="@+id/recyclerTodayRecord"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingTop="@dimen/spacing_normal"/>

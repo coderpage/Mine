@@ -8,38 +8,68 @@
     android:fitsSystemWindows="true"
     app:shadowDrawable="@drawable/header_shadow">
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/lyContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="65dp">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-            <include
-                android:id="@+id/lyMonthInfo"
-                layout="@layout/tally_content_month_info"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_gravity="top"
-                android:layout_marginTop="16dp"/>
-
-            <com.coderpage.mine.app.tally.ui.widget.LoadMoreRecyclerView
-                android:id="@+id/recyclerHistoryRecord"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_normal"
-                />
-        </LinearLayout>
+                android:orientation="vertical">
 
+                <include
+                    android:id="@+id/lyMonthInfo"
+                    layout="@layout/tally_content_month_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_marginTop="@dimen/padding_normal"/>
+
+                <TextView
+                    android:id="@+id/tvTodayExpenseRecordTip"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:gravity="center"
+                    android:textColor="@color/appTextColorSecondary"
+                    android:textSize="@dimen/app_text_size_medium"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:descendantFocusability="blocksDescendants">
+
+                    <com.coderpage.mine.app.tally.ui.widget.LoadMoreRecyclerView
+                        android:id="@+id/recyclerTodayRecord"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <include
+                        layout="@layout/divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_gravity="top"/>
+
+                    <include
+                        layout="@layout/divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_gravity="bottom"/>
+                </FrameLayout>
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="65dp"
-            android:layout_gravity="bottom"
             android:background="@color/white">
 
             <TextView
@@ -63,7 +93,7 @@
 
         </FrameLayout>
 
-    </FrameLayout>
+    </LinearLayout>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"

@@ -12,19 +12,21 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.coderpage.framework.UpdatableView;
+import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.about.AboutActivity;
 import com.coderpage.mine.app.tally.chart.ChartActivity;
-import com.coderpage.mine.app.tally.edit.ExpenseEditActivity;
-import com.coderpage.mine.app.tally.records.RecordsActivity;
-import com.coderpage.utils.LogUtils;
-import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
+import com.coderpage.mine.app.tally.edit.ExpenseEditActivity;
 import com.coderpage.mine.app.tally.eventbus.EventRecordAdd;
 import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
+import com.coderpage.mine.app.tally.records.RecordsActivity;
 import com.coderpage.mine.app.tally.ui.widget.LoadMoreRecyclerView;
 import com.coderpage.mine.ui.BaseActivity;
 import com.coderpage.mine.ui.widget.DrawShadowFrameLayout;
 import com.coderpage.mine.utils.UIUtils;
+import com.coderpage.utils.LogUtils;
+import com.coderpage.utils.ResUtils;
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
@@ -55,12 +57,13 @@ public class MainActivity extends BaseActivity
     private static final String TAG = LogUtils.makeLogTag(MainActivity.class);
 
     DecimalFormat mAmountDecimalFormat = new DecimalFormat(".00");
-    String mAmountFormat;
+    //    String mAmountFormat;
     MainPresenter mPresenter;
     UserActionListener mUserActionListener;
 
     LoadMoreRecyclerView mHistoryRecordsRecycler;
     TextView mSumOfMonthAmountTv;
+    TextView mTodayExpenseTipTv;
     MainHistoryExpenseAdapter mAllExpenseAdapter;
 
     PieChart mPieChart;
@@ -69,32 +72,24 @@ public class MainActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tally);
-        mAmountFormat = getString(R.string.tally_amount_cny);
         initView();
         initPresenter();
         EventBus.getDefault().register(this);
     }
 
     private void initView() {
-        mHistoryRecordsRecycler = ((LoadMoreRecyclerView) findViewById(R.id.recyclerHistoryRecord));
-        mHistoryRecordsRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mHistoryRecordsRecycler = ((LoadMoreRecyclerView) findViewById(R.id.recyclerTodayRecord));
+        LinearLayoutManager linearLayoutManager =
+                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        linearLayoutManager.setSmoothScrollbarEnabled(true);
+        linearLayoutManager.setAutoMeasureEnabled(true);
+        mHistoryRecordsRecycler.setLayoutManager(linearLayoutManager);
+        mHistoryRecordsRecycler.setHasFixedSize(true);
+        mHistoryRecordsRecycler.setNestedScrollingEnabled(false);
         mAllExpenseAdapter = new MainHistoryExpenseAdapter(this);
         mHistoryRecordsRecycler.setAdapter(mAllExpenseAdapter);
-        mHistoryRecordsRecycler.setPullActionListener(new LoadMoreRecyclerView.PullActionListener() {
-
-            @Override
-            public void onPullUpLoadMore() {
-                ArrayList<ExpenseItem> dataList = mAllExpenseAdapter.getDataList();
-                long loadMoreStartDate = System.currentTimeMillis();
-                if (!dataList.isEmpty()) {
-                    loadMoreStartDate = dataList.get(dataList.size() - 1).getTime();
-                }
-                Bundle args = new Bundle(1);
-                args.putLong(MainModel.EXTRA_LOAD_MORE_START_DATE, loadMoreStartDate);
-                mUserActionListener.onUserAction(MainModel.MainUserActionEnum.LOAD_MORE, args);
-            }
-        });
         mSumOfMonthAmountTv = ((TextView) findViewById(R.id.tvMonthAmount));
+        mTodayExpenseTipTv = ((TextView) findViewById(R.id.tvTodayExpenseRecordTip));
 
         findViewById(R.id.btnAddRecord).setOnClickListener(mOnClickListener);
         findViewById(R.id.lyMonthInfo).setOnClickListener(mOnClickListener);
@@ -177,7 +172,7 @@ public class MainActivity extends BaseActivity
     public void onEventRecordAdd(EventRecordAdd event) {
         Bundle args = new Bundle(1);
         args.putLong(MainModel.EXTRA_EXPENSE_ID, event.getExpenseItem().getId());
-        mUserActionListener.onUserAction(MainModel.MainUserActionEnum.NEW_EXPENSE_CREATED, args);
+        mUserActionListener.onUserAction(MainModel.MainUserActionEnum.REFRESH_TODAY_EXPENSE, null);
         mUserActionListener.onUserAction(MainModel.MainUserActionEnum.RELOAD_MONTH_TOTAL, null);
     }
 
@@ -185,7 +180,7 @@ public class MainActivity extends BaseActivity
     public void onEventRecordUpdate(EventRecordUpdate event) {
         Bundle args = new Bundle(1);
         args.putLong(MainModel.EXTRA_EXPENSE_ID, event.getExpenseItem().getId());
-        mUserActionListener.onUserAction(MainModel.MainUserActionEnum.EXPENSE_EDITED, args);
+        mUserActionListener.onUserAction(MainModel.MainUserActionEnum.REFRESH_TODAY_EXPENSE, null);
         mUserActionListener.onUserAction(MainModel.MainUserActionEnum.RELOAD_MONTH_TOTAL, null);
     }
 
@@ -193,13 +188,13 @@ public class MainActivity extends BaseActivity
     public void displayData(MainModel model, MainModel.MainQueryEnum query) {
         switch (query) {
             case MONTH_TOTAL:
-                String format = String.format(
-                        mAmountFormat, mAmountDecimalFormat.format(model.getMonthTotal()));
+                String format = mAmountDecimalFormat.format(model.getMonthTotal());
                 mSumOfMonthAmountTv.setText(format);
                 reDrawPieChart(model.getCurrentMonthExpenseItemList());
                 break;
             case EXPENSE_INIT:
-                mAllExpenseAdapter.refreshData(model.getInitExpenseItemList());
+                mAllExpenseAdapter.refreshData(model.getTodayExpenseList());
+                refreshToadyExpenseTip(model);
                 break;
         }
     }
@@ -215,39 +210,40 @@ public class MainActivity extends BaseActivity
                                         boolean success) {
         LOGI(TAG, "displayUserActionResult-> action=" + userAction.getId());
         switch (userAction) {
-            case NEW_EXPENSE_CREATED:
-                if (success) {
-                    ExpenseItem newAddExpenseItem = model.getNewAddExpenseItem();
-                    mAllExpenseAdapter.addNewItem(newAddExpenseItem);
-                }
-                break;
             case RELOAD_MONTH_TOTAL:
                 if (success) {
-                    String format = String.format(
-                            mAmountFormat, mAmountDecimalFormat.format(model.getMonthTotal()));
+                    String format = mAmountDecimalFormat.format(model.getMonthTotal());
                     mSumOfMonthAmountTv.setText(format);
                     reDrawPieChart(model.getCurrentMonthExpenseItemList());
                 }
                 break;
-            case EXPENSE_EDITED:
-                if (success) {
-                    ExpenseItem editedExpenseItem = model.getEditedExpenseItem();
-                    mAllExpenseAdapter.refreshItem(editedExpenseItem);
-                }
-                break;
             case EXPENSE_DELETE:
                 if (success) {
-                    long deletedId = args.getLong(MainModel.EXTRA_EXPENSE_ID);
-                    mAllExpenseAdapter.removeItem(deletedId);
                     mUserActionListener.onUserAction(MainModel.MainUserActionEnum.RELOAD_MONTH_TOTAL, null);
+                    mUserActionListener.onUserAction(MainModel.MainUserActionEnum.REFRESH_TODAY_EXPENSE, null);
                 }
                 break;
-            case LOAD_MORE:
+            case REFRESH_TODAY_EXPENSE:
                 if (success) {
-                    mAllExpenseAdapter.addHistoryItems(model.getLoadMoreExpenseItemList());
+                    mAllExpenseAdapter.refreshData(model.getTodayExpenseList());
+                    refreshToadyExpenseTip(model);
                 }
-                mPresenter.setOnLoadMore(false);
                 break;
+        }
+    }
+
+    private void refreshToadyExpenseTip(MainModel model) {
+        List<ExpenseItem> todayExpenseList = model.getTodayExpenseList();
+        if (todayExpenseList.isEmpty()) {
+            mTodayExpenseTipTv.setText(R.string.tally_today_no_expense_record_tip);
+        } else {
+            float todayTotal = 0f;
+            for (ExpenseItem expenseItem : todayExpenseList) {
+                todayTotal += expenseItem.getAmount();
+            }
+            String totalFormat = mAmountDecimalFormat.format(todayTotal);
+            mTodayExpenseTipTv.setText(
+                    ResUtils.getString(this, R.string.tally_toady_expense_total, totalFormat));
         }
     }
 
@@ -291,15 +287,16 @@ public class MainActivity extends BaseActivity
         PieData pieData = new PieData(pieDataSet);
         mPieChart.setData(pieData);
         mPieChart.setDescription(null);
-//        mPieChart.setEntryLabelTextSize(9f);
-        mPieChart.setCenterTextSize(20f);
         mPieChart.setDrawEntryLabels(false);
-        mPieChart.getLegend().setEnabled(true);
-        mPieChart.getLegend().setOrientation(Legend.LegendOrientation.VERTICAL);
-        mPieChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        mPieChart.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.CENTER);
+        Legend legend = mPieChart.getLegend();
+        legend.setEnabled(true);
+        legend.setOrientation(Legend.LegendOrientation.VERTICAL);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.CENTER);
+        legend.setTextColor(ResUtils.getColor(MainActivity.this, R.color.appTextColorSecondary));
+        legend.setWordWrapEnabled(true);
 
-        mPieChart.invalidate();
+        mPieChart.animateY(1400, Easing.EasingOption.EaseInOutQuart);
     }
 
     @Override

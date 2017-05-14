@@ -1,6 +1,8 @@
 package com.coderpage.utils;
 
 import android.content.Context;
+import android.os.Build;
+import android.support.annotation.ColorRes;
 import android.support.annotation.IntegerRes;
 import android.support.annotation.StringRes;
 
@@ -20,5 +22,13 @@ public class ResUtils {
 
     public static String getString(Context context, @StringRes int strId, Object... formatArgs) {
         return context.getResources().getString(strId, formatArgs);
+    }
+
+    public static int getColor(Context context, @ColorRes int colorResId) {
+        if (Build.VERSION.SDK_INT >= 23) {
+            return context.getColor(colorResId);
+        } else {
+            return context.getResources().getColor(colorResId);
+        }
     }
 }

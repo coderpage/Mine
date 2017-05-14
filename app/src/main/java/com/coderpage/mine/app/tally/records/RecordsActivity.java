@@ -46,7 +46,7 @@ public class RecordsActivity extends BaseActivity implements UpdatableView<Recor
     }
 
     private void initView() {
-        mHistoryRecordsRecycler = ((LoadMoreRecyclerView) findViewById(R.id.recyclerHistoryRecord));
+        mHistoryRecordsRecycler = ((LoadMoreRecyclerView) findViewById(R.id.recyclerTodayRecord));
         mHistoryRecordsRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mHistoryRecordsAdapter = new HistoryRecordsAdapter(this);
         mHistoryRecordsRecycler.setAdapter(mHistoryRecordsAdapter);
