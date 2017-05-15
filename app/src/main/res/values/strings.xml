@@ -13,6 +13,7 @@
     <string name="tally_toolbar_title_about">关于</string>
     <string name="tally_toolbar_title_chart">图表分析</string>
     <string name="tally_toolbar_title_records">消费记录</string>
+    <string name="tally_toolbar_title_category_records">流水</string>
 
     <!-- tally chart activity -->
     <string name="tally_switch_2_daily_expense">切换日消费情况</string>

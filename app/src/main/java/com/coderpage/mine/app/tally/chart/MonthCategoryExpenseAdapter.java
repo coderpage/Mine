@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.chart.data.MonthCategoryExpense;
+import com.coderpage.mine.app.tally.records.CategoryRecordsActivity;
 import com.coderpage.utils.ResUtils;
 
 import java.text.DecimalFormat;
@@ -55,7 +56,7 @@ class MonthCategoryExpenseAdapter
         notifyDataSetChanged();
     }
 
-    class MViewHolder extends RecyclerView.ViewHolder {
+    class MViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private MonthCategoryExpense mExpense;
 
         private AppCompatImageView mIconIv;
@@ -65,10 +66,20 @@ class MonthCategoryExpenseAdapter
 
         MViewHolder(View view) {
             super(view);
+            view.setOnClickListener(this);
             mIconIv = (AppCompatImageView) view.findViewById(R.id.ivCategoryIcon);
             mCategoryNameTv = (TextView) view.findViewById(R.id.tvCategoryName);
             mPercentTv = (TextView) view.findViewById(R.id.tvCategoryPercent);
             mAmountTv = (TextView) view.findViewById(R.id.tvCategoryExpenseTotal);
+        }
+
+        @Override
+        public void onClick(View v) {
+            CategoryRecordsActivity.open(
+                    mActivity,
+                    mExpense.getMonth().getYear(),
+                    mExpense.getMonth().getMonth(),
+                    mExpense.getCategoryId());
         }
 
         void setData(MonthCategoryExpense expense) {

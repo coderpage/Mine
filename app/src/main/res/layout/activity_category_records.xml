@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     app:shadowDrawable="@drawable/header_shadow"
-    tools:context=".app.tally.records.RecordsActivity">
+    tools:context=".app.tally.records.CategoryRecordsActivity">
 
     <FrameLayout
         android:id="@+id/lyContainer"
@@ -18,9 +18,8 @@
         <com.coderpage.mine.app.tally.ui.widget.LoadMoreRecyclerView
             android:id="@+id/recyclerRecord"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:paddingTop="@dimen/spacing_normal"/>
-
     </FrameLayout>
 
     <android.support.v7.widget.Toolbar
