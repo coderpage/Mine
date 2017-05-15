@@ -70,10 +70,10 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
                 Calendar calendar = Calendar.getInstance();
                 int year = calendar.get(Calendar.YEAR);
                 int month = calendar.get(Calendar.MONTH) + 1;
-                mDisplayMonth = new Month(year, month);
                 loadMonthExpense(year, month, new Callback<List<ExpenseItem>, IError>() {
                     @Override
                     public void success(List<ExpenseItem> items) {
+                        mDisplayMonth = new Month(year, month);
                         mMonthExpenseList.clear();
                         mMonthExpenseList.addAll(items);
                         mMonthDailyExpenseList.clear();
@@ -124,6 +124,7 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
                 loadMonthExpense(year, month, new Callback<List<ExpenseItem>, IError>() {
                     @Override
                     public void success(List<ExpenseItem> items) {
+                        mDisplayMonth = new Month(year, month);
                         mMonthExpenseList.clear();
                         mMonthExpenseList.addAll(items);
                         mMonthDailyExpenseList.clear();
