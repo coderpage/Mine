@@ -91,10 +91,11 @@ public class MainActivity extends BaseActivity
         mSumOfMonthAmountTv = ((TextView) findViewById(R.id.tvMonthAmount));
         mTodayExpenseTipTv = ((TextView) findViewById(R.id.tvTodayExpenseRecordTip));
 
+        mPieChart = (PieChart) findViewById(R.id.chartCurrentMonth);
+        mPieChart.setTouchEnabled(false);
+
         findViewById(R.id.btnAddRecord).setOnClickListener(mOnClickListener);
         findViewById(R.id.lyMonthInfo).setOnClickListener(mOnClickListener);
-
-        mPieChart = (PieChart) findViewById(R.id.chartCurrentMonth);
     }
 
     private void initPresenter() {
