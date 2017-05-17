@@ -1,6 +1,8 @@
 package com.coderpage.mine.app.tally.chart;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
@@ -48,8 +50,6 @@ import java.util.Map;
 import static com.coderpage.mine.R.id.lineChart;
 import static com.coderpage.mine.app.tally.chart.ChartModel.ChartQueryEnum;
 import static com.coderpage.mine.app.tally.chart.ChartModel.ChartUserActionEnum;
-import static com.coderpage.mine.app.tally.chart.ChartModel.EXTRA_MONTH;
-import static com.coderpage.mine.app.tally.chart.ChartModel.EXTRA_YEAR;
 
 /**
  * @author abner-l. 2017-04-23
@@ -57,6 +57,9 @@ import static com.coderpage.mine.app.tally.chart.ChartModel.EXTRA_YEAR;
 
 public class ChartActivity extends BaseActivity implements
         UpdatableView<ChartModel, ChartModel.ChartQueryEnum, ChartModel.ChartUserActionEnum> {
+
+    private static final String EXTRA_YEAR = "extra_year";
+    private static final String EXTRA_MONTH = "extra_month";
 
     private LineChart mLineChart;
     private TextView mMonthTv;
@@ -68,6 +71,8 @@ public class ChartActivity extends BaseActivity implements
     private RecyclerView mCategoryMonthRecycler;
     private MonthCategoryExpenseAdapter mMonthCategoryAdapter;
 
+    private int mInitYear;
+    private int mInitMonth;
     private Presenter mPresenter;
     private UserActionListener mUserActionListener;
 
@@ -75,8 +80,16 @@ public class ChartActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tall_chart);
+        initData();
         initView();
         initPresenter();
+    }
+
+    private void initData() {
+        Intent intent = getIntent();
+        if (intent == null) return;
+        mInitYear = intent.getIntExtra(EXTRA_YEAR, -1);
+        mInitMonth = intent.getIntExtra(EXTRA_MONTH, -1);
     }
 
     private void initView() {
@@ -103,9 +116,26 @@ public class ChartActivity extends BaseActivity implements
     }
 
     private void initPresenter() {
-        mPresenter = new PresenterImpl(new ChartModel(this),
-                this, ChartUserActionEnum.values(), ChartQueryEnum.values());
-        mPresenter.loadInitialQueries();
+        if (mInitYear != -1 && mInitMonth != -1) {
+            mPresenter = new PresenterImpl(new ChartModel(this),
+                    this, ChartUserActionEnum.values(), null);
+            mPresenter.loadInitialQueries();
+            Bundle args = new Bundle(2);
+            args.putInt(EXTRA_YEAR, mInitYear);
+            args.putInt(EXTRA_MONTH, mInitMonth);
+            mUserActionListener.onUserAction(ChartUserActionEnum.SWITCH_MONTH, args);
+        } else {
+            mPresenter = new PresenterImpl(new ChartModel(this),
+                    this, ChartUserActionEnum.values(), ChartQueryEnum.values());
+            mPresenter.loadInitialQueries();
+        }
+    }
+
+    public static void open(Activity activity, int year, int month) {
+        Intent intent = new Intent(activity, ChartActivity.class);
+        intent.putExtra(EXTRA_YEAR, year);
+        intent.putExtra(EXTRA_MONTH, month);
+        activity.startActivity(intent);
     }
 
     @Override
@@ -269,7 +299,8 @@ public class ChartActivity extends BaseActivity implements
                 }
                 break;
             case SWITCH_MONTH:
-                if (mMonthSwitchPopupWindow.isShowing()) {
+                if (mMonthSwitchPopupWindow != null
+                        && mMonthSwitchPopupWindow.isShowing()) {
                     mMonthSwitchPopupWindow.dismiss();
                 }
                 if (success) {

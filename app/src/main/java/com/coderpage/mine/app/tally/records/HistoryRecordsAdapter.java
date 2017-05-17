@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
+import com.coderpage.mine.app.tally.chart.ChartActivity;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
 import com.coderpage.mine.app.tally.edit.ExpenseEditActivity;
 import com.coderpage.mine.app.tally.main.MainModel;
@@ -23,6 +24,7 @@ import com.coderpage.mine.ui.widget.ButtonGroupDialog;
 import com.coderpage.utils.LogUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -41,7 +43,7 @@ class HistoryRecordsAdapter extends RecyclerView.Adapter<HistoryRecordsAdapter.E
     private UpdatableView.UserActionListener mUserActionListener;
     private String mAmountFormat;
 
-    private ArrayList<ExpenseItem> mExpenseItemList = new ArrayList<>();
+    private ArrayList<RecyclerItem> mExpenseItemList = new ArrayList<>();
 
     HistoryRecordsAdapter(Activity activity) {
         mActivity = activity;
@@ -55,42 +57,60 @@ class HistoryRecordsAdapter extends RecyclerView.Adapter<HistoryRecordsAdapter.E
     }
 
     @Override
+    public int getItemViewType(int position) {
+        return mExpenseItemList.get(position).getType();
+    }
+
+    @Override
     public ExpenseItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ExpenseItemViewHolder(mInflater.inflate(R.layout.tally_recycle_item_expense_record, null));
+        if (viewType == RecyclerItem.TYPE_EXPENSE_ITEM) {
+            return new ExpenseItemViewHolder(
+                    mInflater.inflate(R.layout.tally_recycle_item_expense_record, parent, false), viewType);
+        } else {
+            return new ExpenseItemViewHolder(
+                    mInflater.inflate(
+                            R.layout.tally_recycler_item_expense_month_title, parent, false), viewType);
+        }
     }
 
     @Override
     public void onBindViewHolder(ExpenseItemViewHolder holder, int position) {
-        ExpenseItem expenseItem = mExpenseItemList.get(position);
-        holder.setExpense(expenseItem);
+        holder.setExpense(mExpenseItemList.get(position));
     }
 
     void setUserActionListener(UpdatableView.UserActionListener userActionListener) {
         mUserActionListener = userActionListener;
     }
 
-    class ExpenseItemViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
+    class ExpenseItemViewHolder extends RecyclerView.ViewHolder
+            implements View.OnLongClickListener, View.OnClickListener {
         private AppCompatImageView mCategoryIcon;
         private TextView mAmountTv;
         private TextView mTimeTv;
         private TextView mCategoryNameTv;
         private TextView mDescTv;
-        private ExpenseItem mExpense;
+        private TextView mMonthTv;
+        private RecyclerItem mRecyclerItem;
 
-        ExpenseItemViewHolder(View view) {
+        ExpenseItemViewHolder(View view, int type) {
             super(view);
-            mAmountTv = ((TextView) view.findViewById(R.id.tvAmount));
-            mTimeTv = ((TextView) view.findViewById(R.id.tvTime));
-            mCategoryNameTv = ((TextView) view.findViewById(R.id.tvCategoryName));
-            mDescTv = ((TextView) view.findViewById(R.id.tvRecordDec));
-            mCategoryIcon = ((AppCompatImageView) view.findViewById(R.id.ivCategoryIcon));
+            view.setOnClickListener(this);
             view.setOnLongClickListener(this);
+            if (type == RecyclerItem.TYPE_EXPENSE_ITEM) {
+                mAmountTv = ((TextView) view.findViewById(R.id.tvAmount));
+                mTimeTv = ((TextView) view.findViewById(R.id.tvTime));
+                mCategoryNameTv = ((TextView) view.findViewById(R.id.tvCategoryName));
+                mDescTv = ((TextView) view.findViewById(R.id.tvRecordDec));
+                mCategoryIcon = ((AppCompatImageView) view.findViewById(R.id.ivCategoryIcon));
+            } else {
+                mMonthTv = (TextView) view.findViewById(R.id.tvMonth);
+            }
         }
 
         @Override
         public boolean onLongClick(View v) {
-            if (mExpense == null) return true;
-
+            if (mRecyclerItem == null || mRecyclerItem.getExpenseItem() == null) return true;
+            if (mRecyclerItem.getType() == RecyclerItem.TYPE_MONTH_TITLE) return true;
             ButtonGroupDialog dialog = new ButtonGroupDialog(mActivity);
             dialog.setCancelable(true);
             dialog.setCanceledOnTouchOutside(true);
@@ -98,7 +118,7 @@ class HistoryRecordsAdapter extends RecyclerView.Adapter<HistoryRecordsAdapter.E
                 @Override
                 public void onClick(DialogInterface dialog, View v) {
                     Bundle args = new Bundle(1);
-                    args.putLong(RecordsModel.EXTRA_EXPENSE_ID, mExpense.getId());
+                    args.putLong(RecordsModel.EXTRA_EXPENSE_ID, mRecyclerItem.getExpenseItem().getId());
                     mUserActionListener.onUserAction(MainModel.MainUserActionEnum.EXPENSE_DELETE, args);
                     dialog.dismiss();
                 }
@@ -107,7 +127,7 @@ class HistoryRecordsAdapter extends RecyclerView.Adapter<HistoryRecordsAdapter.E
                 @Override
                 public void onClick(DialogInterface dialog, View v) {
                     Intent intent = new Intent(mActivity, ExpenseEditActivity.class);
-                    intent.putExtra(ExpenseEditActivity.EXTRA_RECORD_ID, mExpense.getId());
+                    intent.putExtra(ExpenseEditActivity.EXTRA_RECORD_ID, mRecyclerItem.getExpenseItem().getId());
                     mActivity.startActivity(intent);
                     dialog.dismiss();
                 }
@@ -116,14 +136,25 @@ class HistoryRecordsAdapter extends RecyclerView.Adapter<HistoryRecordsAdapter.E
             return true;
         }
 
-        private void setExpense(ExpenseItem expense) {
-            mExpense = expense;
-            if (mExpense == null) return;
-            setAmount(String.valueOf(mExpense.getAmount()));
-            setCategoryName(mExpense.getCategoryName());
-            setTime(mExpense.getTime());
-            setCategoryIcon(mExpense.getCategoryIconResId());
-            setDesc(mExpense.getDesc());
+        @Override
+        public void onClick(View v) {
+            if (mRecyclerItem == null) return;
+            if (mRecyclerItem.getType() == RecyclerItem.TYPE_EXPENSE_ITEM) return;
+            ChartActivity.open(mActivity, mRecyclerItem.getYear(), mRecyclerItem.getMonth());
+        }
+
+        private void setExpense(RecyclerItem recyclerItem) {
+            mRecyclerItem = recyclerItem;
+            if (mRecyclerItem == null) return;
+            if (recyclerItem.getType() == RecyclerItem.TYPE_EXPENSE_ITEM) {
+                setAmount(String.valueOf(mRecyclerItem.getExpenseItem().getAmount()));
+                setCategoryName(mRecyclerItem.getExpenseItem().getCategoryName());
+                setTime(mRecyclerItem.getExpenseItem().getTime());
+                setCategoryIcon(mRecyclerItem.getExpenseItem().getCategoryIconResId());
+                setDesc(mRecyclerItem.getExpenseItem().getDesc());
+            } else {
+                setMonthTitle(mRecyclerItem.getYear() + "/" + mRecyclerItem.getMonth());
+            }
         }
 
         private void setAmount(String amount) {
@@ -151,15 +182,28 @@ class HistoryRecordsAdapter extends RecyclerView.Adapter<HistoryRecordsAdapter.E
                 mDescTv.setText(desc);
             }
         }
+
+        private void setMonthTitle(String monthTitle) {
+            mMonthTv.setText(monthTitle);
+        }
     }
 
-    ArrayList<ExpenseItem> getDataList() {
-        return mExpenseItemList;
+    ExpenseItem getLastExpenseShow() {
+        if (mExpenseItemList.isEmpty()) {
+            return null;
+        }
+        for (int i = mExpenseItemList.size() - 1; i >= 0; i--) {
+            RecyclerItem item = mExpenseItemList.get(i);
+            if (item.getType() == RecyclerItem.TYPE_EXPENSE_ITEM) {
+                return item.getExpenseItem();
+            }
+        }
+        return null;
     }
 
     void refreshData(List<ExpenseItem> items) {
         mExpenseItemList.clear();
-        mExpenseItemList.addAll(items);
+        mExpenseItemList.addAll(formatToRecyclerItemList(items, true));
         notifyDataSetChanged();
     }
 
@@ -170,14 +214,16 @@ class HistoryRecordsAdapter extends RecyclerView.Adapter<HistoryRecordsAdapter.E
         }
         int position = -1;
         for (int i = 0; i < mExpenseItemList.size(); i++) {
-            ExpenseItem item1 = mExpenseItemList.get(i);
-            if (item.getId() == item1.getId()) {
-                item1.setAmount(item.getAmount());
-                item1.setCategoryId(item.getCategoryId());
-                item1.setCategoryName(item.getCategoryName());
-                item1.setDesc(item.getDesc());
-                item1.setCategoryIconResId(item.getCategoryIconResId());
-                item1.setTime(item.getTime());
+            RecyclerItem item1 = mExpenseItemList.get(i);
+
+            if (item1.getType() == RecyclerItem.TYPE_EXPENSE_ITEM
+                    && item.getId() == item1.getExpenseItem().getId()) {
+                item1.getExpenseItem().setAmount(item.getAmount());
+                item1.getExpenseItem().setCategoryId(item.getCategoryId());
+                item1.getExpenseItem().setCategoryName(item.getCategoryName());
+                item1.getExpenseItem().setDesc(item.getDesc());
+                item1.getExpenseItem().setCategoryIconResId(item.getCategoryIconResId());
+                item1.getExpenseItem().setTime(item.getTime());
                 position = i;
                 break;
             }
@@ -193,7 +239,9 @@ class HistoryRecordsAdapter extends RecyclerView.Adapter<HistoryRecordsAdapter.E
     void removeItem(long expenseId) {
         int position = -1;
         for (int i = 0; i < mExpenseItemList.size(); i++) {
-            if (expenseId == mExpenseItemList.get(i).getId()) {
+            RecyclerItem item = mExpenseItemList.get(i);
+            if (item.getType() == RecyclerItem.TYPE_EXPENSE_ITEM
+                    && expenseId == item.getExpenseItem().getId()) {
                 position = i;
                 break;
             }
@@ -206,7 +254,72 @@ class HistoryRecordsAdapter extends RecyclerView.Adapter<HistoryRecordsAdapter.E
 
     void addHistoryItems(List<ExpenseItem> items) {
         int insertPositionStart = mExpenseItemList.size();
-        mExpenseItemList.addAll(items);
+        mExpenseItemList.addAll(formatToRecyclerItemList(items, false));
         notifyItemRangeInserted(insertPositionStart, items.size());
+    }
+
+    private List<RecyclerItem> formatToRecyclerItemList(List<ExpenseItem> items, boolean refreshAll) {
+        List<RecyclerItem> result = new ArrayList<>(items.size());
+        Calendar calendar = Calendar.getInstance();
+        int yearFrontItem = -1;
+        int monthFrontItem = -1;
+        if (!refreshAll) {
+            ExpenseItem lastExpenseShow = getLastExpenseShow();
+            if (lastExpenseShow != null) {
+                calendar.setTimeInMillis(lastExpenseShow.getTime());
+                yearFrontItem = calendar.get(Calendar.YEAR);
+                monthFrontItem = calendar.get(Calendar.MONTH) + 1;
+            }
+        }
+        for (ExpenseItem expenseItem : items) {
+            long time = expenseItem.getTime();
+            calendar.setTimeInMillis(time);
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH) + 1;
+            if (year != yearFrontItem || month != monthFrontItem) {
+                result.add(new RecyclerItem(year, month));
+                yearFrontItem = year;
+                monthFrontItem = month;
+            }
+            result.add(new RecyclerItem(expenseItem));
+        }
+        return result;
+    }
+
+    private class RecyclerItem {
+        static final int TYPE_MONTH_TITLE = 1;
+        static final int TYPE_EXPENSE_ITEM = 2;
+
+        int type;
+        private int year;
+        private int month;
+        private ExpenseItem expenseItem;
+
+        RecyclerItem(int year, int month) {
+            this.year = year;
+            this.month = month;
+            this.type = TYPE_MONTH_TITLE;
+        }
+
+        RecyclerItem(ExpenseItem item) {
+            this.expenseItem = item;
+            this.type = TYPE_EXPENSE_ITEM;
+        }
+
+        int getType() {
+            return type;
+        }
+
+        public int getYear() {
+            return year;
+        }
+
+        public int getMonth() {
+            return month;
+        }
+
+        public ExpenseItem getExpenseItem() {
+            return expenseItem;
+        }
     }
 }

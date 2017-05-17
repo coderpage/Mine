@@ -43,7 +43,7 @@ public class CategoryRecordsActivity extends BaseActivity implements UpdatableVi
     private long mCategoryId;
 
     private RecyclerView mHistoryRecordsRecycler;
-    private HistoryRecordsAdapter mHistoryRecordsAdapter;
+    private SimpleRecorAdapter mHistoryRecordsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +66,7 @@ public class CategoryRecordsActivity extends BaseActivity implements UpdatableVi
         mHistoryRecordsRecycler = ((RecyclerView) findViewById(R.id.recyclerRecord));
         mHistoryRecordsRecycler.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        mHistoryRecordsAdapter = new HistoryRecordsAdapter(this);
+        mHistoryRecordsAdapter = new SimpleRecorAdapter(this);
         mHistoryRecordsRecycler.setAdapter(mHistoryRecordsAdapter);
     }
 

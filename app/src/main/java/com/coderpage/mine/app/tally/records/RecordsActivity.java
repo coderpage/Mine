@@ -21,8 +21,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
-
 /**
  * @author abner-l. 2017-05-12
  */
@@ -54,10 +52,10 @@ public class RecordsActivity extends BaseActivity implements UpdatableView<Recor
 
             @Override
             public void onPullUpLoadMore() {
-                ArrayList<ExpenseItem> dataList = mHistoryRecordsAdapter.getDataList();
+                ExpenseItem lastExpenseShow = mHistoryRecordsAdapter.getLastExpenseShow();
                 long loadMoreStartDate = System.currentTimeMillis();
-                if (!dataList.isEmpty()) {
-                    loadMoreStartDate = dataList.get(dataList.size() - 1).getTime();
+                if (lastExpenseShow != null) {
+                    loadMoreStartDate = lastExpenseShow.getTime();
                 }
                 Bundle args = new Bundle(1);
                 args.putLong(RecordsModel.EXTRA_LOAD_MORE_START_DATE, loadMoreStartDate);

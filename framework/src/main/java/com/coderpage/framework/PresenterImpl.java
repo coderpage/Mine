@@ -48,9 +48,9 @@ public class PresenterImpl implements Presenter, UpdatableView.UserActionListene
             if (mUpdatableViews == null) {
                 return;
             }
-            for (UpdatableView view : mUpdatableViews) {
-                view.displayData(mModel, null);
-            }
+//            for (UpdatableView view : mUpdatableViews) {
+//                view.displayData(mModel, null);
+//            }
             return;
         }
         // 加载初始化数据
