@@ -354,6 +354,8 @@ public class ChartActivity extends BaseActivity implements
         if (mMonthSwitchPopupWindow == null) {
             mMonthSwitchPopupWindow = new PopupWindow(getContext(), null, 0, R.style.Widget_PopupWindow);
             monthListView.setAdapter(new MonthAdapter(getContext(), historyMonthList));
+            mMonthSwitchPopupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+            mMonthSwitchPopupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
             mMonthSwitchPopupWindow.setContentView(popupView);
             mMonthSwitchPopupWindow.setOutsideTouchable(true);
         }
