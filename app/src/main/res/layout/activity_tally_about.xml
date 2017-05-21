@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     app:shadowDrawable="@drawable/header_shadow"
-    tools:context=".app.tally.ui.activity.AboutActivity">
+    tools:context=".app.tally.about.AboutActivity">
 
     <ScrollView
         android:id="@+id/lyContainer"

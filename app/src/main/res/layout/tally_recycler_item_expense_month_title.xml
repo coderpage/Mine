@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:background="@drawable/bg_touchable_transparent"
+             android:clickable="true">
+
+    <TextView
+        android:id="@+id/tvMonth"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_gravity="left"
+        android:gravity="center_vertical|left"
+        android:paddingLeft="@dimen/padding_normal"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_gravity="right"
+        android:gravity="center_vertical|right"
+        android:paddingRight="@dimen/padding_normal"
+        android:text="@string/tally_check_month_expense"/>
+</FrameLayout>

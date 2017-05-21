@@ -1,6 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 
+String appVersion = rootProject.appVersion
+int buildVerCode = Integer.parseInt(appVersion.replace('.', ''))
+
 android {
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion rootProject.buildToolsVersion
@@ -8,7 +11,7 @@ android {
         applicationId "com.coderpage.mine"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 20
+        versionCode buildVerCode
         versionName rootProject.appVersion
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary true
@@ -41,6 +44,10 @@ android {
         checkReleaseBuilds true
         abortOnError false
     }
+    productFlavors {
+        yingyongbao {
+        }
+    }
 }
 
 dependencies {
@@ -50,6 +57,7 @@ dependencies {
     compile rootProject.recyclerview
     compile rootProject.design
     compile 'com.prolificinteractive:material-calendarview:1.4.3'
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
     compile 'com.tencent.bugly:crashreport:2.5.0'
 
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {

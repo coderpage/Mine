@@ -6,7 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
-import static com.coderpage.framework.utils.LogUtils.makeLogTag;
+import static com.coderpage.utils.LogUtils.makeLogTag;
 
 /**
  * @author abner-l. 2017-04-15
