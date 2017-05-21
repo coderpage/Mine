@@ -17,7 +17,8 @@
         android:theme="@style/Theme.Tally">
 
         <activity
-            android:name=".app.tally.ui.activity.MainActivity"
+            android:name=".app.tally.main.MainActivity"
+            android:label="@string/tally_toolbar_title_main"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Tally">
             <intent-filter>
@@ -28,14 +29,34 @@
         </activity>
 
         <activity
-            android:name=".app.tally.ui.activity.ExpenseEditActivity"
+            android:name=".app.tally.edit.ExpenseEditActivity"
+            android:label="@string/tally_toolbar_title_add_record"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Tally"
             android:windowSoftInputMode="adjustPan">
         </activity>
 
         <activity
-            android:name=".app.tally.ui.activity.AboutActivity"
+            android:name=".app.tally.about.AboutActivity"
+            android:label="@string/tally_toolbar_title_about"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Tally"/>
+
+        <activity
+            android:name=".app.tally.chart.ChartActivity"
+            android:label="@string/tally_toolbar_title_chart"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Tally"/>
+
+        <activity
+            android:name=".app.tally.records.RecordsActivity"
+            android:label="@string/tally_toolbar_title_records"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Tally"/>
+
+        <activity
+            android:name=".app.tally.records.CategoryRecordsActivity"
+            android:label="@string/tally_toolbar_title_category_records"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Tally"/>
 

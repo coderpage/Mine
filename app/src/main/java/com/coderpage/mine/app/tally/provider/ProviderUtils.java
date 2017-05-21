@@ -2,11 +2,11 @@ package com.coderpage.mine.app.tally.provider;
 
 import android.net.Uri;
 
-import com.coderpage.framework.utils.LogUtils;
+import com.coderpage.utils.LogUtils;
 
 import java.util.List;
 
-import static com.coderpage.framework.utils.LogUtils.LOGE;
+import static com.coderpage.utils.LogUtils.LOGE;
 
 /**
  * @author abner-l. 2017-04-15

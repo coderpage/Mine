@@ -20,4 +20,25 @@
     <color name="divider">#dcdcdc</color>
     <color name="colorHint">#66000000</color>
 
+    <color name="categoryColor1">#afb341</color>
+    <color name="categoryColor2">#81aca9</color>
+    <color name="categoryColor3">#6b83b7</color>
+    <color name="categoryColor4">#b47ca7</color>
+    <color name="categoryColor5">#e2728e</color>
+    <color name="categoryColor6">#6797a8</color>
+    <color name="categoryColor7">#ed9241</color>
+    <color name="categoryColor8">#f19834</color>
+    <color name="categoryColor9">#9e7866</color>
+    <color name="categoryColor10">#9c939e</color>
+    <color name="categoryColor11">#d1b95d</color>
+    <color name="categoryColor12">#475999</color>
+    <color name="categoryColor13">#52a24e</color>
+    <color name="categoryColor14">#d05b97</color>
+    <color name="categoryColor15">#6faa70</color>
+    <color name="categoryColor16">#dba7bc</color>
+    <color name="categoryColor17">#7f8b36</color>
+    <color name="categoryColor18">#b5a353</color>
+
+    <color name="chartLine">#FF5722</color>
+
 </resources>

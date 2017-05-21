@@ -8,12 +8,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
-import com.coderpage.framework.utils.LogUtils;
+import com.coderpage.utils.LogUtils;
 import com.coderpage.mine.utils.SelectionBuilder;
 
 import java.util.Arrays;
 
-import static com.coderpage.framework.utils.LogUtils.LOGV;
+import static com.coderpage.utils.LogUtils.LOGV;
 
 /**
  * @author abner-l. 2017-02-12
