@@ -1,6 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 
+String appVersion = rootProject.appVersion
+int buildVerCode = Integer.parseInt(appVersion.replace('.', ''))
+
 android {
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion rootProject.buildToolsVersion
@@ -8,7 +11,7 @@ android {
         applicationId "com.coderpage.mine"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 20
+        versionCode buildVerCode
         versionName rootProject.appVersion
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary true
