@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp">
+
+        <TextView
+            android:id="@+id/tvMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/padding_normal"
+            android:gravity="center"
+            android:textColor="@color/appTextColorPrimary"
+            android:textSize="@dimen/app_text_size_medium"/>
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivMonthSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingRight="@dimen/padding_normal"
+            app:srcCompat="@drawable/ic_month_switch"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <View
+            style="@style/Divider"
+            android:layout_width="match_parent"
+            android:layout_height="1px"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="42dp">
+
+            <TextView
+                android:id="@+id/tvMonthExpenseTip"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="@dimen/padding_normal"
+                android:gravity="center"
+                android:textColor="@color/appTextColorPrimary"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/tvMonthDailyChartSwitcher"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/padding_normal"
+                android:gravity="center"
+                android:text="@string/tally_switch_2_monthly_expense"
+                android:textColor="@color/appTextColorPrimary"
+                android:textSize="16sp"/>
+        </RelativeLayout>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lineChart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/spacing_normal"
+            android:layout_weight="1"/>
+
+        <View
+            style="@style/Divider"
+            android:layout_width="match_parent"
+            android:layout_height="1px"/>
+
+    </LinearLayout>
+
+</LinearLayout>

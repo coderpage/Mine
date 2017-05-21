@@ -73,5 +73,7 @@
         <item name="android:layout_height">1px</item>
     </style>
 
+    <style name="Widget.PopupWindow" parent="Base.Widget.AppCompat.Light.PopupMenu">
 
+    </style>
 </resources>

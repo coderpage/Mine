@@ -33,4 +33,28 @@ public class TimeUtils {
 
         return mHourMinFormat.format(calendar.getTime());
     }
+
+    /**
+     * 计算该月份的天数
+     *
+     * @param year  年
+     * @param month 月
+     *
+     * @return 返回该月的天数
+     */
+    public static int getDaysTotalOfMonth(int year, int month) {
+        if (month == 2) {
+            boolean leapyear = year % 4 == 0; // 闰年
+            if (leapyear) {
+                return 29;
+            } else {
+                return 28;
+            }
+        }
+        if (month == 1 || month == 3 || month == 5
+                || month == 7 || month == 8 || month == 10 || month == 12) {
+            return 31;
+        }
+        return 30;
+    }
 }

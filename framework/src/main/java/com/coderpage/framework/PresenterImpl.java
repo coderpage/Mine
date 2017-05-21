@@ -3,8 +3,8 @@ package com.coderpage.framework;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import static com.coderpage.framework.utils.LogUtils.LOGI;
-import static com.coderpage.framework.utils.LogUtils.makeLogTag;
+import static com.coderpage.utils.LogUtils.LOGI;
+import static com.coderpage.utils.LogUtils.makeLogTag;
 
 /**
  * @author abner-l. 2017-04-13
@@ -48,9 +48,9 @@ public class PresenterImpl implements Presenter, UpdatableView.UserActionListene
             if (mUpdatableViews == null) {
                 return;
             }
-            for (UpdatableView view : mUpdatableViews) {
-                view.displayData(mModel, null);
-            }
+//            for (UpdatableView view : mUpdatableViews) {
+//                view.displayData(mModel, null);
+//            }
             return;
         }
         // 加载初始化数据
