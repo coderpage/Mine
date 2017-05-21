@@ -18,7 +18,6 @@ import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.chart.ChartActivity;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
 import com.coderpage.mine.app.tally.edit.ExpenseEditActivity;
-import com.coderpage.mine.app.tally.main.MainModel;
 import com.coderpage.mine.app.tally.utils.TimeUtils;
 import com.coderpage.mine.ui.widget.ButtonGroupDialog;
 import com.coderpage.utils.LogUtils;
@@ -119,7 +118,7 @@ class HistoryRecordsAdapter extends RecyclerView.Adapter<HistoryRecordsAdapter.E
                 public void onClick(DialogInterface dialog, View v) {
                     Bundle args = new Bundle(1);
                     args.putLong(RecordsModel.EXTRA_EXPENSE_ID, mRecyclerItem.getExpenseItem().getId());
-                    mUserActionListener.onUserAction(MainModel.MainUserActionEnum.EXPENSE_DELETE, args);
+                    mUserActionListener.onUserAction(RecordsModel.RecordsUserActionEnum.EXPENSE_DELETE, args);
                     dialog.dismiss();
                 }
             });

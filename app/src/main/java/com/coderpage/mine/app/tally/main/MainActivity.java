@@ -293,9 +293,8 @@ public class MainActivity extends BaseActivity
         legend.setEnabled(true);
         legend.setOrientation(Legend.LegendOrientation.VERTICAL);
         legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
-        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.CENTER);
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         legend.setTextColor(ResUtils.getColor(MainActivity.this, R.color.appTextColorSecondary));
-        legend.setWordWrapEnabled(true);
 
         mPieChart.animateY(1400, Easing.EasingOption.EaseInOutQuart);
     }

@@ -11,7 +11,6 @@ import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
 import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
-import com.coderpage.mine.app.tally.main.MainModel;
 import com.coderpage.mine.app.tally.ui.widget.LoadMoreRecyclerView;
 import com.coderpage.mine.ui.BaseActivity;
 import com.coderpage.mine.ui.widget.DrawShadowFrameLayout;
@@ -137,7 +136,6 @@ public class RecordsActivity extends BaseActivity implements UpdatableView<Recor
                 if (success) {
                     long deletedId = args.getLong(RecordsModel.EXTRA_EXPENSE_ID);
                     mHistoryRecordsAdapter.removeItem(deletedId);
-                    mUserActionListener.onUserAction(MainModel.MainUserActionEnum.RELOAD_MONTH_TOTAL, null);
                 }
                 break;
             case LOAD_MORE:
