@@ -44,6 +44,10 @@ android {
         checkReleaseBuilds true
         abortOnError false
     }
+    productFlavors {
+        yingyongbao {
+        }
+    }
 }
 
 dependencies {

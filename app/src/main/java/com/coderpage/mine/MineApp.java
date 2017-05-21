@@ -16,8 +16,11 @@ public class MineApp extends Application {
     public void onCreate() {
         super.onCreate();
         Framework.onAppOnCreate();
-        if (!BuildConfig.DEBUG){
-            CrashReport.initCrashReport(getApplicationContext(), Constants.BUGLY_APP_ID, BuildConfig.DEBUG);
+        if (!BuildConfig.DEBUG) {
+            CrashReport.UserStrategy userStrategy = new CrashReport.UserStrategy(getApplicationContext());
+            userStrategy.setAppChannel(BuildConfig.FLAVOR);
+            CrashReport.initCrashReport(getApplicationContext(),
+                    Constants.BUGLY_APP_ID, BuildConfig.DEBUG, userStrategy);
         }
     }
 
