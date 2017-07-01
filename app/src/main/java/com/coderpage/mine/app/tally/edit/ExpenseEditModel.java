@@ -18,6 +18,7 @@ import com.coderpage.mine.app.tally.data.CategoryItem;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
 import com.coderpage.mine.app.tally.provider.ProviderUtils;
 import com.coderpage.mine.app.tally.provider.TallyContract;
+import com.coderpage.mine.utils.AndroidUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -263,6 +264,7 @@ public class ExpenseEditModel implements Model<ExpenseEditModel.EditQueryEnum
                             new String[]{String.valueOf(expenseId)});
                     return expenseId;
                 } else {
+                    values.put(TallyContract.Expense.SYNC_ID, AndroidUtils.generateUUID());
                     Uri uri = mContext.getContentResolver()
                             .insert(TallyContract.Expense.CONTENT_URI, values);
                     return ProviderUtils.parseIdFromUri(uri);

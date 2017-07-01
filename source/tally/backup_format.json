@@ -1,0 +1,30 @@
+{
+  "metadata": {
+    "client_version": "0.4.0",
+    "backup_date": 100,
+    "device_name": "",
+    "expense_number": 1
+  },
+  "category_list": [
+    {
+      "name": "other",
+      "icon": "Other"
+    }
+  ],
+  "expense_list": [
+    {
+      "1": 10.2,
+      // amount
+      "2": "shopping",
+      // desc
+      "3": "Other",
+      // category
+      "4": 100,
+      // time
+      "5": "abc",
+      // syncid
+      "6": 1
+      // userID
+    }
+  ]
+}

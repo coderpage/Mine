@@ -5,6 +5,10 @@
           android:title="@string/description_about"
           android:orderInCategory="1" />
 
+    <item android:id="@+id/menu_setting"
+          android:title="@string/menu_tally_setting"
+          android:orderInCategory="1" />
+
     <item android:id="@+id/menu_expense_records"
           android:title="@string/menu_tally_expense_records"
           android:orderInCategory="2" />

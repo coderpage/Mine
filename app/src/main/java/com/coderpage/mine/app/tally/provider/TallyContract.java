@@ -33,6 +33,12 @@ public class TallyContract {
         String DESC = "expense_desc";
         /** 时间 */
         String TIME = "expense_time";
+        /** 用户 ID */
+        String ACCOUNT_ID = "expense_account_id";
+        /** 同步 ID，相当于 uuid */
+        String SYNC_ID = "expense_sync_id";
+        /** 是否已经同步 */
+        String SYNCED = "expense_synced";
     }
 
     /**

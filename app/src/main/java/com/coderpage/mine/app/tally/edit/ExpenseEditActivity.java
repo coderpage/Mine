@@ -38,7 +38,7 @@ public class ExpenseEditActivity extends BaseActivity
         implements UpdatableView<ExpenseEditModel,
         ExpenseEditModel.EditQueryEnum, ExpenseEditModel.EditUserActionEnum> {
     private static final String TAG = LogUtils.makeLogTag(ExpenseEditActivity.class);
-    public static final String EXTRA_RECORD_ID = "extraRecordId";
+    public static final String EXTRA_RECORD_ID = "extra_record_id";
 
     TextView mAmountTv;
     TextView mCategoryName;
@@ -155,10 +155,14 @@ public class ExpenseEditActivity extends BaseActivity
             int id = v.getId();
             switch (id) {
                 case R.id.tvDate:
-                    DatePickUtils.showDatePickDialog(ExpenseEditActivity.this, new DatePickUtils.OnDatePickListener() {
+                    DatePickUtils.showDatePickDialog(ExpenseEditActivity.this,
+                            new DatePickUtils.OnDatePickListener() {
 
                         @Override
-                        public void onDatePick(DialogInterface dialog, int year, int month, int dayOfMonth) {
+                        public void onDatePick(DialogInterface dialog,
+                                               int year,
+                                               int month,
+                                               int dayOfMonth) {
                             Calendar calendar = Calendar.getInstance();
                             calendar.set(year, month, dayOfMonth);
                             mExpenseDate = calendar;

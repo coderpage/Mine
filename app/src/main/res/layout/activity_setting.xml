@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              tools:context=".app.tally.setting.SettingActivity">
+
+    <include layout="@layout/layout_appbar"/>
+
+    <FrameLayout
+        android:id="@+id/lyDataExport"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_touchable_white">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/padding_normal"
+            android:gravity="left|center_vertical"
+            android:text="@string/tally_setting_btn_data_export"
+            android:textColor="@color/appTextColorPrimary"
+            android:textSize="16sp"/>
+
+        <View
+            style="@style/Divider"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="@dimen/padding_normal"
+            android:layout_marginRight="@dimen/padding_normal"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/lyDataImport"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_touchable_white">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/padding_normal"
+            android:gravity="left|center_vertical"
+            android:text="@string/tally_setting_btn_data_import"
+            android:textColor="@color/appTextColorPrimary"
+            android:textSize="16sp"/>
+
+        <View
+            style="@style/Divider"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="@dimen/padding_normal"
+            android:layout_marginRight="@dimen/padding_normal"/>
+    </FrameLayout>
+
+</LinearLayout>

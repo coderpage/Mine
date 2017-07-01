@@ -3,10 +3,12 @@
     <string name="app_name">我的记账本</string>
     <string name="delete">删除</string>
     <string name="modify">修改</string>
+    <string name="place_holder">--</string>
 
     <!-- Menu item open About Activity -->
     <string name="description_about">关于</string>
     <string name="menu_tally_expense_records">消费记录</string>
+    <string name="menu_tally_setting">设置</string>
 
     <!--  toolbar title of tally main activity -->
     <string name="tally_toolbar_title_main">我的.记账本</string>
@@ -14,12 +16,34 @@
     <string name="tally_toolbar_title_chart">图表分析</string>
     <string name="tally_toolbar_title_records">消费记录</string>
     <string name="tally_toolbar_title_category_records">流水</string>
+    <string name="tally_toolbar_title_setting">设置</string>
 
     <!-- tally chart activity -->
     <string name="tally_switch_2_daily_expense">切换日消费情况</string>
     <string name="tally_switch_2_monthly_expense">切换月消费情况</string>
     <string name="tally_month_info_format" formatted="false">%s/%d</string>
     <string name="tally_month_expense_tip_format">%d月消费情况</string>
+
+    <!-- setting activity -->
+    <string name="tally_setting_btn_data_export">导出数据</string>
+    <string name="tally_setting_btn_data_import">导入数据</string>
+    <string name="tally_alert_backup">备份数据</string>
+    <string name="tally_alert_restore_data">恢复数据</string>
+    <string name="tally_alert_check_data_format">校验数据</string>
+    <string name="tally_alert_reading_db_data">读取数据&#8230;</string>
+    <string name="tally_alert_write_data_2_file">写入数据到文件&#8230;</string>
+    <string name="tally_alert_reading_backup_file">读取备份文件&#8230;</string>
+    <string name="tally_alert_backup_success">备份成功!</string>
+    <string name="tally_alert_backup_failure">备份失败!</string>
+    <string name="tally_alert_restore_data_success">数据恢复成功</string>
+    <string name="tally_alert_restore_data_failure">数据恢复失败</string>
+    <string name="tally_alert_read_data_success">读取数据成功</string>
+    <string name="tally_alert_read_data_failure">读取数据失败</string>
+    <string name="tally_toast_illegal_path">非法路径</string>
+
+    <!-- dialog -->
+    <string name="dialog_btn_cancel">取消</string>
+    <string name="dialog_btn_choose_local_file">选择本地文件</string>
 
     <!-- toolbar title of tall expense record add activity -->
     <string name="tally_toolbar_title_add_record">记一笔</string>
