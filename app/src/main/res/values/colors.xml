@@ -2,6 +2,16 @@
 <resources>
     <color name="white">#ffffffff</color>
     <color name="black">#ff000000</color>
+    <color name="black_alpha_02">#04000000</color>
+    <color name="black_alpha_03">#08000000</color>
+    <color name="black_alpha_08">#14000000</color>
+    <color name="black_alpha_12">#20000000</color>
+    <color name="black_alpha_20">#33000000</color>
+    <color name="black_alpha_25">#3f000000</color>
+    <color name="black_alpha_30">#4c000000</color>
+    <color name="black_alpha_35">#60000000</color>
+    <color name="black_alpha_50">#80000000</color>
+    <color name="black_alpha_70">#b3000000</color>
     <color name="grey">#ffaaaaaa</color>
     <color name="transparent">#00000000</color>
     <color name="background">#f5f5f9</color>

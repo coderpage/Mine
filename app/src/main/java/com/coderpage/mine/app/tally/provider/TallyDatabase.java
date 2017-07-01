@@ -19,8 +19,11 @@ import java.util.Map;
 
 public class TallyDatabase extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "sql_tally";
-    private static final int CURRENT_VERSION = 1;
+    private static final String DATABASE_NAME = "sql_tally"; // sqlite db name
+
+    private static final int VERSION_0_1_0 = 1; // db version of app version 0.1.0
+    private static final int VERSION_0_4_0 = 40; // db version of app version 0.4.0
+    private static final int CURRENT_VERSION = VERSION_0_4_0;
 
     private Context mContext;
 
@@ -36,7 +39,10 @@ public class TallyDatabase extends SQLiteOpenHelper {
         this(context, DATABASE_NAME, null, CURRENT_VERSION);
     }
 
-    private TallyDatabase(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    private TallyDatabase(Context context,
+                          String name,
+                          SQLiteDatabase.CursorFactory factory,
+                          int version) {
         super(context, name, factory, version);
         mContext = context;
     }
@@ -60,6 +66,7 @@ public class TallyDatabase extends SQLiteOpenHelper {
                 + "UNIQUE (" + TallyContract.Category.NAME + ") ON CONFLICT REPLACE)");
 
         initDb(db);
+        upgradeFrom010to040(db);
     }
 
     private void initDb(SQLiteDatabase db) {
@@ -91,12 +98,71 @@ public class TallyDatabase extends SQLiteOpenHelper {
         }
         db.setTransactionSuccessful();
         db.endTransaction();
+    }
 
+    private void upgradeFrom010to040(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE " + Tables.EXPENSE + "1" + " ("
+                + TallyContract.Expense._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + TallyContract.Expense.CATEGORY_ID + " INTEGER NOT NULL,"
+                + TallyContract.Expense.CATEGORY + " TEXT NOT NULL,"
+                + TallyContract.Expense.AMOUNT + " DOUBLE NOT NULL,"
+                + TallyContract.Expense.DESC + " TEXT NOT NULL DEFAULT '',"
+                + TallyContract.Expense.TIME + " DOUBLE NOT NULL,"
+                + TallyContract.Expense.ACCOUNT_ID + " INTEGER NOT NULL DEFAULT 0,"
+                + TallyContract.Expense.SYNC_ID + " TEXT NOT NULL,"
+                + TallyContract.Expense.SYNCED + " INTEGER NOT NULL DEFAULT 0,"
+                + "UNIQUE (" + TallyContract.Expense.SYNC_ID + ") ON CONFLICT IGNORE)"
+        );
+
+        db.execSQL("CREATE TABLE " + Tables.CATEGORY + "1" + " ("
+                + TallyContract.Category._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + TallyContract.Category.NAME + " TEXT NOT NULL,"
+                + TallyContract.Category.ICON + " TEXT,"
+                + TallyContract.Category.ORDER + " INTEGER NOT NULL DEFAULT(0),"
+                + "UNIQUE (" + TallyContract.Category.NAME + ") ON CONFLICT IGNORE)");
+
+
+        // 生成 UUID
+        String uuid = "hex( randomblob(4)) || '-' || " +
+                "hex( randomblob(2))|| '-' || '4' || " +
+                "substr( hex( randomblob(2)), 2) || '-' || " +
+                "substr('AB89', 1 + (abs(random()) % 4) , 1)  || " +
+                "substr(hex(randomblob(2)), 2) || '-' || " +
+                "hex(randomblob(6))";
+
+        db.execSQL("INSERT INTO " + Tables.EXPENSE + "1 ("
+                + TallyContract.Expense._ID + ","
+                + TallyContract.Expense.CATEGORY_ID + ","
+                + TallyContract.Expense.CATEGORY + ","
+                + TallyContract.Expense.AMOUNT + ","
+                + TallyContract.Expense.DESC + ","
+                + TallyContract.Expense.TIME + ","
+                + TallyContract.Expense.SYNC_ID + ") SELECT "
+                + TallyContract.Expense._ID + ","
+                + TallyContract.Expense.CATEGORY_ID + ","
+                + TallyContract.Expense.CATEGORY + ","
+                + TallyContract.Expense.AMOUNT + ","
+                + TallyContract.Expense.DESC + ","
+                + TallyContract.Expense.TIME + ","
+                + uuid + " FROM " + Tables.EXPENSE
+        );
+
+        db.execSQL("INSERT INTO " + Tables.CATEGORY + "1" + " SELECT *  FROM " + Tables.CATEGORY);
+
+        db.execSQL("DROP TABLE " + Tables.EXPENSE);
+        db.execSQL("DROP TABLE " + Tables.CATEGORY);
+        db.execSQL("ALTER TABLE " + Tables.EXPENSE + "1" + " RENAME TO " + Tables.EXPENSE);
+        db.execSQL("ALTER TABLE " + Tables.CATEGORY + "1" + " RENAME TO " + Tables.CATEGORY);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        int version = oldVersion;
 
+        if (version == VERSION_0_1_0) {
+            upgradeFrom010to040(db);
+            version = VERSION_0_4_0;
+        }
     }
 
     public static void deleteDatabase(Context context) {

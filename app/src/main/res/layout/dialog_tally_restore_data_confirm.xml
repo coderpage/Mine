@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:paddingBottom="@dimen/spacing_micro"
+              android:paddingLeft="24dp"
+              android:paddingTop="@dimen/spacing_micro">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/spacing_normal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="备份时间:"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="@dimen/app_text_size_normal"/>
+
+        <TextView
+            android:id="@+id/tvBackupDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_normal"
+            android:text="@string/place_holder"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="@dimen/app_text_size_normal"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/spacing_normal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="备份设备:"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="@dimen/app_text_size_normal"/>
+
+        <TextView
+            android:id="@+id/tvBackupDeviceName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_normal"
+            android:text="@string/place_holder"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="@dimen/app_text_size_normal"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/spacing_normal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="备份条数:"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="@dimen/app_text_size_normal"/>
+
+        <TextView
+            android:id="@+id/tvBackupExpenseCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_normal"
+            android:text="@string/place_holder"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="@dimen/app_text_size_normal"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,16 +1,21 @@
 package com.coderpage.mine.app.tally.provider;
 
 import android.content.ContentProvider;
+import android.content.ContentProviderOperation;
+import android.content.ContentProviderResult;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.coderpage.utils.LogUtils;
 import com.coderpage.mine.utils.SelectionBuilder;
+import com.coderpage.utils.LogUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static com.coderpage.utils.LogUtils.LOGV;
@@ -108,6 +113,22 @@ public class TallyProvider extends ContentProvider {
                     cursor.setNotificationUri(context.getContentResolver(), uri);
                 }
                 return cursor;
+        }
+    }
+
+    @NonNull
+    @Override
+    public ContentProviderResult[] applyBatch(
+            @NonNull ArrayList<ContentProviderOperation> operations)
+            throws OperationApplicationException {
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            ContentProviderResult[] results = super.applyBatch(operations);
+            db.setTransactionSuccessful();
+            return results;
+        } finally {
+            db.endTransaction();
         }
     }
 
