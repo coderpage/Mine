@@ -30,7 +30,8 @@ public class DatePickUtils {
 
     private static void showDatePickDialog_Low(Activity activity, final OnDatePickListener listener) {
         LayoutInflater inflater = LayoutInflater.from(activity);
-        MaterialCalendarView materialCalendar = ((MaterialCalendarView) inflater.inflate(R.layout.dialog_tally_date_pick, null, false));
+        MaterialCalendarView materialCalendar = ((MaterialCalendarView) inflater.inflate(
+                R.layout.dialog_tally_date_pick, null, false));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         final AlertDialog dialog = builder.setTitle("")
@@ -49,7 +50,7 @@ public class DatePickUtils {
 
         final String titleDateFormat = activity.getString(R.string.tally_calendar_title_format);
         materialCalendar.setTitleFormatter(
-                (CalendarDay day) -> String.format(titleDateFormat, day.getYear(), day.getMonth()));
+                (CalendarDay day) -> String.format(titleDateFormat, day.getYear(), day.getMonth() + 1));
         materialCalendar.state().edit().setMaximumDate(Calendar.getInstance()).commit();
         materialCalendar.setOnDateChangedListener(
                 (@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) -> {
@@ -60,9 +61,11 @@ public class DatePickUtils {
         dialog.show();
     }
 
-    private static void showDatePickDialog_Lollipop(Activity activity, final OnDatePickListener listener) {
+    private static void showDatePickDialog_Lollipop(Activity activity,
+                                                    final OnDatePickListener listener) {
         LayoutInflater inflater = LayoutInflater.from(activity);
-        CalendarView calendarView = ((CalendarView) inflater.inflate(R.layout.dialog_tally_date_pick, null, false));
+        CalendarView calendarView = ((CalendarView) inflater.inflate(
+                R.layout.dialog_tally_date_pick, null, false));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         final AlertDialog dialog = builder.setTitle("")

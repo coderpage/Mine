@@ -226,6 +226,7 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
                 expense = new DailyExpense();
                 dailyExpenseSparseArray.put(day, expense);
             }
+            expense.setTimeMillis(item.getTime());
             expense.setDayOfMonth(day);
             expense.setExpense(expense.getExpense() + item.getAmount());
         }
@@ -240,7 +241,10 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
         for (int i = 1; i <= daysOfMonth; i++) {
             DailyExpense expense = dailyExpenseSparseArray.get(i, null);
             if (expense == null) {
+                calendar.set(Calendar.MONTH, month-1);
+                calendar.set(Calendar.DAY_OF_MONTH, i);
                 expense = new DailyExpense();
+                expense.setTimeMillis(calendar.getTimeInMillis());
                 expense.setDayOfMonth(i);
                 expense.setExpense(0);
             }

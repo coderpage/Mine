@@ -57,8 +57,7 @@ public class MainActivity extends BaseActivity
 
     private static final String TAG = LogUtils.makeLogTag(MainActivity.class);
 
-    DecimalFormat mAmountDecimalFormat = new DecimalFormat(".00");
-    //    String mAmountFormat;
+    DecimalFormat mAmountDecimalFormat = new DecimalFormat("0.00");
     MainPresenter mPresenter;
     UserActionListener mUserActionListener;
 
@@ -142,35 +141,6 @@ public class MainActivity extends BaseActivity
         switch (id) {
             case R.id.menu_about:
                 startActivity(new Intent(this, AboutActivity.class));
-//                AsyncTaskExecutor.execute(()->{
-//                    Random random = new Random();
-//                    ArrayList<ContentProviderOperation> operations = new ArrayList<>(100000);
-//                    for (int i=0; i<10000; i++){
-//                        ContentValues values = new ContentValues();
-//                        values.put(TallyContract.Expense.AMOUNT, random.nextFloat());
-//                        values.put(TallyContract.Expense.CATEGORY_ID, 1);
-//                        values.put(TallyContract.Expense.CATEGORY, "其他");
-//                        values.put(TallyContract.Expense.DESC, "备注信息" + random.nextFloat());
-//                        values.put(TallyContract.Expense.TIME, System.currentTimeMillis() - random.nextInt(1000000000));
-//
-//                      ContentProviderOperation operation =  ContentProviderOperation
-//                                .newInsert(TallyContract.Expense.CONTENT_URI)
-//                                .withValues(values)
-//                                .build();
-//
-//                        operations.add(operation);
-//                    }
-//                    try {
-//                        getContentResolver().applyBatch(TallyContract.CONTENT_AUTHORITY,operations);
-//                        runOnUiThread(()->{
-//                            Toast.makeText(getContext(),"OK",Toast.LENGTH_SHORT).show();
-//                        });
-//                    } catch (RemoteException e) {
-//                        e.printStackTrace();
-//                    } catch (OperationApplicationException e) {
-//                        e.printStackTrace();
-//                    }
-//                });
                 break;
             case R.id.menu_expense_records:
                 startActivity(new Intent(this, RecordsActivity.class));

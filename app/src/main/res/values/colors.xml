@@ -50,5 +50,7 @@
     <color name="categoryColor18">#b5a353</color>
 
     <color name="chartLine">#FF5722</color>
+    <color name="markerViewBg">@color/transparent</color>
+    <color name="markerViewBgStroke">@color/colorHint</color>
 
 </resources>

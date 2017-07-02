@@ -8,11 +8,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.coderpage.concurrency.AsyncTaskExecutor;
 import com.coderpage.framework.Model;
 import com.coderpage.framework.QueryEnum;
 import com.coderpage.framework.SimpleCallback;
 import com.coderpage.framework.UserActionEnum;
-import com.coderpage.concurrency.AsyncTaskExecutor;
 import com.coderpage.mine.app.tally.data.CategoryIconHelper;
 import com.coderpage.mine.app.tally.data.CategoryItem;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
@@ -34,27 +34,30 @@ public class ExpenseEditModel implements Model<ExpenseEditModel.EditQueryEnum
         , ExpenseEditModel.EditUserActionEnum> {
     private static final String TAG = makeLogTag(ExpenseEditModel.class);
 
-    public static final String EXTRA_EXPENSE_ID = "extra_expense_id";
-    public static final String EXTRA_EXPENSE_AMOUNT = "extra_expense_amount";
-    public static final String EXTRA_EXPENSE_CATEGORY_ID = "extra_expense_category_id";
-    public static final String EXTRA_EXPENSE_CATEGORY = "extra_expense_category";
-    public static final String EXTRA_EXPENSE_DESC = "extra_expense_desc";
-    public static final String EXTRA_EXPENSE_TIME = "extra_expense_time";
+    static final String EXTRA_EXPENSE_ID = "extra_expense_id";
+    static final String EXTRA_EXPENSE_AMOUNT = "extra_expense_amount";
+    static final String EXTRA_EXPENSE_CATEGORY_ID = "extra_expense_category_id";
+    static final String EXTRA_EXPENSE_CATEGORY = "extra_expense_category";
+    static final String EXTRA_EXPENSE_CATEGORY_ICON_RES_ID = "extra_expense_category_icon_res_id";
+    static final String EXTRA_EXPENSE_DESC = "extra_expense_desc";
+    static final String EXTRA_EXPENSE_TIME = "extra_expense_time";
 
     private Context mContext;
-    private ExpenseItem mExpenseItem;
+    private ExpenseItem mExpense;
     private List<CategoryItem> mCategoryItemList = new ArrayList<>();
 
-    public ExpenseEditModel(Context context) {
+    ExpenseEditModel(Context context, long expenseId) {
         mContext = context;
+        mExpense = new ExpenseItem();
+        mExpense.setId(expenseId);
     }
 
-    public List<CategoryItem> getCategoryItemList() {
+    List<CategoryItem> getCategoryItemList() {
         return mCategoryItemList;
     }
 
-    public ExpenseItem getExpenseItem() {
-        return mExpenseItem;
+    ExpenseItem getExpenseItem() {
+        return mExpense;
     }
 
     @Override
@@ -81,6 +84,34 @@ public class ExpenseEditModel implements Model<ExpenseEditModel.EditQueryEnum
                     }
                 });
                 break;
+            case LOAD_EXPENSE:
+                // 没有记录ID，说明为创建一个新纪录，赋值为默认值
+                if (mExpense.getId() == 0) {
+                    queryFirstPlaceCategory((item) -> {
+                        if (item == null) {
+                            callback.onError(query);
+                        } else {
+                            mExpense.setAmount(0.0F);
+                            mExpense.setCategoryIconResId(item.getIcon());
+                            mExpense.setTime(System.currentTimeMillis());
+                            mExpense.setCategoryId(item.getId());
+                            mExpense.setCategoryName(item.getName());
+                            mExpense.setSyncId(AndroidUtils.generateUUID());
+                            callback.onModelUpdated(ExpenseEditModel.this, query);
+                        }
+                    });
+                } else {
+                    // 读取当前记录最新数据
+                    queryExpenseByIdAsync(mExpense.getId(), (item) -> {
+                        if (item == null) {
+                            callback.onError(query);
+                        } else {
+                            mExpense = item;
+                            callback.onModelUpdated(ExpenseEditModel.this, query);
+                        }
+                    });
+                }
+                break;
         }
     }
 
@@ -88,63 +119,48 @@ public class ExpenseEditModel implements Model<ExpenseEditModel.EditQueryEnum
     public void deliverUserAction(EditUserActionEnum action,
                                   @Nullable Bundle args, UserActionCallback callback) {
         switch (action) {
-            case RELOAD:
-                if (args == null || !args.containsKey(EXTRA_EXPENSE_ID)) {
-                    LOGE(TAG, "action " + action.getId() + " request args with " + EXTRA_EXPENSE_ID);
-                    return;
+            case AMOUNT_CHANGED:
+                if (args == null || !args.containsKey(EXTRA_EXPENSE_AMOUNT)) {
+                    throw new IllegalArgumentException("miss extra " + EXTRA_EXPENSE_AMOUNT);
                 }
-                if (mExpenseItem == null) {
-                    mExpenseItem = new ExpenseItem();
+                mExpense.setAmount(args.getFloat(EXTRA_EXPENSE_AMOUNT));
+                LOGE(TAG, "update expense amount " + args.getFloat(EXTRA_EXPENSE_AMOUNT));
+                callback.onModelUpdated(ExpenseEditModel.this, action);
+                break;
+            case CATEGORY_CHANGED:
+                if (args == null || !args.containsKey(EXTRA_EXPENSE_CATEGORY)
+                        || !args.containsKey(EXTRA_EXPENSE_CATEGORY_ID)
+                        || !args.containsKey(EXTRA_EXPENSE_CATEGORY_ICON_RES_ID)) {
+                    throw new IllegalArgumentException("miss extra "
+                            + EXTRA_EXPENSE_CATEGORY + " OR " + EXTRA_EXPENSE_CATEGORY_ID
+                            + " OR " + EXTRA_EXPENSE_CATEGORY_ICON_RES_ID);
                 }
-                long editedExpenseId = args.getLong(EXTRA_EXPENSE_ID);
-                // 没有记录ID，说明为创建一个新纪录，赋值为默认值
-                if (editedExpenseId <= 0) {
-                    queryFirstPlaceCategory((item) -> {
-                        if (item == null) {
-                            callback.onError(action);
-                        } else {
-                            mExpenseItem.setAmount(0.0f);
-                            mExpenseItem.setCategoryIconResId(item.getIcon());
-                            mExpenseItem.setTime(System.currentTimeMillis());
-                            mExpenseItem.setCategoryId(item.getId());
-                            mExpenseItem.setCategoryName(item.getName());
-                            callback.onModelUpdated(ExpenseEditModel.this, action);
-                        }
-                    });
-                    return;
+                mExpense.setCategoryIconResId(args.getInt(EXTRA_EXPENSE_CATEGORY_ICON_RES_ID));
+                mExpense.setCategoryName(args.getString(EXTRA_EXPENSE_CATEGORY));
+                mExpense.setCategoryId(args.getLong(EXTRA_EXPENSE_CATEGORY_ID));
+                callback.onModelUpdated(ExpenseEditModel.this, action);
+                break;
+            case DESC_CHANGED:
+                if (args == null || !args.containsKey(EXTRA_EXPENSE_DESC)) {
+                    throw new IllegalArgumentException("miss extra " + EXTRA_EXPENSE_DESC);
                 }
-                // 读取当前记录最新数据
-                queryExpenseByIdAsync(editedExpenseId, (item) -> {
-                    if (item == null) {
-                        callback.onError(action);
-                    } else {
-                        mExpenseItem = item;
-                        callback.onModelUpdated(ExpenseEditModel.this, action);
-                    }
-                });
+                mExpense.setDesc(args.getString(EXTRA_EXPENSE_DESC, ""));
+                callback.onModelUpdated(ExpenseEditModel.this, action);
+                break;
+            case DATE_CHANGED:
+                if (args == null || !args.containsKey(EXTRA_EXPENSE_TIME)) {
+                    throw new IllegalArgumentException("miss extra " + EXTRA_EXPENSE_TIME);
+                }
+                mExpense.setTime(args.getLong(EXTRA_EXPENSE_TIME));
+                callback.onModelUpdated(ExpenseEditModel.this, action);
                 break;
             case SAVE_DATA:
-                if (args == null) {
-                    LOGE(TAG, "action " + action.getId() + " request args");
-                    return;
-                }
-                long id = args.getLong(EXTRA_EXPENSE_ID, -1);
-                float amount = args.getFloat(EXTRA_EXPENSE_AMOUNT, 0.0F);
-                long categoryId = args.getLong(EXTRA_EXPENSE_CATEGORY_ID, -1);
-                String categoryName = args.getString(EXTRA_EXPENSE_CATEGORY, "");
-                String desc = args.getString(EXTRA_EXPENSE_DESC, "");
-                long date = args.getLong(EXTRA_EXPENSE_TIME, System.currentTimeMillis());
-                saveDataAsync(id, amount, categoryId, categoryName, desc, date, (eid) -> {
-                    if (mExpenseItem == null) {
-                        mExpenseItem = new ExpenseItem();
-                    }
+                LOGE(TAG, "save data amount " + mExpense.getAmount());
+                saveExpenseAsync(mExpense, (eid) -> {
                     if (eid > 0) {
-                        mExpenseItem.setId(eid);
-                        mExpenseItem.setAmount(amount);
-                        mExpenseItem.setCategoryId(categoryId);
-                        mExpenseItem.setDesc(desc);
-                        mExpenseItem.setTime(date);
-                        mExpenseItem.setCategoryIconResId(CategoryIconHelper.resId(categoryName));
+                        mExpense.setId(eid);
+                        mExpense.setCategoryIconResId(
+                                CategoryIconHelper.resId(mExpense.getCategoryName()));
                         callback.onModelUpdated(ExpenseEditModel.this, action);
                     } else {
                         callback.onError(action);
@@ -210,7 +226,7 @@ public class ExpenseEditModel implements Model<ExpenseEditModel.EditQueryEnum
     }
 
 
-    public void queryExpenseByIdAsync(long expenseId, SimpleCallback<ExpenseItem> callback) {
+    private void queryExpenseByIdAsync(long expenseId, SimpleCallback<ExpenseItem> callback) {
         new AsyncTask<Void, Void, ExpenseItem>() {
             @Override
             protected ExpenseItem doInBackground(Void... params) {
@@ -237,34 +253,29 @@ public class ExpenseEditModel implements Model<ExpenseEditModel.EditQueryEnum
         }.executeOnExecutor(AsyncTaskExecutor.executor());
     }
 
-    public void saveDataAsync(long expenseId,
-                              float amount,
-                              long categoryId,
-                              String categoryName,
-                              String desc,
-                              long date,
-                              SimpleCallback<Long> callback) {
+    private void saveExpenseAsync(ExpenseItem expenseItem, SimpleCallback<Long> callback) {
         new AsyncTask<Void, Void, Long>() {
             @Override
             protected Long doInBackground(Void... params) {
                 ContentValues values = new ContentValues();
-                values.put(TallyContract.Expense.AMOUNT, amount);
-                values.put(TallyContract.Expense.CATEGORY_ID, categoryId);
-                values.put(TallyContract.Expense.CATEGORY, categoryName);
-                values.put(TallyContract.Expense.DESC, desc == null ? "" : desc);
-                values.put(TallyContract.Expense.TIME, date);
+                values.put(TallyContract.Expense.AMOUNT, expenseItem.getAmount());
+                values.put(TallyContract.Expense.CATEGORY_ID, expenseItem.getCategoryId());
+                values.put(TallyContract.Expense.CATEGORY, expenseItem.getCategoryName());
+                values.put(TallyContract.Expense.DESC,
+                        expenseItem.getDesc() == null ? "" : expenseItem.getDesc());
+                values.put(TallyContract.Expense.TIME, expenseItem.getTime());
 
                 // categoryId 大于0，更新记录
                 // 否则插入新记录
-                if (expenseId > 0) {
+                if (expenseItem.getId() > 0) {
                     mContext.getContentResolver().update(
                             TallyContract.Expense.CONTENT_URI,
                             values,
                             TallyContract.Expense._ID + "=?",
-                            new String[]{String.valueOf(expenseId)});
-                    return expenseId;
+                            new String[]{String.valueOf(expenseItem.getId())});
+                    return mExpense.getId();
                 } else {
-                    values.put(TallyContract.Expense.SYNC_ID, AndroidUtils.generateUUID());
+                    values.put(TallyContract.Expense.SYNC_ID, mExpense.getSyncId());
                     Uri uri = mContext.getContentResolver()
                             .insert(TallyContract.Expense.CONTENT_URI, values);
                     return ProviderUtils.parseIdFromUri(uri);
@@ -276,11 +287,11 @@ public class ExpenseEditModel implements Model<ExpenseEditModel.EditQueryEnum
                 callback.success(id);
             }
         }.executeOnExecutor(AsyncTaskExecutor.executor());
-
     }
 
-    public enum EditQueryEnum implements QueryEnum {
-        LOAD_CATEGORY(1, null);
+    enum EditQueryEnum implements QueryEnum {
+        LOAD_EXPENSE(1, null),
+        LOAD_CATEGORY(2, null);
 
         private int id;
         private String[] projection;
@@ -301,13 +312,17 @@ public class ExpenseEditModel implements Model<ExpenseEditModel.EditQueryEnum
         }
     }
 
-    public enum EditUserActionEnum implements UserActionEnum {
+    enum EditUserActionEnum implements UserActionEnum {
         RELOAD(1),
-        SAVE_DATA(2);
+        SAVE_DATA(2),
+        CATEGORY_CHANGED(3),
+        DATE_CHANGED(4),
+        AMOUNT_CHANGED(5),
+        DESC_CHANGED(6);
 
         private int id;
 
-        private EditUserActionEnum(int id) {
+        EditUserActionEnum(int id) {
             this.id = id;
         }
 

@@ -6,6 +6,7 @@ package com.coderpage.mine.app.tally.chart.data;
 
 public class DailyExpense {
 
+    private long timeMillis;
     private int dayOfMonth;
     private float expense;
 
@@ -17,6 +18,13 @@ public class DailyExpense {
         this.expense = expense;
     }
 
+    public long getTimeMillis() {
+        return timeMillis;
+    }
+
+    public void setTimeMillis(long timeMillis) {
+        this.timeMillis = timeMillis;
+    }
 
     public float getDayOfMonth() {
         return dayOfMonth;

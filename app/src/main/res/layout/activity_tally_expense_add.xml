@@ -37,17 +37,19 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
-                    <EditText
-                        android:id="@+id/etDesc"
+                    <TextView
+                        android:id="@+id/tvDesc"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="start|center_vertical"
-                        android:layout_weight="1"
                         android:layout_marginLeft="@dimen/padding_normal"
+                        android:layout_weight="1"
                         android:background="@color/transparent"
+                        android:ellipsize="end"
                         android:gravity="start|center_vertical"
-                        android:hint="@string/tally_expense_note"
-                        android:textColor="@color/appTextColorPrimary"
+                        android:hint="@string/tally_add_expense_note"
+                        android:maxLines="1"
+                        android:textColor="?android:textColorSecondary"
                         android:textSize="@dimen/app_text_size_medium"/>
 
                     <TextView

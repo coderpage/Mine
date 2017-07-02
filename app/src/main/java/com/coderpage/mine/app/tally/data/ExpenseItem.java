@@ -17,6 +17,9 @@ public class ExpenseItem {
     private String desc;
     private long time;
     private int categoryIconResId;
+    private long accountId;
+    private String syncId;
+    private boolean synced;
 
     public static ExpenseItem fromCursor(Cursor cursor) {
         long id = cursor.getLong(cursor.getColumnIndex(TallyContract.Expense._ID));
@@ -26,6 +29,9 @@ public class ExpenseItem {
         String desc = cursor.getString(cursor.getColumnIndex(TallyContract.Expense.DESC));
         long time = cursor.getLong(cursor.getColumnIndex(TallyContract.Expense.TIME));
         String categoryIcon = cursor.getString(cursor.getColumnIndex(TallyContract.Category.ICON));
+        long accountId = cursor.getLong(cursor.getColumnIndex(TallyContract.Expense.ACCOUNT_ID));
+        String syncId = cursor.getString(cursor.getColumnIndex(TallyContract.Expense.SYNC_ID));
+        int synced = cursor.getInt(cursor.getColumnIndex(TallyContract.Expense.SYNCED));
 
         ExpenseItem item = new ExpenseItem();
         item.setId(id);
@@ -35,6 +41,9 @@ public class ExpenseItem {
         item.setDesc(desc);
         item.setTime(time);
         item.setCategoryIconResId(CategoryIconHelper.resId(categoryIcon));
+        item.setAccountId(accountId);
+        item.setSyncId(syncId);
+        item.setSynced(synced == 1);
         return item;
     }
 
@@ -92,5 +101,29 @@ public class ExpenseItem {
 
     public void setCategoryIconResId(int categoryIconResId) {
         this.categoryIconResId = categoryIconResId;
+    }
+
+    public long getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(long accountId) {
+        this.accountId = accountId;
+    }
+
+    public String getSyncId() {
+        return syncId;
+    }
+
+    public void setSyncId(String syncId) {
+        this.syncId = syncId;
+    }
+
+    public boolean isSynced() {
+        return synced;
+    }
+
+    public void setSynced(boolean synced) {
+        this.synced = synced;
     }
 }

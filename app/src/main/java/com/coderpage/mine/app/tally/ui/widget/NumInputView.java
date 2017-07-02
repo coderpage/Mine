@@ -141,7 +141,9 @@ public class NumInputView extends LinearLayout {
             return;
         }
         mListener.onKeyClick(code);
-        mListener.onNumChange(newNumber);
+        if (code != KeyEvent.KEYCODE_ENTER){
+            mListener.onNumChange(newNumber);
+        }
     }
 
     public interface InputListener {

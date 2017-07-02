@@ -4,6 +4,7 @@
     <string name="delete">删除</string>
     <string name="modify">修改</string>
     <string name="place_holder">--</string>
+    <string name="date_format_m_d_e">"M月d日 E"</string>
 
     <!-- Menu item open About Activity -->
     <string name="description_about">关于</string>
@@ -52,6 +53,7 @@
     <string name="tally_sum_of_amount_month">本月账单总额</string>
     <string name="tally_calendar_title_format" formatted="false">%d年%d月</string>
     <string name="tally_expense_note">备注</string>
+    <string name="tally_add_expense_note">添加备注</string>
     <string name="tally_today_no_expense_record_tip">今天没花钱？快去记一笔~</string>
     <string name="tally_toady_expense_total">今日消费 %s 元</string>
     <string name="tally_check_month_expense">查看月账单</string>
@@ -72,7 +74,10 @@
         给我发邮件 <u>codenobug@163.com</u>
 
         <h5>可以提意见么？</h5>
-        可以，给我发邮件 <u>codenobug@163.com</u>
+        给我发邮件 <u>codenobug@163.com</u>
+
+        <h5>附源码地址</h5>
+        给我发邮件 <u>https://github.com/coderpage/Mine</u>
 
 
     ]]></string>

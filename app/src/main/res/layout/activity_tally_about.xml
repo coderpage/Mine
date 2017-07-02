@@ -27,6 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/spacing_normal"
                 android:layout_marginTop="@dimen/spacing_normal"
+                android:autoLink="all"
                 android:paddingBottom="@dimen/padding_micro"
                 android:paddingLeft="@dimen/spacing_normal"
                 android:paddingRight="@dimen/padding_normal"
