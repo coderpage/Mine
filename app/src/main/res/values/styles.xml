@@ -15,6 +15,9 @@
         <item name="android:windowNoTitle">true</item>
         <item name="actionBarSize">@dimen/toolbar_height</item>
 
+        <item name="android:textColorPrimary">@color/appTextColorPrimary</item>
+        <item name="android:textColorSecondary">@color/appTextColorSecondary</item>
+
         <item name="android:windowBackground">@color/background</item>
     </style>
 

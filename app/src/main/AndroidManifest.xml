@@ -34,8 +34,7 @@
             android:name=".app.tally.edit.ExpenseEditActivity"
             android:label="@string/tally_toolbar_title_add_record"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Tally"
-            android:windowSoftInputMode="adjustPan">
+            android:theme="@style/Theme.Tally">
         </activity>
 
         <activity

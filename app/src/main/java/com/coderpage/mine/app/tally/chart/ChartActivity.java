@@ -153,7 +153,11 @@ public class ChartActivity extends BaseActivity implements
         mLineChart.getLegend().setEnabled(false);
         mLineChart.setDragEnabled(true);
         mLineChart.setScaleEnabled(true);
-        mLineChart.setViewPortOffsets(0, dp2px(getContext(), 32F), dp2px(getContext(), 16F), 0);
+        mLineChart.setViewPortOffsets(
+                dp2px(getContext(), 16F),
+                dp2px(getContext(), 32F),
+                dp2px(getContext(), 16F),
+                0);
 
         XAxis xAxis = mLineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -340,7 +344,7 @@ public class ChartActivity extends BaseActivity implements
 
     }
 
-    private List<Entry> generateLineData(List<DailyExpense> monthDailyExpenseList){
+    private List<Entry> generateLineData(List<DailyExpense> monthDailyExpenseList) {
         List<Entry> entries = new ArrayList<>();
         for (DailyExpense expense : monthDailyExpenseList) {
             Entry entry = new Entry(expense.getDayOfMonth(), expense.getExpense());
