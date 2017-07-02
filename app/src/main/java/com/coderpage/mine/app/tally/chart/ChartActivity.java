@@ -24,22 +24,24 @@ import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.chart.data.DailyExpense;
 import com.coderpage.mine.app.tally.chart.data.Month;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
+import com.coderpage.mine.app.tally.utils.TimeUtils;
 import com.coderpage.mine.ui.BaseActivity;
 import com.coderpage.mine.ui.widget.DrawShadowFrameLayout;
 import com.coderpage.mine.utils.UIUtils;
 import com.coderpage.utils.AndroidUtils;
+import com.coderpage.utils.ResUtils;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,6 +52,7 @@ import java.util.Map;
 import static com.coderpage.mine.R.id.lineChart;
 import static com.coderpage.mine.app.tally.chart.ChartModel.ChartQueryEnum;
 import static com.coderpage.mine.app.tally.chart.ChartModel.ChartUserActionEnum;
+import static com.coderpage.utils.UIUtils.dp2px;
 
 /**
  * @author abner-l. 2017-04-23
@@ -74,6 +77,7 @@ public class ChartActivity extends BaseActivity implements
     private int mInitYear;
     private int mInitMonth;
     private Presenter mPresenter;
+    private ChartModel mModel;
     private UserActionListener mUserActionListener;
 
     @Override
@@ -97,7 +101,7 @@ public class ChartActivity extends BaseActivity implements
         setupLineChart();
         mMonthTv = (TextView) findViewById(R.id.tvMonth);
         mLineChartMonthExpenseTipTv = (TextView) findViewById(R.id.tvMonthExpenseTip);
-        mLineChartMonthDailySwitcherTv = (TextView) findViewById(R.id.tvMonthDailyChartSwitcher);
+//        mLineChartMonthDailySwitcherTv = (TextView) findViewById(R.id.tvMonthDailyChartSwitcher);
         mMonthTotalTv = (TextView) findViewById(R.id.tvMonthExpenseTotal);
         mPieChart = (PieChart) findViewById(R.id.pieChart);
         mCategoryMonthRecycler = (RecyclerView) findViewById(R.id.recyclerCategoryExpense);
@@ -111,21 +115,21 @@ public class ChartActivity extends BaseActivity implements
         mCategoryMonthRecycler.setAdapter(mMonthCategoryAdapter);
         setupPieChart();
 
-        mLineChartMonthDailySwitcherTv.setOnClickListener(mOnClickListener);
+//        mLineChartMonthDailySwitcherTv.setOnClickListener(mOnClickListener);
         findViewById(R.id.ivMonthSwitch).setOnClickListener(mOnClickListener);
     }
 
     private void initPresenter() {
+        mModel = new ChartModel(this);
         if (mInitYear != -1 && mInitMonth != -1) {
-            mPresenter = new PresenterImpl(new ChartModel(this),
-                    this, ChartUserActionEnum.values(), null);
+            mPresenter = new PresenterImpl(mModel, this, ChartUserActionEnum.values(), null);
             mPresenter.loadInitialQueries();
             Bundle args = new Bundle(2);
             args.putInt(EXTRA_YEAR, mInitYear);
             args.putInt(EXTRA_MONTH, mInitMonth);
             mUserActionListener.onUserAction(ChartUserActionEnum.SWITCH_MONTH, args);
         } else {
-            mPresenter = new PresenterImpl(new ChartModel(this),
+            mPresenter = new PresenterImpl(mModel,
                     this, ChartUserActionEnum.values(), ChartQueryEnum.values());
             mPresenter.loadInitialQueries();
         }
@@ -145,25 +149,32 @@ public class ChartActivity extends BaseActivity implements
     }
 
     private void setupLineChart() {
-        mLineChart.getAxisLeft().setDrawGridLines(false);
-        mLineChart.getXAxis().setDrawGridLines(false);
-        mLineChart.getXAxis().setGranularity(1f);
-        IAxisValueFormatter formatter = (value, axis) -> (int) value + "";
-        mLineChart.getXAxis().setValueFormatter(formatter);
-        mLineChart.getLegend().setEnabled(false);
         mLineChart.setDescription(null);
         mLineChart.getLegend().setEnabled(false);
-        mLineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        mLineChart.getXAxis().setDrawGridLines(false);
-        mLineChart.getXAxis().setDrawAxisLine(false);
-        mLineChart.getAxisRight().setDrawGridLines(false);
-        mLineChart.getAxisLeft().setDrawGridLines(false);
-        mLineChart.getAxisLeft().setDrawAxisLine(false);
-        mLineChart.getAxisRight().setDrawAxisLine(false);
-        mLineChart.getAxisLeft().setEnabled(false);
-        mLineChart.getAxisRight().setEnabled(false);
-        mLineChart.setDragEnabled(false);
-        mLineChart.setScaleEnabled(false);
+        mLineChart.setDragEnabled(true);
+        mLineChart.setScaleEnabled(true);
+        mLineChart.setViewPortOffsets(0, dp2px(getContext(), 32F), dp2px(getContext(), 16F), 0);
+
+        XAxis xAxis = mLineChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+        xAxis.setDrawAxisLine(false);
+        xAxis.setGranularity(1f);
+        xAxis.setEnabled(false);
+
+        YAxis axisRight = mLineChart.getAxisRight();
+        axisRight.setDrawGridLines(false);
+        axisRight.setDrawAxisLine(false);
+        axisRight.setDrawLabels(false);
+        axisRight.setEnabled(true);
+
+        YAxis axisLeft = mLineChart.getAxisLeft();
+        axisLeft.setDrawGridLines(false);
+        axisLeft.setDrawAxisLine(false);
+        axisLeft.setDrawLabels(false);
+        axisLeft.setDrawZeroLine(true);
+        axisLeft.setZeroLineWidth(0.2F);
+        axisLeft.setZeroLineColor(ResUtils.getColor(getContext(), R.color.colorHint));
     }
 
     private void setupPieChart() {
@@ -236,12 +247,21 @@ public class ChartActivity extends BaseActivity implements
         lineDataSet.setMode(LineDataSet.Mode.LINEAR);
         lineDataSet.setLabel(null);
         lineDataSet.setDrawCircleHole(false);
-        lineDataSet.setColor(getResources().getColor(R.color.chartLine));
-        lineDataSet.setCircleColor(getResources().getColor(R.color.chartLine));
-        lineDataSet.setLineWidth(1.0f);
-        lineDataSet.setCircleRadius(1.3f);
+        lineDataSet.setDrawValues(false);
+        lineDataSet.setColor(ResUtils.getColor(this, R.color.chartLine));
+        lineDataSet.setLineWidth(1.0F);
+        lineDataSet.setDrawCircles(false);
+        lineDataSet.setDrawHorizontalHighlightIndicator(false);
+        lineDataSet.setDrawVerticalHighlightIndicator(true);
+        lineDataSet.setHighLightColor(ResUtils.getColor(getContext(), R.color.colorHint));
+
+
         LineData lineData = new LineData(lineDataSet);
         mLineChart.setData(lineData);
+        mLineChart.getXAxis().setAxisMaximum(TimeUtils.getDaysTotalOfMonth(
+                mModel.getDisplayMonth().getYear(),
+                mModel.getDisplayMonth().getMonth()));
+        mLineChart.getXAxis().setAxisMinimum(0);
         mLineChart.animateY(1400, Easing.EasingOption.EaseInOutQuart);
     }
 
@@ -272,11 +292,7 @@ public class ChartActivity extends BaseActivity implements
                 showMonthTipViews(
                         model.getDisplayMonth().getYear(), model.getDisplayMonth().getMonth());
                 List<DailyExpense> monthDailyExpenseList = model.getMonthDailyExpenseList();
-                List<Entry> entries = new ArrayList<>();
-                for (DailyExpense expense : monthDailyExpenseList) {
-                    entries.add(new Entry(expense.getDayOfMonth(), expense.getExpense()));
-                }
-                showDailyExpenseLineChart(entries);
+                showDailyExpenseLineChart(generateLineData(monthDailyExpenseList));
                 reDrawPieChart(model.getMonthExpenseList());
                 float monthTotal = calculateMonthTotal(model.getMonthExpenseList());
                 mMonthTotalTv.setText(
@@ -307,11 +323,7 @@ public class ChartActivity extends BaseActivity implements
                     showMonthTipViews(
                             model.getDisplayMonth().getYear(), model.getDisplayMonth().getMonth());
                     List<DailyExpense> monthDailyExpenseList = model.getMonthDailyExpenseList();
-                    List<Entry> entries = new ArrayList<>();
-                    for (DailyExpense expense : monthDailyExpenseList) {
-                        entries.add(new Entry(expense.getDayOfMonth(), expense.getExpense()));
-                    }
-                    showDailyExpenseLineChart(entries);
+                    showDailyExpenseLineChart(generateLineData(monthDailyExpenseList));
                     reDrawPieChart(model.getMonthExpenseList());
 
                     float monthTotal = calculateMonthTotal(model.getMonthExpenseList());
@@ -326,6 +338,16 @@ public class ChartActivity extends BaseActivity implements
     @Override
     public void displayErrorMessage(ChartModel.ChartQueryEnum query) {
 
+    }
+
+    private List<Entry> generateLineData(List<DailyExpense> monthDailyExpenseList){
+        List<Entry> entries = new ArrayList<>();
+        for (DailyExpense expense : monthDailyExpenseList) {
+            Entry entry = new Entry(expense.getDayOfMonth(), expense.getExpense());
+            entry.setData(expense);
+            entries.add(entry);
+        }
+        return entries;
     }
 
     private float calculateMonthTotal(List<ExpenseItem> itemList) {

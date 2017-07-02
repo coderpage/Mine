@@ -4,6 +4,7 @@
     <string name="delete">删除</string>
     <string name="modify">修改</string>
     <string name="place_holder">--</string>
+    <string name="date_format_m_d_e">"M月d日 E"</string>
 
     <!-- Menu item open About Activity -->
     <string name="description_about">关于</string>

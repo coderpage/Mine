@@ -32,7 +32,7 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="150dp"
+        android:layout_height="180dp"
         android:background="@color/white"
         android:orientation="vertical">
 
@@ -42,7 +42,7 @@
             android:layout_height="1px"/>
 
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="42dp">
 
             <TextView
@@ -55,19 +55,19 @@
                 android:textColor="@color/appTextColorPrimary"
                 android:textSize="16sp"/>
 
-            <TextView
-                android:id="@+id/tvMonthDailyChartSwitcher"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/padding_normal"
-                android:gravity="center"
-                android:text="@string/tally_switch_2_monthly_expense"
-                android:textColor="@color/appTextColorPrimary"
-                android:textSize="16sp"/>
+            <!--<TextView-->
+                <!--android:id="@+id/tvMonthDailyChartSwitcher"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_marginRight="@dimen/padding_normal"-->
+                <!--android:gravity="center"-->
+                <!--android:text="@string/tally_switch_2_monthly_expense"-->
+                <!--android:textColor="@color/appTextColorPrimary"-->
+                <!--android:textSize="16sp"/>-->
         </RelativeLayout>
 
-        <com.github.mikephil.charting.charts.LineChart
+        <com.coderpage.mine.app.tally.chart.widget.DailyExpenseLineChart
             android:id="@+id/lineChart"
             android:layout_width="match_parent"
             android:layout_height="0dp"
