@@ -1,5 +1,6 @@
 package com.coderpage.mine.app.tally.ui.widget;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -28,6 +29,12 @@ public class NumInputView extends LinearLayout {
 
     public NumInputView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initView(context);
+    }
+
+    @TargetApi(21)
+    public NumInputView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
         initView(context);
     }
 

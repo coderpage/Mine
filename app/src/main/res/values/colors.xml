@@ -20,9 +20,12 @@
     <color name="colorPrimary">@color/white</color>
     <color name="colorPrimaryDark">#b0b0b0</color>
     <color name="colorAccent">#0F956F</color>
+
     <color name="appTextColorPrimary">#ff3e3e3e</color>
     <color name="appTextColorSecondary">#ff666666</color>
     <color name="appTextColorThird">#ff9b9b9b</color>
+    <color name="appTextColorLabel">@color/colorHint</color>
+
     <color name="appBgBtnNormal">@color/colorAccent</color>
     <color name="appBgBtnPressed">#008560</color>
     <color name="appBgBtnDisabled">#99aaaaaa</color>
@@ -48,6 +51,8 @@
     <color name="categoryColor16">#dba7bc</color>
     <color name="categoryColor17">#7f8b36</color>
     <color name="categoryColor18">#b5a353</color>
+
+    <color name="category_icon_color">@color/appTextColorPrimary</color>
 
     <color name="chartLine">#FF5722</color>
     <color name="markerViewBg">@color/transparent</color>
