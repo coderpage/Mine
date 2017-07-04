@@ -74,6 +74,7 @@
                 android:id="@+id/numInputView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/white"
                 android:elevation="4dp"
                 android:orientation="vertical"/>
 
@@ -109,7 +110,8 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/spacing_micro"
                         android:layout_toRightOf="@id/ivCategoryIcon"
-                        android:gravity="center"/>
+                        android:gravity="center"
+                        android:textColor="?android:textColorPrimary"/>
                 </RelativeLayout>
 
                 <TextView
@@ -119,7 +121,7 @@
                     android:layout_gravity="center_vertical|right"
                     android:gravity="center"
                     android:paddingRight="@dimen/padding_normal"
-                    android:textColor="@color/appTextColorPrimary"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="@dimen/app_text_size_large"/>
 
                 <include
@@ -133,9 +135,9 @@
                 android:id="@+id/gvCategoryIcon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
                 android:numColumns="6"
                 android:paddingBottom="@dimen/padding_normal"
+                android:paddingTop="@dimen/padding_normal"
                 android:verticalSpacing="@dimen/spacing_normal"/>
 
         </LinearLayout>

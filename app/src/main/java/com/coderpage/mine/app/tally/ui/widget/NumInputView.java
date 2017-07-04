@@ -1,11 +1,11 @@
 package com.coderpage.mine.app.tally.ui.widget;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.LinearLayout;
 
 import com.coderpage.mine.R;
@@ -32,6 +32,12 @@ public class NumInputView extends LinearLayout {
         initView(context);
     }
 
+    @TargetApi(21)
+    public NumInputView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        initView(context);
+    }
+
     private void initView(Context context) {
         setOrientation(VERTICAL);
         inflate(context, R.layout.layout_tally_input, this);
@@ -47,8 +53,7 @@ public class NumInputView extends LinearLayout {
         findViewById(R.id.tvNum8).setOnClickListener(mOnclickListener);
         findViewById(R.id.tvNum9).setOnClickListener(mOnclickListener);
         findViewById(R.id.tvClear).setOnClickListener(mOnclickListener);
-        findViewById(R.id.tvPlus).setOnClickListener(mOnclickListener);
-        findViewById(R.id.tvReduce).setOnClickListener(mOnclickListener);
+        findViewById(R.id.ivDelete).setOnClickListener(mOnclickListener);
         findViewById(R.id.tvDot).setOnClickListener(mOnclickListener);
         findViewById(R.id.tvOk).setOnClickListener(mOnclickListener);
     }
@@ -68,71 +73,69 @@ public class NumInputView extends LinearLayout {
         }
     }
 
-    private OnClickListener mOnclickListener = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            int id = v.getId();
-            switch (id) {
-                case R.id.tvNum0:
-                    mExpression += "0";
-                    callback(KeyEvent.KEYCODE_0, calculateResult());
-                    break;
-                case R.id.tvNum1:
-                    mExpression += "1";
-                    callback(KeyEvent.KEYCODE_1, calculateResult());
-                    break;
-                case R.id.tvNum2:
-                    mExpression += "2";
-                    callback(KeyEvent.KEYCODE_2, calculateResult());
-                    break;
-                case R.id.tvNum3:
-                    mExpression += "3";
-                    callback(KeyEvent.KEYCODE_3, calculateResult());
-                    break;
-                case R.id.tvNum4:
-                    mExpression += "4";
-                    callback(KeyEvent.KEYCODE_4, calculateResult());
-                    break;
-                case R.id.tvNum5:
-                    mExpression += "5";
-                    callback(KeyEvent.KEYCODE_5, calculateResult());
-                    break;
-                case R.id.tvNum6:
-                    mExpression += "6";
-                    callback(KeyEvent.KEYCODE_6, calculateResult());
-                    break;
-                case R.id.tvNum7:
-                    mExpression += "7";
-                    callback(KeyEvent.KEYCODE_7, calculateResult());
-                    break;
-                case R.id.tvNum8:
-                    mExpression += "8";
-                    callback(KeyEvent.KEYCODE_8, calculateResult());
-                    break;
-                case R.id.tvNum9:
-                    mExpression += "9";
-                    callback(KeyEvent.KEYCODE_9, calculateResult());
-                    break;
-                case R.id.tvClear:
-                    mExpression = "";
-                    callback(KeyEvent.KEYCODE_CLEAR, calculateResult());
-                    break;
-                case R.id.tvPlus:
-                    // no nothing for now
-                    break;
-                case R.id.tvReduce:
-                    // no nothing for now
-                    break;
-                case R.id.tvDot:
-                    if (!mExpression.contains(".")) {
-                        mExpression += ".";
-                        callback(KeyEvent.KEYCODE_NUMPAD_DOT, calculateResult());
-                    }
-                    break;
-                case R.id.tvOk:
-                    callback(KeyEvent.KEYCODE_ENTER, calculateResult());
-                    break;
-            }
+    private OnClickListener mOnclickListener = (v) -> {
+        int id = v.getId();
+        switch (id) {
+            case R.id.tvNum0:
+                mExpression += "0";
+                callback(KeyEvent.KEYCODE_0, calculateResult());
+                break;
+            case R.id.tvNum1:
+                mExpression += "1";
+                callback(KeyEvent.KEYCODE_1, calculateResult());
+                break;
+            case R.id.tvNum2:
+                mExpression += "2";
+                callback(KeyEvent.KEYCODE_2, calculateResult());
+                break;
+            case R.id.tvNum3:
+                mExpression += "3";
+                callback(KeyEvent.KEYCODE_3, calculateResult());
+                break;
+            case R.id.tvNum4:
+                mExpression += "4";
+                callback(KeyEvent.KEYCODE_4, calculateResult());
+                break;
+            case R.id.tvNum5:
+                mExpression += "5";
+                callback(KeyEvent.KEYCODE_5, calculateResult());
+                break;
+            case R.id.tvNum6:
+                mExpression += "6";
+                callback(KeyEvent.KEYCODE_6, calculateResult());
+                break;
+            case R.id.tvNum7:
+                mExpression += "7";
+                callback(KeyEvent.KEYCODE_7, calculateResult());
+                break;
+            case R.id.tvNum8:
+                mExpression += "8";
+                callback(KeyEvent.KEYCODE_8, calculateResult());
+                break;
+            case R.id.tvNum9:
+                mExpression += "9";
+                callback(KeyEvent.KEYCODE_9, calculateResult());
+                break;
+            case R.id.tvClear:
+                mExpression = "";
+                callback(KeyEvent.KEYCODE_CLEAR, calculateResult());
+                break;
+            case R.id.ivDelete:
+                // no nothing for now
+                if (!TextUtils.isEmpty(mExpression)) {
+                    mExpression = mExpression.substring(0, mExpression.length() - 1);
+                    callback(KeyEvent.KEYCODE_DEL, calculateResult());
+                }
+                break;
+            case R.id.tvDot:
+                if (!mExpression.contains(".")) {
+                    mExpression += ".";
+                    callback(KeyEvent.KEYCODE_NUMPAD_DOT, calculateResult());
+                }
+                break;
+            case R.id.tvOk:
+                callback(KeyEvent.KEYCODE_ENTER, calculateResult());
+                break;
         }
     };
 
@@ -141,7 +144,7 @@ public class NumInputView extends LinearLayout {
             return;
         }
         mListener.onKeyClick(code);
-        if (code != KeyEvent.KEYCODE_ENTER){
+        if (code != KeyEvent.KEYCODE_ENTER) {
             mListener.onNumChange(newNumber);
         }
     }

@@ -73,7 +73,7 @@ public class ExpenseEditActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tally_expense_add);
+        setContentView(R.layout.activity_tally_expense_editor);
         setTitle(R.string.tally_toolbar_title_add_record);
 
         initData();

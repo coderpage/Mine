@@ -45,8 +45,8 @@ android {
         abortOnError false
     }
     productFlavors {
-        yingyongbao {
-        }
+        yingyongbao {}
+        xiaomi {}
     }
 }
 
