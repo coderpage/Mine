@@ -52,7 +52,9 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
     }
 
     @Override
-    public void deliverUserAction(MainUserActionEnum action, @Nullable Bundle args, UserActionCallback callback) {
+    public void deliverUserAction(MainUserActionEnum action,
+                                  @Nullable Bundle args,
+                                  UserActionCallback callback) {
         switch (action) {
             case RELOAD_MONTH_TOTAL:
                 reloadMonthTotalAsync((monthRecords) -> {

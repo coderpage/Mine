@@ -32,7 +32,8 @@ import static com.coderpage.utils.LogUtils.LOGE;
  * @since 0.2.0
  */
 
-public class MainHistoryExpenseAdapter extends RecyclerView.Adapter<MainHistoryExpenseAdapter.ExpenseItemViewHolder> {
+public class MainHistoryExpenseAdapter extends
+        RecyclerView.Adapter<MainHistoryExpenseAdapter.ExpenseItemViewHolder> {
     private static final String TAG = LogUtils.makeLogTag(MainHistoryExpenseAdapter.class);
 
     private Activity mActivity;
@@ -55,7 +56,8 @@ public class MainHistoryExpenseAdapter extends RecyclerView.Adapter<MainHistoryE
 
     @Override
     public ExpenseItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ExpenseItemViewHolder(mInflater.inflate(R.layout.tally_recycle_item_expense_record, null));
+        return new ExpenseItemViewHolder(mInflater.inflate(
+                R.layout.tally_recycle_item_expense_record, null));
     }
 
     @Override
