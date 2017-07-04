@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:app="http://schemas.android.com/apk/res-auto"
        android:layout_width="match_parent"
        android:layout_height="match_parent"
        android:background="@color/white"
@@ -34,44 +35,15 @@
                 android:gravity="center"
                 android:text="@string/num_3"/>
 
-            <TextView
-                android:id="@+id/tvPlus"
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/ivDelete"
                 style="@style/TextAppearance.TallyNumInputItem"
                 android:layout_height="@dimen/tally_input_item_height"
-                android:gravity="center"
-                android:text="@string/symbol_plus"/>
+                app:srcCompat="@drawable/ic_delete"
+                android:scaleType="center"
+                android:gravity="center"/>
         </TableRow>
 
-        <TableRow>
-
-            <TextView
-                android:id="@+id/tvNum4"
-                style="@style/TextAppearance.TallyNumInputItem"
-                android:layout_height="@dimen/tally_input_item_height"
-                android:gravity="center"
-                android:text="@string/num_4"/>
-
-            <TextView
-                android:id="@+id/tvNum5"
-                style="@style/TextAppearance.TallyNumInputItem"
-                android:layout_height="@dimen/tally_input_item_height"
-                android:gravity="center"
-                android:text="@string/num_5"/>
-
-            <TextView
-                android:id="@+id/tvNum6"
-                style="@style/TextAppearance.TallyNumInputItem"
-                android:layout_height="@dimen/tally_input_item_height"
-                android:gravity="center"
-                android:text="@string/num_6"/>
-
-            <TextView
-                android:id="@+id/tvReduce"
-                style="@style/TextAppearance.TallyNumInputItem"
-                android:layout_height="@dimen/tally_input_item_height"
-                android:gravity="center"
-                android:text="@string/symbol_reduce"/>
-        </TableRow>
 
         <TableRow>
 
@@ -80,6 +52,37 @@
                 android:layout_height="wrap_content"
                 android:layout_span="3"
                 android:stretchColumns="*">
+
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/tvNum4"
+                        style="@style/TextAppearance.TallyNumInputItem"
+                        android:layout_height="@dimen/tally_input_item_height"
+                        android:gravity="center"
+                        android:text="@string/num_4"/>
+
+                    <TextView
+                        android:id="@+id/tvNum5"
+                        style="@style/TextAppearance.TallyNumInputItem"
+                        android:layout_height="@dimen/tally_input_item_height"
+                        android:gravity="center"
+                        android:text="@string/num_5"/>
+
+                    <TextView
+                        android:id="@+id/tvNum6"
+                        style="@style/TextAppearance.TallyNumInputItem"
+                        android:layout_height="@dimen/tally_input_item_height"
+                        android:gravity="center"
+                        android:text="@string/num_6"/>
+
+                    <!--<TextView-->
+                    <!--android:id="@+id/tvReduce"-->
+                    <!--style="@style/TextAppearance.TallyNumInputItem"-->
+                    <!--android:layout_height="@dimen/tally_input_item_height"-->
+                    <!--android:gravity="center"-->
+                    <!--android:text="@string/symbol_reduce"/>-->
+                </TableRow>
 
                 <TableRow>
 

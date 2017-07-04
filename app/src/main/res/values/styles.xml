@@ -29,7 +29,8 @@
     <style name="TextAppearance.TallyNumInputItem" parent="TextAppearance">
         <item name="android:background">@drawable/bg_tally_num_input_item</item>
         <item name="android:clickable">true</item>
-        <item name="android:layout_margin">0.5dp</item>
+        <item name="android:layout_margin">1px</item>
+        <item name="android:stateListAnimator">@animator/selector_tally_num_intput_animator</item>
     </style>
 
     <style name="TextAppearance.Headline" parent="TextAppearance">
