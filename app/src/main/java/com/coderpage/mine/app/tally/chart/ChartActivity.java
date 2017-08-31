@@ -26,8 +26,6 @@ import com.coderpage.mine.app.tally.chart.data.Month;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
 import com.coderpage.mine.app.tally.utils.TimeUtils;
 import com.coderpage.mine.ui.BaseActivity;
-import com.coderpage.mine.ui.widget.DrawShadowFrameLayout;
-import com.coderpage.mine.utils.UIUtils;
 import com.coderpage.utils.AndroidUtils;
 import com.coderpage.utils.ResUtils;
 import com.github.mikephil.charting.animation.Easing;
@@ -267,26 +265,6 @@ public class ChartActivity extends BaseActivity implements
                 mModel.getDisplayMonth().getMonth()));
         mLineChart.getXAxis().setAxisMinimum(0);
         mLineChart.animateY(1400, Easing.EasingOption.EaseInOutQuart);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        int actionBarSize = UIUtils.calculateActionBarSize(this);
-        DrawShadowFrameLayout drawShadowFrameLayout =
-                ((DrawShadowFrameLayout) findViewById(R.id.main_content));
-        if (drawShadowFrameLayout != null) {
-            drawShadowFrameLayout.setShadowTopOffset(actionBarSize);
-        }
-        setContentTopClearance(actionBarSize);
-    }
-
-    private void setContentTopClearance(int clearance) {
-        View rootView = findViewById(R.id.lyContainer);
-        if (rootView != null) {
-            rootView.setPadding(rootView.getPaddingLeft(), clearance,
-                    rootView.getPaddingRight(), rootView.getPaddingBottom());
-        }
     }
 
     @Override

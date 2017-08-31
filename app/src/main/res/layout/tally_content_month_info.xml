@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="@drawable/bg_touchable_white">
-
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardCornerRadius="@dimen/cardDefaultCornerRadius"
+    app:cardElevation="@dimen/cardDefaultElevation"
+    card_view:context=".app.tally.main.MainActivity"
+    card_view:showIn="@layout/activity_tally">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,12 +48,11 @@
 
         </FrameLayout>
 
-
         <View
             style="@style/Divider"
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_marginBottom="@dimen/padding_micro"
+            android:layout_marginBottom="@dimen/spacing_micro"
             android:layout_marginTop="@dimen/padding_micro"
             android:paddingLeft="@dimen/padding_normal"
             android:paddingRight="@dimen/padding_normal"/>
@@ -61,16 +67,4 @@
 
     </LinearLayout>
 
-    <include
-        layout="@layout/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_gravity="top"/>
-
-    <include
-        layout="@layout/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_gravity="bottom"/>
-
-</FrameLayout>
+</android.support.v7.widget.CardView>

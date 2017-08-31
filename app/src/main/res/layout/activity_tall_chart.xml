@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.coderpage.mine.ui.widget.DrawShadowFrameLayout
+<LinearLayout
     android:id="@+id/main_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    app:shadowDrawable="@drawable/header_shadow"
+    android:orientation="vertical"
     tools:context=".app.tally.chart.ChartActivity">
+
+    <include layout="@layout/toolbar"/>
+
+    <View
+        android:id="@+id/ivToolbarShadow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shadow_height"
+        android:background="@drawable/shadow_appbar"/>
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/lyContainer"
@@ -64,11 +71,4 @@
     </android.support.v4.widget.NestedScrollView>
 
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        style="@style/Widget.Toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/white"/>
-
-</com.coderpage.mine.ui.widget.DrawShadowFrameLayout>
+</LinearLayout>

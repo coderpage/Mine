@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.view.View;
 
 import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
@@ -13,8 +12,6 @@ import com.coderpage.mine.app.tally.data.ExpenseItem;
 import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
 import com.coderpage.mine.app.tally.ui.widget.LoadMoreRecyclerView;
 import com.coderpage.mine.ui.BaseActivity;
-import com.coderpage.mine.ui.widget.DrawShadowFrameLayout;
-import com.coderpage.mine.utils.UIUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -76,26 +73,6 @@ public class RecordsActivity extends BaseActivity implements UpdatableView<Recor
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         setToolbarAsBack(v -> finish());
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        int actionBarSize = UIUtils.calculateActionBarSize(this);
-        DrawShadowFrameLayout drawShadowFrameLayout =
-                (DrawShadowFrameLayout) findViewById(R.id.main_content);
-        if (drawShadowFrameLayout != null) {
-            drawShadowFrameLayout.setShadowTopOffset(actionBarSize);
-        }
-        setContentTopClearance(actionBarSize);
-    }
-
-    private void setContentTopClearance(int clearance) {
-        View view = findViewById(R.id.lyContainer);
-        if (view != null) {
-            view.setPadding(view.getPaddingLeft(), clearance,
-                    view.getPaddingRight(), view.getPaddingBottom());
-        }
     }
 
     @Override

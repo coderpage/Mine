@@ -4,11 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.LinearLayoutManager;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.coderpage.framework.UpdatableView;
@@ -23,8 +25,6 @@ import com.coderpage.mine.app.tally.records.RecordsActivity;
 import com.coderpage.mine.app.tally.setting.SettingActivity;
 import com.coderpage.mine.app.tally.ui.widget.LoadMoreRecyclerView;
 import com.coderpage.mine.ui.BaseActivity;
-import com.coderpage.mine.ui.widget.DrawShadowFrameLayout;
-import com.coderpage.mine.utils.UIUtils;
 import com.coderpage.utils.LogUtils;
 import com.coderpage.utils.ResUtils;
 import com.github.mikephil.charting.animation.Easing;
@@ -88,6 +88,7 @@ public class MainActivity extends BaseActivity
         mHistoryRecordsRecycler.setNestedScrollingEnabled(false);
         mAllExpenseAdapter = new MainHistoryExpenseAdapter(this);
         mHistoryRecordsRecycler.setAdapter(mAllExpenseAdapter);
+
         mSumOfMonthAmountTv = ((TextView) findViewById(R.id.tvMonthAmount));
         mTodayExpenseTipTv = ((TextView) findViewById(R.id.tvTodayExpenseRecordTip));
 
@@ -96,6 +97,7 @@ public class MainActivity extends BaseActivity
 
         findViewById(R.id.btnAddRecord).setOnClickListener(mOnClickListener);
         findViewById(R.id.lyMonthInfo).setOnClickListener(mOnClickListener);
+        findViewById(R.id.ivBottomMenu).setOnClickListener(mOnClickListener);
     }
 
     private void initPresenter() {
@@ -111,46 +113,31 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
-        int actionBarSize = UIUtils.calculateActionBarSize(this);
-        DrawShadowFrameLayout drawShadowFrameLayout =
-                (DrawShadowFrameLayout) findViewById(R.id.main_content);
-        if (drawShadowFrameLayout != null) {
-            drawShadowFrameLayout.setShadowTopOffset(actionBarSize);
-        }
-        setContentTopClearance(actionBarSize);
     }
 
-    private void setContentTopClearance(int clearance) {
-        View view = findViewById(R.id.lyContainer);
-        if (view != null) {
-            view.setPadding(view.getPaddingLeft(), clearance,
-                    view.getPaddingRight(), view.getPaddingBottom());
-        }
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        super.onCreateOptionsMenu(menu);
+//        getMenuInflater().inflate(R.menu.mine_tally, menu);
+//        return true;
+//    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.mine_tally, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.menu_about:
-                startActivity(new Intent(this, AboutActivity.class));
-                break;
-            case R.id.menu_expense_records:
-                startActivity(new Intent(this, RecordsActivity.class));
-                break;
-            case R.id.menu_setting:
-                startActivity(new Intent(this, SettingActivity.class));
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        int id = item.getItemId();
+//        switch (id) {
+//            case R.id.menu_about:
+//                startActivity(new Intent(this, AboutActivity.class));
+//                break;
+//            case R.id.menu_expense_records:
+//                startActivity(new Intent(this, RecordsActivity.class));
+//                break;
+//            case R.id.menu_setting:
+//                startActivity(new Intent(this, SettingActivity.class));
+//                break;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @Override
     protected void onDestroy() {
@@ -169,8 +156,56 @@ public class MainActivity extends BaseActivity
                 Intent chartIntent = new Intent(MainActivity.this, ChartActivity.class);
                 startActivity(chartIntent);
                 break;
+            case R.id.ivBottomMenu:
+                showBottomSheet();
+                break;
         }
     };
+
+    private void showBottomSheet() {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this, R.style.Widget_Dialog_BottomSheet);
+        View.OnClickListener menuClickListener = (v) -> {
+            int id = v.getId();
+            switch (id) {
+                case R.id.lyBtnAbout:
+                    startActivity(new Intent(this, AboutActivity.class));
+                    bottomSheetDialog.dismiss();
+                    break;
+                case R.id.lyBtnSetting:
+                    startActivity(new Intent(this, SettingActivity.class));
+                    bottomSheetDialog.dismiss();
+                    break;
+                case R.id.lyBtnExpenseRecords:
+                    startActivity(new Intent(this, RecordsActivity.class));
+                    bottomSheetDialog.dismiss();
+                    break;
+                case R.id.lyBtnChart:
+                    startActivity(new Intent(this, ChartActivity.class));
+                    bottomSheetDialog.dismiss();
+                    break;
+            }
+        };
+
+        View view = getLayoutInflater().inflate(R.layout.widget_tally_bottom_menu_sheet, null);
+        view.findViewById(R.id.lyBtnAbout).setOnClickListener(menuClickListener);
+        view.findViewById(R.id.lyBtnSetting).setOnClickListener(menuClickListener);
+        view.findViewById(R.id.lyBtnExpenseRecords).setOnClickListener(menuClickListener);
+        view.findViewById(R.id.lyBtnChart).setOnClickListener(menuClickListener);
+
+        bottomSheetDialog.setContentView(view);
+        bottomSheetDialog.setCanceledOnTouchOutside(true);
+        bottomSheetDialog.show();
+
+        Window window = bottomSheetDialog.getWindow();
+        if (window == null) {
+            return;
+        }
+        window.setWindowAnimations(R.style.BottomSheetAnimation);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventRecordAdd(EventRecordAdd event) {

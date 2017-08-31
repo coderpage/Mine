@@ -10,8 +10,6 @@ import android.widget.TextView;
 import com.coderpage.mine.BuildConfig;
 import com.coderpage.mine.R;
 import com.coderpage.mine.ui.BaseActivity;
-import com.coderpage.mine.ui.widget.DrawShadowFrameLayout;
-import com.coderpage.mine.utils.UIUtils;
 
 /**
  * @author abner-l. 2017-03-23
@@ -33,25 +31,5 @@ public class AboutActivity extends BaseActivity {
     public void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         setToolbarAsBack((View v) -> finish());
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        int actionBarSize = UIUtils.calculateActionBarSize(this);
-        DrawShadowFrameLayout drawShadowFrameLayout =
-                ((DrawShadowFrameLayout) findViewById(R.id.main_content));
-        if (drawShadowFrameLayout != null) {
-            drawShadowFrameLayout.setShadowTopOffset(actionBarSize);
-        }
-        setContentTopClearance(actionBarSize);
-    }
-
-    private void setContentTopClearance(int clearance) {
-        View rootView = findViewById(R.id.lyContainer);
-        if (rootView != null) {
-            rootView.setPadding(rootView.getPaddingLeft(), clearance,
-                    rootView.getPaddingRight(), rootView.getPaddingBottom());
-        }
     }
 }
