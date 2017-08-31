@@ -47,6 +47,13 @@ android {
     }
 }
 
+apply plugin: 'bugly'
+
+bugly {
+    appId = rootProject.buglyAppId
+    appKey = rootProject.buglyAppKey
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':framework')
