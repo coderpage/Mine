@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.coderpage.mine.ui.widget.DrawShadowFrameLayout
+<LinearLayout
     android:id="@+id/main_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    app:shadowDrawable="@drawable/header_shadow"
+    android:orientation="vertical"
     tools:context=".app.tally.about.AboutActivity">
+
+
+    <include layout="@layout/toolbar"/>
+
+    <View
+        android:id="@+id/ivToolbarShadow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shadow_height"
+        android:background="@drawable/shadow_appbar"/>
 
     <ScrollView
         android:id="@+id/lyContainer"
@@ -39,6 +47,4 @@
 
     </ScrollView>
 
-    <include layout="@layout/toolbar"/>
-
-</com.coderpage.mine.ui.widget.DrawShadowFrameLayout>
+</LinearLayout>

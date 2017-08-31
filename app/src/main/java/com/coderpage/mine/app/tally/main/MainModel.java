@@ -26,7 +26,7 @@ import static com.coderpage.utils.LogUtils.LOGE;
  * @since 0.2.0
  */
 
-public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainUserActionEnum> {
+class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainUserActionEnum> {
     private static final String TAG = LogUtils.makeLogTag(MainModel.class);
 
     static final String EXTRA_EXPENSE_ID = "extra_expense_id";
@@ -140,8 +140,8 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
 
     }
 
-   private void queryExpenseAsync(String selection, String[] selectionArgs,
-                           String order, SimpleCallback<List<ExpenseItem>> callback) {
+    private void queryExpenseAsync(String selection, String[] selectionArgs,
+                                   String order, SimpleCallback<List<ExpenseItem>> callback) {
         new AsyncTask<Void, Void, List<ExpenseItem>>() {
             @Override
             protected List<ExpenseItem> doInBackground(Void... params) {
@@ -169,7 +169,7 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
         }.executeOnExecutor(AsyncTaskExecutor.executor());
     }
 
-   private void reloadMonthTotalAsync(SimpleCallback<List<ExpenseItem>> callback) {
+    private void reloadMonthTotalAsync(SimpleCallback<List<ExpenseItem>> callback) {
         Calendar monthStartCalendar = Calendar.getInstance();
         monthStartCalendar.set(Calendar.DAY_OF_MONTH, 1);
         monthStartCalendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -254,7 +254,7 @@ public class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainU
         }
     }
 
-    public enum MainUserActionEnum implements UserActionEnum {
+    enum MainUserActionEnum implements UserActionEnum {
         RELOAD_MONTH_TOTAL(1),
         EXPENSE_DELETE(2),
         REFRESH_TODAY_EXPENSE(3);

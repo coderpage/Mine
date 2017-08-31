@@ -32,7 +32,7 @@ import static com.coderpage.utils.LogUtils.LOGE;
  * @since 0.2.0
  */
 
-public class MainHistoryExpenseAdapter extends
+class MainHistoryExpenseAdapter extends
         RecyclerView.Adapter<MainHistoryExpenseAdapter.ExpenseItemViewHolder> {
     private static final String TAG = LogUtils.makeLogTag(MainHistoryExpenseAdapter.class);
 
@@ -43,7 +43,7 @@ public class MainHistoryExpenseAdapter extends
 
     private ArrayList<ExpenseItem> mExpenseItemList = new ArrayList<>();
 
-    public MainHistoryExpenseAdapter(Activity activity) {
+    MainHistoryExpenseAdapter(Activity activity) {
         mActivity = activity;
         mInflater = LayoutInflater.from(activity);
         mAmountFormat = mActivity.getString(R.string.tally_amount_cny);
@@ -57,7 +57,7 @@ public class MainHistoryExpenseAdapter extends
     @Override
     public ExpenseItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ExpenseItemViewHolder(mInflater.inflate(
-                R.layout.tally_recycle_item_expense_record, null));
+                R.layout.tally_recycle_item_expense_record, parent, false));
     }
 
     @Override
@@ -66,7 +66,7 @@ public class MainHistoryExpenseAdapter extends
         holder.setExpense(expenseItem);
     }
 
-    public void setUserActionListener(UpdatableView.UserActionListener userActionListener) {
+    void setUserActionListener(UpdatableView.UserActionListener userActionListener) {
         mUserActionListener = userActionListener;
     }
 

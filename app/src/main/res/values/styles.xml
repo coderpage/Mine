@@ -72,6 +72,20 @@
         <item name="android:windowBackground">@drawable/bg_common_dialog</item>
     </style>
 
+    <style name="Widget.Dialog.BottomSheet" parent="Widget.Dialog">
+        <item name="android:windowFrame">@null</item><!--边框-->
+        <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
+        <item name="android:windowIsTranslucent">false</item><!--半透明-->
+        <item name="android:windowNoTitle">true</item><!--无标题-->
+        <item name="android:windowBackground">@color/transparent</item><!--背景透明-->
+        <item name="android:backgroundDimEnabled">true</item><!--模糊-->
+    </style>
+
+    <style name="BottomSheetAnimation" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/dialog_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_out</item>
+    </style>
+
     <style name="Divider">
         <item name="android:background">@color/divider</item>
         <item name="android:layout_height">1px</item>
@@ -79,5 +93,9 @@
 
     <style name="Widget.PopupWindow" parent="Base.Widget.AppCompat.Light.PopupMenu">
 
+    </style>
+
+    <style name="Widget.Btn.Borderless">
+        <item name="android:background">@drawable/btn_bottom_borderless_withpadding</item>
     </style>
 </resources>

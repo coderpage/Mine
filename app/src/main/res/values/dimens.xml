@@ -11,9 +11,17 @@
     <dimen name="padding_normal">16dp</dimen>
     <dimen name="padding_large">36dp</dimen>
 
+    <dimen name="cardDefaultCornerRadius">2dp</dimen>
+    <dimen name="cardDefaultElevation">2dp</dimen>
+    <dimen name="cardVerticalMargin">0dp</dimen>
+
     <!-- toolBar -->
     <dimen name="toolbar_height">52dp</dimen>
     <dimen name="headerbar_elevation">4dp</dimen>
+    <dimen name="shadow_height">4dp</dimen>
+    <dimen name="shadow_height_micro">2dp</dimen>
+
+    <dimen name="bottom_bar_height">48dp</dimen>
 
     <!-- App Primary Text Sizes -->
     <dimen name="app_text_size_xsmall">11sp</dimen>

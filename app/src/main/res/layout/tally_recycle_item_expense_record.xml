@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_touchable_white"
+    android:layout_marginBottom="@dimen/cardVerticalMargin"
+    android:layout_marginLeft="@dimen/spacing_micro"
+    android:layout_marginRight="@dimen/spacing_micro"
+    android:layout_marginTop="@dimen/cardVerticalMargin"
     android:clickable="true"
-    android:minHeight="66dp">
+    android:foreground="?attr/selectableItemBackground"
+    android:minHeight="66dp"
+    app:cardCornerRadius="@dimen/cardDefaultCornerRadius"
+    app:cardElevation="@dimen/cardDefaultElevation">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,9 +46,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/spacing_micro"
-                    android:textSize="@dimen/app_text_size_medium"
                     android:gravity="start|center_vertical"
-                    android:textColor="@color/appTextColorPrimary"/>
+                    android:textColor="@color/appTextColorPrimary"
+                    android:textSize="@dimen/app_text_size_medium"/>
             </LinearLayout>
 
             <TextView
@@ -74,11 +80,4 @@
 
     </LinearLayout>
 
-    <include
-        layout="@layout/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_gravity="bottom"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"/>
-</FrameLayout>
+</android.support.v7.widget.CardView>

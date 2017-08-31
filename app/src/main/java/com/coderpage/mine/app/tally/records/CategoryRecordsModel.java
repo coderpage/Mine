@@ -26,7 +26,7 @@ import static com.coderpage.utils.LogUtils.makeLogTag;
  * @since 0.1.0
  */
 
-public class CategoryRecordsModel implements
+class CategoryRecordsModel implements
         Model<CategoryRecordsModel.RecordsQueryEnum, CategoryRecordsModel.RecordsUserActionEnum> {
     private static final String TAG = makeLogTag(RecordsModel.class);
 
@@ -189,7 +189,7 @@ public class CategoryRecordsModel implements
         }.executeOnExecutor(AsyncTaskExecutor.executor());
     }
 
-    public void deleteExpenseByIdAsync(long expenseId, SimpleCallback<Integer> callback) {
+     void deleteExpenseByIdAsync(long expenseId, SimpleCallback<Integer> callback) {
         new AsyncTask<Void, Void, Integer>() {
             @Override
             protected Integer doInBackground(Void... params) {

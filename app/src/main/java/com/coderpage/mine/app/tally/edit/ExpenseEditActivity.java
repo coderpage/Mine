@@ -25,8 +25,6 @@ import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
 import com.coderpage.mine.app.tally.ui.widget.NumInputView;
 import com.coderpage.mine.app.tally.utils.DatePickUtils;
 import com.coderpage.mine.ui.BaseActivity;
-import com.coderpage.mine.ui.widget.DrawShadowFrameLayout;
-import com.coderpage.mine.utils.UIUtils;
 import com.coderpage.utils.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -126,27 +124,6 @@ public class ExpenseEditActivity extends BaseActivity
         super.onPostCreate(savedInstanceState);
         setToolbarAsClose((View v) -> finish());
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        int actionBarSize = UIUtils.calculateActionBarSize(this);
-        DrawShadowFrameLayout drawShadowFrameLayout =
-                (DrawShadowFrameLayout) findViewById(R.id.main_content);
-        if (drawShadowFrameLayout != null) {
-            drawShadowFrameLayout.setShadowTopOffset(actionBarSize);
-        }
-        setContentTopClearance(actionBarSize);
-    }
-
-    private void setContentTopClearance(int clearance) {
-        View view = findViewById(R.id.lyContainer);
-        if (view != null) {
-            view.setPadding(view.getPaddingLeft(), clearance,
-                    view.getPaddingRight(), view.getPaddingBottom());
-        }
-    }
-
 
     @Override
     public void displayData(ExpenseEditModel model, ExpenseEditModel.EditQueryEnum query) {

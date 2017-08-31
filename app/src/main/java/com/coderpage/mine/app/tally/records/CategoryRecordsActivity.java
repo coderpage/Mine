@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import com.coderpage.framework.Presenter;
 import com.coderpage.framework.PresenterImpl;
@@ -16,10 +15,7 @@ import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
 import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
-import com.coderpage.mine.app.tally.main.MainModel;
 import com.coderpage.mine.ui.BaseActivity;
-import com.coderpage.mine.ui.widget.DrawShadowFrameLayout;
-import com.coderpage.mine.utils.UIUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -43,7 +39,7 @@ public class CategoryRecordsActivity extends BaseActivity implements UpdatableVi
     private long mCategoryId;
 
     private RecyclerView mHistoryRecordsRecycler;
-    private SimpleRecorAdapter mHistoryRecordsAdapter;
+    private SimpleRecordAdapter mHistoryRecordsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +62,7 @@ public class CategoryRecordsActivity extends BaseActivity implements UpdatableVi
         mHistoryRecordsRecycler = ((RecyclerView) findViewById(R.id.recyclerRecord));
         mHistoryRecordsRecycler.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        mHistoryRecordsAdapter = new SimpleRecorAdapter(this);
+        mHistoryRecordsAdapter = new SimpleRecordAdapter(this);
         mHistoryRecordsRecycler.setAdapter(mHistoryRecordsAdapter);
     }
 
@@ -90,27 +86,7 @@ public class CategoryRecordsActivity extends BaseActivity implements UpdatableVi
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        setToolbarAsBack(v -> finish());
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        int actionBarSize = UIUtils.calculateActionBarSize(this);
-        DrawShadowFrameLayout drawShadowFrameLayout =
-                (DrawShadowFrameLayout) findViewById(R.id.main_content);
-        if (drawShadowFrameLayout != null) {
-            drawShadowFrameLayout.setShadowTopOffset(actionBarSize);
-        }
-        setContentTopClearance(actionBarSize);
-    }
-
-    private void setContentTopClearance(int clearance) {
-        View view = findViewById(R.id.lyContainer);
-        if (view != null) {
-            view.setPadding(view.getPaddingLeft(), clearance,
-                    view.getPaddingRight(), view.getPaddingBottom());
-        }
+        setToolbarAsClose(v -> finish());
     }
 
     @Override
@@ -151,7 +127,6 @@ public class CategoryRecordsActivity extends BaseActivity implements UpdatableVi
                 if (success) {
                     long deletedId = args.getLong(CategoryRecordsModel.EXTRA_EXPENSE_ID);
                     mHistoryRecordsAdapter.removeItem(deletedId);
-                    mUserActionListener.onUserAction(MainModel.MainUserActionEnum.RELOAD_MONTH_TOTAL, null);
                 }
                 break;
         }

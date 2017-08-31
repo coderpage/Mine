@@ -2,8 +2,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
-             android:background="@drawable/bg_touchable_transparent"
-             android:clickable="true">
+             android:clickable="true"
+             android:foreground="?attr/selectableItemBackground">
 
     <TextView
         android:id="@+id/tvMonth"
@@ -19,5 +19,6 @@
         android:layout_gravity="right"
         android:gravity="center_vertical|right"
         android:paddingRight="@dimen/padding_normal"
-        android:text="@string/tally_check_month_expense"/>
+        android:text="@string/tally_check_month_expense"
+        android:textColor="@color/colorAccent"/>
 </FrameLayout>

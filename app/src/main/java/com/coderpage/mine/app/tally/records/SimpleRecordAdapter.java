@@ -17,7 +17,6 @@ import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
 import com.coderpage.mine.app.tally.edit.ExpenseEditActivity;
-import com.coderpage.mine.app.tally.main.MainModel;
 import com.coderpage.mine.app.tally.utils.TimeUtils;
 import com.coderpage.mine.ui.widget.ButtonGroupDialog;
 import com.coderpage.utils.LogUtils;
@@ -32,7 +31,7 @@ import static com.coderpage.utils.LogUtils.LOGE;
  * @author abner-l. 2017-05-18
  */
 
-public class SimpleRecorAdapter extends RecyclerView.Adapter<SimpleRecorAdapter.ExpenseItemViewHolder> {
+class SimpleRecordAdapter extends RecyclerView.Adapter<SimpleRecordAdapter.ExpenseItemViewHolder> {
     private static final String TAG = LogUtils.makeLogTag(HistoryRecordsAdapter.class);
 
     private Activity mActivity;
@@ -42,7 +41,7 @@ public class SimpleRecorAdapter extends RecyclerView.Adapter<SimpleRecorAdapter.
 
     private ArrayList<ExpenseItem> mExpenseItemList = new ArrayList<>();
 
-    SimpleRecorAdapter(Activity activity) {
+    SimpleRecordAdapter(Activity activity) {
         mActivity = activity;
         mInflater = LayoutInflater.from(activity);
         mAmountFormat = mActivity.getString(R.string.tally_amount_cny);
@@ -55,7 +54,8 @@ public class SimpleRecorAdapter extends RecyclerView.Adapter<SimpleRecorAdapter.
 
     @Override
     public ExpenseItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ExpenseItemViewHolder(mInflater.inflate(R.layout.tally_recycle_item_expense_record, null));
+        return new ExpenseItemViewHolder(mInflater.inflate(
+                R.layout.tally_recycle_item_expense_record, parent, false));
     }
 
     @Override
@@ -98,7 +98,7 @@ public class SimpleRecorAdapter extends RecyclerView.Adapter<SimpleRecorAdapter.
                 public void onClick(DialogInterface dialog, View v) {
                     Bundle args = new Bundle(1);
                     args.putLong(RecordsModel.EXTRA_EXPENSE_ID, mExpense.getId());
-                    mUserActionListener.onUserAction(MainModel.MainUserActionEnum.EXPENSE_DELETE, args);
+                    mUserActionListener.onUserAction(CategoryRecordsModel.RecordsUserActionEnum.EXPENSE_DELETE, args);
                     dialog.dismiss();
                 }
             });

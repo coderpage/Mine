@@ -1,105 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.coderpage.mine.ui.widget.DrawShadowFrameLayout
-    android:id="@+id/main_content"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    app:shadowDrawable="@drawable/header_shadow">
+<FrameLayout android:id="@+id/main_content"
+             xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:fitsSystemWindows="true"
+             android:orientation="vertical"
+             tools:context=".app.tally.main.MainActivity">
 
-    <LinearLayout
-        android:id="@+id/lyContainer"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/spacing_normal"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/bottom_bar_height"
+        android:paddingTop="@dimen/toolbar_height">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/lyMonthInfo"
+                layout="@layout/tally_content_month_info"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginLeft="@dimen/spacing_micro"
+                android:layout_marginRight="@dimen/spacing_micro"
+                android:layout_marginTop="@dimen/padding_normal"/>
+
+            <TextView
+                android:id="@+id/tvTodayExpenseRecordTip"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:textColor="@color/appTextColorSecondary"
+                android:textSize="@dimen/app_text_size_medium"/>
+
+            <com.coderpage.mine.app.tally.ui.widget.LoadMoreRecyclerView
+                android:id="@+id/recyclerTodayRecord"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <!-- ToolBar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <android.support.v4.widget.NestedScrollView
+        <include
+            layout="@layout/toolbar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+        <View
+            android:id="@+id/ivToolbarShadow"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_height="@dimen/shadow_height"
+            android:background="@drawable/shadow_appbar"/>
+    </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
 
-                <include
-                    android:id="@+id/lyMonthInfo"
-                    layout="@layout/tally_content_month_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:layout_marginTop="@dimen/padding_normal"/>
+    <!-- 底部导航 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
 
-                <TextView
-                    android:id="@+id/tvTodayExpenseRecordTip"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:gravity="center"
-                    android:textColor="@color/appTextColorSecondary"
-                    android:textSize="@dimen/app_text_size_medium"/>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:descendantFocusability="blocksDescendants">
-
-                    <com.coderpage.mine.app.tally.ui.widget.LoadMoreRecyclerView
-                        android:id="@+id/recyclerTodayRecord"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-
-                    <include
-                        layout="@layout/divider"
-                        android:layout_width="match_parent"
-                        android:layout_height="1px"
-                        android:layout_gravity="top"/>
-
-                    <include
-                        layout="@layout/divider"
-                        android:layout_width="match_parent"
-                        android:layout_height="1px"
-                        android:layout_gravity="bottom"/>
-                </FrameLayout>
-
-            </LinearLayout>
-
-        </android.support.v4.widget.NestedScrollView>
-
-        <FrameLayout
+        <View
+            android:id="@+id/ivBottomShadow"
             android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:background="@color/white">
+            android:layout_height="@dimen/shadow_height"
+            android:background="@drawable/shadow_top"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_bar_height"
+            android:layout_below="@id/ivBottomShadow"
+            android:layout_gravity="center_vertical"
+            android:background="@color/colorPrimary"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/btnAddRecord"
-                style="@style/Widget.Btn"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
+                style="@style/Widget.Btn.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_marginLeft="@dimen/padding_normal"
-                android:layout_marginRight="@dimen/padding_normal"
+                android:layout_weight="1"
                 android:clickable="true"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:text="@string/tally_add_record"
-                android:textSize="@dimen/app_text_size_large"/>
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/app_text_size_normal"
+                android:textStyle="bold"/>
 
-            <include
-                layout="@layout/divider"
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_gravity="top"/>
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/ivBottomMenu"
+                style="@style/Widget.Btn.Borderless"
+                android:layout_width="@dimen/bottom_bar_height"
+                android:layout_height="@dimen/bottom_bar_height"
+                android:clickable="true"
+                app:srcCompat="@drawable/ic_menu"/>
 
-        </FrameLayout>
+        </LinearLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        style="@style/Widget.Toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/white"/>
-
-</com.coderpage.mine.ui.widget.DrawShadowFrameLayout>
+</FrameLayout>

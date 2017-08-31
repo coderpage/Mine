@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent">
+
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/padding_normal"
+        android:background="@android:color/white"
+        android:clickable="true"
+        card_view:cardCornerRadius="16dp"
+        card_view:cardElevation="@dimen/card_recycler_item_elevation">
+
+
+        <!-- 关于 -->
+        <android.support.percent.PercentRelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="160dp">
+
+            <LinearLayout
+                android:id="@+id/lyBtnAbout"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_gravity="top"
+                android:background="@drawable/bg_clickable"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:orientation="vertical"
+                app:layout_heightPercent="50%"
+                app:layout_widthPercent="33.33%">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/padding_normal"
+                    app:srcCompat="@drawable/ic_about"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_micro"
+                    android:gravity="center"
+                    android:text="@string/menu_tall_about"
+                    android:textColor="@color/appTextColorPrimary"
+                    android:textSize="@dimen/app_text_size_small"/>
+
+            </LinearLayout>
+
+            <!-- 设置 -->
+            <LinearLayout
+                android:id="@+id/lyBtnSetting"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_gravity="top"
+                android:layout_toRightOf="@id/lyBtnAbout"
+                android:background="@drawable/bg_clickable"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:orientation="vertical"
+                app:layout_heightPercent="50%"
+                app:layout_widthPercent="33.33%">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/padding_normal"
+                    app:srcCompat="@drawable/ic_settings"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_micro"
+                    android:gravity="center"
+                    android:text="@string/menu_tally_setting"
+                    android:textColor="@color/appTextColorPrimary"
+                    android:textSize="@dimen/app_text_size_small"/>
+
+            </LinearLayout>
+
+            <!-- 消费记录 -->
+            <LinearLayout
+                android:id="@+id/lyBtnExpenseRecords"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_gravity="right|top"
+                android:layout_toRightOf="@id/lyBtnSetting"
+                android:background="@drawable/bg_clickable"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:orientation="vertical"
+                app:layout_heightPercent="50%"
+                app:layout_widthPercent="33.33%">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/padding_normal"
+                    app:srcCompat="@drawable/ic_list"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_micro"
+                    android:gravity="center"
+                    android:text="@string/menu_tally_expense_records"
+                    android:textColor="@color/appTextColorPrimary"
+                    android:textSize="@dimen/app_text_size_small"/>
+
+            </LinearLayout>
+
+            <!-- 图表分析 -->
+            <LinearLayout
+                android:id="@+id/lyBtnChart"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_below="@id/lyBtnAbout"
+                android:background="@drawable/bg_clickable"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:orientation="vertical"
+                app:layout_heightPercent="50%"
+                app:layout_widthPercent="33.33%">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/padding_normal"
+                    app:srcCompat="@drawable/ic_chart"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_micro"
+                    android:gravity="center"
+                    android:text="@string/menu_tally_chart"
+                    android:textColor="@color/appTextColorPrimary"
+                    android:textSize="@dimen/app_text_size_small"/>
+
+            </LinearLayout>
+
+        </android.support.percent.PercentRelativeLayout>
+
+    </android.support.v7.widget.CardView>
+</FrameLayout>
