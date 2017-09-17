@@ -17,6 +17,8 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.coderpage.common.IError;
+import com.coderpage.framework.PresenterImpl;
 import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.data.CategoryItem;
@@ -44,7 +46,7 @@ import static com.coderpage.mine.app.tally.edit.ExpenseEditModel.EditUserActionE
 
 public class ExpenseEditActivity extends BaseActivity
         implements UpdatableView<ExpenseEditModel,
-        ExpenseEditModel.EditQueryEnum, ExpenseEditModel.EditUserActionEnum> {
+        ExpenseEditModel.EditQueryEnum, ExpenseEditModel.EditUserActionEnum, IError> {
 
     private static final String TAG = LogUtils.makeLogTag(ExpenseEditActivity.class);
     public static final String EXTRA_RECORD_ID = "extra_record_id";
@@ -65,7 +67,7 @@ public class ExpenseEditActivity extends BaseActivity
     private long mExpenseId = 0;
 
     private UserActionListener mUserActionListener;
-    private ExpenseEditPresenter mPresenter;
+    private PresenterImpl mPresenter;
     private ExpenseEditModel mModel;
 
     @Override
@@ -105,7 +107,7 @@ public class ExpenseEditActivity extends BaseActivity
 
     private void initPresenter() {
         mModel = new ExpenseEditModel(getContext(), mExpenseId);
-        mPresenter = new ExpenseEditPresenter(
+        mPresenter = new PresenterImpl<>(
                 mModel,
                 this, ExpenseEditModel.EditUserActionEnum.values(),
                 ExpenseEditModel.EditQueryEnum.values());
@@ -141,7 +143,7 @@ public class ExpenseEditActivity extends BaseActivity
     }
 
     @Override
-    public void displayErrorMessage(ExpenseEditModel.EditQueryEnum query) {
+    public void displayErrorMessage(ExpenseEditModel.EditQueryEnum query, IError error) {
 
     }
 
@@ -149,7 +151,8 @@ public class ExpenseEditActivity extends BaseActivity
     public void displayUserActionResult(ExpenseEditModel model,
                                         Bundle args,
                                         ExpenseEditModel.EditUserActionEnum userAction,
-                                        boolean success) {
+                                        boolean success,
+                                        IError error) {
         switch (userAction) {
             case CATEGORY_CHANGED:
                 if (success) {

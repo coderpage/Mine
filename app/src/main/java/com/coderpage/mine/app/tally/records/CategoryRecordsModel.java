@@ -6,11 +6,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.coderpage.common.IError;
+import com.coderpage.common.NonThrowError;
 import com.coderpage.concurrency.AsyncTaskExecutor;
 import com.coderpage.framework.Model;
 import com.coderpage.framework.QueryEnum;
 import com.coderpage.framework.SimpleCallback;
 import com.coderpage.framework.UserActionEnum;
+import com.coderpage.mine.app.tally.common.error.ErrorCode;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
 import com.coderpage.mine.app.tally.provider.TallyContract;
 
@@ -26,8 +29,11 @@ import static com.coderpage.utils.LogUtils.makeLogTag;
  * @since 0.1.0
  */
 
-class CategoryRecordsModel implements
-        Model<CategoryRecordsModel.RecordsQueryEnum, CategoryRecordsModel.RecordsUserActionEnum> {
+class CategoryRecordsModel implements Model<
+        CategoryRecordsModel.RecordsQueryEnum,
+        CategoryRecordsModel.RecordsUserActionEnum,
+        CategoryRecordsModel,
+        IError> {
     private static final String TAG = makeLogTag(RecordsModel.class);
 
     static final String EXTRA_EXPENSE_ID = "extra_expense_id";
@@ -57,10 +63,13 @@ class CategoryRecordsModel implements
     }
 
     @Override
-    public void requestData(RecordsQueryEnum query, DataQueryCallback callback) {
-        switch (query) {
-            case INIT_DATA:
+    public void requestData(
+            RecordsQueryEnum query,
+            DataQueryCallback<CategoryRecordsModel, RecordsQueryEnum, IError> callback) {
 
+        switch (query) {
+
+            case INIT_DATA:
                 Calendar monthStartCalendar = Calendar.getInstance();
                 monthStartCalendar.set(Calendar.YEAR, mYear);
                 // month -1 的原因是, Calendar MONTH 从 0 开始计数，即 0 是一月
@@ -92,10 +101,13 @@ class CategoryRecordsModel implements
     }
 
     @Override
-    public void deliverUserAction(RecordsUserActionEnum action,
-                                  @Nullable Bundle args,
-                                  UserActionCallback callback) {
+    public void deliverUserAction(
+            RecordsUserActionEnum action,
+            @Nullable Bundle args,
+            UserActionCallback<CategoryRecordsModel, RecordsUserActionEnum, IError> callback) {
+
         switch (action) {
+
             case EXPENSE_EDITED:
                 if (args == null || !args.containsKey(EXTRA_EXPENSE_ID)) {
                     LOGE(TAG, "action " + action.getId() + " request args with " + EXTRA_EXPENSE_ID);
@@ -104,13 +116,14 @@ class CategoryRecordsModel implements
                 long editedExpenseId = args.getLong(EXTRA_EXPENSE_ID);
                 queryExpenseByIdAsync(editedExpenseId, (item) -> {
                     if (item == null) {
-                        callback.onError(action);
+                        callback.onError(action, new NonThrowError(ErrorCode.UNKNOWN, ""));
                     } else {
                         mEditedExpenseItem = item;
                         callback.onModelUpdated(CategoryRecordsModel.this, action);
                     }
                 });
                 break;
+
             case EXPENSE_DELETE:
                 if (args == null || !args.containsKey(EXTRA_EXPENSE_ID)) {
                     LOGE(TAG, "action " + action.getId() + " request args with " + EXTRA_EXPENSE_ID);
@@ -121,7 +134,7 @@ class CategoryRecordsModel implements
                     if (delNum > 0) {
                         callback.onModelUpdated(CategoryRecordsModel.this, action);
                     } else {
-                        callback.onError(action);
+                        callback.onError(action, new NonThrowError(ErrorCode.UNKNOWN, ""));
                     }
                 });
                 break;
@@ -189,7 +202,7 @@ class CategoryRecordsModel implements
         }.executeOnExecutor(AsyncTaskExecutor.executor());
     }
 
-     void deleteExpenseByIdAsync(long expenseId, SimpleCallback<Integer> callback) {
+    void deleteExpenseByIdAsync(long expenseId, SimpleCallback<Integer> callback) {
         new AsyncTask<Void, Void, Integer>() {
             @Override
             protected Integer doInBackground(Void... params) {

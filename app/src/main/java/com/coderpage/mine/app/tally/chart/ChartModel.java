@@ -36,7 +36,7 @@ import static com.coderpage.utils.LogUtils.makeLogTag;
  * @author abner-l. 2017-05-04
  */
 
-class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUserActionEnum> {
+class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUserActionEnum, ChartModel, IError> {
     private static final String TAG = makeLogTag(ChartModel.class);
 
     static final String EXTRA_YEAR = "extra_year"; // bundle extra year
@@ -64,7 +64,8 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
     }
 
     @Override
-    public void requestData(ChartQueryEnum query, DataQueryCallback callback) {
+    public void requestData(ChartQueryEnum query,
+                            DataQueryCallback<ChartModel, ChartQueryEnum, IError> callback) {
         switch (query) {
             case LOAD_CURRENT_MONTH_DATA:
                 Calendar calendar = Calendar.getInstance();
@@ -86,17 +87,18 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
 
                     @Override
                     public void failure(IError iError) {
-                        callback.onError(query);
+                        callback.onError(query, iError);
                     }
                 });
                 break;
         }
     }
 
+
     @Override
     public void deliverUserAction(ChartUserActionEnum action,
                                   @Nullable Bundle args,
-                                  UserActionCallback callback) {
+                                  UserActionCallback<ChartModel, ChartUserActionEnum, IError> callback) {
         switch (action) {
             case SHOW_HISTORY_MONTH_LIST:
                 loadMonthArray(new Callback<List<Month>, IError>() {
@@ -109,7 +111,7 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
 
                     @Override
                     public void failure(IError iError) {
-                        callback.onError(action);
+                        callback.onError(action, iError);
                     }
                 });
                 break;
@@ -137,7 +139,7 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
 
                     @Override
                     public void failure(IError iError) {
-                        callback.onError(action);
+                        callback.onError(action, iError);
                     }
                 });
                 break;
@@ -241,7 +243,7 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
         for (int i = 1; i <= daysOfMonth; i++) {
             DailyExpense expense = dailyExpenseSparseArray.get(i, null);
             if (expense == null) {
-                calendar.set(Calendar.MONTH, month-1);
+                calendar.set(Calendar.MONTH, month - 1);
                 calendar.set(Calendar.DAY_OF_MONTH, i);
                 expense = new DailyExpense();
                 expense.setTimeMillis(calendar.getTimeInMillis());
@@ -296,7 +298,7 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
         new AsyncTask<Void, Void, IResult<List<Month>, IError>>() {
             @Override
             protected Result<List<Month>, IError> doInBackground(Void... params) {
-                Result result = new Result();
+                Result<List<Month>, IError> result = new Result<>();
                 String order = "expense_time ASC LIMIT 1";
                 Cursor cursor = mContext.getContentResolver().query(
                         TallyContract.Expense.CONTENT_URI, null, null, null, order);
@@ -310,6 +312,8 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
                             cursor.getLong(cursor.getColumnIndex(TallyContract.Expense.TIME));
                     startTime = firstExpenseTime;
                 }
+                cursor.close();
+
                 Calendar calendar = Calendar.getInstance();
                 int currentYear = calendar.get(Calendar.YEAR);
                 int currentMonth = calendar.get(Calendar.MONTH) + 1;
@@ -375,7 +379,7 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
 
     }
 
-    public enum ChartQueryEnum implements QueryEnum {
+    enum ChartQueryEnum implements QueryEnum {
         LOAD_CURRENT_MONTH_DATA(1, null);
         private int id;
         private String[] projection;
@@ -396,7 +400,7 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
         }
     }
 
-    public enum ChartUserActionEnum implements UserActionEnum {
+    enum ChartUserActionEnum implements UserActionEnum {
         // 显示历史月份选择列表
         SHOW_HISTORY_MONTH_LIST(1),
         // 切换显示的月份

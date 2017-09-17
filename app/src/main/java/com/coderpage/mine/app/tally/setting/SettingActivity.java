@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.coderpage.common.IError;
 import com.coderpage.framework.Presenter;
 import com.coderpage.framework.PresenterImpl;
 import com.coderpage.framework.UpdatableView;
@@ -41,7 +42,7 @@ import static com.coderpage.utils.LogUtils.makeLogTag;
  */
 
 public class SettingActivity extends BaseActivity
-        implements UpdatableView<SettingModel, SettingQueryEnum, SettingUserActionEnum> {
+        implements UpdatableView<SettingModel, SettingQueryEnum, SettingUserActionEnum, IError> {
 
     private static final String TAG = makeLogTag(SettingActivity.class);
 
@@ -67,7 +68,7 @@ public class SettingActivity extends BaseActivity
 
     private void initPresenter() {
         mModel = new SettingModel(getContext());
-        mPresenter = new PresenterImpl(
+        mPresenter = new PresenterImpl<>(
                 mModel,
                 this, SettingUserActionEnum.values(),
                 SettingQueryEnum.values());
@@ -103,7 +104,7 @@ public class SettingActivity extends BaseActivity
     }
 
     @Override
-    public void displayErrorMessage(SettingQueryEnum query) {
+    public void displayErrorMessage(SettingQueryEnum query, IError error) {
 
     }
 
@@ -111,7 +112,8 @@ public class SettingActivity extends BaseActivity
     public void displayUserActionResult(SettingModel model,
                                         Bundle args,
                                         SettingUserActionEnum userAction,
-                                        boolean success) {
+                                        boolean success,
+                                        IError error) {
         switch (userAction) {
             case BACKUP_TO_JSON_FILE:
                 if (success) {

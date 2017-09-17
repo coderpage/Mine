@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 
+import com.coderpage.common.IError;
 import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
@@ -22,7 +23,7 @@ import org.greenrobot.eventbus.ThreadMode;
  */
 
 public class RecordsActivity extends BaseActivity implements UpdatableView<RecordsModel,
-        RecordsModel.RecordsQueryEnum, RecordsModel.RecordsUserActionEnum> {
+        RecordsModel.RecordsQueryEnum, RecordsModel.RecordsUserActionEnum, IError> {
 
     private UserActionListener mUserActionListener;
     private RecordsPresenter mPresenter;
@@ -61,7 +62,8 @@ public class RecordsActivity extends BaseActivity implements UpdatableView<Recor
     }
 
     private void initPresenter() {
-        mPresenter = new RecordsPresenter(new RecordsModel(this),
+        mPresenter = new RecordsPresenter(
+                new RecordsModel(this),
                 this,
                 RecordsModel.RecordsUserActionEnum.values(),
                 RecordsModel.RecordsQueryEnum.values());
@@ -101,7 +103,8 @@ public class RecordsActivity extends BaseActivity implements UpdatableView<Recor
     public void displayUserActionResult(RecordsModel model,
                                         Bundle args,
                                         RecordsModel.RecordsUserActionEnum userAction,
-                                        boolean success) {
+                                        boolean success,
+                                        IError error) {
         switch (userAction) {
             case EXPENSE_EDITED:
                 if (success) {
@@ -125,7 +128,7 @@ public class RecordsActivity extends BaseActivity implements UpdatableView<Recor
     }
 
     @Override
-    public void displayErrorMessage(RecordsModel.RecordsQueryEnum query) {
+    public void displayErrorMessage(RecordsModel.RecordsQueryEnum query, IError error) {
 
     }
 

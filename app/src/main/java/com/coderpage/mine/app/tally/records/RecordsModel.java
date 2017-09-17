@@ -6,11 +6,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.coderpage.common.IError;
+import com.coderpage.common.NonThrowError;
 import com.coderpage.concurrency.AsyncTaskExecutor;
 import com.coderpage.framework.Model;
 import com.coderpage.framework.QueryEnum;
 import com.coderpage.framework.SimpleCallback;
 import com.coderpage.framework.UserActionEnum;
+import com.coderpage.mine.app.tally.common.error.ErrorCode;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
 import com.coderpage.mine.app.tally.provider.TallyContract;
 
@@ -24,8 +27,11 @@ import static com.coderpage.utils.LogUtils.makeLogTag;
  * @author abner-l. 2017-05-12
  */
 
-class RecordsModel implements
-        Model<RecordsModel.RecordsQueryEnum, RecordsModel.RecordsUserActionEnum> {
+class RecordsModel implements Model<
+        RecordsModel.RecordsQueryEnum,
+        RecordsModel.RecordsUserActionEnum,
+        RecordsModel,
+        IError> {
     private static final String TAG = makeLogTag(RecordsModel.class);
 
     static final String EXTRA_EXPENSE_ID = "extra_expense_id";
@@ -52,7 +58,9 @@ class RecordsModel implements
     }
 
     @Override
-    public void requestData(RecordsQueryEnum query, DataQueryCallback callback) {
+    public void requestData(
+            RecordsQueryEnum query,
+            DataQueryCallback<RecordsModel, RecordsQueryEnum, IError> callback) {
         switch (query) {
             case INIT_DATA:
                 queryExpenseAsync(null, null, "expense_time DESC LIMIT 25", (result) -> {
@@ -65,10 +73,13 @@ class RecordsModel implements
     }
 
     @Override
-    public void deliverUserAction(RecordsUserActionEnum action,
-                                  @Nullable Bundle args,
-                                  UserActionCallback callback) {
+    public void deliverUserAction(
+            RecordsUserActionEnum action,
+            @Nullable Bundle args,
+            UserActionCallback<RecordsModel, RecordsUserActionEnum, IError> callback) {
+
         switch (action) {
+
             case EXPENSE_EDITED:
                 if (args == null || !args.containsKey(EXTRA_EXPENSE_ID)) {
                     LOGE(TAG, "action " + action.getId() + " request args with " + EXTRA_EXPENSE_ID);
@@ -77,13 +88,14 @@ class RecordsModel implements
                 long editedExpenseId = args.getLong(EXTRA_EXPENSE_ID);
                 queryExpenseByIdAsync(editedExpenseId, (item) -> {
                     if (item == null) {
-                        callback.onError(action);
+                        callback.onError(action, new NonThrowError(ErrorCode.UNKNOWN, ""));
                     } else {
                         mEditedExpenseItem = item;
                         callback.onModelUpdated(RecordsModel.this, action);
                     }
                 });
                 break;
+
             case EXPENSE_DELETE:
                 if (args == null || !args.containsKey(EXTRA_EXPENSE_ID)) {
                     LOGE(TAG, "action " + action.getId() + " request args with " + EXTRA_EXPENSE_ID);
@@ -94,10 +106,11 @@ class RecordsModel implements
                     if (delNum > 0) {
                         callback.onModelUpdated(RecordsModel.this, action);
                     } else {
-                        callback.onError(action);
+                        callback.onError(action, new NonThrowError(ErrorCode.UNKNOWN, ""));
                     }
                 });
                 break;
+
             case LOAD_MORE:
                 if (args == null || !args.containsKey(EXTRA_LOAD_MORE_START_DATE)) {
                     LOGE(TAG, "action " + action.getId()
@@ -123,7 +136,7 @@ class RecordsModel implements
 
     }
 
-    public void queryExpenseByIdAsync(long expenseId, SimpleCallback<ExpenseItem> callback) {
+    private void queryExpenseByIdAsync(long expenseId, SimpleCallback<ExpenseItem> callback) {
         new AsyncTask<Void, Void, ExpenseItem>() {
             @Override
             protected ExpenseItem doInBackground(Void... params) {
@@ -150,8 +163,8 @@ class RecordsModel implements
         }.executeOnExecutor(AsyncTaskExecutor.executor());
     }
 
-    public void queryExpenseAsync(String selection, String[] selectionArgs,
-                                  String order, SimpleCallback<List<ExpenseItem>> callback) {
+    private void queryExpenseAsync(String selection, String[] selectionArgs,
+                                   String order, SimpleCallback<List<ExpenseItem>> callback) {
         new AsyncTask<Void, Void, List<ExpenseItem>>() {
             @Override
             protected List<ExpenseItem> doInBackground(Void... params) {
@@ -179,7 +192,7 @@ class RecordsModel implements
         }.executeOnExecutor(AsyncTaskExecutor.executor());
     }
 
-    public void deleteExpenseByIdAsync(long expenseId, SimpleCallback<Integer> callback) {
+    private void deleteExpenseByIdAsync(long expenseId, SimpleCallback<Integer> callback) {
         new AsyncTask<Void, Void, Integer>() {
             @Override
             protected Integer doInBackground(Void... params) {
@@ -196,15 +209,15 @@ class RecordsModel implements
         }.executeOnExecutor(AsyncTaskExecutor.executor());
     }
 
-     ExpenseItem getEditedExpenseItem() {
+    ExpenseItem getEditedExpenseItem() {
         return mEditedExpenseItem;
     }
 
-     List<ExpenseItem> getInitExpenseList() {
+    List<ExpenseItem> getInitExpenseList() {
         return mInitExpenseList;
     }
 
-     List<ExpenseItem> getLoadMoreExpenseList() {
+    List<ExpenseItem> getLoadMoreExpenseList() {
         return mLoadMoreExpenseList;
     }
 

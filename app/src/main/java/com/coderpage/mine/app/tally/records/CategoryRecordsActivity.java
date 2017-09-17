@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.coderpage.common.IError;
 import com.coderpage.framework.Presenter;
 import com.coderpage.framework.PresenterImpl;
 import com.coderpage.framework.UpdatableView;
@@ -25,8 +26,9 @@ import org.greenrobot.eventbus.ThreadMode;
  * @author abner-l. 2017-05-15
  */
 
-public class CategoryRecordsActivity extends BaseActivity implements UpdatableView<CategoryRecordsModel,
-        CategoryRecordsModel.RecordsQueryEnum, CategoryRecordsModel.RecordsUserActionEnum> {
+public class CategoryRecordsActivity extends BaseActivity
+        implements UpdatableView<CategoryRecordsModel, CategoryRecordsModel.RecordsQueryEnum,
+        CategoryRecordsModel.RecordsUserActionEnum, IError> {
 
     private static final String EXTRA_YEAR = "extra_year";
     private static final String EXTRA_MONTH = "extra_month";
@@ -67,7 +69,8 @@ public class CategoryRecordsActivity extends BaseActivity implements UpdatableVi
     }
 
     private void initPresenter() {
-        mPresenter = new PresenterImpl(new CategoryRecordsModel(this, mYear, mMonth, mCategoryId),
+        mPresenter = new PresenterImpl<>(
+                new CategoryRecordsModel(this, mYear, mMonth, mCategoryId),
                 this,
                 CategoryRecordsModel.RecordsUserActionEnum.values(),
                 CategoryRecordsModel.RecordsQueryEnum.values());
@@ -115,7 +118,8 @@ public class CategoryRecordsActivity extends BaseActivity implements UpdatableVi
     public void displayUserActionResult(CategoryRecordsModel model,
                                         Bundle args,
                                         CategoryRecordsModel.RecordsUserActionEnum userAction,
-                                        boolean success) {
+                                        boolean success,
+                                        IError error) {
         switch (userAction) {
             case EXPENSE_EDITED:
                 if (success) {
@@ -133,7 +137,7 @@ public class CategoryRecordsActivity extends BaseActivity implements UpdatableVi
     }
 
     @Override
-    public void displayErrorMessage(CategoryRecordsModel.RecordsQueryEnum query) {
+    public void displayErrorMessage(CategoryRecordsModel.RecordsQueryEnum query, IError error) {
 
     }
 

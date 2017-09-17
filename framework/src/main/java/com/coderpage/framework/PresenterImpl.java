@@ -3,6 +3,11 @@ package com.coderpage.framework;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static com.coderpage.utils.LogUtils.LOGI;
 import static com.coderpage.utils.LogUtils.makeLogTag;
 
@@ -11,33 +16,48 @@ import static com.coderpage.utils.LogUtils.makeLogTag;
  * @since 0.2.0
  */
 
-public class PresenterImpl implements Presenter, UpdatableView.UserActionListener {
+public class PresenterImpl<
+        M extends Model<Q, UA, M, E>,
+        V extends UpdatableView<M, Q, UA, E>,
+        UA extends UserActionEnum,
+        Q extends QueryEnum,
+        E> implements Presenter<Q, UA>, UpdatableView.UserActionListener<UA> {
     private static final String TAG = makeLogTag(PresenterImpl.class);
 
-    private UpdatableView[] mUpdatableViews;
+    private List<WeakReference<V>> mUpdatableViews;
 
-    private Model mModel;
+    private M mModel;
 
-    private QueryEnum[] mInitialQueriesToLoad;
+    private Q[] mInitialQueriesToLoad;
 
-    private UserActionEnum[] mValidUserActions;
+    private UA[] mValidUserActions;
 
-    public PresenterImpl(Model model, UpdatableView view, UserActionEnum[] validUserActions,
-                         QueryEnum[] initialQueries) {
-        this(model, new UpdatableView[]{view}, validUserActions, initialQueries);
+    public PresenterImpl(M model,
+                         V view,
+                         UA[] validUserActions,
+                         Q[] initialQueries) {
+        this(model, Arrays.asList(view), validUserActions, initialQueries);
     }
 
-    public PresenterImpl(Model model, @Nullable UpdatableView[] views, UserActionEnum[] validUserActions,
-                         QueryEnum[] initialQueries) {
+    public PresenterImpl(M model,
+                         @Nullable List<V> views,
+                         UA[] validUserActions,
+                         Q[] initialQueries) {
         mModel = model;
         mValidUserActions = validUserActions;
         mInitialQueriesToLoad = initialQueries;
-        mUpdatableViews = views;
-        if (views == null) {
-            return;
+        if (views == null) return;
+
+        mUpdatableViews = new ArrayList<>(views.size());
+        for (V view : views) {
+            mUpdatableViews.add(new WeakReference<V>(view));
         }
-        for (UpdatableView view : mUpdatableViews) {
-            view.addListener(this);
+
+        for (WeakReference<V> ref : mUpdatableViews) {
+            final V v = ref.get();
+            if (v != null) {
+                v.addListener(this);
+            }
         }
     }
 
@@ -54,25 +74,31 @@ public class PresenterImpl implements Presenter, UpdatableView.UserActionListene
             return;
         }
         // 加载初始化数据
-        for (QueryEnum queryEnum : mInitialQueriesToLoad) {
-            mModel.requestData(queryEnum, new Model.DataQueryCallback() {
+        for (Q queryEnum : mInitialQueriesToLoad) {
+            mModel.requestData(queryEnum, new Model.DataQueryCallback<M, Q, E>() {
                 @Override
-                public void onModelUpdated(Model model, QueryEnum query) {
+                public void onModelUpdated(M model, Q query) {
                     if (mUpdatableViews == null) {
                         return;
                     }
-                    for (UpdatableView view : mUpdatableViews) {
-                        view.displayData(model, query);
+                    for (WeakReference<V> ref : mUpdatableViews) {
+                        V view = ref.get();
+                        if (view != null) {
+                            view.displayData(model, query);
+                        }
                     }
                 }
 
                 @Override
-                public void onError(QueryEnum query) {
+                public void onError(Q query, E error) {
                     if (mUpdatableViews == null) {
                         return;
                     }
-                    for (UpdatableView view : mUpdatableViews) {
-                        view.displayErrorMessage(query);
+                    for (WeakReference<V> ref : mUpdatableViews) {
+                        V view = ref.get();
+                        if (view != null) {
+                            view.displayErrorMessage(query, error);
+                        }
                     }
                 }
             });
@@ -80,27 +106,33 @@ public class PresenterImpl implements Presenter, UpdatableView.UserActionListene
     }
 
     @Override
-    public void onUserAction(UserActionEnum action, @Nullable final Bundle args) {
+    public void onUserAction(UA action, @Nullable final Bundle args) {
         LOGI(TAG, "onUserAction -> " + action);
         if (isUserActionValid(action)) {
-            mModel.deliverUserAction(action, args, new Model.UserActionCallback() {
+            mModel.deliverUserAction(action, args, new Model.UserActionCallback<M, UA, E>() {
                 @Override
-                public void onModelUpdated(Model model, UserActionEnum userAction) {
+                public void onModelUpdated(M model, UA userAction) {
                     if (mUpdatableViews == null) {
                         return;
                     }
-                    for (UpdatableView view : mUpdatableViews) {
-                        view.displayUserActionResult(model, args, userAction, true);
+                    for (WeakReference<V> ref : mUpdatableViews) {
+                        V view = ref.get();
+                        if (view != null) {
+                            view.displayUserActionResult(model, args, userAction, true, null);
+                        }
                     }
                 }
 
                 @Override
-                public void onError(UserActionEnum userAction) {
+                public void onError(UA userAction, E error) {
                     if (mUpdatableViews == null) {
                         return;
                     }
-                    for (UpdatableView view : mUpdatableViews) {
-                        view.displayUserActionResult(null, args, userAction, false);
+                    for (WeakReference<V> ref : mUpdatableViews) {
+                        V view = ref.get();
+                        if (view != null) {
+                            view.displayUserActionResult(null, args, userAction, false, error);
+                        }
                     }
                 }
             });
@@ -108,20 +140,16 @@ public class PresenterImpl implements Presenter, UpdatableView.UserActionListene
             if (mUpdatableViews == null) {
                 return;
             }
-            for (UpdatableView view : mUpdatableViews) {
-                view.displayUserActionResult(null, args, action, false);
-            }
             throw new RuntimeException(
                     "Invalid user action " + (action != null ? action.getId() : null) +
                             ". Have you called setValidUserActions on your presenter, with all " +
-
                             "the UserActionEnum you want to support?");
         }
     }
 
-    protected boolean isUserActionValid(UserActionEnum action) {
+    protected boolean isUserActionValid(UA action) {
         if (mValidUserActions != null && action != null) {
-            for (UserActionEnum userActionEnum : mValidUserActions) {
+            for (UA userActionEnum : mValidUserActions) {
                 if (userActionEnum.getId() == action.getId()) {
                     return true;
                 }

@@ -13,6 +13,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.coderpage.common.IError;
 import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.about.AboutActivity;
@@ -53,7 +54,7 @@ import static com.coderpage.utils.LogUtils.LOGI;
 
 public class MainActivity extends BaseActivity
         implements UpdatableView<MainModel, MainModel.MainQueryEnum,
-        MainModel.MainUserActionEnum> {
+        MainModel.MainUserActionEnum, IError> {
 
     private static final String TAG = LogUtils.makeLogTag(MainActivity.class);
 
@@ -239,14 +240,15 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void displayErrorMessage(MainModel.MainQueryEnum query) {
+    public void displayErrorMessage(MainModel.MainQueryEnum query, IError error) {
 
     }
 
     @Override
     public void displayUserActionResult(MainModel model,
                                         Bundle args, MainModel.MainUserActionEnum userAction,
-                                        boolean success) {
+                                        boolean success,
+                                        IError error) {
         LOGI(TAG, "displayUserActionResult-> action=" + userAction.getId());
         switch (userAction) {
             case RELOAD_MONTH_TOTAL:

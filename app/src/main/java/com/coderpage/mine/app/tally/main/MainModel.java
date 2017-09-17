@@ -6,11 +6,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.coderpage.common.IError;
+import com.coderpage.common.NonThrowError;
 import com.coderpage.concurrency.AsyncTaskExecutor;
 import com.coderpage.framework.Model;
 import com.coderpage.framework.QueryEnum;
 import com.coderpage.framework.SimpleCallback;
 import com.coderpage.framework.UserActionEnum;
+import com.coderpage.mine.app.tally.common.error.ErrorCode;
 import com.coderpage.mine.app.tally.data.ExpenseItem;
 import com.coderpage.mine.app.tally.provider.TallyContract;
 import com.coderpage.utils.LogUtils;
@@ -26,7 +29,11 @@ import static com.coderpage.utils.LogUtils.LOGE;
  * @since 0.2.0
  */
 
-class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainUserActionEnum> {
+class MainModel implements Model<
+        MainModel.MainQueryEnum,
+        MainModel.MainUserActionEnum,
+        MainModel,
+        IError> {
     private static final String TAG = LogUtils.makeLogTag(MainModel.class);
 
     static final String EXTRA_EXPENSE_ID = "extra_expense_id";
@@ -52,9 +59,11 @@ class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainUserActi
     }
 
     @Override
-    public void deliverUserAction(MainUserActionEnum action,
-                                  @Nullable Bundle args,
-                                  UserActionCallback callback) {
+    public void deliverUserAction(
+            MainUserActionEnum action,
+            @Nullable Bundle args,
+            UserActionCallback<MainModel, MainUserActionEnum, IError> callback) {
+
         switch (action) {
             case RELOAD_MONTH_TOTAL:
                 reloadMonthTotalAsync((monthRecords) -> {
@@ -68,6 +77,7 @@ class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainUserActi
                     callback.onModelUpdated(MainModel.this, action);
                 });
                 break;
+
             case EXPENSE_DELETE:
                 if (args == null || !args.containsKey(EXTRA_EXPENSE_ID)) {
                     LOGE(TAG, "action " + action.getId() + " request args with " + EXTRA_EXPENSE_ID);
@@ -78,10 +88,11 @@ class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainUserActi
                     if (delNum > 0) {
                         callback.onModelUpdated(MainModel.this, action);
                     } else {
-                        callback.onError(action);
+                        callback.onError(action, new NonThrowError(ErrorCode.UNKNOWN, ""));
                     }
                 });
                 break;
+
             case REFRESH_TODAY_EXPENSE:
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -102,8 +113,12 @@ class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainUserActi
     }
 
     @Override
-    public void requestData(MainQueryEnum query, DataQueryCallback callback) {
+    public void requestData(
+            MainQueryEnum query,
+            DataQueryCallback<MainModel, MainQueryEnum, IError> callback) {
+
         switch (query) {
+
             case MONTH_TOTAL:
                 reloadMonthTotalAsync((monthRecords) -> {
                     float amountTotal = 0.0F;
@@ -116,6 +131,7 @@ class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainUserActi
                     callback.onModelUpdated(MainModel.this, query);
                 });
                 break;
+
             case EXPENSE_INIT:
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -140,8 +156,11 @@ class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainUserActi
 
     }
 
-    private void queryExpenseAsync(String selection, String[] selectionArgs,
-                                   String order, SimpleCallback<List<ExpenseItem>> callback) {
+    private void queryExpenseAsync(
+            String selection,
+            String[] selectionArgs,
+            String order, SimpleCallback<List<ExpenseItem>> callback) {
+
         new AsyncTask<Void, Void, List<ExpenseItem>>() {
             @Override
             protected List<ExpenseItem> doInBackground(Void... params) {
@@ -182,7 +201,7 @@ class MainModel implements Model<MainModel.MainQueryEnum, MainModel.MainUserActi
         queryExpenseAsync(selection, selectionArgs, null, callback);
     }
 
-    void deleteExpenseByIdAsync(long expenseId, SimpleCallback<Integer> callback) {
+    private void deleteExpenseByIdAsync(long expenseId, SimpleCallback<Integer> callback) {
         new AsyncTask<Void, Void, Integer>() {
             @Override
             protected Integer doInBackground(Void... params) {

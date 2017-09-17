@@ -22,8 +22,11 @@ import java.io.File;
  * @since 0.4.0
  */
 
-class SettingModel implements Model<SettingModel.SettingQueryEnum,
-        SettingModel.SettingUserActionEnum> {
+class SettingModel implements Model<
+        SettingModel.SettingQueryEnum,
+        SettingModel.SettingUserActionEnum,
+        SettingModel,
+        IError> {
 
     static final String EXTRA_ACTION_CODE = "extra_action_code";
     static final String EXTRA_MESSAGE = "extra_message";
@@ -56,18 +59,24 @@ class SettingModel implements Model<SettingModel.SettingQueryEnum,
     }
 
     @Override
-    public void requestData(SettingQueryEnum query, DataQueryCallback callback) {
+    public void requestData(
+            SettingQueryEnum query,
+            DataQueryCallback<SettingModel, SettingQueryEnum, IError> callback) {
 
     }
 
     @Override
-    public void deliverUserAction(SettingUserActionEnum action,
-                                  @Nullable Bundle args,
-                                  UserActionCallback callback) {
+    public void deliverUserAction(
+            SettingUserActionEnum action,
+            @Nullable Bundle args,
+            UserActionCallback<SettingModel, SettingUserActionEnum, IError> callback) {
+
         switch (action) {
+
             case BACKUP_TO_JSON_FILE:
                 backup2JsonFile(mContext, action, args, callback);
                 break;
+
             case READ_BACKUP_JSON_FILE:
                 if (args == null || !args.containsKey(EXTRA_FILE_PATH)) {
                     throw new IllegalArgumentException("缺少参数: " + EXTRA_FILE_PATH);
@@ -75,6 +84,7 @@ class SettingModel implements Model<SettingModel.SettingQueryEnum,
                 String filePath = args.getString(EXTRA_FILE_PATH, "");
                 readDataFromBackupJsonFile(mContext, filePath, action, args, callback);
                 break;
+
             case RESTORE_TO_DB_WITH_BACKUP_MODEL:
                 restoreToDbFromBackupModel(mContext, mBackupModel, action, args, callback);
                 break;
@@ -121,7 +131,7 @@ class SettingModel implements Model<SettingModel.SettingQueryEnum,
             @Override
             public void failure(IError iError) {
                 mHandler.post(() ->
-                        callback.onError(action));
+                        callback.onError(action, iError));
             }
         });
     }
@@ -177,7 +187,7 @@ class SettingModel implements Model<SettingModel.SettingQueryEnum,
             @Override
             public void failure(IError iError) {
                 mHandler.post(() ->
-                        callback.onError(action));
+                        callback.onError(action, iError));
             }
         });
     }
@@ -234,7 +244,7 @@ class SettingModel implements Model<SettingModel.SettingQueryEnum,
             @Override
             public void failure(IError iError) {
                 mBackupModel = null;
-                mHandler.post(() -> callback.onError(action));
+                mHandler.post(() -> callback.onError(action, iError));
             }
         });
     }

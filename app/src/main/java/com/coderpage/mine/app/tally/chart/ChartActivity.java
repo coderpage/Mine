@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.coderpage.common.IError;
 import com.coderpage.framework.Presenter;
 import com.coderpage.framework.PresenterImpl;
 import com.coderpage.framework.UpdatableView;
@@ -57,7 +58,8 @@ import static com.coderpage.utils.UIUtils.dp2px;
  */
 
 public class ChartActivity extends BaseActivity implements
-        UpdatableView<ChartModel, ChartModel.ChartQueryEnum, ChartModel.ChartUserActionEnum> {
+        UpdatableView<ChartModel, ChartModel.ChartQueryEnum,
+                ChartModel.ChartUserActionEnum, IError> {
 
     private static final String EXTRA_YEAR = "extra_year";
     private static final String EXTRA_MONTH = "extra_month";
@@ -76,7 +78,7 @@ public class ChartActivity extends BaseActivity implements
     private int mInitMonth;
     private Presenter mPresenter;
     private ChartModel mModel;
-    private UserActionListener mUserActionListener;
+    private UserActionListener<ChartModel.ChartUserActionEnum> mUserActionListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,14 +122,14 @@ public class ChartActivity extends BaseActivity implements
     private void initPresenter() {
         mModel = new ChartModel(this);
         if (mInitYear != -1 && mInitMonth != -1) {
-            mPresenter = new PresenterImpl(mModel, this, ChartUserActionEnum.values(), null);
+            mPresenter = new PresenterImpl<>(mModel, this, ChartUserActionEnum.values(), null);
             mPresenter.loadInitialQueries();
             Bundle args = new Bundle(2);
             args.putInt(EXTRA_YEAR, mInitYear);
             args.putInt(EXTRA_MONTH, mInitMonth);
             mUserActionListener.onUserAction(ChartUserActionEnum.SWITCH_MONTH, args);
         } else {
-            mPresenter = new PresenterImpl(mModel,
+            mPresenter = new PresenterImpl<>(mModel,
                     this, ChartUserActionEnum.values(), ChartQueryEnum.values());
             mPresenter.loadInitialQueries();
         }
@@ -288,7 +290,8 @@ public class ChartActivity extends BaseActivity implements
     public void displayUserActionResult(ChartModel model,
                                         Bundle args,
                                         ChartModel.ChartUserActionEnum userAction,
-                                        boolean success) {
+                                        boolean success,
+                                        IError error) {
         switch (userAction) {
             case SHOW_HISTORY_MONTH_LIST:
                 if (success) {
@@ -318,7 +321,7 @@ public class ChartActivity extends BaseActivity implements
     }
 
     @Override
-    public void displayErrorMessage(ChartModel.ChartQueryEnum query) {
+    public void displayErrorMessage(ChartModel.ChartQueryEnum query, IError error) {
 
     }
 
@@ -382,7 +385,7 @@ public class ChartActivity extends BaseActivity implements
     }
 
     @Override
-    public void addListener(UserActionListener listener) {
+    public void addListener(UserActionListener<ChartUserActionEnum> listener) {
         mUserActionListener = listener;
     }
 
