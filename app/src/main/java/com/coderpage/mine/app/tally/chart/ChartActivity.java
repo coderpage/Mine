@@ -24,7 +24,7 @@ import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.chart.data.DailyExpense;
 import com.coderpage.mine.app.tally.chart.data.Month;
-import com.coderpage.mine.app.tally.data.ExpenseItem;
+import com.coderpage.mine.app.tally.data.Expense;
 import com.coderpage.mine.app.tally.utils.TimeUtils;
 import com.coderpage.mine.ui.BaseActivity;
 import com.coderpage.utils.AndroidUtils;
@@ -83,7 +83,7 @@ public class ChartActivity extends BaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tall_chart);
+        setContentView(R.layout.activity_tally_chart);
         initData();
         initView();
         initPresenter();
@@ -193,9 +193,9 @@ public class ChartActivity extends BaseActivity implements
         mPieChart.getLegend().setWordWrapEnabled(true);
     }
 
-    private void reDrawPieChart(List<ExpenseItem> items) {
+    private void reDrawPieChart(List<Expense> items) {
         Map<String, Float> getMountByCategoryName = new HashMap<>();
-        for (ExpenseItem item : items) {
+        for (Expense item : items) {
             Float amount = getMountByCategoryName.get(item.getCategoryName());
             if (amount == null) {
                 amount = item.getAmount();
@@ -335,9 +335,9 @@ public class ChartActivity extends BaseActivity implements
         return entries;
     }
 
-    private float calculateMonthTotal(List<ExpenseItem> itemList) {
+    private float calculateMonthTotal(List<Expense> itemList) {
         float total = 0.0f;
-        for (ExpenseItem item : itemList) {
+        for (Expense item : itemList) {
             total += item.getAmount();
         }
         return total;

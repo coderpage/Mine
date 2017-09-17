@@ -14,7 +14,8 @@ import com.coderpage.framework.QueryEnum;
 import com.coderpage.framework.SimpleCallback;
 import com.coderpage.framework.UserActionEnum;
 import com.coderpage.mine.app.tally.common.error.ErrorCode;
-import com.coderpage.mine.app.tally.data.ExpenseItem;
+
+import com.coderpage.mine.app.tally.data.Expense;
 import com.coderpage.mine.app.tally.provider.TallyContract;
 import com.coderpage.utils.LogUtils;
 
@@ -41,8 +42,8 @@ class MainModel implements Model<
     private Context mContext;
 
     private volatile float mMonthTotal = 0.0f;
-    private List<ExpenseItem> mCurrentMonthExpenseItemList = new ArrayList<>();
-    private List<ExpenseItem> mTodayExpenseList = new ArrayList<>();
+    private List<Expense> mCurrentMonthExpenseList = new ArrayList<>();
+    private List<Expense> mTodayExpenseList = new ArrayList<>();
 
     MainModel(Context context) {
         mContext = context;
@@ -68,12 +69,12 @@ class MainModel implements Model<
             case RELOAD_MONTH_TOTAL:
                 reloadMonthTotalAsync((monthRecords) -> {
                     float amountTotal = 0.0F;
-                    for (ExpenseItem item : monthRecords) {
+                    for (Expense item : monthRecords) {
                         amountTotal += item.getAmount();
                     }
                     mMonthTotal = amountTotal;
-                    mCurrentMonthExpenseItemList.clear();
-                    mCurrentMonthExpenseItemList.addAll(monthRecords);
+                    mCurrentMonthExpenseList.clear();
+                    mCurrentMonthExpenseList.addAll(monthRecords);
                     callback.onModelUpdated(MainModel.this, action);
                 });
                 break;
@@ -122,12 +123,12 @@ class MainModel implements Model<
             case MONTH_TOTAL:
                 reloadMonthTotalAsync((monthRecords) -> {
                     float amountTotal = 0.0F;
-                    for (ExpenseItem item : monthRecords) {
+                    for (Expense item : monthRecords) {
                         amountTotal += item.getAmount();
                     }
                     mMonthTotal = amountTotal;
-                    mCurrentMonthExpenseItemList.clear();
-                    mCurrentMonthExpenseItemList.addAll(monthRecords);
+                    mCurrentMonthExpenseList.clear();
+                    mCurrentMonthExpenseList.addAll(monthRecords);
                     callback.onModelUpdated(MainModel.this, query);
                 });
                 break;
@@ -156,14 +157,14 @@ class MainModel implements Model<
 
     }
 
-    private void queryExpenseAsync(
-            String selection,
-            String[] selectionArgs,
-            String order, SimpleCallback<List<ExpenseItem>> callback) {
 
-        new AsyncTask<Void, Void, List<ExpenseItem>>() {
+    private void queryExpenseAsync(String selection,
+                                   String[] selectionArgs,
+                                   String order,
+                                   SimpleCallback<List<Expense>> callback) {
+        new AsyncTask<Void, Void, List<Expense>>() {
             @Override
-            protected List<ExpenseItem> doInBackground(Void... params) {
+            protected List<Expense> doInBackground(Void... params) {
                 Cursor cursor = mContext.getContentResolver().query(
                         TallyContract.Expense.CONTENT_URI,
                         null,
@@ -173,22 +174,22 @@ class MainModel implements Model<
                 if (cursor == null) {
                     return new ArrayList<>(0);
                 }
-                List<ExpenseItem> items = new ArrayList<>(cursor.getCount());
+                List<Expense> items = new ArrayList<>(cursor.getCount());
                 while (cursor.moveToNext()) {
-                    items.add(ExpenseItem.fromCursor(cursor));
+                    items.add(Expense.fromCursor(cursor));
                 }
                 cursor.close();
                 return items;
             }
 
             @Override
-            protected void onPostExecute(List<ExpenseItem> items) {
+            protected void onPostExecute(List<Expense> items) {
                 callback.success(items);
             }
         }.executeOnExecutor(AsyncTaskExecutor.executor());
     }
 
-    private void reloadMonthTotalAsync(SimpleCallback<List<ExpenseItem>> callback) {
+    private void reloadMonthTotalAsync(SimpleCallback<List<Expense>> callback) {
         Calendar monthStartCalendar = Calendar.getInstance();
         monthStartCalendar.set(Calendar.DAY_OF_MONTH, 1);
         monthStartCalendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -225,15 +226,15 @@ class MainModel implements Model<
         return mMonthTotal;
     }
 
-    List<ExpenseItem> getCurrentMonthExpenseItemList() {
-        return mCurrentMonthExpenseItemList;
+    List<Expense> getCurrentMonthExpenseItemList() {
+        return mCurrentMonthExpenseList;
     }
 
-    List<ExpenseItem> getTodayExpenseList() {
+    List<Expense> getTodayExpenseList() {
         return mTodayExpenseList;
     }
 
-    private ExpenseItem queryExpenseItemById(long id) {
+    private Expense queryExpenseItemById(long id) {
         Cursor cursor = mContext.getContentResolver().query(
                 TallyContract.Expense.CONTENT_URI,
                 null,
@@ -241,10 +242,10 @@ class MainModel implements Model<
                 new String[]{String.valueOf(id)},
                 null
         );
-        ExpenseItem item = null;
+        Expense item = null;
         if (cursor == null) return null;
         if (cursor.moveToFirst()) {
-            item = ExpenseItem.fromCursor(cursor);
+            item = Expense.fromCursor(cursor);
         }
         cursor.close();
         return item;

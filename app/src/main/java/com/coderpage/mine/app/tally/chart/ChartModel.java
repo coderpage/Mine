@@ -19,7 +19,7 @@ import com.coderpage.framework.UserActionEnum;
 import com.coderpage.mine.app.tally.chart.data.DailyExpense;
 import com.coderpage.mine.app.tally.chart.data.Month;
 import com.coderpage.mine.app.tally.chart.data.MonthCategoryExpense;
-import com.coderpage.mine.app.tally.data.ExpenseItem;
+import com.coderpage.mine.app.tally.data.Expense;
 import com.coderpage.mine.app.tally.provider.TallyContract;
 import com.coderpage.mine.app.tally.utils.TimeUtils;
 
@@ -45,7 +45,7 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
     private Context mContext;
     private Month mDisplayMonth;
     private List<Month> mMonthList = new ArrayList<>();
-    private List<ExpenseItem> mMonthExpenseList = new ArrayList<>();
+    private List<Expense> mMonthExpenseList = new ArrayList<>();
     private List<DailyExpense> mMonthDailyExpenseList = new ArrayList<>();
     private List<MonthCategoryExpense> mMonthCategoryExpenseList = new ArrayList<>();
 
@@ -71,9 +71,9 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
                 Calendar calendar = Calendar.getInstance();
                 int year = calendar.get(Calendar.YEAR);
                 int month = calendar.get(Calendar.MONTH) + 1;
-                loadMonthExpense(year, month, new Callback<List<ExpenseItem>, IError>() {
+                loadMonthExpense(year, month, new Callback<List<Expense>, IError>() {
                     @Override
-                    public void success(List<ExpenseItem> items) {
+                    public void success(List<Expense> items) {
                         mDisplayMonth = new Month(year, month);
                         mMonthExpenseList.clear();
                         mMonthExpenseList.addAll(items);
@@ -123,9 +123,9 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
                 }
                 int year = args.getInt(EXTRA_YEAR);
                 int month = args.getInt(EXTRA_MONTH);
-                loadMonthExpense(year, month, new Callback<List<ExpenseItem>, IError>() {
+                loadMonthExpense(year, month, new Callback<List<Expense>, IError>() {
                     @Override
-                    public void success(List<ExpenseItem> items) {
+                    public void success(List<Expense> items) {
                         mDisplayMonth = new Month(year, month);
                         mMonthExpenseList.clear();
                         mMonthExpenseList.addAll(items);
@@ -154,7 +154,7 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
         return mMonthDailyExpenseList;
     }
 
-    List<ExpenseItem> getMonthExpenseList() {
+    List<Expense> getMonthExpenseList() {
         return mMonthExpenseList;
     }
 
@@ -166,11 +166,11 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
         return mDisplayMonth;
     }
 
-    private void loadMonthExpense(int year, int month, Callback<List<ExpenseItem>, IError> callback) {
+    private void loadMonthExpense(int year, int month, Callback<List<Expense>, IError> callback) {
         LOGI(TAG, "load " + year + "/" + month + " daily expense");
-        new AsyncTask<Void, Void, List<ExpenseItem>>() {
+        new AsyncTask<Void, Void, List<Expense>>() {
             @Override
-            protected List<ExpenseItem> doInBackground(Void... params) {
+            protected List<Expense> doInBackground(Void... params) {
                 Calendar monthStartCalendar = Calendar.getInstance();
                 monthStartCalendar.set(Calendar.YEAR, year);
                 // month -1 的原因是, Calendar MONTH 从 0 开始计数，即 0 是一月
@@ -199,28 +199,28 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
                 if (cursor == null) {
                     return new ArrayList<>(0);
                 }
-                List<ExpenseItem> items = new ArrayList<>(cursor.getCount());
+                List<Expense> items = new ArrayList<>(cursor.getCount());
                 while (cursor.moveToNext()) {
-                    items.add(ExpenseItem.fromCursor(cursor));
+                    items.add(Expense.fromCursor(cursor));
                 }
                 cursor.close();
                 return items;
             }
 
             @Override
-            protected void onPostExecute(List<ExpenseItem> dailyExpenses) {
+            protected void onPostExecute(List<Expense> dailyExpenses) {
                 callback.success(dailyExpenses);
             }
         }.executeOnExecutor(AsyncTaskExecutor.executor());
     }
 
-    private List<DailyExpense> generateDailyExpense(int year, int month, List<ExpenseItem> list) {
+    private List<DailyExpense> generateDailyExpense(int year, int month, List<Expense> list) {
         SparseArray<DailyExpense> dailyExpenseSparseArray = new SparseArray<>(31);
         Calendar calendar = Calendar.getInstance();
         int currentYear = calendar.get(Calendar.YEAR);
         int currentMonth = calendar.get(Calendar.MONTH) + 1;
         int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
-        for (ExpenseItem item : list) {
+        for (Expense item : list) {
             calendar.setTimeInMillis(item.getTime());
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             DailyExpense expense = dailyExpenseSparseArray.get(day, null);
@@ -257,13 +257,13 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
 
     private List<MonthCategoryExpense> generateMonthCategoryList(int year,
                                                                  int month,
-                                                                 List<ExpenseItem> list) {
+                                                                 List<Expense> list) {
         List<MonthCategoryExpense> result = new ArrayList<>();
 
         HashMap<Long, MonthCategoryExpense> getMonthCategoryExpenseByCid = new HashMap<>();
 
         float monthExpenseTotal = 0.0f;
-        for (ExpenseItem item : list) {
+        for (Expense item : list) {
             long cid = item.getCategoryId();
             MonthCategoryExpense expense = getMonthCategoryExpenseByCid.get(cid);
             if (expense == null) {

@@ -14,7 +14,8 @@ import com.coderpage.framework.Presenter;
 import com.coderpage.framework.PresenterImpl;
 import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
-import com.coderpage.mine.app.tally.data.ExpenseItem;
+import com.coderpage.mine.app.tally.data.Expense;
+import com.coderpage.mine.app.tally.eventbus.EventRecordDelete;
 import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
 import com.coderpage.mine.ui.BaseActivity;
 
@@ -105,6 +106,11 @@ public class CategoryRecordsActivity extends BaseActivity
         mUserActionListener.onUserAction(CategoryRecordsModel.RecordsUserActionEnum.EXPENSE_EDITED, args);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventRecordDelete(EventRecordDelete event) {
+        mHistoryRecordsAdapter.removeItem(event.getExpenseItem().getId());
+    }
+
     @Override
     public void displayData(CategoryRecordsModel model, CategoryRecordsModel.RecordsQueryEnum query) {
         switch (query) {
@@ -123,8 +129,8 @@ public class CategoryRecordsActivity extends BaseActivity
         switch (userAction) {
             case EXPENSE_EDITED:
                 if (success) {
-                    ExpenseItem editedExpenseItem = model.getEditedExpenseItem();
-                    mHistoryRecordsAdapter.refreshItem(editedExpenseItem);
+                    Expense editedExpense = model.getEditedExpenseItem();
+                    mHistoryRecordsAdapter.refreshItem(editedExpense);
                 }
                 break;
             case EXPENSE_DELETE:

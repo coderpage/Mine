@@ -9,7 +9,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import com.coderpage.common.IError;
 import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
-import com.coderpage.mine.app.tally.data.ExpenseItem;
+import com.coderpage.mine.app.tally.data.Expense;
+import com.coderpage.mine.app.tally.eventbus.EventRecordDelete;
 import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
 import com.coderpage.mine.app.tally.ui.widget.LoadMoreRecyclerView;
 import com.coderpage.mine.ui.BaseActivity;
@@ -34,7 +35,7 @@ public class RecordsActivity extends BaseActivity implements UpdatableView<Recor
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tall_records);
+        setContentView(R.layout.activity_tally_records);
         initView();
         initPresenter();
         EventBus.getDefault().register(this);
@@ -49,7 +50,7 @@ public class RecordsActivity extends BaseActivity implements UpdatableView<Recor
 
             @Override
             public void onPullUpLoadMore() {
-                ExpenseItem lastExpenseShow = mHistoryRecordsAdapter.getLastExpenseShow();
+                Expense lastExpenseShow = mHistoryRecordsAdapter.getLastExpenseShow();
                 long loadMoreStartDate = System.currentTimeMillis();
                 if (lastExpenseShow != null) {
                     loadMoreStartDate = lastExpenseShow.getTime();
@@ -90,6 +91,11 @@ public class RecordsActivity extends BaseActivity implements UpdatableView<Recor
         mUserActionListener.onUserAction(RecordsModel.RecordsUserActionEnum.EXPENSE_EDITED, args);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventRecordDelete(EventRecordDelete event) {
+        mHistoryRecordsAdapter.removeItem(event.getExpenseItem().getId());
+    }
+
     @Override
     public void displayData(RecordsModel model, RecordsModel.RecordsQueryEnum query) {
         switch (query) {
@@ -108,8 +114,8 @@ public class RecordsActivity extends BaseActivity implements UpdatableView<Recor
         switch (userAction) {
             case EXPENSE_EDITED:
                 if (success) {
-                    ExpenseItem editedExpenseItem = model.getEditedExpenseItem();
-                    mHistoryRecordsAdapter.refreshItem(editedExpenseItem);
+                    Expense editedExpense = model.getEditedExpenseItem();
+                    mHistoryRecordsAdapter.refreshItem(editedExpense);
                 }
                 break;
             case EXPENSE_DELETE:

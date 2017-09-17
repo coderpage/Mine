@@ -18,9 +18,10 @@ import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.about.AboutActivity;
 import com.coderpage.mine.app.tally.chart.ChartActivity;
-import com.coderpage.mine.app.tally.data.ExpenseItem;
+import com.coderpage.mine.app.tally.data.Expense;
 import com.coderpage.mine.app.tally.edit.ExpenseEditActivity;
 import com.coderpage.mine.app.tally.eventbus.EventRecordAdd;
+import com.coderpage.mine.app.tally.eventbus.EventRecordDelete;
 import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
 import com.coderpage.mine.app.tally.records.RecordsActivity;
 import com.coderpage.mine.app.tally.setting.SettingActivity;
@@ -224,6 +225,14 @@ public class MainActivity extends BaseActivity
         mUserActionListener.onUserAction(MainModel.MainUserActionEnum.RELOAD_MONTH_TOTAL, null);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventRecordDelete(EventRecordDelete event) {
+        Bundle args = new Bundle(1);
+        args.putLong(MainModel.EXTRA_EXPENSE_ID, event.getExpenseItem().getId());
+        mUserActionListener.onUserAction(MainModel.MainUserActionEnum.REFRESH_TODAY_EXPENSE, null);
+        mUserActionListener.onUserAction(MainModel.MainUserActionEnum.RELOAD_MONTH_TOTAL, null);
+    }
+
     @Override
     public void displayData(MainModel model, MainModel.MainQueryEnum query) {
         switch (query) {
@@ -274,13 +283,13 @@ public class MainActivity extends BaseActivity
     }
 
     private void refreshToadyExpenseTip(MainModel model) {
-        List<ExpenseItem> todayExpenseList = model.getTodayExpenseList();
+        List<Expense> todayExpenseList = model.getTodayExpenseList();
         if (todayExpenseList.isEmpty()) {
             mTodayExpenseTipTv.setText(R.string.tally_today_no_expense_record_tip);
         } else {
             float todayTotal = 0f;
-            for (ExpenseItem expenseItem : todayExpenseList) {
-                todayTotal += expenseItem.getAmount();
+            for (Expense expense : todayExpenseList) {
+                todayTotal += expense.getAmount();
             }
             String totalFormat = mAmountDecimalFormat.format(todayTotal);
             mTodayExpenseTipTv.setText(
@@ -288,9 +297,9 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    private void reDrawPieChart(List<ExpenseItem> items) {
+    private void reDrawPieChart(List<Expense> items) {
         Map<String, Float> getMountByCategoryName = new HashMap<>();
-        for (ExpenseItem item : items) {
+        for (Expense item : items) {
             Float amount = getMountByCategoryName.get(item.getCategoryName());
             if (amount == null) {
                 amount = item.getAmount();

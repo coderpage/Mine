@@ -15,7 +15,8 @@ import android.widget.TextView;
 
 import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
-import com.coderpage.mine.app.tally.data.ExpenseItem;
+import com.coderpage.mine.app.tally.data.Expense;
+import com.coderpage.mine.app.tally.detail.ExpenseDetailActivity;
 import com.coderpage.mine.app.tally.edit.ExpenseEditActivity;
 import com.coderpage.mine.app.tally.utils.TimeUtils;
 import com.coderpage.mine.ui.widget.ButtonGroupDialog;
@@ -39,7 +40,7 @@ class SimpleRecordAdapter extends RecyclerView.Adapter<SimpleRecordAdapter.Expen
     private UpdatableView.UserActionListener mUserActionListener;
     private String mAmountFormat;
 
-    private ArrayList<ExpenseItem> mExpenseItemList = new ArrayList<>();
+    private ArrayList<Expense> mExpenseList = new ArrayList<>();
 
     SimpleRecordAdapter(Activity activity) {
         mActivity = activity;
@@ -49,7 +50,7 @@ class SimpleRecordAdapter extends RecyclerView.Adapter<SimpleRecordAdapter.Expen
 
     @Override
     public int getItemCount() {
-        return mExpenseItemList.size();
+        return mExpenseList.size();
     }
 
     @Override
@@ -60,21 +61,22 @@ class SimpleRecordAdapter extends RecyclerView.Adapter<SimpleRecordAdapter.Expen
 
     @Override
     public void onBindViewHolder(ExpenseItemViewHolder holder, int position) {
-        ExpenseItem expenseItem = mExpenseItemList.get(position);
-        holder.setExpense(expenseItem);
+        Expense expense = mExpenseList.get(position);
+        holder.setExpense(expense);
     }
 
     void setUserActionListener(UpdatableView.UserActionListener userActionListener) {
         mUserActionListener = userActionListener;
     }
 
-    class ExpenseItemViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
+    class ExpenseItemViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener, View.OnLongClickListener {
         private AppCompatImageView mCategoryIcon;
         private TextView mAmountTv;
         private TextView mTimeTv;
         private TextView mCategoryNameTv;
         private TextView mDescTv;
-        private ExpenseItem mExpense;
+        private Expense mExpense;
 
         ExpenseItemViewHolder(View view) {
             super(view);
@@ -83,7 +85,13 @@ class SimpleRecordAdapter extends RecyclerView.Adapter<SimpleRecordAdapter.Expen
             mCategoryNameTv = ((TextView) view.findViewById(R.id.tvCategoryName));
             mDescTv = ((TextView) view.findViewById(R.id.tvRecordDec));
             mCategoryIcon = ((AppCompatImageView) view.findViewById(R.id.ivCategoryIcon));
+            view.setOnClickListener(this);
             view.setOnLongClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            ExpenseDetailActivity.open(mActivity, mExpense.getId(), v);
         }
 
         @Override
@@ -115,7 +123,7 @@ class SimpleRecordAdapter extends RecyclerView.Adapter<SimpleRecordAdapter.Expen
             return true;
         }
 
-        private void setExpense(ExpenseItem expense) {
+        private void setExpense(Expense expense) {
             mExpense = expense;
             if (mExpense == null) return;
             setAmount(String.valueOf(mExpense.getAmount()));
@@ -152,24 +160,24 @@ class SimpleRecordAdapter extends RecyclerView.Adapter<SimpleRecordAdapter.Expen
         }
     }
 
-    ArrayList<ExpenseItem> getDataList() {
-        return mExpenseItemList;
+    ArrayList<Expense> getDataList() {
+        return mExpenseList;
     }
 
-    void refreshData(List<ExpenseItem> items) {
-        mExpenseItemList.clear();
-        mExpenseItemList.addAll(items);
+    void refreshData(List<Expense> items) {
+        mExpenseList.clear();
+        mExpenseList.addAll(items);
         notifyDataSetChanged();
     }
 
-    void refreshItem(ExpenseItem item) {
+    void refreshItem(Expense item) {
         if (item == null) {
             LOGE(TAG, "can't notify item changed with null value");
             return;
         }
         int position = -1;
-        for (int i = 0; i < mExpenseItemList.size(); i++) {
-            ExpenseItem item1 = mExpenseItemList.get(i);
+        for (int i = 0; i < mExpenseList.size(); i++) {
+            Expense item1 = mExpenseList.get(i);
             if (item.getId() == item1.getId()) {
                 item1.setAmount(item.getAmount());
                 item1.setCategoryId(item.getCategoryId());
@@ -191,21 +199,21 @@ class SimpleRecordAdapter extends RecyclerView.Adapter<SimpleRecordAdapter.Expen
 
     void removeItem(long expenseId) {
         int position = -1;
-        for (int i = 0; i < mExpenseItemList.size(); i++) {
-            if (expenseId == mExpenseItemList.get(i).getId()) {
+        for (int i = 0; i < mExpenseList.size(); i++) {
+            if (expenseId == mExpenseList.get(i).getId()) {
                 position = i;
                 break;
             }
         }
         if (position != -1) {
-            mExpenseItemList.remove(position);
+            mExpenseList.remove(position);
             notifyItemRemoved(position);
         }
     }
 
-    void addHistoryItems(List<ExpenseItem> items) {
-        int insertPositionStart = mExpenseItemList.size();
-        mExpenseItemList.addAll(items);
+    void addHistoryItems(List<Expense> items) {
+        int insertPositionStart = mExpenseList.size();
+        mExpenseList.addAll(items);
         notifyItemRangeInserted(insertPositionStart, items.size());
     }
 

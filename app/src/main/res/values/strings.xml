@@ -19,6 +19,7 @@
     <string name="tally_toolbar_title_records">消费记录</string>
     <string name="tally_toolbar_title_category_records">流水</string>
     <string name="tally_toolbar_title_setting">设置</string>
+    <string name="tally_toolbar_title_detail">详情</string>
 
     <!-- tally chart activity -->
     <string name="tally_switch_2_daily_expense">切换日消费情况</string>
@@ -43,9 +44,17 @@
     <string name="tally_alert_read_data_failure">读取数据失败</string>
     <string name="tally_toast_illegal_path">非法路径</string>
 
+    <!--消费记录详情-->
+    <string name="tally_time">时间</string>
+
+    <!-- toast msg -->
+    <string name="tally_toast_delete_success">删除成功</string>
+
     <!-- dialog -->
     <string name="dialog_btn_cancel">取消</string>
     <string name="dialog_btn_choose_local_file">选择本地文件</string>
+    <string name="dialog_btn_delete">删除</string>
+    <string name="dialog_title_delete_confirm">确定删除？</string>
 
     <!-- toolbar title of tall expense record add activity -->
     <string name="tally_toolbar_title_add_record">记一笔</string>

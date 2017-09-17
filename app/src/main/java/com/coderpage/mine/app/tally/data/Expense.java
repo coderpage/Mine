@@ -8,7 +8,7 @@ import com.coderpage.mine.app.tally.provider.TallyContract;
  * @author abner-l. 2017-02-03
  */
 
-public class ExpenseItem {
+public class Expense {
 
     private long id;
     private long categoryId;
@@ -21,7 +21,7 @@ public class ExpenseItem {
     private String syncId;
     private boolean synced;
 
-    public static ExpenseItem fromCursor(Cursor cursor) {
+    public static Expense fromCursor(Cursor cursor) {
         long id = cursor.getLong(cursor.getColumnIndex(TallyContract.Expense._ID));
         long categoryId = cursor.getLong(cursor.getColumnIndex(TallyContract.Expense.CATEGORY_ID));
         float amount = cursor.getFloat(cursor.getColumnIndex(TallyContract.Expense.AMOUNT));
@@ -33,7 +33,7 @@ public class ExpenseItem {
         String syncId = cursor.getString(cursor.getColumnIndex(TallyContract.Expense.SYNC_ID));
         int synced = cursor.getInt(cursor.getColumnIndex(TallyContract.Expense.SYNCED));
 
-        ExpenseItem item = new ExpenseItem();
+        Expense item = new Expense();
         item.setId(id);
         item.setCategoryId(categoryId);
         item.setAmount(amount);

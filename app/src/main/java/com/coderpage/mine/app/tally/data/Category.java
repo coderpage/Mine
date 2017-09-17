@@ -8,7 +8,7 @@ import com.coderpage.mine.app.tally.provider.TallyContract;
  * @author abner-l. 2017-03-05
  */
 
-public class CategoryItem {
+public class Category {
 
     /** 分类 ID，{@link com.coderpage.mine.app.tally.provider.TallyContract.Category#_ID} */
     private long id;
@@ -18,12 +18,12 @@ public class CategoryItem {
     private int icon;
     private int order;
 
-    public static CategoryItem fromCursor(Cursor cursor) {
+    public static Category fromCursor(Cursor cursor) {
         long id = cursor.getLong(cursor.getColumnIndex(TallyContract.Category._ID));
         String name = cursor.getString(cursor.getColumnIndex(TallyContract.Category.NAME));
         String icon = cursor.getString(cursor.getColumnIndex(TallyContract.Category.ICON));
         int order = cursor.getInt(cursor.getColumnIndex(TallyContract.Category.ORDER));
-        CategoryItem item = new CategoryItem();
+        Category item = new Category();
         item.setIcon(CategoryIconHelper.resId(icon));
         item.setId(id);
         item.setName(name);
