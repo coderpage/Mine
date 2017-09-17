@@ -52,6 +52,21 @@
         <item name="android:textSize">@dimen/app_text_size_medium</item>
     </style>
 
+    <style name="DefaultEditText" parent="Widget.AppCompat.EditText">
+
+    </style>
+
+    <style name="SearchEditText" parent="DefaultEditText">
+        <item name="android:background">@null</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:textCursorDrawable">@drawable/edit_cursor</item>
+        <item name="android:textColor">@color/appTextColorPrimary</item>
+        <item name="android:textSize">@dimen/app_text_size_normal</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColorHint">@color/colorHint</item>
+    </style>
+
     <style name="Widget.Card" parent="Widget">
         <item name="android:background">@drawable/bg_touchable_white</item>
         <item name="android:clickable">true</item>

@@ -1,6 +1,9 @@
 <resources>
     <!-- app name -->
     <string name="app_name">我的记账本</string>
+    <string name="searchable_label">mine</string>
+    <string name="searchable_hint">搜索</string>
+
     <string name="delete">删除</string>
     <string name="modify">修改</string>
     <string name="place_holder">--</string>
@@ -11,6 +14,7 @@
     <string name="menu_tally_expense_records">消费记录</string>
     <string name="menu_tally_setting">设置</string>
     <string name="menu_tally_chart">图表分析</string>
+    <string name="menu_tally_search">搜索</string>
 
     <!--  toolbar title of tally main activity -->
     <string name="tally_toolbar_title_main">我的.记账本</string>
@@ -20,6 +24,7 @@
     <string name="tally_toolbar_title_category_records">流水</string>
     <string name="tally_toolbar_title_setting">设置</string>
     <string name="tally_toolbar_title_detail">详情</string>
+    <string name="tally_toolbar_title_search">搜索</string>
 
     <!-- tally chart activity -->
     <string name="tally_switch_2_daily_expense">切换日消费情况</string>

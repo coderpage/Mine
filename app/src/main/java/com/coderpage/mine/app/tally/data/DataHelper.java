@@ -11,6 +11,9 @@ import com.coderpage.concurrency.AsyncTaskExecutor;
 import com.coderpage.mine.app.tally.common.error.ErrorCode;
 import com.coderpage.mine.app.tally.provider.TallyContract;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author lc. 2017-09-17
  * @since 0.5.0
@@ -70,6 +73,47 @@ public class DataHelper {
             @Override
             protected void onPostExecute(Integer deletedNum) {
                 callback.success(deletedNum);
+            }
+        }.executeOnExecutor(AsyncTaskExecutor.executor());
+    }
+
+    public static void searchByKeywordAsync(Context context,
+                                            String keyword,
+                                            Callback<List<Expense>, IError> callback) {
+        new AsyncTask<Void, Void, List<Expense>>() {
+            @Override
+            protected List<Expense> doInBackground(Void... params) {
+
+                String[] projection = null;
+                String selection = TallyContract.Expense.CATEGORY + "=? or "
+                        + TallyContract.Expense.DESC + " LIKE '%" + keyword + "%'";
+                String[] selectionArgs = new String[]{keyword};
+                String sortOrder = "";
+
+                Cursor cursor = context.getContentResolver().query(
+                        TallyContract.Expense.CONTENT_URI,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        sortOrder);
+                if (cursor == null) return null;
+
+                List<Expense> result = new ArrayList<>(cursor.getCount());
+                while (cursor.moveToNext()) {
+                    result.add(Expense.fromCursor(cursor));
+                }
+                cursor.close();
+
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(List<Expense> result) {
+                if (result == null) {
+                    callback.failure(new NonThrowError(ErrorCode.UNKNOWN, ""));
+                } else {
+                    callback.success(result);
+                }
             }
         }.executeOnExecutor(AsyncTaskExecutor.executor());
     }

@@ -8,6 +8,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -24,6 +26,7 @@ import com.coderpage.mine.app.tally.eventbus.EventRecordAdd;
 import com.coderpage.mine.app.tally.eventbus.EventRecordDelete;
 import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
 import com.coderpage.mine.app.tally.records.RecordsActivity;
+import com.coderpage.mine.app.tally.search.SearchActivity;
 import com.coderpage.mine.app.tally.setting.SettingActivity;
 import com.coderpage.mine.app.tally.ui.widget.LoadMoreRecyclerView;
 import com.coderpage.mine.ui.BaseActivity;
@@ -117,29 +120,23 @@ public class MainActivity extends BaseActivity
         super.onResume();
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        super.onCreateOptionsMenu(menu);
-//        getMenuInflater().inflate(R.menu.mine_tally, menu);
-//        return true;
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_tally_main, menu);
+        return true;
+    }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//        switch (id) {
-//            case R.id.menu_about:
-//                startActivity(new Intent(this, AboutActivity.class));
-//                break;
-//            case R.id.menu_expense_records:
-//                startActivity(new Intent(this, RecordsActivity.class));
-//                break;
-//            case R.id.menu_setting:
-//                startActivity(new Intent(this, SettingActivity.class));
-//                break;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.menu_search:
+                startActivity(new Intent(this, SearchActivity.class));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onDestroy() {
