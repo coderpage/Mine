@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.coderpage.base.utils.LogUtils;
 import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.chart.ChartActivity;
@@ -21,14 +22,14 @@ import com.coderpage.mine.app.tally.detail.ExpenseDetailActivity;
 import com.coderpage.mine.app.tally.edit.ExpenseEditActivity;
 import com.coderpage.mine.app.tally.utils.TimeUtils;
 import com.coderpage.mine.ui.widget.ButtonGroupDialog;
-import com.coderpage.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import static com.coderpage.utils.LogUtils.LOGE;
+import static com.coderpage.base.utils.LogUtils.LOGE;
+
 
 /**
  * @author abner-l. 2017-04-13

@@ -23,9 +23,7 @@
             style="@style/SearchEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:hint="@string/searchable_hint"
+            android:hint="@string/tally_search_et_hint"
             android:imeActionLabel="@string/searchable_label"
             android:imeOptions="actionSearch|flagNoExtractUi"/>
 
@@ -37,9 +35,20 @@
         android:layout_height="@dimen/shadow_height"
         android:background="@drawable/shadow_appbar"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerResult"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent">
 
+        <com.coderpage.mine.app.tally.search.SearchHistoryView
+            android:id="@+id/lySearchHistoryView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <com.coderpage.mine.app.tally.search.SearchResultView
+            android:id="@+id/lySearchResultView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+    </FrameLayout>
 </LinearLayout>

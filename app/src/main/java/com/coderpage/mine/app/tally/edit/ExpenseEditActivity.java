@@ -18,7 +18,8 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 
-import com.coderpage.common.IError;
+import com.coderpage.base.common.IError;
+import com.coderpage.base.utils.LogUtils;
 import com.coderpage.framework.PresenterImpl;
 import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
@@ -28,7 +29,6 @@ import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
 import com.coderpage.mine.app.tally.ui.widget.NumInputView;
 import com.coderpage.mine.app.tally.utils.DatePickUtils;
 import com.coderpage.mine.ui.BaseActivity;
-import com.coderpage.utils.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 

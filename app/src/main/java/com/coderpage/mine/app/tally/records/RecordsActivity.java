@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 
-import com.coderpage.common.IError;
+import com.coderpage.base.common.IError;
 import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.data.Expense;

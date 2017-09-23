@@ -1,6 +1,6 @@
 package com.coderpage.mine.app.tally.search;
 
-import android.app.Activity;
+import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
@@ -10,12 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.coderpage.base.utils.LogUtils;
 import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.data.Expense;
 import com.coderpage.mine.app.tally.detail.ExpenseDetailActivity;
 import com.coderpage.mine.app.tally.utils.TimeUtils;
-import com.coderpage.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,17 +30,17 @@ public class SearchResultAdapter extends
         RecyclerView.Adapter<SearchResultAdapter.ExpenseViewHolder> {
     private static final String TAG = LogUtils.makeLogTag(SearchResultAdapter.class);
 
-    private Activity mActivity;
+    private Context mContext;
     private LayoutInflater mInflater;
     private UpdatableView.UserActionListener mUserActionListener;
     private String mAmountFormat;
 
     private ArrayList<Expense> mExpenseList = new ArrayList<>();
 
-    SearchResultAdapter(Activity activity) {
-        mActivity = activity;
-        mInflater = LayoutInflater.from(activity);
-        mAmountFormat = mActivity.getString(R.string.tally_amount_cny);
+    SearchResultAdapter(Context context) {
+        mContext = context;
+        mInflater = LayoutInflater.from(context);
+        mAmountFormat = mContext.getString(R.string.tally_amount_cny);
     }
 
     void refresh(List<Expense> list) {
@@ -91,7 +91,7 @@ public class SearchResultAdapter extends
 
         @Override
         public void onClick(View v) {
-            ExpenseDetailActivity.open(mActivity, mExpense.getId(), v);
+            ExpenseDetailActivity.open(mContext, mExpense.getId(), v);
         }
 
         private void setExpense(Expense expense) {

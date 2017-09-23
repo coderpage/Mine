@@ -7,11 +7,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.SparseArray;
 
-import com.coderpage.common.Callback;
-import com.coderpage.common.IError;
-import com.coderpage.common.IResult;
-import com.coderpage.common.NonThrowError;
-import com.coderpage.common.Result;
+import com.coderpage.base.common.Callback;
+import com.coderpage.base.common.IError;
+import com.coderpage.base.common.IResult;
+import com.coderpage.base.common.NonThrowError;
+import com.coderpage.base.common.Result;
 import com.coderpage.concurrency.AsyncTaskExecutor;
 import com.coderpage.framework.Model;
 import com.coderpage.framework.QueryEnum;
@@ -29,8 +29,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.coderpage.utils.LogUtils.LOGI;
-import static com.coderpage.utils.LogUtils.makeLogTag;
+import static com.coderpage.base.utils.LogUtils.LOGI;
+import static com.coderpage.base.utils.LogUtils.makeLogTag;
 
 /**
  * @author abner-l. 2017-05-04

@@ -1,6 +1,6 @@
 package com.coderpage.mine.app.tally.common.error;
 
-import com.coderpage.common.IError;
+import com.coderpage.base.common.IError;
 
 import java.util.Locale;
 

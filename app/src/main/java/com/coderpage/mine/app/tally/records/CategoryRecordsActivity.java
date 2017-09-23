@@ -9,7 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.coderpage.common.IError;
+import com.coderpage.base.common.IError;
 import com.coderpage.framework.Presenter;
 import com.coderpage.framework.PresenterImpl;
 import com.coderpage.framework.UpdatableView;

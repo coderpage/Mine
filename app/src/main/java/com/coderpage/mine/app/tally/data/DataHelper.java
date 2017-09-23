@@ -4,9 +4,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 
-import com.coderpage.common.Callback;
-import com.coderpage.common.IError;
-import com.coderpage.common.NonThrowError;
+import com.coderpage.base.common.Callback;
+import com.coderpage.base.common.IError;
+import com.coderpage.base.common.NonThrowError;
 import com.coderpage.concurrency.AsyncTaskExecutor;
 import com.coderpage.mine.app.tally.common.error.ErrorCode;
 import com.coderpage.mine.app.tally.provider.TallyContract;

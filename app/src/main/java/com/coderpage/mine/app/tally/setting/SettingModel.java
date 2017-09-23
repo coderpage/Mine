@@ -6,14 +6,14 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 
-import com.coderpage.common.IError;
+import com.coderpage.base.common.IError;
+import com.coderpage.base.utils.ResUtils;
 import com.coderpage.framework.Model;
 import com.coderpage.framework.QueryEnum;
 import com.coderpage.framework.UserActionEnum;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.backup.Backup;
 import com.coderpage.mine.app.tally.backup.BackupModel;
-import com.coderpage.utils.ResUtils;
 
 import java.io.File;
 

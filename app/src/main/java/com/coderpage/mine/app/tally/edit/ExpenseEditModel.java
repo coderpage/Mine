@@ -8,12 +8,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import com.coderpage.common.IError;
-import com.coderpage.common.NonThrowError;
+import com.coderpage.base.common.IError;
+import com.coderpage.base.common.NonThrowError;
 import com.coderpage.concurrency.AsyncTaskExecutor;
 import com.coderpage.framework.Model;
 import com.coderpage.framework.QueryEnum;
-import com.coderpage.framework.SimpleCallback;
+import com.coderpage.base.common.SimpleCallback;
 import com.coderpage.framework.UserActionEnum;
 import com.coderpage.mine.app.tally.common.error.ErrorCode;
 import com.coderpage.mine.app.tally.data.CategoryIconHelper;
@@ -26,8 +26,8 @@ import com.coderpage.mine.utils.AndroidUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.coderpage.utils.LogUtils.LOGE;
-import static com.coderpage.utils.LogUtils.makeLogTag;
+import static com.coderpage.base.utils.LogUtils.LOGE;
+import static com.coderpage.base.utils.LogUtils.makeLogTag;
 
 /**
  * @author abner-l. 2017-04-16

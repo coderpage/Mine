@@ -23,13 +23,13 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    buildToolsVersion '25.0.0'
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile rootProject.appCompat
     compile rootProject.eventBus
+    compile project(':base')
 
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'

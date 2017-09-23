@@ -14,7 +14,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.coderpage.common.IError;
+import com.coderpage.base.common.IError;
+import com.coderpage.base.utils.ResUtils;
+import com.coderpage.base.utils.UIUtils;
 import com.coderpage.framework.Presenter;
 import com.coderpage.framework.PresenterImpl;
 import com.coderpage.framework.UpdatableView;
@@ -22,20 +24,19 @@ import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.backup.Backup;
 import com.coderpage.mine.app.tally.backup.BackupModelMetadata;
 import com.coderpage.mine.ui.BaseActivity;
-import com.coderpage.utils.ResUtils;
 
 import java.io.File;
 import java.util.Date;
 import java.util.List;
 
+import static com.coderpage.base.utils.LogUtils.LOGE;
+import static com.coderpage.base.utils.LogUtils.makeLogTag;
 import static com.coderpage.mine.app.tally.setting.SettingModel.ACTION_CODE_FINISH;
 import static com.coderpage.mine.app.tally.setting.SettingModel.EXTRA_ACTION_CODE;
 import static com.coderpage.mine.app.tally.setting.SettingModel.EXTRA_FILE_PATH;
 import static com.coderpage.mine.app.tally.setting.SettingModel.EXTRA_MESSAGE;
 import static com.coderpage.mine.app.tally.setting.SettingModel.SettingQueryEnum;
 import static com.coderpage.mine.app.tally.setting.SettingModel.SettingUserActionEnum;
-import static com.coderpage.utils.LogUtils.LOGE;
-import static com.coderpage.utils.LogUtils.makeLogTag;
 
 /**
  * @author abner-l. 2017-06-01
@@ -124,14 +125,14 @@ public class SettingActivity extends BaseActivity
                         updateBackupProgressMessage(ResUtils.getString(
                                 getContext(), R.string.tally_alert_backup_success));
                         dismissBackupProgressDialog();
-                        com.coderpage.utils.UIUtils.showToastShort(
+                        UIUtils.showToastShort(
                                 getContext(), R.string.tally_alert_backup_success);
                     }
                 } else {
                     updateBackupProgressMessage(ResUtils.getString(
                             getContext(), R.string.tally_alert_backup_failure));
                     dismissBackupProgressDialog();
-                    com.coderpage.utils.UIUtils.showToastShort(
+                    UIUtils.showToastShort(
                             getContext(), R.string.tally_alert_backup_failure);
                 }
                 break;
@@ -153,7 +154,7 @@ public class SettingActivity extends BaseActivity
                     updateBackupProgressMessage(ResUtils.getString(
                             getContext(), R.string.tally_alert_read_data_failure));
                     dismissBackupProgressDialog();
-                    com.coderpage.utils.UIUtils.showToastShort(
+                    UIUtils.showToastShort(
                             getContext(), R.string.tally_alert_read_data_failure);
                 }
                 break;
@@ -167,14 +168,14 @@ public class SettingActivity extends BaseActivity
                         updateBackupProgressMessage(ResUtils.getString(
                                 getContext(), R.string.tally_alert_restore_data_success));
                         dismissBackupProgressDialog();
-                        com.coderpage.utils.UIUtils.showToastShort(
+                        UIUtils.showToastShort(
                                 getContext(), R.string.tally_alert_restore_data_success);
                     }
                 } else {
                     updateBackupProgressMessage(ResUtils.getString(
                             getContext(), R.string.tally_alert_restore_data_failure));
                     dismissBackupProgressDialog();
-                    com.coderpage.utils.UIUtils.showToastShort(
+                    UIUtils.showToastShort(
                             getContext(), R.string.tally_alert_restore_data_failure);
                 }
                 break;

@@ -22,11 +22,11 @@ import android.text.TextUtils;
 /**
  * Provides helper methods for specifying query parameters on {@code Uri}s.
  */
-public class TallyContractHelper {
+class TallyContractHelper {
 
-    public static final String QUERY_PARAMETER_DISTINCT = "distinct";
+    static final String QUERY_PARAMETER_DISTINCT = "distinct";
 
-    public static boolean isQueryDistinct(Uri uri) {
+    static boolean isQueryDistinct(Uri uri) {
         return !TextUtils.isEmpty(uri.getQueryParameter(QUERY_PARAMETER_DISTINCT));
     }
 

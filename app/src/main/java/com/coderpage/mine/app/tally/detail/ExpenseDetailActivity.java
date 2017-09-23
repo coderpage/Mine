@@ -14,7 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.coderpage.common.IError;
+import com.coderpage.base.common.IError;
+import com.coderpage.base.utils.UIUtils;
 import com.coderpage.framework.Presenter;
 import com.coderpage.framework.PresenterImpl;
 import com.coderpage.framework.UpdatableView;
@@ -25,7 +26,6 @@ import com.coderpage.mine.app.tally.edit.ExpenseEditActivity;
 import com.coderpage.mine.app.tally.eventbus.EventRecordDelete;
 import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
 import com.coderpage.mine.ui.BaseActivity;
-import com.coderpage.utils.UIUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -36,9 +36,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import static com.coderpage.base.utils.LogUtils.makeLogTag;
 import static com.coderpage.mine.app.tally.detail.ExpenseDetailModel.Queries;
 import static com.coderpage.mine.app.tally.detail.ExpenseDetailModel.UserActions;
-import static com.coderpage.utils.LogUtils.makeLogTag;
 
 /**
  * @author abner-l. 2017-09-17

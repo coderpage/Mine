@@ -73,6 +73,11 @@
     <string name="tally_toady_expense_total">今日消费 %s 元</string>
     <string name="tally_check_month_expense">查看月账单</string>
 
+    <!-- search activity -->
+    <string name="tally_clear_search_history">清除所有</string>
+    <string name="tally_search_et_hint">搜索消费记录</string>
+    <string name="tally_search_no_data_tip">未搜索到相关内容</string>
+
     <string name="tally_about_main"><![CDATA[
         <h3>%s版</h3>
 

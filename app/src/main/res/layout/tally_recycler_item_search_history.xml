@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/ivRemove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:paddingBottom="@dimen/padding_normal"
+        android:paddingLeft="@dimen/padding_large"
+        android:paddingRight="@dimen/padding_large"
+        android:paddingTop="@dimen/padding_normal"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/ic_close"/>
+
+    <TextView
+        android:id="@+id/tvKeyword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/ivRemove"
+        android:foreground="?attr/selectableItemBackground"
+        android:paddingBottom="@dimen/padding_normal"
+        android:paddingLeft="@dimen/padding_large"
+        android:paddingTop="@dimen/padding_normal"
+        android:text="@string/place_holder"
+        android:textColor="@color/appTextColorSecondary"
+        android:textSize="@dimen/app_text_size_normal"/>
+
+</RelativeLayout>

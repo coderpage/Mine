@@ -8,8 +8,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.coderpage.utils.LogUtils.LOGI;
-import static com.coderpage.utils.LogUtils.makeLogTag;
+import static com.coderpage.base.utils.LogUtils.LOGI;
+import static com.coderpage.base.utils.LogUtils.makeLogTag;
+
 
 /**
  * @author abner-l. 2017-04-13

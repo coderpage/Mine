@@ -3,21 +3,23 @@ package com.coderpage.mine.app.tally.search;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
-import android.view.WindowManager;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.coderpage.common.IError;
+import com.coderpage.base.common.IError;
 import com.coderpage.framework.Presenter;
 import com.coderpage.framework.PresenterImpl;
 import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
-import com.coderpage.mine.app.tally.common.error.ErrorUtils;
 import com.coderpage.mine.ui.BaseActivity;
-import com.coderpage.utils.UIUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.coderpage.mine.app.tally.search.SearchModel.Queries;
 import static com.coderpage.mine.app.tally.search.SearchModel.UserActions;
@@ -26,8 +28,8 @@ public class SearchActivity extends BaseActivity
         implements UpdatableView<SearchModel, Queries, UserActions, IError> {
 
     private EditText mSearchEt;
-    private RecyclerView mResultRecycler;
-    private SearchResultAdapter mSearchResultAdapter;
+    private SearchHistoryView mSearchHistoryView;
+    private SearchResultView mSearchResultView;
 
     private Presenter<Queries, UserActions> mPresenter;
     private UserActionListener<UserActions> mUserActionListener;
@@ -51,16 +53,20 @@ public class SearchActivity extends BaseActivity
     }
 
     private void initToolbar() {
-        setToolbarAsBack(v -> onBackPressed());
+        setToolbarAsBack(v -> {
+            if (mSearchResultView.getVisibility() == View.VISIBLE) {
+                mSearchResultView.setVisibility(View.INVISIBLE);
+                mSearchHistoryView.setVisibility(View.VISIBLE);
+            } else {
+                onBackPressed();
+            }
+        });
     }
 
     private void initView() {
         mSearchEt = (EditText) findViewById(R.id.etSearch);
-        mResultRecycler = (RecyclerView) findViewById(R.id.recyclerResult);
-        mResultRecycler.setLayoutManager(
-                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        mSearchResultAdapter = new SearchResultAdapter(this);
-        mResultRecycler.setAdapter(mSearchResultAdapter);
+        mSearchHistoryView = (SearchHistoryView) findViewById(R.id.lySearchHistoryView);
+        mSearchResultView = (SearchResultView) findViewById(R.id.lySearchResultView);
     }
 
     private void setupSearchView() {
@@ -69,31 +75,61 @@ public class SearchActivity extends BaseActivity
         mSearchEt.requestFocus();
         showSoftKeyBoard();
 
+        mSearchEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String keyword = s.toString();
+
+                // 搜索框内容删除，显示搜索历史记录
+                if (TextUtils.isEmpty(keyword) && mSearchHistoryView.getVisibility() != View.VISIBLE) {
+                    mSearchHistoryView.setVisibility(View.VISIBLE);
+                    mSearchResultView.setVisibility(View.INVISIBLE);
+                }
+
+            }
+        });
         mSearchEt.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
                 String keyword = mSearchEt.getText().toString();
-                if (TextUtils.isEmpty(keyword)) {
-                } else {
+                if (!TextUtils.isEmpty(keyword)) {
                     Bundle args = new Bundle(1);
                     args.putString(SearchModel.EXTRA_KEYWORD, keyword);
                     mUserActionListener.onUserAction(UserActions.SEARCH, args);
+                    mUserActionListener.onUserAction(UserActions.SEARCH_HISTORY_ADD, args);
                 }
+                hideSoftKeyBoard();
             }
             return false;
         });
     }
 
     private void showSoftKeyBoard() {
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.showSoftInputFromInputMethod(mSearchEt.getWindowToken(), 0);
     }
 
     private void hideSoftKeyBoard() {
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mSearchEt.getWindowToken(), 0);
     }
 
     private void initPresenter() {
         SearchModel model = new SearchModel(this);
-        mPresenter = new PresenterImpl<>(model, this, UserActions.values(), Queries.values());
+        List<UpdatableView<SearchModel, Queries, UserActions, IError>> viewList = new ArrayList<>(3);
+        viewList.add(this);
+        viewList.add(mSearchHistoryView);
+        viewList.add(mSearchResultView);
+        mPresenter = new PresenterImpl<>(model, viewList, UserActions.values(), Queries.values());
         mPresenter.loadInitialQueries();
     }
 
@@ -114,13 +150,11 @@ public class SearchActivity extends BaseActivity
                                         boolean success,
                                         IError error) {
         switch (userAction) {
-
             case SEARCH:
-                if (success) {
-                    mSearchResultAdapter.refresh(model.getResults());
-                } else {
-                    UIUtils.showToastShort(SearchActivity.this, ErrorUtils.formatDisplayMsg(error));
-                }
+                String keyword = args.getString(SearchModel.EXTRA_KEYWORD, "");
+                mSearchEt.setText(keyword);
+                mSearchEt.setSelection(keyword.length());
+                hideSoftKeyBoard();
                 break;
         }
     }

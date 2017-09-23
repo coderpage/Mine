@@ -17,7 +17,9 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.coderpage.common.IError;
+import com.coderpage.base.common.IError;
+import com.coderpage.base.utils.AndroidUtils;
+import com.coderpage.base.utils.ResUtils;
 import com.coderpage.framework.Presenter;
 import com.coderpage.framework.PresenterImpl;
 import com.coderpage.framework.UpdatableView;
@@ -27,8 +29,6 @@ import com.coderpage.mine.app.tally.chart.data.Month;
 import com.coderpage.mine.app.tally.data.Expense;
 import com.coderpage.mine.app.tally.utils.TimeUtils;
 import com.coderpage.mine.ui.BaseActivity;
-import com.coderpage.utils.AndroidUtils;
-import com.coderpage.utils.ResUtils;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -48,10 +48,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.coderpage.base.utils.UIUtils.dp2px;
 import static com.coderpage.mine.R.id.lineChart;
 import static com.coderpage.mine.app.tally.chart.ChartModel.ChartQueryEnum;
 import static com.coderpage.mine.app.tally.chart.ChartModel.ChartUserActionEnum;
-import static com.coderpage.utils.UIUtils.dp2px;
 
 /**
  * @author abner-l. 2017-04-23

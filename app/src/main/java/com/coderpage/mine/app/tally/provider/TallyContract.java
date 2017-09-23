@@ -9,12 +9,12 @@ import android.net.Uri;
 
 public class TallyContract {
 
-    public static final String CONTENT_TYPE_APP_BASE = "minetally.";
+    private static final String CONTENT_TYPE_APP_BASE = "minetally.";
 
-    public static final String CONTENT_TYPE_BASE = "vnd.android.cursor.dir/vnd."
+    private static final String CONTENT_TYPE_BASE = "vnd.android.cursor.dir/vnd."
             + CONTENT_TYPE_APP_BASE;
 
-    public static final String CONTENT_ITEM_TYPE_BASE = "vnd.android.cursor.item/vnd."
+    private static final String CONTENT_ITEM_TYPE_BASE = "vnd.android.cursor.item/vnd."
             + CONTENT_TYPE_APP_BASE;
 
     /**

@@ -15,7 +15,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.coderpage.common.IError;
+import com.coderpage.base.common.IError;
+import com.coderpage.base.utils.LogUtils;
+import com.coderpage.base.utils.ResUtils;
 import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.about.AboutActivity;
@@ -30,8 +32,6 @@ import com.coderpage.mine.app.tally.search.SearchActivity;
 import com.coderpage.mine.app.tally.setting.SettingActivity;
 import com.coderpage.mine.app.tally.ui.widget.LoadMoreRecyclerView;
 import com.coderpage.mine.ui.BaseActivity;
-import com.coderpage.utils.LogUtils;
-import com.coderpage.utils.ResUtils;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -49,7 +49,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.coderpage.utils.LogUtils.LOGI;
+import static com.coderpage.base.utils.LogUtils.LOGI;
+
 
 /**
  * @author abner-l. 2017-01-23

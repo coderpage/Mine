@@ -12,13 +12,14 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.coderpage.base.utils.LogUtils;
 import com.coderpage.mine.utils.SelectionBuilder;
-import com.coderpage.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static com.coderpage.utils.LogUtils.LOGV;
+import static com.coderpage.base.utils.LogUtils.LOGV;
+
 
 /**
  * @author abner-l. 2017-02-12

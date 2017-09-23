@@ -10,9 +10,9 @@ import android.os.Build;
 import android.os.RemoteException;
 
 import com.alibaba.fastjson.JSON;
-import com.coderpage.common.Callback;
-import com.coderpage.common.IError;
-import com.coderpage.common.NonThrowError;
+import com.coderpage.base.common.Callback;
+import com.coderpage.base.common.IError;
+import com.coderpage.base.common.NonThrowError;
 import com.coderpage.concurrency.AsyncTaskExecutor;
 import com.coderpage.mine.BuildConfig;
 import com.coderpage.mine.app.tally.common.error.ErrorCode;
@@ -28,8 +28,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.coderpage.utils.LogUtils.LOGE;
-import static com.coderpage.utils.LogUtils.makeLogTag;
+import static com.coderpage.base.utils.LogUtils.LOGE;
+import static com.coderpage.base.utils.LogUtils.makeLogTag;
 
 /**
  * @author abner-l. 2017-06-01
