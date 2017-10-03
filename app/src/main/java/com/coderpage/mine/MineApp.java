@@ -1,6 +1,7 @@
 package com.coderpage.mine;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.coderpage.framework.Framework;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -12,9 +13,12 @@ import com.tencent.bugly.crashreport.CrashReport;
 
 public class MineApp extends Application {
 
+    private static Context mAppContext;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        mAppContext = this;
         Framework.onAppOnCreate();
         if (!BuildConfig.DEBUG) {
             CrashReport.UserStrategy userStrategy = new CrashReport.UserStrategy(getApplicationContext());
@@ -24,4 +28,7 @@ public class MineApp extends Application {
         }
     }
 
+    public static Context getAppContext() {
+        return mAppContext;
+    }
 }

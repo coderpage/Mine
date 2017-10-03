@@ -1,5 +1,7 @@
 package com.coderpage.utils;
 
+import com.coderpage.base.utils.CommonUtils;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -17,15 +19,15 @@ public class CommonUtilsTest {
         ArrayList<String> strings = new ArrayList<>();
         String result;
 
-        result = CommonUtils.joinCollectionElements(strings, ",");
+        result = CommonUtils.collectionJoinElements(strings, ",");
         Assert.assertEquals("", result);
 
         strings.add("A");
-        result = CommonUtils.joinCollectionElements(strings, ",");
+        result = CommonUtils.collectionJoinElements(strings, ",");
         Assert.assertEquals("A", result);
 
         strings.add("B");
-        result = CommonUtils.joinCollectionElements(strings, ",");
+        result = CommonUtils.collectionJoinElements(strings, ",");
         Assert.assertEquals("A,B", result);
     }
 }

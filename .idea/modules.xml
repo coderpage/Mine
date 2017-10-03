@@ -5,7 +5,9 @@
       <module fileurl="file://$PROJECT_DIR$/Mine.iml" filepath="$PROJECT_DIR$/Mine.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/base/base.iml" filepath="$PROJECT_DIR$/base/base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/buildSrc/buildSrc.iml" filepath="$PROJECT_DIR$/buildSrc/buildSrc.iml" />
       <module fileurl="file://$PROJECT_DIR$/framework/framework.iml" filepath="$PROJECT_DIR$/framework/framework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libupdate/libupdate.iml" filepath="$PROJECT_DIR$/libupdate/libupdate.iml" />
     </modules>
   </component>
 </project>

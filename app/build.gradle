@@ -44,19 +44,31 @@ android {
     productFlavors {
         yingyongbao {}
         xiaomi {}
+        offical{}
     }
 }
 
-apply plugin: 'bugly'
+//apply plugin: 'bugly'
+//
+//bugly {
+//    appId = rootProject.buglyAppId
+//    appKey = rootProject.buglyAppKey
+//}
 
-bugly {
-    appId = rootProject.buglyAppId
-    appKey = rootProject.buglyAppKey
+apply plugin: 'com.coderpage.app'
+
+uploader {
+//    apiServer = 'http://127.0.0.1:8001'
+    token = rootProject.releaseToken
+    appName = '我的.记账本'
+    changeLog = file("${rootDir}/source/changelog/${rootProject.appVersionName}").text;
+    isRelease = true
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':framework')
+    compile project(':libupdate')
     compile rootProject.appCompat
     compile rootProject.recyclerview
     compile rootProject.design
