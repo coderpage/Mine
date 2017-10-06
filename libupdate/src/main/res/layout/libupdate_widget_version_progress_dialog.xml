@@ -7,7 +7,7 @@
               android:paddingBottom="10dp"
               android:paddingTop="10dp">
 
-    <cn.rntd.greedwolf.common.ui.widget.ProgressWheel
+    <com.coderpage.lib.update.ProgressWheel
         android:id="@+id/progress"
         android:layout_width="36dp"
         android:layout_height="36dp"

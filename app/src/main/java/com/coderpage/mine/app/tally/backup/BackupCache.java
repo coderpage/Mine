@@ -41,7 +41,7 @@ class BackupCache {
     private File backupFolder; // 备份文件夹
     private String backupFolderPath = DATA_ROOT_PATH + File.separator + BACKUP_FOLDER_NAME;
     private SimpleDateFormat backupFileDateFormat =
-            new SimpleDateFormat("yyyy-MM-dd#HH:mm:ss", Locale.getDefault());
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
     BackupCache(Context context) {
         mContext = context;

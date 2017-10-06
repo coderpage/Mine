@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
@@ -31,6 +32,7 @@ import com.coderpage.mine.app.tally.records.RecordsActivity;
 import com.coderpage.mine.app.tally.search.SearchActivity;
 import com.coderpage.mine.app.tally.setting.SettingActivity;
 import com.coderpage.mine.app.tally.ui.widget.LoadMoreRecyclerView;
+import com.coderpage.mine.app.tally.update.UpdateUtils;
 import com.coderpage.mine.ui.BaseActivity;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
@@ -81,6 +83,12 @@ public class MainActivity extends BaseActivity
         initView();
         initPresenter();
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        UpdateUtils.checkPersistedNewVersionAndShowUpdateConfirmDialog(this);
     }
 
     private void initView() {

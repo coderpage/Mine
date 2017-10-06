@@ -21,4 +21,9 @@ public class Error {
     public String message() {
         return message;
     }
+
+    @Override
+    public String toString() {
+        return "ERR: code=" + code() + " message=" + message();
+    }
 }

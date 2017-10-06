@@ -13,6 +13,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 
 import java.io.File;
 
@@ -23,6 +24,7 @@ import java.io.File;
 
 public class DownloadService extends IntentService {
 
+    private static final String TAG = DownloadService.class.getSimpleName();
     private static final int NOTIFY_ID_DOWNLOAD_APK = 10086;
 
     private static final String ACTION_APK_DOWNLOAD = "com.coderpage.lib.update.service.action.ApkDownload";
@@ -46,6 +48,7 @@ public class DownloadService extends IntentService {
                                         String downloadUrl,
                                         String filename,
                                         int notifyIconResId) {
+        Log.i(TAG, "start download apk:" + downloadUrl);
         Intent intent = new Intent(context, DownloadService.class);
         intent.setAction(ACTION_APK_DOWNLOAD);
         intent.putExtra(EXTRA_DOWNLOAD_URL, downloadUrl);
@@ -106,9 +109,9 @@ public class DownloadService extends IntentService {
                 install.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             }
             startActivity(install);
+        } else {
+            Log.e(TAG, "download apk failed: " + result.error());
         }
-
-
     }
 
     private class NotifyRunnable implements Runnable {

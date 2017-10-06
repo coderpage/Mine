@@ -58,7 +58,7 @@ android {
 apply plugin: 'com.coderpage.app'
 
 uploader {
-//    apiServer = 'http://127.0.0.1:8001'
+    apiServer = 'http://127.0.0.1:8001'
     token = rootProject.releaseToken
     appName = '我的.记账本'
     changeLog = file("${rootDir}/source/changelog/${rootProject.appVersionName}").text;
@@ -78,6 +78,7 @@ dependencies {
     compile rootProject.mpAndroidChart
     compile rootProject.buglyCrashReport
     compile rootProject.fastjson
+    compile rootProject.retrofitConverterFastjson
 
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
