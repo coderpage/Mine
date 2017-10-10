@@ -78,29 +78,22 @@
     <string name="tally_search_et_hint">搜索消费记录</string>
     <string name="tally_search_no_data_tip">未搜索到相关内容</string>
 
-    <string name="tally_about_main"><![CDATA[
-        <h3>%s版</h3>
-
-        <h5>关于作者</h5>
-        三年工作时间，目前失业了的苦逼程序员。
-
-        <h5>为什么要写这个应用？</h5>
-        我乐意。
-
-        <h5>市场上已经有那么多同类应用，你还写个毛？</h5>
-        我乐意。
-
-        <h5>发现 bug 怎么办？</h5>
-        给我发邮件 <u>codenobug@163.com</u>
-
-        <h5>可以提意见么？</h5>
-        给我发邮件 <u>codenobug@163.com</u>
-
-        <h5>源码地址</h5>
-        <u>https://github.com/coderpage/Mine</u>
-
-
-    ]]></string>
+    <!-- about activity -->
+    <string name="tally_about_title_app_info">应用信息</string>
+    <string name="tally_about_title_version">版本</string>
+    <string name="tally_about_check_new_version">检查更新</string>
+    <string name="tally_about_find_new_version" formatted="false">新版本 %s(%d)</string>
+    <string name="tally_about_title_about_app">关于应用</string>
+    <string name="tally_about_about_app_content">周末业余时间有点无聊，就写了这个应用，平时记记自己的消费支出，本着简单、干净、够用即可的原则（主要是水平有限），由于个人开发，难免有些问题，希望大家多多提意见，我也会一直维护下去的。</string>
+    <string name="tally_about_title_developer_info">开发者</string>
+    <string name="tally_about_title_about_me">关于我</string>
+    <string name="tally_about_about_me_content">坐标苏州，写了三年的 Android，目前卖彩票。</string>
+    <string name="tally_about_title_send_email">发送邮件</string>
+    <string name="tally_about_send_email_content">我的个人邮箱 codenobug@163.com ，有问题可以给我发邮件。</string>
+    <string name="tally_about_title_wechat">微信公众号</string>
+    <string name="tally_about_wechat_content">微信公众号：MINE应用；可以通过公众号反馈意见或者BUG</string>
+    <string name="tally_about_title_source_code">源代码</string>
+    <string name="tally_about_source_code_content">代码已托管在 GitHub(https://github.com/coderpage/Mine) 上，欢迎吐槽我的渣渣代码。</string>
 
     <string name="tyOther">其他</string>
     <string name="tyFoodAndBeverage">餐饮</string>

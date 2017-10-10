@@ -225,7 +225,8 @@ public class Updater {
     private AlertDialog showApkDownloadConfirmDialog(Context context,
                                                      ApkModel apkModel,
                                                      boolean force) {
-        if (!PreferenceUtils.isRemindAgain(context) && !force) {
+        if (!PreferenceUtils.isRemindAgain(context, apkModel.getVersion(), apkModel.getBuildCode())
+                && !force) {
             return null;
         }
         final Context appContext = context.getApplicationContext();
@@ -256,7 +257,8 @@ public class Updater {
         CheckBox checkbox = (CheckBox) dialog.findViewById(R.id.checkboxDoNotRemindAgain);
         messageTv.setText(apkModel.getChangelog());
         checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            PreferenceUtils.setRemindAgain(appContext, !isChecked);
+            PreferenceUtils.setRemindAgain(appContext,
+                    apkModel.getVersion(), apkModel.getBuildCode(), !isChecked);
         });
         if (!NetWorkUtils.isWifiOK(context)) {
             Log.e("TAG", "====" + apkModel.getApkSizeBytes());
@@ -370,7 +372,7 @@ public class Updater {
         }
     }
 
-    public abstract class NewVersionCheckCallBack {
+    public abstract static class NewVersionCheckCallBack {
         public void onCheckStart() {
         }
 

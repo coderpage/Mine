@@ -81,12 +81,19 @@ public class PreferenceUtils {
         return getPreference(context).getLong(PRE_NEW_VERSION_BUILD_CODE, 0);
     }
 
-    public static boolean isRemindAgain(Context context) {
-        return getPreference(context).getBoolean(PRE_DO_NOT_REMIND_AGAIN, true);
+    public static boolean isRemindAgain(Context context,
+                                        String versionName,
+                                        long versionCode) {
+        return getPreference(context).getBoolean(
+                PRE_DO_NOT_REMIND_AGAIN + versionName + versionCode, true);
     }
 
-    public static void setRemindAgain(Context context, boolean remindAgain) {
-        getPreference(context).edit().putBoolean(PRE_DO_NOT_REMIND_AGAIN, remindAgain).apply();
+    public static void setRemindAgain(Context context,
+                                      String versionName,
+                                      long versionCode,
+                                      boolean remindAgain) {
+        getPreference(context).edit().putBoolean(
+                PRE_DO_NOT_REMIND_AGAIN + versionName + versionCode, remindAgain).apply();
     }
 
     private static SharedPreferences getPreference(Context context) {

@@ -15,12 +15,13 @@ import com.coderpage.mine.R;
 
 public class UpdateUtils {
 
-    public static void startNewClientVersionCheck(Context context) {
+    public static void startNewClientVersionCheck(Context context,
+                                                  Updater.NewVersionCheckCallBack checkCallBack) {
         new Updater.Builder(context, new LatestVersionFetcher())
                 .setExecutor(AsyncTaskExecutor.executor())
                 .setNotifyIcon(R.mipmap.ic_launcher)
                 .create()
-                .checkNewVersion(context);
+                .checkNewVersion(context, checkCallBack);
     }
 
     public static void startNewClientVersionCheckBackground(Context context) {
