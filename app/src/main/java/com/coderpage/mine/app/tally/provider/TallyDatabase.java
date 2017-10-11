@@ -17,7 +17,7 @@ import java.util.Map;
  * @since 0.1.0
  */
 
-public class TallyDatabase extends SQLiteOpenHelper {
+class TallyDatabase extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "sql_tally"; // sqlite db name
 

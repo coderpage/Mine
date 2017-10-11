@@ -6,27 +6,34 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.coderpage.base.common.IError;
+import com.coderpage.base.utils.LogUtils;
+import com.coderpage.base.utils.ResUtils;
 import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.about.AboutActivity;
 import com.coderpage.mine.app.tally.chart.ChartActivity;
-import com.coderpage.mine.app.tally.data.ExpenseItem;
+import com.coderpage.mine.app.tally.data.Expense;
 import com.coderpage.mine.app.tally.edit.ExpenseEditActivity;
 import com.coderpage.mine.app.tally.eventbus.EventRecordAdd;
+import com.coderpage.mine.app.tally.eventbus.EventRecordDelete;
 import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
 import com.coderpage.mine.app.tally.records.RecordsActivity;
+import com.coderpage.mine.app.tally.search.SearchActivity;
 import com.coderpage.mine.app.tally.setting.SettingActivity;
 import com.coderpage.mine.app.tally.ui.widget.LoadMoreRecyclerView;
+import com.coderpage.mine.app.tally.update.UpdateUtils;
 import com.coderpage.mine.ui.BaseActivity;
-import com.coderpage.utils.LogUtils;
-import com.coderpage.utils.ResUtils;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -44,7 +51,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.coderpage.utils.LogUtils.LOGI;
+import static com.coderpage.base.utils.LogUtils.LOGI;
+
 
 /**
  * @author abner-l. 2017-01-23
@@ -53,7 +61,7 @@ import static com.coderpage.utils.LogUtils.LOGI;
 
 public class MainActivity extends BaseActivity
         implements UpdatableView<MainModel, MainModel.MainQueryEnum,
-        MainModel.MainUserActionEnum> {
+        MainModel.MainUserActionEnum, IError> {
 
     private static final String TAG = LogUtils.makeLogTag(MainActivity.class);
 
@@ -75,6 +83,12 @@ public class MainActivity extends BaseActivity
         initView();
         initPresenter();
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        UpdateUtils.checkPersistedNewVersionAndShowUpdateConfirmDialog(this);
     }
 
     private void initView() {
@@ -115,29 +129,23 @@ public class MainActivity extends BaseActivity
         super.onResume();
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        super.onCreateOptionsMenu(menu);
-//        getMenuInflater().inflate(R.menu.mine_tally, menu);
-//        return true;
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_tally_main, menu);
+        return true;
+    }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//        switch (id) {
-//            case R.id.menu_about:
-//                startActivity(new Intent(this, AboutActivity.class));
-//                break;
-//            case R.id.menu_expense_records:
-//                startActivity(new Intent(this, RecordsActivity.class));
-//                break;
-//            case R.id.menu_setting:
-//                startActivity(new Intent(this, SettingActivity.class));
-//                break;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.menu_search:
+                startActivity(new Intent(this, SearchActivity.class));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onDestroy() {
@@ -223,6 +231,14 @@ public class MainActivity extends BaseActivity
         mUserActionListener.onUserAction(MainModel.MainUserActionEnum.RELOAD_MONTH_TOTAL, null);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventRecordDelete(EventRecordDelete event) {
+        Bundle args = new Bundle(1);
+        args.putLong(MainModel.EXTRA_EXPENSE_ID, event.getExpenseItem().getId());
+        mUserActionListener.onUserAction(MainModel.MainUserActionEnum.REFRESH_TODAY_EXPENSE, null);
+        mUserActionListener.onUserAction(MainModel.MainUserActionEnum.RELOAD_MONTH_TOTAL, null);
+    }
+
     @Override
     public void displayData(MainModel model, MainModel.MainQueryEnum query) {
         switch (query) {
@@ -239,14 +255,15 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void displayErrorMessage(MainModel.MainQueryEnum query) {
+    public void displayErrorMessage(MainModel.MainQueryEnum query, IError error) {
 
     }
 
     @Override
     public void displayUserActionResult(MainModel model,
                                         Bundle args, MainModel.MainUserActionEnum userAction,
-                                        boolean success) {
+                                        boolean success,
+                                        IError error) {
         LOGI(TAG, "displayUserActionResult-> action=" + userAction.getId());
         switch (userAction) {
             case RELOAD_MONTH_TOTAL:
@@ -272,13 +289,13 @@ public class MainActivity extends BaseActivity
     }
 
     private void refreshToadyExpenseTip(MainModel model) {
-        List<ExpenseItem> todayExpenseList = model.getTodayExpenseList();
+        List<Expense> todayExpenseList = model.getTodayExpenseList();
         if (todayExpenseList.isEmpty()) {
             mTodayExpenseTipTv.setText(R.string.tally_today_no_expense_record_tip);
         } else {
             float todayTotal = 0f;
-            for (ExpenseItem expenseItem : todayExpenseList) {
-                todayTotal += expenseItem.getAmount();
+            for (Expense expense : todayExpenseList) {
+                todayTotal += expense.getAmount();
             }
             String totalFormat = mAmountDecimalFormat.format(todayTotal);
             mTodayExpenseTipTv.setText(
@@ -286,9 +303,9 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    private void reDrawPieChart(List<ExpenseItem> items) {
+    private void reDrawPieChart(List<Expense> items) {
         Map<String, Float> getMountByCategoryName = new HashMap<>();
-        for (ExpenseItem item : items) {
+        for (Expense item : items) {
             Float amount = getMountByCategoryName.get(item.getCategoryName());
             if (amount == null) {
                 amount = item.getAmount();

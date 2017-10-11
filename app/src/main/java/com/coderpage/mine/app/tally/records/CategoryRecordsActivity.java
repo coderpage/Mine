@@ -9,11 +9,13 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.coderpage.base.common.IError;
 import com.coderpage.framework.Presenter;
 import com.coderpage.framework.PresenterImpl;
 import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
-import com.coderpage.mine.app.tally.data.ExpenseItem;
+import com.coderpage.mine.app.tally.data.Expense;
+import com.coderpage.mine.app.tally.eventbus.EventRecordDelete;
 import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
 import com.coderpage.mine.ui.BaseActivity;
 
@@ -25,8 +27,9 @@ import org.greenrobot.eventbus.ThreadMode;
  * @author abner-l. 2017-05-15
  */
 
-public class CategoryRecordsActivity extends BaseActivity implements UpdatableView<CategoryRecordsModel,
-        CategoryRecordsModel.RecordsQueryEnum, CategoryRecordsModel.RecordsUserActionEnum> {
+public class CategoryRecordsActivity extends BaseActivity
+        implements UpdatableView<CategoryRecordsModel, CategoryRecordsModel.RecordsQueryEnum,
+        CategoryRecordsModel.RecordsUserActionEnum, IError> {
 
     private static final String EXTRA_YEAR = "extra_year";
     private static final String EXTRA_MONTH = "extra_month";
@@ -67,7 +70,8 @@ public class CategoryRecordsActivity extends BaseActivity implements UpdatableVi
     }
 
     private void initPresenter() {
-        mPresenter = new PresenterImpl(new CategoryRecordsModel(this, mYear, mMonth, mCategoryId),
+        mPresenter = new PresenterImpl<>(
+                new CategoryRecordsModel(this, mYear, mMonth, mCategoryId),
                 this,
                 CategoryRecordsModel.RecordsUserActionEnum.values(),
                 CategoryRecordsModel.RecordsQueryEnum.values());
@@ -102,6 +106,11 @@ public class CategoryRecordsActivity extends BaseActivity implements UpdatableVi
         mUserActionListener.onUserAction(CategoryRecordsModel.RecordsUserActionEnum.EXPENSE_EDITED, args);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventRecordDelete(EventRecordDelete event) {
+        mHistoryRecordsAdapter.removeItem(event.getExpenseItem().getId());
+    }
+
     @Override
     public void displayData(CategoryRecordsModel model, CategoryRecordsModel.RecordsQueryEnum query) {
         switch (query) {
@@ -115,12 +124,13 @@ public class CategoryRecordsActivity extends BaseActivity implements UpdatableVi
     public void displayUserActionResult(CategoryRecordsModel model,
                                         Bundle args,
                                         CategoryRecordsModel.RecordsUserActionEnum userAction,
-                                        boolean success) {
+                                        boolean success,
+                                        IError error) {
         switch (userAction) {
             case EXPENSE_EDITED:
                 if (success) {
-                    ExpenseItem editedExpenseItem = model.getEditedExpenseItem();
-                    mHistoryRecordsAdapter.refreshItem(editedExpenseItem);
+                    Expense editedExpense = model.getEditedExpenseItem();
+                    mHistoryRecordsAdapter.refreshItem(editedExpense);
                 }
                 break;
             case EXPENSE_DELETE:
@@ -133,7 +143,7 @@ public class CategoryRecordsActivity extends BaseActivity implements UpdatableVi
     }
 
     @Override
-    public void displayErrorMessage(CategoryRecordsModel.RecordsQueryEnum query) {
+    public void displayErrorMessage(CategoryRecordsModel.RecordsQueryEnum query, IError error) {
 
     }
 

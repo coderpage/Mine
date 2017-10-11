@@ -1,5 +1,6 @@
 package com.coderpage.mine.app.tally.edit;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,15 +18,17 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.coderpage.base.common.IError;
+import com.coderpage.base.utils.LogUtils;
+import com.coderpage.framework.PresenterImpl;
 import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
-import com.coderpage.mine.app.tally.data.CategoryItem;
+import com.coderpage.mine.app.tally.data.Category;
 import com.coderpage.mine.app.tally.eventbus.EventRecordAdd;
 import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
 import com.coderpage.mine.app.tally.ui.widget.NumInputView;
 import com.coderpage.mine.app.tally.utils.DatePickUtils;
 import com.coderpage.mine.ui.BaseActivity;
-import com.coderpage.utils.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -44,7 +47,7 @@ import static com.coderpage.mine.app.tally.edit.ExpenseEditModel.EditUserActionE
 
 public class ExpenseEditActivity extends BaseActivity
         implements UpdatableView<ExpenseEditModel,
-        ExpenseEditModel.EditQueryEnum, ExpenseEditModel.EditUserActionEnum> {
+        ExpenseEditModel.EditQueryEnum, ExpenseEditModel.EditUserActionEnum, IError> {
 
     private static final String TAG = LogUtils.makeLogTag(ExpenseEditActivity.class);
     public static final String EXTRA_RECORD_ID = "extra_record_id";
@@ -65,8 +68,17 @@ public class ExpenseEditActivity extends BaseActivity
     private long mExpenseId = 0;
 
     private UserActionListener mUserActionListener;
-    private ExpenseEditPresenter mPresenter;
+    private PresenterImpl mPresenter;
     private ExpenseEditModel mModel;
+
+    public static void open(Context context, long expenseId) {
+        Intent intent = new Intent(context, ExpenseEditActivity.class);
+        if (!(context instanceof Activity)) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        intent.putExtra(EXTRA_RECORD_ID, expenseId);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +117,7 @@ public class ExpenseEditActivity extends BaseActivity
 
     private void initPresenter() {
         mModel = new ExpenseEditModel(getContext(), mExpenseId);
-        mPresenter = new ExpenseEditPresenter(
+        mPresenter = new PresenterImpl<>(
                 mModel,
                 this, ExpenseEditModel.EditUserActionEnum.values(),
                 ExpenseEditModel.EditQueryEnum.values());
@@ -141,7 +153,7 @@ public class ExpenseEditActivity extends BaseActivity
     }
 
     @Override
-    public void displayErrorMessage(ExpenseEditModel.EditQueryEnum query) {
+    public void displayErrorMessage(ExpenseEditModel.EditQueryEnum query, IError error) {
 
     }
 
@@ -149,7 +161,8 @@ public class ExpenseEditActivity extends BaseActivity
     public void displayUserActionResult(ExpenseEditModel model,
                                         Bundle args,
                                         ExpenseEditModel.EditUserActionEnum userAction,
-                                        boolean success) {
+                                        boolean success,
+                                        IError error) {
         switch (userAction) {
             case CATEGORY_CHANGED:
                 if (success) {
@@ -224,7 +237,7 @@ public class ExpenseEditActivity extends BaseActivity
     AdapterView.OnItemClickListener mCategorySelectListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            CategoryItem category = mCategoryPickerAdapter.getCategoryItems().get(position);
+            Category category = mCategoryPickerAdapter.getCategoryItems().get(position);
 
             Bundle bundle = new Bundle();
             bundle.putLong(EXTRA_EXPENSE_CATEGORY_ID, category.getId());

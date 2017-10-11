@@ -33,8 +33,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.coderpage.utils.LogUtils.LOGV;
-import static com.coderpage.utils.LogUtils.makeLogTag;
+import static com.coderpage.base.utils.LogUtils.LOGV;
+import static com.coderpage.base.utils.LogUtils.makeLogTag;
 
 /**
  * Helper for building selection clauses for {@link SQLiteDatabase}. Each

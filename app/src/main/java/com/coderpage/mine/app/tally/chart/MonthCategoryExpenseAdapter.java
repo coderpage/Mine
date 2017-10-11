@@ -8,10 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.coderpage.base.utils.ResUtils;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.chart.data.MonthCategoryExpense;
 import com.coderpage.mine.app.tally.records.CategoryRecordsActivity;
-import com.coderpage.utils.ResUtils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

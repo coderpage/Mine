@@ -9,7 +9,7 @@ import android.util.SparseArray;
  * @since 0.1.0
  */
 
-public class TallyUriMatcher {
+class TallyUriMatcher {
     private UriMatcher mUriMatcher;
     private SparseArray<TallyUriEnum> mEnumsMap = new SparseArray<>();
 

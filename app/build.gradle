@@ -28,7 +28,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-//            minifyEnabled true
+            minifyEnabled true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -44,19 +44,31 @@ android {
     productFlavors {
         yingyongbao {}
         xiaomi {}
+        offical{}
     }
 }
 
-apply plugin: 'bugly'
+//apply plugin: 'bugly'
+//
+//bugly {
+//    appId = rootProject.buglyAppId
+//    appKey = rootProject.buglyAppKey
+//}
 
-bugly {
-    appId = rootProject.buglyAppId
-    appKey = rootProject.buglyAppKey
+apply plugin: 'com.coderpage.app'
+
+uploader {
+//    apiServer = 'http://127.0.0.1:8001'
+    token = rootProject.releaseToken
+    appName = '我的.记账本'
+    changeLog = file("${rootDir}/source/changelog/${rootProject.appVersionName}").text;
+    isRelease = true
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':framework')
+    compile project(':libupdate')
     compile rootProject.appCompat
     compile rootProject.recyclerview
     compile rootProject.design
@@ -66,10 +78,12 @@ dependencies {
     compile rootProject.mpAndroidChart
     compile rootProject.buglyCrashReport
     compile rootProject.fastjson
+    compile rootProject.retrofitConverterFastjson
 
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
     testCompile rootProject.junit
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }

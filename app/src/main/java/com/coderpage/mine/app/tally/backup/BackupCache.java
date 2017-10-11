@@ -4,11 +4,11 @@ import android.content.Context;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.coderpage.common.Callback;
-import com.coderpage.common.IError;
-import com.coderpage.common.NonThrowError;
+import com.coderpage.base.common.Callback;
+import com.coderpage.base.common.IError;
+import com.coderpage.base.common.NonThrowError;
 import com.coderpage.mine.app.tally.common.error.ErrorCode;
-import com.coderpage.mine.cache.Cache;
+import com.coderpage.base.cache.Cache;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -20,9 +20,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import static com.coderpage.utils.LogUtils.LOGE;
-import static com.coderpage.utils.LogUtils.LOGI;
-import static com.coderpage.utils.LogUtils.makeLogTag;
+import static com.coderpage.base.utils.LogUtils.LOGE;
+import static com.coderpage.base.utils.LogUtils.LOGI;
+import static com.coderpage.base.utils.LogUtils.makeLogTag;
 
 /**
  * @author abner-l. 2017-06-01
@@ -41,7 +41,7 @@ class BackupCache {
     private File backupFolder; // 备份文件夹
     private String backupFolderPath = DATA_ROOT_PATH + File.separator + BACKUP_FOLDER_NAME;
     private SimpleDateFormat backupFileDateFormat =
-            new SimpleDateFormat("yyyy-MM-dd#HH:mm:ss", Locale.getDefault());
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
     BackupCache(Context context) {
         mContext = context;

@@ -18,8 +18,8 @@ props.each { key, val ->
 }
 
 ext {
-    appVersionName = '0.4.2'
-    appVersionCode = 42
+    appVersionName = '0.5.0'
+    appVersionCode = 50
 
     minSdkVersion = 14
     targetSdkVersion = 25
@@ -42,6 +42,7 @@ ext {
 
     retrofit = 'com.squareup.retrofit2:retrofit:2.0.0'
     retrofitConverterGson = 'com.squareup.retrofit2:converter-gson:2.0.0'
+    retrofitConverterFastjson = 'org.ligboy.retrofit2:converter-fastjson-android:2.1.0'
     okhttp3InterceptorLogging = 'com.squareup.okhttp3:logging-interceptor:3.2.0'
 
     testRunner = 'com.android.support.test:runner:0.5'

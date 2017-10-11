@@ -6,26 +6,32 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.coderpage.base.common.IError;
+import com.coderpage.base.common.NonThrowError;
 import com.coderpage.concurrency.AsyncTaskExecutor;
 import com.coderpage.framework.Model;
 import com.coderpage.framework.QueryEnum;
-import com.coderpage.framework.SimpleCallback;
+import com.coderpage.base.common.SimpleCallback;
 import com.coderpage.framework.UserActionEnum;
-import com.coderpage.mine.app.tally.data.ExpenseItem;
+import com.coderpage.mine.app.tally.common.error.ErrorCode;
+import com.coderpage.mine.app.tally.data.Expense;
 import com.coderpage.mine.app.tally.provider.TallyContract;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.coderpage.utils.LogUtils.LOGE;
-import static com.coderpage.utils.LogUtils.makeLogTag;
+import static com.coderpage.base.utils.LogUtils.LOGE;
+import static com.coderpage.base.utils.LogUtils.makeLogTag;
 
 /**
  * @author abner-l. 2017-05-12
  */
 
-class RecordsModel implements
-        Model<RecordsModel.RecordsQueryEnum, RecordsModel.RecordsUserActionEnum> {
+class RecordsModel implements Model<
+        RecordsModel.RecordsQueryEnum,
+        RecordsModel.RecordsUserActionEnum,
+        RecordsModel,
+        IError> {
     private static final String TAG = makeLogTag(RecordsModel.class);
 
     static final String EXTRA_EXPENSE_ID = "extra_expense_id";
@@ -33,9 +39,9 @@ class RecordsModel implements
 
     private Context mContext;
 
-    private ExpenseItem mEditedExpenseItem;
-    private List<ExpenseItem> mInitExpenseList = new ArrayList<>();
-    private List<ExpenseItem> mLoadMoreExpenseList = new ArrayList<>();
+    private Expense mEditedExpense;
+    private List<Expense> mInitExpenseList = new ArrayList<>();
+    private List<Expense> mLoadMoreExpenseList = new ArrayList<>();
 
     RecordsModel(Context context) {
         mContext = context;
@@ -52,7 +58,9 @@ class RecordsModel implements
     }
 
     @Override
-    public void requestData(RecordsQueryEnum query, DataQueryCallback callback) {
+    public void requestData(
+            RecordsQueryEnum query,
+            DataQueryCallback<RecordsModel, RecordsQueryEnum, IError> callback) {
         switch (query) {
             case INIT_DATA:
                 queryExpenseAsync(null, null, "expense_time DESC LIMIT 25", (result) -> {
@@ -65,10 +73,13 @@ class RecordsModel implements
     }
 
     @Override
-    public void deliverUserAction(RecordsUserActionEnum action,
-                                  @Nullable Bundle args,
-                                  UserActionCallback callback) {
+    public void deliverUserAction(
+            RecordsUserActionEnum action,
+            @Nullable Bundle args,
+            UserActionCallback<RecordsModel, RecordsUserActionEnum, IError> callback) {
+
         switch (action) {
+
             case EXPENSE_EDITED:
                 if (args == null || !args.containsKey(EXTRA_EXPENSE_ID)) {
                     LOGE(TAG, "action " + action.getId() + " request args with " + EXTRA_EXPENSE_ID);
@@ -77,13 +88,14 @@ class RecordsModel implements
                 long editedExpenseId = args.getLong(EXTRA_EXPENSE_ID);
                 queryExpenseByIdAsync(editedExpenseId, (item) -> {
                     if (item == null) {
-                        callback.onError(action);
+                        callback.onError(action, new NonThrowError(ErrorCode.UNKNOWN, ""));
                     } else {
-                        mEditedExpenseItem = item;
+                        mEditedExpense = item;
                         callback.onModelUpdated(RecordsModel.this, action);
                     }
                 });
                 break;
+
             case EXPENSE_DELETE:
                 if (args == null || !args.containsKey(EXTRA_EXPENSE_ID)) {
                     LOGE(TAG, "action " + action.getId() + " request args with " + EXTRA_EXPENSE_ID);
@@ -94,10 +106,11 @@ class RecordsModel implements
                     if (delNum > 0) {
                         callback.onModelUpdated(RecordsModel.this, action);
                     } else {
-                        callback.onError(action);
+                        callback.onError(action, new NonThrowError(ErrorCode.UNKNOWN, ""));
                     }
                 });
                 break;
+
             case LOAD_MORE:
                 if (args == null || !args.containsKey(EXTRA_LOAD_MORE_START_DATE)) {
                     LOGE(TAG, "action " + action.getId()
@@ -123,10 +136,11 @@ class RecordsModel implements
 
     }
 
-    public void queryExpenseByIdAsync(long expenseId, SimpleCallback<ExpenseItem> callback) {
-        new AsyncTask<Void, Void, ExpenseItem>() {
+    private void queryExpenseByIdAsync(long expenseId, SimpleCallback<Expense> callback) {
+        new AsyncTask<Void, Void, Expense>() {
+
             @Override
-            protected ExpenseItem doInBackground(Void... params) {
+            protected Expense doInBackground(Void... params) {
                 Cursor cursor = mContext.getContentResolver().query(
                         TallyContract.Expense.CONTENT_URI,
                         null,
@@ -134,27 +148,32 @@ class RecordsModel implements
                         new String[]{String.valueOf(expenseId)},
                         null
                 );
-                ExpenseItem item = null;
+                Expense item = null;
                 if (cursor == null) return null;
                 if (cursor.moveToFirst()) {
-                    item = ExpenseItem.fromCursor(cursor);
+                    item = Expense.fromCursor(cursor);
                 }
                 cursor.close();
                 return item;
             }
 
             @Override
-            protected void onPostExecute(ExpenseItem item) {
+            protected void onPostExecute(Expense item) {
                 callback.success(item);
             }
         }.executeOnExecutor(AsyncTaskExecutor.executor());
     }
 
-    public void queryExpenseAsync(String selection, String[] selectionArgs,
-                                  String order, SimpleCallback<List<ExpenseItem>> callback) {
-        new AsyncTask<Void, Void, List<ExpenseItem>>() {
+
+    private void queryExpenseAsync(
+            String selection,
+            String[] selectionArgs,
+            String order,
+            SimpleCallback<List<Expense>> callback) {
+        new AsyncTask<Void, Void, List<Expense>>() {
+
             @Override
-            protected List<ExpenseItem> doInBackground(Void... params) {
+            protected List<Expense> doInBackground(Void... params) {
                 Cursor cursor = mContext.getContentResolver().query(
                         TallyContract.Expense.CONTENT_URI,
                         null,
@@ -164,22 +183,22 @@ class RecordsModel implements
                 if (cursor == null) {
                     return new ArrayList<>(0);
                 }
-                List<ExpenseItem> items = new ArrayList<>(cursor.getCount());
+                List<Expense> items = new ArrayList<>(cursor.getCount());
                 while (cursor.moveToNext()) {
-                    items.add(ExpenseItem.fromCursor(cursor));
+                    items.add(Expense.fromCursor(cursor));
                 }
                 cursor.close();
                 return items;
             }
 
             @Override
-            protected void onPostExecute(List<ExpenseItem> items) {
+            protected void onPostExecute(List<Expense> items) {
                 callback.success(items);
             }
         }.executeOnExecutor(AsyncTaskExecutor.executor());
     }
 
-    public void deleteExpenseByIdAsync(long expenseId, SimpleCallback<Integer> callback) {
+    private void deleteExpenseByIdAsync(long expenseId, SimpleCallback<Integer> callback) {
         new AsyncTask<Void, Void, Integer>() {
             @Override
             protected Integer doInBackground(Void... params) {
@@ -196,15 +215,15 @@ class RecordsModel implements
         }.executeOnExecutor(AsyncTaskExecutor.executor());
     }
 
-     ExpenseItem getEditedExpenseItem() {
-        return mEditedExpenseItem;
+    Expense getEditedExpenseItem() {
+        return mEditedExpense;
     }
 
-     List<ExpenseItem> getInitExpenseList() {
+    List<Expense> getInitExpenseList() {
         return mInitExpenseList;
     }
 
-     List<ExpenseItem> getLoadMoreExpenseList() {
+    List<Expense> getLoadMoreExpenseList() {
         return mLoadMoreExpenseList;
     }
 

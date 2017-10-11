@@ -10,22 +10,22 @@ import android.support.annotation.Nullable;
  * @since 0.1.0
  */
 
-public interface UpdatableView<M, Q extends QueryEnum, UA extends UserActionEnum> {
+public interface UpdatableView<M, Q extends QueryEnum, UA extends UserActionEnum, E> {
 
     void displayData(M model, Q query);
 
-    void displayErrorMessage(Q query);
+    void displayErrorMessage(Q query, E error);
 
-    void displayUserActionResult(M model, Bundle args, UA userAction, boolean success);
+    void displayUserActionResult(M model, Bundle args, UA userAction, boolean success, E error);
 
     Uri getDataUri(Q query);
 
     Context getContext();
 
-    void addListener(UserActionListener listener);
+    void addListener(UserActionListener<UA> listener);
 
     interface UserActionListener<UA extends UserActionEnum> {
 
-        public void onUserAction(UA action, @Nullable Bundle args);
+        void onUserAction(UA action, @Nullable Bundle args);
     }
 }

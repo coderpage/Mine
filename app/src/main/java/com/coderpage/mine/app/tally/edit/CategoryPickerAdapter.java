@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.coderpage.mine.R;
-import com.coderpage.mine.app.tally.data.CategoryItem;
+import com.coderpage.mine.app.tally.data.Category;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.List;
 public class CategoryPickerAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
-    private List<CategoryItem> mCategoryItems = new ArrayList<>();
+    private List<Category> mCategories = new ArrayList<>();
 
     CategoryPickerAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
@@ -29,7 +29,7 @@ public class CategoryPickerAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mCategoryItems.size();
+        return mCategories.size();
     }
 
     @Override
@@ -39,7 +39,7 @@ public class CategoryPickerAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return mCategoryItems.get(position);
+        return mCategories.get(position);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class CategoryPickerAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.tally_grid_item_category, null);
         }
-        CategoryItem item = mCategoryItems.get(position);
+        Category item = mCategories.get(position);
 
         ImageView icon = ((ImageView) convertView.findViewById(R.id.ivIcon));
         TextView name = ((TextView) convertView.findViewById(R.id.tvName));
@@ -59,13 +59,13 @@ public class CategoryPickerAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void refreshData(List<CategoryItem> items) {
-        mCategoryItems.clear();
-        mCategoryItems.addAll(items);
+    public void refreshData(List<Category> items) {
+        mCategories.clear();
+        mCategories.addAll(items);
         notifyDataSetChanged();
     }
 
-    public List<CategoryItem> getCategoryItems() {
-        return mCategoryItems;
+    public List<Category> getCategoryItems() {
+        return mCategories;
     }
 }

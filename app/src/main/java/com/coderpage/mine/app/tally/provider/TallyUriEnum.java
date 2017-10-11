@@ -5,7 +5,7 @@ package com.coderpage.mine.app.tally.provider;
  * @since 0.1.0
  */
 
-public enum TallyUriEnum {
+ enum TallyUriEnum {
 
     EXPENSE(100, "expense", TallyContract.Expense.CONTENT_TYPE_ID, false, TallyDatabase.Tables.EXPENSE),
     CATEGORY(200, "category", TallyContract.Category.CONTENT_TYPE_ID, false, TallyDatabase.Tables.CATEGORY);

@@ -19,6 +19,7 @@
     <color name="grey_icon">#afafaf</color>
     <color name="colorAction">#737373</color>
     <color name="shadow_start_color">#22000000</color>
+    <color name="shadow_start_color_medium">#11000000</color>
 
     <color name="colorPrimary">#fafafa</color>
     <color name="colorPrimaryDark">#b2b2b2</color>

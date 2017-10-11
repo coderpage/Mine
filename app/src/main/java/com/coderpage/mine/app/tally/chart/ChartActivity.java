@@ -17,17 +17,18 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.coderpage.base.common.IError;
+import com.coderpage.base.utils.AndroidUtils;
+import com.coderpage.base.utils.ResUtils;
 import com.coderpage.framework.Presenter;
 import com.coderpage.framework.PresenterImpl;
 import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.chart.data.DailyExpense;
 import com.coderpage.mine.app.tally.chart.data.Month;
-import com.coderpage.mine.app.tally.data.ExpenseItem;
+import com.coderpage.mine.app.tally.data.Expense;
 import com.coderpage.mine.app.tally.utils.TimeUtils;
 import com.coderpage.mine.ui.BaseActivity;
-import com.coderpage.utils.AndroidUtils;
-import com.coderpage.utils.ResUtils;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -47,17 +48,18 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.coderpage.base.utils.UIUtils.dp2px;
 import static com.coderpage.mine.R.id.lineChart;
 import static com.coderpage.mine.app.tally.chart.ChartModel.ChartQueryEnum;
 import static com.coderpage.mine.app.tally.chart.ChartModel.ChartUserActionEnum;
-import static com.coderpage.utils.UIUtils.dp2px;
 
 /**
  * @author abner-l. 2017-04-23
  */
 
 public class ChartActivity extends BaseActivity implements
-        UpdatableView<ChartModel, ChartModel.ChartQueryEnum, ChartModel.ChartUserActionEnum> {
+        UpdatableView<ChartModel, ChartModel.ChartQueryEnum,
+                ChartModel.ChartUserActionEnum, IError> {
 
     private static final String EXTRA_YEAR = "extra_year";
     private static final String EXTRA_MONTH = "extra_month";
@@ -76,12 +78,12 @@ public class ChartActivity extends BaseActivity implements
     private int mInitMonth;
     private Presenter mPresenter;
     private ChartModel mModel;
-    private UserActionListener mUserActionListener;
+    private UserActionListener<ChartModel.ChartUserActionEnum> mUserActionListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tall_chart);
+        setContentView(R.layout.activity_tally_chart);
         initData();
         initView();
         initPresenter();
@@ -120,14 +122,14 @@ public class ChartActivity extends BaseActivity implements
     private void initPresenter() {
         mModel = new ChartModel(this);
         if (mInitYear != -1 && mInitMonth != -1) {
-            mPresenter = new PresenterImpl(mModel, this, ChartUserActionEnum.values(), null);
+            mPresenter = new PresenterImpl<>(mModel, this, ChartUserActionEnum.values(), null);
             mPresenter.loadInitialQueries();
             Bundle args = new Bundle(2);
             args.putInt(EXTRA_YEAR, mInitYear);
             args.putInt(EXTRA_MONTH, mInitMonth);
             mUserActionListener.onUserAction(ChartUserActionEnum.SWITCH_MONTH, args);
         } else {
-            mPresenter = new PresenterImpl(mModel,
+            mPresenter = new PresenterImpl<>(mModel,
                     this, ChartUserActionEnum.values(), ChartQueryEnum.values());
             mPresenter.loadInitialQueries();
         }
@@ -191,9 +193,9 @@ public class ChartActivity extends BaseActivity implements
         mPieChart.getLegend().setWordWrapEnabled(true);
     }
 
-    private void reDrawPieChart(List<ExpenseItem> items) {
+    private void reDrawPieChart(List<Expense> items) {
         Map<String, Float> getMountByCategoryName = new HashMap<>();
-        for (ExpenseItem item : items) {
+        for (Expense item : items) {
             Float amount = getMountByCategoryName.get(item.getCategoryName());
             if (amount == null) {
                 amount = item.getAmount();
@@ -288,7 +290,8 @@ public class ChartActivity extends BaseActivity implements
     public void displayUserActionResult(ChartModel model,
                                         Bundle args,
                                         ChartModel.ChartUserActionEnum userAction,
-                                        boolean success) {
+                                        boolean success,
+                                        IError error) {
         switch (userAction) {
             case SHOW_HISTORY_MONTH_LIST:
                 if (success) {
@@ -318,7 +321,7 @@ public class ChartActivity extends BaseActivity implements
     }
 
     @Override
-    public void displayErrorMessage(ChartModel.ChartQueryEnum query) {
+    public void displayErrorMessage(ChartModel.ChartQueryEnum query, IError error) {
 
     }
 
@@ -332,9 +335,9 @@ public class ChartActivity extends BaseActivity implements
         return entries;
     }
 
-    private float calculateMonthTotal(List<ExpenseItem> itemList) {
+    private float calculateMonthTotal(List<Expense> itemList) {
         float total = 0.0f;
-        for (ExpenseItem item : itemList) {
+        for (Expense item : itemList) {
             total += item.getAmount();
         }
         return total;
@@ -382,7 +385,7 @@ public class ChartActivity extends BaseActivity implements
     }
 
     @Override
-    public void addListener(UserActionListener listener) {
+    public void addListener(UserActionListener<ChartUserActionEnum> listener) {
         mUserActionListener = listener;
     }
 

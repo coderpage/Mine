@@ -13,11 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.coderpage.base.utils.LogUtils;
 import com.coderpage.framework.UpdatableView;
-import com.coderpage.mine.app.tally.edit.ExpenseEditActivity;
-import com.coderpage.utils.LogUtils;
 import com.coderpage.mine.R;
-import com.coderpage.mine.app.tally.data.ExpenseItem;
+import com.coderpage.mine.app.tally.data.Expense;
+import com.coderpage.mine.app.tally.detail.ExpenseDetailActivity;
+import com.coderpage.mine.app.tally.edit.ExpenseEditActivity;
 import com.coderpage.mine.app.tally.utils.TimeUtils;
 import com.coderpage.mine.ui.widget.ButtonGroupDialog;
 
@@ -25,7 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static com.coderpage.utils.LogUtils.LOGE;
+import static com.coderpage.base.utils.LogUtils.LOGE;
+
 
 /**
  * @author abner-l. 2017-04-13
@@ -41,7 +43,7 @@ class MainHistoryExpenseAdapter extends
     private UpdatableView.UserActionListener mUserActionListener;
     private String mAmountFormat;
 
-    private ArrayList<ExpenseItem> mExpenseItemList = new ArrayList<>();
+    private ArrayList<Expense> mExpenseList = new ArrayList<>();
 
     MainHistoryExpenseAdapter(Activity activity) {
         mActivity = activity;
@@ -51,7 +53,7 @@ class MainHistoryExpenseAdapter extends
 
     @Override
     public int getItemCount() {
-        return mExpenseItemList.size();
+        return mExpenseList.size();
     }
 
     @Override
@@ -62,21 +64,22 @@ class MainHistoryExpenseAdapter extends
 
     @Override
     public void onBindViewHolder(ExpenseItemViewHolder holder, int position) {
-        ExpenseItem expenseItem = mExpenseItemList.get(position);
-        holder.setExpense(expenseItem);
+        Expense expense = mExpenseList.get(position);
+        holder.setExpense(expense);
     }
 
     void setUserActionListener(UpdatableView.UserActionListener userActionListener) {
         mUserActionListener = userActionListener;
     }
 
-    class ExpenseItemViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
+    class ExpenseItemViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener, View.OnLongClickListener {
         private AppCompatImageView mCategoryIcon;
         private TextView mAmountTv;
         private TextView mTimeTv;
         private TextView mCategoryNameTv;
         private TextView mDescTv;
-        private ExpenseItem mExpense;
+        private Expense mExpense;
 
         ExpenseItemViewHolder(View view) {
             super(view);
@@ -85,7 +88,13 @@ class MainHistoryExpenseAdapter extends
             mCategoryNameTv = ((TextView) view.findViewById(R.id.tvCategoryName));
             mDescTv = ((TextView) view.findViewById(R.id.tvRecordDec));
             mCategoryIcon = ((AppCompatImageView) view.findViewById(R.id.ivCategoryIcon));
+            view.setOnClickListener(this);
             view.setOnLongClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            ExpenseDetailActivity.open(mActivity, mExpense.getId(), v);
         }
 
         @Override
@@ -117,7 +126,7 @@ class MainHistoryExpenseAdapter extends
             return true;
         }
 
-        private void setExpense(ExpenseItem expense) {
+        private void setExpense(Expense expense) {
             mExpense = expense;
             if (mExpense == null) return;
             setAmount(String.valueOf(mExpense.getAmount()));
@@ -154,24 +163,24 @@ class MainHistoryExpenseAdapter extends
         }
     }
 
-    public ArrayList<ExpenseItem> getDataList() {
-        return mExpenseItemList;
+    public ArrayList<Expense> getDataList() {
+        return mExpenseList;
     }
 
-    public void refreshData(List<ExpenseItem> items) {
-        mExpenseItemList.clear();
-        mExpenseItemList.addAll(items);
+    public void refreshData(List<Expense> items) {
+        mExpenseList.clear();
+        mExpenseList.addAll(items);
         notifyDataSetChanged();
     }
 
-    public void refreshItem(ExpenseItem item) {
+    public void refreshItem(Expense item) {
         if (item == null) {
             LOGE(TAG, "can't notify item changed with null value");
             return;
         }
         int position = -1;
-        for (int i = 0; i < mExpenseItemList.size(); i++) {
-            ExpenseItem item1 = mExpenseItemList.get(i);
+        for (int i = 0; i < mExpenseList.size(); i++) {
+            Expense item1 = mExpenseList.get(i);
             if (item.getId() == item1.getId()) {
                 item1.setAmount(item.getAmount());
                 item1.setCategoryId(item.getCategoryId());
@@ -196,35 +205,35 @@ class MainHistoryExpenseAdapter extends
      * 添加一个新支出记录，显示在列表顶部
      * @param item 新支出记录
      */
-    public void addNewItem(ExpenseItem item) {
+    public void addNewItem(Expense item) {
         if (item == null) {
             return;
         }
-        if (mExpenseItemList.size() == 0) {
-            mExpenseItemList.add(item);
+        if (mExpenseList.size() == 0) {
+            mExpenseList.add(item);
         } else {
-            mExpenseItemList.add(0, item);
+            mExpenseList.add(0, item);
         }
         notifyDataSetChanged();
     }
 
     public void removeItem(long expenseId) {
         int position = -1;
-        for (int i = 0; i < mExpenseItemList.size(); i++) {
-            if (expenseId == mExpenseItemList.get(i).getId()) {
+        for (int i = 0; i < mExpenseList.size(); i++) {
+            if (expenseId == mExpenseList.get(i).getId()) {
                 position = i;
                 break;
             }
         }
         if (position != -1) {
-            mExpenseItemList.remove(position);
+            mExpenseList.remove(position);
             notifyItemRemoved(position);
         }
     }
 
-    public void addHistoryItems(List<ExpenseItem> items) {
-        int insertPositionStart = mExpenseItemList.size();
-        mExpenseItemList.addAll(items);
+    public void addHistoryItems(List<Expense> items) {
+        int insertPositionStart = mExpenseList.size();
+        mExpenseList.addAll(items);
         notifyItemRangeInserted(insertPositionStart, items.size());
     }
 }

@@ -7,11 +7,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.SparseArray;
 
-import com.coderpage.common.Callback;
-import com.coderpage.common.IError;
-import com.coderpage.common.IResult;
-import com.coderpage.common.NonThrowError;
-import com.coderpage.common.Result;
+import com.coderpage.base.common.Callback;
+import com.coderpage.base.common.IError;
+import com.coderpage.base.common.IResult;
+import com.coderpage.base.common.NonThrowError;
+import com.coderpage.base.common.Result;
 import com.coderpage.concurrency.AsyncTaskExecutor;
 import com.coderpage.framework.Model;
 import com.coderpage.framework.QueryEnum;
@@ -19,7 +19,7 @@ import com.coderpage.framework.UserActionEnum;
 import com.coderpage.mine.app.tally.chart.data.DailyExpense;
 import com.coderpage.mine.app.tally.chart.data.Month;
 import com.coderpage.mine.app.tally.chart.data.MonthCategoryExpense;
-import com.coderpage.mine.app.tally.data.ExpenseItem;
+import com.coderpage.mine.app.tally.data.Expense;
 import com.coderpage.mine.app.tally.provider.TallyContract;
 import com.coderpage.mine.app.tally.utils.TimeUtils;
 
@@ -29,14 +29,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.coderpage.utils.LogUtils.LOGI;
-import static com.coderpage.utils.LogUtils.makeLogTag;
+import static com.coderpage.base.utils.LogUtils.LOGI;
+import static com.coderpage.base.utils.LogUtils.makeLogTag;
 
 /**
  * @author abner-l. 2017-05-04
  */
 
-class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUserActionEnum> {
+class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUserActionEnum, ChartModel, IError> {
     private static final String TAG = makeLogTag(ChartModel.class);
 
     static final String EXTRA_YEAR = "extra_year"; // bundle extra year
@@ -45,7 +45,7 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
     private Context mContext;
     private Month mDisplayMonth;
     private List<Month> mMonthList = new ArrayList<>();
-    private List<ExpenseItem> mMonthExpenseList = new ArrayList<>();
+    private List<Expense> mMonthExpenseList = new ArrayList<>();
     private List<DailyExpense> mMonthDailyExpenseList = new ArrayList<>();
     private List<MonthCategoryExpense> mMonthCategoryExpenseList = new ArrayList<>();
 
@@ -64,15 +64,16 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
     }
 
     @Override
-    public void requestData(ChartQueryEnum query, DataQueryCallback callback) {
+    public void requestData(ChartQueryEnum query,
+                            DataQueryCallback<ChartModel, ChartQueryEnum, IError> callback) {
         switch (query) {
             case LOAD_CURRENT_MONTH_DATA:
                 Calendar calendar = Calendar.getInstance();
                 int year = calendar.get(Calendar.YEAR);
                 int month = calendar.get(Calendar.MONTH) + 1;
-                loadMonthExpense(year, month, new Callback<List<ExpenseItem>, IError>() {
+                loadMonthExpense(year, month, new Callback<List<Expense>, IError>() {
                     @Override
-                    public void success(List<ExpenseItem> items) {
+                    public void success(List<Expense> items) {
                         mDisplayMonth = new Month(year, month);
                         mMonthExpenseList.clear();
                         mMonthExpenseList.addAll(items);
@@ -86,17 +87,18 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
 
                     @Override
                     public void failure(IError iError) {
-                        callback.onError(query);
+                        callback.onError(query, iError);
                     }
                 });
                 break;
         }
     }
 
+
     @Override
     public void deliverUserAction(ChartUserActionEnum action,
                                   @Nullable Bundle args,
-                                  UserActionCallback callback) {
+                                  UserActionCallback<ChartModel, ChartUserActionEnum, IError> callback) {
         switch (action) {
             case SHOW_HISTORY_MONTH_LIST:
                 loadMonthArray(new Callback<List<Month>, IError>() {
@@ -109,7 +111,7 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
 
                     @Override
                     public void failure(IError iError) {
-                        callback.onError(action);
+                        callback.onError(action, iError);
                     }
                 });
                 break;
@@ -121,9 +123,9 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
                 }
                 int year = args.getInt(EXTRA_YEAR);
                 int month = args.getInt(EXTRA_MONTH);
-                loadMonthExpense(year, month, new Callback<List<ExpenseItem>, IError>() {
+                loadMonthExpense(year, month, new Callback<List<Expense>, IError>() {
                     @Override
-                    public void success(List<ExpenseItem> items) {
+                    public void success(List<Expense> items) {
                         mDisplayMonth = new Month(year, month);
                         mMonthExpenseList.clear();
                         mMonthExpenseList.addAll(items);
@@ -137,7 +139,7 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
 
                     @Override
                     public void failure(IError iError) {
-                        callback.onError(action);
+                        callback.onError(action, iError);
                     }
                 });
                 break;
@@ -152,7 +154,7 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
         return mMonthDailyExpenseList;
     }
 
-    List<ExpenseItem> getMonthExpenseList() {
+    List<Expense> getMonthExpenseList() {
         return mMonthExpenseList;
     }
 
@@ -164,11 +166,11 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
         return mDisplayMonth;
     }
 
-    private void loadMonthExpense(int year, int month, Callback<List<ExpenseItem>, IError> callback) {
+    private void loadMonthExpense(int year, int month, Callback<List<Expense>, IError> callback) {
         LOGI(TAG, "load " + year + "/" + month + " daily expense");
-        new AsyncTask<Void, Void, List<ExpenseItem>>() {
+        new AsyncTask<Void, Void, List<Expense>>() {
             @Override
-            protected List<ExpenseItem> doInBackground(Void... params) {
+            protected List<Expense> doInBackground(Void... params) {
                 Calendar monthStartCalendar = Calendar.getInstance();
                 monthStartCalendar.set(Calendar.YEAR, year);
                 // month -1 的原因是, Calendar MONTH 从 0 开始计数，即 0 是一月
@@ -197,28 +199,28 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
                 if (cursor == null) {
                     return new ArrayList<>(0);
                 }
-                List<ExpenseItem> items = new ArrayList<>(cursor.getCount());
+                List<Expense> items = new ArrayList<>(cursor.getCount());
                 while (cursor.moveToNext()) {
-                    items.add(ExpenseItem.fromCursor(cursor));
+                    items.add(Expense.fromCursor(cursor));
                 }
                 cursor.close();
                 return items;
             }
 
             @Override
-            protected void onPostExecute(List<ExpenseItem> dailyExpenses) {
+            protected void onPostExecute(List<Expense> dailyExpenses) {
                 callback.success(dailyExpenses);
             }
         }.executeOnExecutor(AsyncTaskExecutor.executor());
     }
 
-    private List<DailyExpense> generateDailyExpense(int year, int month, List<ExpenseItem> list) {
+    private List<DailyExpense> generateDailyExpense(int year, int month, List<Expense> list) {
         SparseArray<DailyExpense> dailyExpenseSparseArray = new SparseArray<>(31);
         Calendar calendar = Calendar.getInstance();
         int currentYear = calendar.get(Calendar.YEAR);
         int currentMonth = calendar.get(Calendar.MONTH) + 1;
         int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
-        for (ExpenseItem item : list) {
+        for (Expense item : list) {
             calendar.setTimeInMillis(item.getTime());
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             DailyExpense expense = dailyExpenseSparseArray.get(day, null);
@@ -241,7 +243,7 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
         for (int i = 1; i <= daysOfMonth; i++) {
             DailyExpense expense = dailyExpenseSparseArray.get(i, null);
             if (expense == null) {
-                calendar.set(Calendar.MONTH, month-1);
+                calendar.set(Calendar.MONTH, month - 1);
                 calendar.set(Calendar.DAY_OF_MONTH, i);
                 expense = new DailyExpense();
                 expense.setTimeMillis(calendar.getTimeInMillis());
@@ -255,13 +257,13 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
 
     private List<MonthCategoryExpense> generateMonthCategoryList(int year,
                                                                  int month,
-                                                                 List<ExpenseItem> list) {
+                                                                 List<Expense> list) {
         List<MonthCategoryExpense> result = new ArrayList<>();
 
         HashMap<Long, MonthCategoryExpense> getMonthCategoryExpenseByCid = new HashMap<>();
 
         float monthExpenseTotal = 0.0f;
-        for (ExpenseItem item : list) {
+        for (Expense item : list) {
             long cid = item.getCategoryId();
             MonthCategoryExpense expense = getMonthCategoryExpenseByCid.get(cid);
             if (expense == null) {
@@ -296,7 +298,7 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
         new AsyncTask<Void, Void, IResult<List<Month>, IError>>() {
             @Override
             protected Result<List<Month>, IError> doInBackground(Void... params) {
-                Result result = new Result();
+                Result<List<Month>, IError> result = new Result<>();
                 String order = "expense_time ASC LIMIT 1";
                 Cursor cursor = mContext.getContentResolver().query(
                         TallyContract.Expense.CONTENT_URI, null, null, null, order);
@@ -310,6 +312,8 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
                             cursor.getLong(cursor.getColumnIndex(TallyContract.Expense.TIME));
                     startTime = firstExpenseTime;
                 }
+                cursor.close();
+
                 Calendar calendar = Calendar.getInstance();
                 int currentYear = calendar.get(Calendar.YEAR);
                 int currentMonth = calendar.get(Calendar.MONTH) + 1;
@@ -375,7 +379,7 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
 
     }
 
-    public enum ChartQueryEnum implements QueryEnum {
+    enum ChartQueryEnum implements QueryEnum {
         LOAD_CURRENT_MONTH_DATA(1, null);
         private int id;
         private String[] projection;
@@ -396,7 +400,7 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
         }
     }
 
-    public enum ChartUserActionEnum implements UserActionEnum {
+    enum ChartUserActionEnum implements UserActionEnum {
         // 显示历史月份选择列表
         SHOW_HISTORY_MONTH_LIST(1),
         // 切换显示的月份

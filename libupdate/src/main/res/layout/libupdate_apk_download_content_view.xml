@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvWifiTip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/libupdate_padding_micro"
+        android:layout_marginLeft="@dimen/libupdate_padding_large"
+        android:layout_marginRight="@dimen/libupdate_padding_large"
+        android:layout_marginTop="@dimen/libupdate_padding_micro"
+        android:lineSpacingMultiplier="1.2"
+        android:textColor="@color/libupdate_warning"
+        android:textSize="@dimen/libupdate_text_size_medium"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tvMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/libupdate_padding_micro"
+        android:layout_marginLeft="@dimen/libupdate_padding_large"
+        android:layout_marginRight="@dimen/libupdate_padding_large"
+        android:layout_marginTop="@dimen/libupdate_padding_micro"
+        android:lineSpacingMultiplier="1.2"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="@dimen/libupdate_text_size_medium"/>
+
+    <CheckBox
+        android:id="@+id/checkboxDoNotRemindAgain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/libupdate_padding_normal"
+        android:layout_marginRight="@dimen/libupdate_padding_normal"
+        android:checked="false"
+        android:text="@string/libupdate_alert_do_not_remind_again"
+        android:textColor="?android:textColorSecondary"/>
+
+</LinearLayout>

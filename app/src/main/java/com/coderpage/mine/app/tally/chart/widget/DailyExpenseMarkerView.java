@@ -3,9 +3,9 @@ package com.coderpage.mine.app.tally.chart.widget;
 import android.content.Context;
 import android.widget.TextView;
 
+import com.coderpage.base.utils.ResUtils;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.chart.data.DailyExpense;
-import com.coderpage.utils.ResUtils;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;

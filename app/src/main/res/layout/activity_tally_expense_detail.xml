@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.coderpage.mine.app.tally.detail.ExpenseDetailActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include layout="@layout/toolbar"/>
+
+        <View
+            android:id="@+id/ivToolbarShadow"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/shadow_height"
+            android:background="@drawable/shadow_appbar"/>
+
+        <android.support.v7.widget.CardView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:card_view="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_normal"
+            android:layout_marginLeft="@dimen/spacing_micro"
+            android:layout_marginRight="@dimen/spacing_micro"
+            android:layout_marginTop="@dimen/padding_normal"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:transitionName="sharedRoot"
+            app:cardCornerRadius="@dimen/cardDefaultCornerRadius"
+            app:cardElevation="@dimen/cardDefaultElevation"
+            card_view:context=".app.tally.detail.ExpenseDetailActivity"
+            card_view:showIn="@layout/activity_tally">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:paddingLeft="@dimen/padding_normal"
+                    android:paddingRight="@dimen/padding_normal">
+
+                    <android.support.v7.widget.AppCompatImageView
+                        android:id="@+id/ivCategoryIcon"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:paddingBottom="@dimen/spacing_normal"
+                        android:paddingTop="@dimen/spacing_normal"
+                        android:transitionName="sharedCategoryIcon"/>
+
+                    <TextView
+                        android:id="@+id/tvCategoryName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/spacing_normal"
+                        android:layout_toRightOf="@id/ivCategoryIcon"
+                        android:gravity="center_vertical"
+                        android:text="@string/place_holder"
+                        android:textColor="?android:textColorPrimary"
+                        android:textSize="@dimen/app_text_size_medium"
+                        android:transitionName="sharedCategoryName"/>
+
+                    <TextView
+                        android:id="@+id/tvExpenseAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical"
+                        android:text="@string/place_holder"
+                        android:textColor="?android:textColorPrimary"
+                        android:textSize="@dimen/app_text_size_medium"
+                        android:transitionName="sharedAmount"/>
+
+                </RelativeLayout>
+
+                <View
+                    style="@style/Divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp">
+
+                    <TextView
+                        android:id="@+id/tvNoteLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/spacing_normal"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="@dimen/padding_normal"
+                        android:paddingRight="@dimen/padding_normal"
+                        android:text="@string/tally_expense_note"
+                        android:textColor="?android:textColorPrimary"
+                        android:textSize="@dimen/app_text_size_medium"/>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/tvNoteLabel">
+
+                        <TextView
+                            android:id="@+id/tvNote"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|right"
+                            android:gravity="center_vertical|left"
+                            android:paddingBottom="@dimen/spacing_normal"
+                            android:paddingLeft="@dimen/padding_normal"
+                            android:paddingRight="@dimen/padding_normal"
+                            android:paddingTop="@dimen/spacing_normal"
+                            android:text="@string/place_holder"
+                            android:textColor="?android:textColorSecondary"
+                            android:textSize="@dimen/app_text_size_small"
+                            android:transitionName="sharedDesc"/>
+                    </FrameLayout>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp">
+
+                    <TextView
+                        android:id="@+id/tvTimeLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/spacing_normal"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="@dimen/padding_normal"
+                        android:paddingRight="@dimen/padding_normal"
+                        android:text="@string/tally_time"
+                        android:textColor="?android:textColorPrimary"
+                        android:textSize="@dimen/app_text_size_medium"/>
+
+                    <TextView
+                        android:id="@+id/tvTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/tvTimeLabel"
+                        android:gravity="center_vertical|right"
+                        android:maxLines="1"
+                        android:paddingLeft="@dimen/padding_normal"
+                        android:paddingRight="@dimen/padding_normal"
+                        android:singleLine="true"
+                        android:text="@string/place_holder"
+                        android:textColor="?android:textColorSecondary"
+                        android:textSize="@dimen/app_text_size_small"
+                        android:transitionName="sharedDesc"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+
+    <!-- 底部导航 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/ivBottomShadow"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/shadow_height"
+            android:background="@drawable/shadow_top_medium"/>
+
+        <TextView
+            android:id="@+id/btnModify"
+            style="@style/Widget.Btn.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="@string/modify"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/app_text_size_normal"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+</FrameLayout>
