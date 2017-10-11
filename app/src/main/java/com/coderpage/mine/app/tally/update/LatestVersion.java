@@ -1,5 +1,7 @@
 package com.coderpage.mine.app.tally.update;
 
+import android.support.annotation.Keep;
+
 import com.alibaba.fastjson.annotation.JSONField;
 import com.coderpage.lib.update.ApkModel;
 
@@ -8,6 +10,7 @@ import com.coderpage.lib.update.ApkModel;
  * @since 0.5.0
  */
 
+@Keep
 public class LatestVersion implements ApkModel {
 
     @JSONField(name = "appName")

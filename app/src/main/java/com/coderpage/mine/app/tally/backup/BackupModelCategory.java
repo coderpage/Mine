@@ -1,5 +1,7 @@
 package com.coderpage.mine.app.tally.backup;
 
+import android.support.annotation.Keep;
+
 import com.alibaba.fastjson.annotation.JSONField;
 
 /**
@@ -9,6 +11,7 @@ import com.alibaba.fastjson.annotation.JSONField;
  * 备份 JSON 文件中"分类"数据；
  */
 
+@Keep
 public class BackupModelCategory {
 
     /**

@@ -28,7 +28,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-//            minifyEnabled true
+            minifyEnabled true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -58,7 +58,7 @@ android {
 apply plugin: 'com.coderpage.app'
 
 uploader {
-    apiServer = 'http://127.0.0.1:8001'
+//    apiServer = 'http://127.0.0.1:8001'
     token = rootProject.releaseToken
     appName = '我的.记账本'
     changeLog = file("${rootDir}/source/changelog/${rootProject.appVersionName}").text;

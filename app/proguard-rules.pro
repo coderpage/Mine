@@ -14,6 +14,7 @@
 # project.properties file.
 
 -keepattributes *Annotation*
+-keepattributes Signature
 -keep public class com.google.vending.licensing.ILicensingService
 -keep public class com.android.vending.licensing.ILicensingService
 
@@ -93,3 +94,7 @@
 
 ## retrofit2
 -dontwarn retrofit2.**
+
+## fastjson
+-dontwarn com.alibaba.fastjson.**
+-keep class com.alibaba.fastjson.** { *; }

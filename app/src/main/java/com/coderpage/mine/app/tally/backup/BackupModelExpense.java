@@ -1,11 +1,13 @@
 package com.coderpage.mine.app.tally.backup;
 
+import android.support.annotation.Keep;
+
 import com.alibaba.fastjson.annotation.JSONField;
 
 /**
  * @author abner-l. 2017-06-01
  */
-
+@Keep
 public class BackupModelExpense {
 
     @JSONField(name = "1")

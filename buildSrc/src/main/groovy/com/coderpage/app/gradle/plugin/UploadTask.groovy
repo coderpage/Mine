@@ -7,7 +7,8 @@ import org.gradle.api.tasks.TaskAction
 
 /**
  * @author lc. 2017-09-26 23:06
- * @since 0.5.0 */
+ * @since 0.5.0
+ * */
 
 
 class UploadTask extends DefaultTask {
@@ -24,7 +25,9 @@ class UploadTask extends DefaultTask {
         version.changeLog = extension.changeLog
         version.isRelease = extension.isRelease
 
-        def apkOutput = variant.outputs.find { variantOutput -> variantOutput instanceof ApkVariantOutput }
+        def apkOutput = variant.outputs.find {
+            variantOutput -> variantOutput instanceof ApkVariantOutput
+        }
 
         String apkPath = apkOutput.outputFile.getAbsolutePath()
         version.apkPath = apkPath

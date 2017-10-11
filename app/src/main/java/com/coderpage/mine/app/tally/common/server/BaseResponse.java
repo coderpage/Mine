@@ -1,5 +1,7 @@
 package com.coderpage.mine.app.tally.common.server;
 
+import android.support.annotation.Keep;
+
 import com.alibaba.fastjson.annotation.JSONField;
 
 /**
@@ -7,6 +9,7 @@ import com.alibaba.fastjson.annotation.JSONField;
  * @since 0.5.0
  */
 
+@Keep
 public class BaseResponse {
     @JSONField(name = "status")
     private int status;

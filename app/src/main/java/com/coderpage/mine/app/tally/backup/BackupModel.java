@@ -1,5 +1,7 @@
 package com.coderpage.mine.app.tally.backup;
 
+import android.support.annotation.Keep;
+
 import com.alibaba.fastjson.annotation.JSONField;
 
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.List;
  * 备份文件 JSON 格式。
  */
 
+@Keep
 public class BackupModel {
 
     @JSONField(name = "metadata")

@@ -1,5 +1,7 @@
 package com.coderpage.mine.app.tally.update;
 
+import android.support.annotation.Keep;
+
 import com.alibaba.fastjson.annotation.JSONField;
 import com.coderpage.base.utils.LogUtils;
 import com.coderpage.lib.update.ApkModel;
@@ -34,7 +36,8 @@ import static com.coderpage.base.utils.LogUtils.makeLogTag;
 class LatestVersionFetcher implements SourceFetcher {
     private static final String TAG = makeLogTag(LatestVersionFetcher.class);
 
-    private static final String VERSION_BASE_URL = "http://192.168.1.29:8001";
+    //    private static final String VERSION_BASE_URL = "http://192.168.1.29:8001";
+    private static final String VERSION_BASE_URL = "http://app.coderpage.com";
 
     @Override
     public Result<ApkModel, Error> fetchApkModel() {
@@ -86,7 +89,9 @@ class LatestVersionFetcher implements SourceFetcher {
         Call<LatestVersionResponse> fetchLatestVersion(@Query("packageName") String packageName);
     }
 
+    @Keep
     private static class LatestVersionResponse extends BaseResponse {
+
         @JSONField(name = "data")
         private LatestVersion latestVersion;
 
