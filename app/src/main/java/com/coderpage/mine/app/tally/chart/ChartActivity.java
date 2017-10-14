@@ -9,16 +9,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.coderpage.base.common.IError;
-import com.coderpage.base.utils.AndroidUtils;
 import com.coderpage.base.utils.ResUtils;
 import com.coderpage.framework.Presenter;
 import com.coderpage.framework.PresenterImpl;
@@ -27,6 +23,7 @@ import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.chart.data.DailyExpense;
 import com.coderpage.mine.app.tally.chart.data.Month;
 import com.coderpage.mine.app.tally.data.Expense;
+import com.coderpage.mine.app.tally.ui.widget.MonthSelectDialog;
 import com.coderpage.mine.app.tally.utils.TimeUtils;
 import com.coderpage.mine.ui.BaseActivity;
 import com.github.mikephil.charting.animation.Easing;
@@ -42,12 +39,14 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.coderpage.base.utils.LogUtils.makeLogTag;
 import static com.coderpage.base.utils.UIUtils.dp2px;
 import static com.coderpage.mine.R.id.lineChart;
 import static com.coderpage.mine.app.tally.chart.ChartModel.ChartQueryEnum;
@@ -61,16 +60,16 @@ public class ChartActivity extends BaseActivity implements
         UpdatableView<ChartModel, ChartModel.ChartQueryEnum,
                 ChartModel.ChartUserActionEnum, IError> {
 
+    private static final String TAG = makeLogTag(ChartActivity.class);
+
     private static final String EXTRA_YEAR = "extra_year";
     private static final String EXTRA_MONTH = "extra_month";
 
     private LineChart mLineChart;
     private TextView mMonthTv;
     private TextView mLineChartMonthExpenseTipTv;
-    private TextView mLineChartMonthDailySwitcherTv;
     private TextView mMonthTotalTv;
     private PieChart mPieChart;
-    private PopupWindow mMonthSwitchPopupWindow;
     private RecyclerView mCategoryMonthRecycler;
     private MonthCategoryExpenseAdapter mMonthCategoryAdapter;
 
@@ -79,6 +78,7 @@ public class ChartActivity extends BaseActivity implements
     private Presenter mPresenter;
     private ChartModel mModel;
     private UserActionListener<ChartModel.ChartUserActionEnum> mUserActionListener;
+    private DecimalFormat mDecimalFormat = new DecimalFormat(".00");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +101,6 @@ public class ChartActivity extends BaseActivity implements
         setupLineChart();
         mMonthTv = (TextView) findViewById(R.id.tvMonth);
         mLineChartMonthExpenseTipTv = (TextView) findViewById(R.id.tvMonthExpenseTip);
-//        mLineChartMonthDailySwitcherTv = (TextView) findViewById(R.id.tvMonthDailyChartSwitcher);
         mMonthTotalTv = (TextView) findViewById(R.id.tvMonthExpenseTotal);
         mPieChart = (PieChart) findViewById(R.id.pieChart);
         mCategoryMonthRecycler = (RecyclerView) findViewById(R.id.recyclerCategoryExpense);
@@ -114,9 +113,6 @@ public class ChartActivity extends BaseActivity implements
         mMonthCategoryAdapter = new MonthCategoryExpenseAdapter(ChartActivity.this);
         mCategoryMonthRecycler.setAdapter(mMonthCategoryAdapter);
         setupPieChart();
-
-//        mLineChartMonthDailySwitcherTv.setOnClickListener(mOnClickListener);
-        findViewById(R.id.ivMonthSwitch).setOnClickListener(mOnClickListener);
     }
 
     private void initPresenter() {
@@ -147,6 +143,25 @@ public class ChartActivity extends BaseActivity implements
         super.onPostCreate(savedInstanceState);
         setToolbarAsBack((v) -> finish());
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_tally_chart, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.menu_date_select:
+                mUserActionListener.onUserAction(ChartUserActionEnum.SHOW_HISTORY_MONTH_LIST, null);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private void setupLineChart() {
         mLineChart.setDescription(null);
@@ -280,7 +295,7 @@ public class ChartActivity extends BaseActivity implements
                 reDrawPieChart(model.getMonthExpenseList());
                 float monthTotal = calculateMonthTotal(model.getMonthExpenseList());
                 mMonthTotalTv.setText(
-                        getString(R.string.tally_amount_cny, String.valueOf(monthTotal)));
+                        getString(R.string.tally_amount_cny, mDecimalFormat.format(monthTotal)));
                 mMonthCategoryAdapter.refreshData(model.getMonthCategoryExpenseList());
                 break;
         }
@@ -300,10 +315,6 @@ public class ChartActivity extends BaseActivity implements
                 }
                 break;
             case SWITCH_MONTH:
-                if (mMonthSwitchPopupWindow != null
-                        && mMonthSwitchPopupWindow.isShowing()) {
-                    mMonthSwitchPopupWindow.dismiss();
-                }
                 if (success) {
                     showMonthTipViews(
                             model.getDisplayMonth().getYear(), model.getDisplayMonth().getMonth());
@@ -313,7 +324,7 @@ public class ChartActivity extends BaseActivity implements
 
                     float monthTotal = calculateMonthTotal(model.getMonthExpenseList());
                     mMonthTotalTv.setText(
-                            getString(R.string.tally_amount_cny, String.valueOf(monthTotal)));
+                            getString(R.string.tally_amount_cny, mDecimalFormat.format(monthTotal)));
                     mMonthCategoryAdapter.refreshData(model.getMonthCategoryExpenseList());
                 }
                 break;
@@ -355,23 +366,16 @@ public class ChartActivity extends BaseActivity implements
      * @param historyMonthList
      */
     private void showMonthSwitchPopupWindow(List<Month> historyMonthList) {
-        View popupView = LayoutInflater.from(ChartActivity.this)
-                .inflate(R.layout.layout_tally_chartview_monthpopup, null);
-        ListView monthListView = (ListView) popupView.findViewById(R.id.listView);
-        if (mMonthSwitchPopupWindow == null) {
-            mMonthSwitchPopupWindow = new PopupWindow(getContext(), null, 0, R.style.Widget_PopupWindow);
-            monthListView.setAdapter(new MonthAdapter(getContext(), historyMonthList));
-            mMonthSwitchPopupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
-            mMonthSwitchPopupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-            mMonthSwitchPopupWindow.setContentView(popupView);
-            mMonthSwitchPopupWindow.setOutsideTouchable(true);
-        }
-        if (!mMonthSwitchPopupWindow.isShowing()) {
-            mMonthSwitchPopupWindow.showAsDropDown(findViewById(R.id.ivMonthSwitch),
-                    -AndroidUtils.dip2px(getContext(), 24 + 16 + 16),
-                    // xOff = (width of ivMonthSwitch) + (padding of ivMonthSwitch) + (right padding)
-                    0);
-        }
+        new MonthSelectDialog(this, historyMonthList, new MonthSelectDialog.DateSelectListener() {
+            @Override
+            public void onMonthSelect(MonthSelectDialog dialog, Month month) {
+                Bundle args = new Bundle(2);
+                args.putInt(EXTRA_YEAR, month.getYear());
+                args.putInt(EXTRA_MONTH, month.getMonth());
+                mUserActionListener.onUserAction(ChartUserActionEnum.SWITCH_MONTH, args);
+                dialog.dismiss();
+            }
+        }, mModel.getDisplayMonth()).show();
     }
 
     @Override
@@ -387,59 +391,6 @@ public class ChartActivity extends BaseActivity implements
     @Override
     public void addListener(UserActionListener<ChartUserActionEnum> listener) {
         mUserActionListener = listener;
-    }
-
-    private View.OnClickListener mOnClickListener = (view) -> {
-        int id = view.getId();
-        switch (id) {
-            case R.id.ivMonthSwitch:
-                mUserActionListener.onUserAction(ChartUserActionEnum.SHOW_HISTORY_MONTH_LIST, null);
-                break;
-        }
-    };
-
-    private class MonthAdapter extends BaseAdapter {
-        private Context mContext;
-        private LayoutInflater mInflater;
-        private List<Month> mMonthList;
-
-        MonthAdapter(Context context, List<Month> monthList) {
-            mMonthList = monthList;
-            mContext = context;
-            mInflater = LayoutInflater.from(mContext);
-        }
-
-        @Override
-        public int getCount() {
-            return mMonthList.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return mMonthList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.list_item_string_simple, parent, false);
-            }
-            Month month = mMonthList.get(position);
-            TextView textView = (TextView) convertView.findViewById(R.id.tvText);
-            textView.setText(month.getYear() + "/" + month.getMonth());
-            convertView.setOnClickListener((view) -> {
-                Bundle args = new Bundle(2);
-                args.putInt(EXTRA_YEAR, month.getYear());
-                args.putInt(EXTRA_MONTH, month.getMonth());
-                mUserActionListener.onUserAction(ChartUserActionEnum.SWITCH_MONTH, args);
-            });
-            return convertView;
-        }
     }
 
 }

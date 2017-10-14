@@ -16,6 +16,25 @@ public class Month {
         this.month = month;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Month month1 = (Month) o;
+
+        if (year != month1.year) return false;
+        return month == month1.month;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = year;
+        result = 31 * result + month;
+        return result;
+    }
+
     public int getYear() {
         return year;
     }

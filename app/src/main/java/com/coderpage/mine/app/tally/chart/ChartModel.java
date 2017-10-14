@@ -27,7 +27,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.coderpage.base.utils.LogUtils.LOGI;
 import static com.coderpage.base.utils.LogUtils.makeLogTag;
@@ -299,67 +301,35 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
             @Override
             protected Result<List<Month>, IError> doInBackground(Void... params) {
                 Result<List<Month>, IError> result = new Result<>();
-                String order = "expense_time ASC LIMIT 1";
+                String order = "expense_time ASC";
+                String[] projection = {TallyContract.Expense.TIME};
                 Cursor cursor = mContext.getContentResolver().query(
-                        TallyContract.Expense.CONTENT_URI, null, null, null, order);
+                        TallyContract.Expense.CONTENT_URI, projection, null, null, order);
                 if (cursor == null) {
                     result.setError(new NonThrowError(-1, "read failed"));
                     return result;
                 }
-                long startTime = System.currentTimeMillis();
-                if (cursor.moveToFirst()) {
-                    long firstExpenseTime =
-                            cursor.getLong(cursor.getColumnIndex(TallyContract.Expense.TIME));
-                    startTime = firstExpenseTime;
-                }
-                cursor.close();
 
-                Calendar calendar = Calendar.getInstance();
-                int currentYear = calendar.get(Calendar.YEAR);
-                int currentMonth = calendar.get(Calendar.MONTH) + 1;
-                calendar.setTimeInMillis(startTime);
-                int startYear = calendar.get(Calendar.YEAR);
-                int startMonth = calendar.get(Calendar.MONTH) + 1;
-
+                Set<Month> monthSet = new HashSet<>();
                 List<Month> monthList = new ArrayList<>();
                 result.setData(monthList);
 
-                if (startYear == currentYear) {
-                    for (int month = startMonth; month <= currentMonth; month++) {
-                        Month m = new Month();
-                        m.setYear(currentYear);
-                        m.setMonth(month);
+                Calendar calendar = Calendar.getInstance();
+
+                // TODO 这个实现方法太水，得重新写一个
+                int timeIdx = cursor.getColumnIndex(TallyContract.Expense.TIME);
+                while (cursor.moveToNext()) {
+                    long time = cursor.getLong(timeIdx);
+                    calendar.setTimeInMillis(time);
+                    int year = calendar.get(Calendar.YEAR);
+                    int month = calendar.get(Calendar.MONTH) + 1;
+                    Month m = new Month(year, month);
+                    if (!monthSet.contains(m)) {
+                        monthSet.add(m);
                         monthList.add(m);
                     }
-                    return result;
                 }
-
-                for (int year = startYear; year <= currentYear; year++) {
-                    if (year == startYear) {
-                        for (int month = startMonth; month <= 12; month++) {
-                            Month m = new Month();
-                            m.setYear(year);
-                            m.setMonth(month);
-                            monthList.add(m);
-                        }
-                    }
-                    if (year > startYear && year < currentYear) {
-                        for (int month = 1; month <= 12; month++) {
-                            Month m = new Month();
-                            m.setYear(year);
-                            m.setMonth(month);
-                            monthList.add(m);
-                        }
-                    }
-                    if (year == currentYear) {
-                        for (int month = startMonth; month <= currentMonth; month++) {
-                            Month m = new Month();
-                            m.setYear(year);
-                            m.setMonth(month);
-                            monthList.add(m);
-                        }
-                    }
-                }
+                cursor.close();
                 return result;
             }
 

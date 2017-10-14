@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:id="@+id/lyContainer"
+             xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_margin="@dimen/spacing_micro"
+             android:background="@drawable/bg_year_selector"
+             android:clickable="true"
+             android:foreground="?attr/selectableItemBackground"
+             android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvYear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingBottom="@dimen/spacing_normal"
+        android:paddingLeft="@dimen/spacing_large"
+        android:paddingRight="@dimen/spacing_large"
+        android:paddingTop="@dimen/spacing_normal"
+        android:textColor="@color/appTextColorSecondary"
+        android:textSize="@dimen/app_text_size_medium"/>
+
+</FrameLayout>

@@ -15,9 +15,10 @@
     <string name="menu_tally_setting">设置</string>
     <string name="menu_tally_chart">图表分析</string>
     <string name="menu_tally_search">搜索</string>
+    <string name="menu_tally_date_range_select">选择日期</string>
 
     <!--  toolbar title of tally main activity -->
-    <string name="tally_toolbar_title_main">我的.记账本</string>
+    <string name="tally_toolbar_title_main">@string/app_name</string>
     <string name="tally_toolbar_title_about">关于</string>
     <string name="tally_toolbar_title_chart">图表分析</string>
     <string name="tally_toolbar_title_records">消费记录</string>

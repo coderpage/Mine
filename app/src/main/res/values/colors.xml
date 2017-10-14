@@ -37,6 +37,10 @@
     <color name="appBgIconBtnNormal">@color/transparent</color>
     <color name="appBgIconBtnPressed">#ebebeb</color>
 
+    <color name="appBgBtnMonthSelectorStateNormal">@color/black_alpha_03</color>
+    <color name="appBgBtnMonthSelectorStateSelected">#440F956F</color>
+    <color name="appBgBtnMonthSelectorStateDisabled">@color/appBgBtnDisabled</color>
+
     <color name="divider">#dcdcdc</color>
     <color name="colorHint">#66000000</color>
 
