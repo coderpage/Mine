@@ -138,19 +138,10 @@
     </LinearLayout>
 
     <!-- ToolBar -->
-    <LinearLayout
+    <include
+        layout="@layout/toolbar_with_elevation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:orientation="vertical">
-
-        <include layout="@layout/toolbar"/>
-
-        <View
-            android:id="@+id/ivToolbarShadow"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/shadow_height"
-            android:background="@drawable/shadow_appbar"/>
-    </LinearLayout>
+        android:layout_gravity="top"/>
 
 </FrameLayout>
