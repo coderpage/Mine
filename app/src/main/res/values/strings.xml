@@ -8,6 +8,8 @@
     <string name="modify">修改</string>
     <string name="place_holder">--</string>
     <string name="date_format_m_d_e">"M月d日 E"</string>
+    <string name="string_format_date_y_m" formatted="false">%d年%d月</string>
+    <string name="string_format_date_m" formatted="false">%d月</string>
 
     <!-- Menu item open About Activity -->
     <string name="menu_tall_about">关于</string>
@@ -28,10 +30,11 @@
     <string name="tally_toolbar_title_search">搜索</string>
 
     <!-- tally chart activity -->
-    <string name="tally_switch_2_daily_expense">切换日消费情况</string>
-    <string name="tally_switch_2_monthly_expense">切换月消费情况</string>
-    <string name="tally_month_info_format" formatted="false">%s/%d</string>
-    <string name="tally_month_expense_tip_format">%d月消费情况</string>
+    <string name="tally_switch_2_daily_expense">日消费折线图</string>
+    <string name="tally_switch_2_monthly_expense">月消费折线图</string>
+    <string name="tally_month_info_format" formatted="false">%d年%s月</string>
+    <string name="tally_daily_expense_tip">日消费折线图</string>
+    <string name="tally_monthly_expense_tip">月消费折线图</string>
 
     <!-- setting activity -->
     <string name="tally_setting_btn_data_export">导出数据</string>

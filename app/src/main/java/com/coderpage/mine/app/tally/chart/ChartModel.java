@@ -19,6 +19,7 @@ import com.coderpage.framework.UserActionEnum;
 import com.coderpage.mine.app.tally.chart.data.DailyExpense;
 import com.coderpage.mine.app.tally.chart.data.Month;
 import com.coderpage.mine.app.tally.chart.data.MonthCategoryExpense;
+import com.coderpage.mine.app.tally.chart.data.MonthlyExpense;
 import com.coderpage.mine.app.tally.data.Expense;
 import com.coderpage.mine.app.tally.provider.TallyContract;
 import com.coderpage.mine.app.tally.utils.TimeUtils;
@@ -27,9 +28,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static com.coderpage.base.utils.LogUtils.LOGI;
 import static com.coderpage.base.utils.LogUtils.makeLogTag;
@@ -50,9 +49,34 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
     private List<Expense> mMonthExpenseList = new ArrayList<>();
     private List<DailyExpense> mMonthDailyExpenseList = new ArrayList<>();
     private List<MonthCategoryExpense> mMonthCategoryExpenseList = new ArrayList<>();
+    private List<MonthlyExpense> mMonthlyExpenseList = new ArrayList<>();
 
     ChartModel(Context context) {
         mContext = context;
+    }
+
+    List<Month> getHistoryMonthList() {
+        return mMonthList;
+    }
+
+    List<DailyExpense> getMonthDailyExpenseList() {
+        return mMonthDailyExpenseList;
+    }
+
+    List<Expense> getMonthExpenseList() {
+        return mMonthExpenseList;
+    }
+
+    List<MonthCategoryExpense> getMonthCategoryExpenseList() {
+        return mMonthCategoryExpenseList;
+    }
+
+    public List<MonthlyExpense> getMonthlyExpenseList() {
+        return mMonthlyExpenseList;
+    }
+
+    Month getDisplayMonth() {
+        return mDisplayMonth;
     }
 
     @Override
@@ -92,6 +116,8 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
                         callback.onError(query, iError);
                     }
                 });
+                break;
+            default:
                 break;
         }
     }
@@ -145,28 +171,38 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
                     }
                 });
                 break;
+
+            // 切换到 月消费 折线图
+            case SWITCH_TO_MONTHLY_DATA:
+                if (!mMonthlyExpenseList.isEmpty()) {
+                    callback.onModelUpdated(ChartModel.this, action);
+                    break;
+                }
+                loadMonthlyExpenseData(new Callback<List<MonthlyExpense>, IError>() {
+                    @Override
+                    public void success(List<MonthlyExpense> monthlyExpenses) {
+                        mMonthlyExpenseList.clear();
+                        mMonthlyExpenseList.addAll(monthlyExpenses);
+                        callback.onModelUpdated(ChartModel.this, action);
+                    }
+
+                    @Override
+                    public void failure(IError iError) {
+                        callback.onError(action, iError);
+                    }
+                });
+                break;
+
+            // 切换到 日消费 折线图
+            case SWITCH_TO_DAILY_DATA:
+                callback.onModelUpdated(ChartModel.this, action);
+                break;
+
+            default:
+                break;
         }
     }
 
-    List<Month> getHistoryMonthList() {
-        return mMonthList;
-    }
-
-    List<DailyExpense> getMonthDailyExpenseList() {
-        return mMonthDailyExpenseList;
-    }
-
-    List<Expense> getMonthExpenseList() {
-        return mMonthExpenseList;
-    }
-
-    List<MonthCategoryExpense> getMonthCategoryExpenseList() {
-        return mMonthCategoryExpenseList;
-    }
-
-    Month getDisplayMonth() {
-        return mDisplayMonth;
-    }
 
     private void loadMonthExpense(int year, int month, Callback<List<Expense>, IError> callback) {
         LOGI(TAG, "load " + year + "/" + month + " daily expense");
@@ -212,6 +248,61 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
             @Override
             protected void onPostExecute(List<Expense> dailyExpenses) {
                 callback.success(dailyExpenses);
+            }
+        }.executeOnExecutor(AsyncTaskExecutor.executor());
+    }
+
+    private void loadMonthlyExpenseData(Callback<List<MonthlyExpense>, IError> callback) {
+        new AsyncTask<Void, Void, List<MonthlyExpense>>() {
+            @Override
+            protected List<MonthlyExpense> doInBackground(Void... params) {
+                List<MonthlyExpense> result = new ArrayList<>();
+
+                // 完整查询 SQL 如下所示
+                // SELECT sum(expense_amount), expense_time FROM expense group by
+                // strftime('%Y-%m', datetime(expense_time/1000, 'unixepoch', 'localtime'));
+                String[] projection = new String[]{
+                        String.format("sum(%s)", TallyContract.Expense.AMOUNT),
+                        TallyContract.Expense.TIME};
+                String orderBy = TallyContract.Expense.TIME + " ASC";
+                // 参考 http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2014/1103/1895.html
+                String groupBy = String.format(
+                        "0=0) group by (strftime('%%Y-%%m', datetime(%s/1000, 'unixepoch', 'localtime'))",
+                        TallyContract.Expense.TIME);
+                Cursor cursor = mContext.getContentResolver().query(
+                        TallyContract.Expense.CONTENT_URI,
+                        projection,
+                        groupBy,
+                        null,
+                        orderBy);
+
+                if (cursor == null) {
+                    return result;
+                }
+                Calendar calendar = Calendar.getInstance();
+                while (cursor.moveToNext()) {
+                    float sum = cursor.getFloat(cursor.getColumnIndex(
+                            String.format("sum(%s)", TallyContract.Expense.AMOUNT)));
+                    long time = cursor.getLong(cursor.getColumnIndex(TallyContract.Expense.TIME));
+
+                    calendar.setTimeInMillis(time);
+                    int year = calendar.get(Calendar.YEAR);
+                    int monthOfYear = calendar.get(Calendar.MONTH) + 1;
+                    Month month = new Month(year, monthOfYear);
+                    MonthlyExpense monthlyExpense = new MonthlyExpense();
+                    monthlyExpense.setMonth(month);
+                    monthlyExpense.setTotal(sum);
+
+                    result.add(monthlyExpense);
+                }
+
+                cursor.close();
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(List<MonthlyExpense> monthlyExpenses) {
+                callback.success(monthlyExpenses);
             }
         }.executeOnExecutor(AsyncTaskExecutor.executor());
     }
@@ -301,34 +392,41 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
             @Override
             protected Result<List<Month>, IError> doInBackground(Void... params) {
                 Result<List<Month>, IError> result = new Result<>();
-                String order = "expense_time ASC";
-                String[] projection = {TallyContract.Expense.TIME};
+
+                // 完整查询 SQL 如下所示
+                // SELECT expense_time FROM expense group by
+                // strftime('%Y-%m', datetime(expense_time/1000, 'unixepoch', 'localtime'));
+                String[] projection = new String[]{TallyContract.Expense.TIME};
+                String orderBy = TallyContract.Expense.TIME + " ASC";
+                String groupBy = String.format(
+                        "0=0) group by (strftime('%%Y-%%m', datetime(%s/1000, 'unixepoch', 'localtime'))",
+                        TallyContract.Expense.TIME);
                 Cursor cursor = mContext.getContentResolver().query(
-                        TallyContract.Expense.CONTENT_URI, projection, null, null, order);
+                        TallyContract.Expense.CONTENT_URI,
+                        projection,
+                        groupBy,
+                        null,
+                        orderBy);
+
                 if (cursor == null) {
                     result.setError(new NonThrowError(-1, "read failed"));
                     return result;
                 }
 
-                Set<Month> monthSet = new HashSet<>();
                 List<Month> monthList = new ArrayList<>();
                 result.setData(monthList);
 
                 Calendar calendar = Calendar.getInstance();
-
-                // TODO 这个实现方法太水，得重新写一个
-                int timeIdx = cursor.getColumnIndex(TallyContract.Expense.TIME);
                 while (cursor.moveToNext()) {
-                    long time = cursor.getLong(timeIdx);
+                    long time = cursor.getLong(cursor.getColumnIndex(TallyContract.Expense.TIME));
+
                     calendar.setTimeInMillis(time);
                     int year = calendar.get(Calendar.YEAR);
-                    int month = calendar.get(Calendar.MONTH) + 1;
-                    Month m = new Month(year, month);
-                    if (!monthSet.contains(m)) {
-                        monthSet.add(m);
-                        monthList.add(m);
-                    }
+                    int monthOfYear = calendar.get(Calendar.MONTH) + 1;
+                    Month month = new Month(year, monthOfYear);
+                    monthList.add(month);
                 }
+
                 cursor.close();
                 return result;
             }
@@ -350,6 +448,9 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
     }
 
     enum ChartQueryEnum implements QueryEnum {
+        /**
+         * 读取当前月的消费数据
+         */
         LOAD_CURRENT_MONTH_DATA(1, null);
         private int id;
         private String[] projection;
@@ -374,7 +475,11 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
         // 显示历史月份选择列表
         SHOW_HISTORY_MONTH_LIST(1),
         // 切换显示的月份
-        SWITCH_MONTH(2);
+        SWITCH_MONTH(2),
+        // 切换到日消费折线图
+        SWITCH_TO_DAILY_DATA(3),
+        // 切换到月消费折线图
+        SWITCH_TO_MONTHLY_DATA(4);
         private int id;
 
         @Override
