@@ -91,7 +91,7 @@
     <string name="tally_about_about_app_content">周末业余时间有点无聊，就写了这个应用，平时记记自己的消费支出，本着简单、干净、够用即可的原则（主要是水平有限），由于个人开发，难免有些问题，希望大家多多提意见，我也会一直维护下去的。</string>
     <string name="tally_about_title_developer_info">开发者</string>
     <string name="tally_about_title_about_me">关于我</string>
-    <string name="tally_about_about_me_content">坐标苏州，写了三年的 Android，目前卖彩票。</string>
+    <string name="tally_about_about_me_content">坐标苏州，Android 程序员，目前卖彩票。</string>
     <string name="tally_about_title_send_email">发送邮件</string>
     <string name="tally_about_send_email_content">我的个人邮箱 codenobug@163.com ，有问题可以给我发邮件。</string>
     <string name="tally_about_title_wechat">微信公众号</string>
