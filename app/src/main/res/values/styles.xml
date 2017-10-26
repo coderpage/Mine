@@ -94,6 +94,7 @@
         <item name="android:windowNoTitle">true</item><!--无标题-->
         <item name="android:windowBackground">@color/transparent</item><!--背景透明-->
         <item name="android:backgroundDimEnabled">true</item><!--模糊-->
+        <item name="android:backgroundDimAmount">0.3</item>
     </style>
 
     <style name="BottomSheetAnimation" parent="@android:style/Animation">
