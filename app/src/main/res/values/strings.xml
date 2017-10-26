@@ -11,6 +11,9 @@
     <string name="string_format_date_y_m" formatted="false">%d年%d月</string>
     <string name="string_format_date_m" formatted="false">%d月</string>
 
+    <string name="permission_request_failed_read_external_storage">请授予读取手机存储权限</string>
+    <string name="permission_request_failed_write_external_storage">请授予写入手机存储权限</string>
+
     <!-- Menu item open About Activity -->
     <string name="menu_tall_about">关于</string>
     <string name="menu_tally_expense_records">消费记录</string>

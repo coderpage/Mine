@@ -1,5 +1,6 @@
 package com.coderpage.mine.app.tally.setting;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -24,6 +26,9 @@ import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.backup.Backup;
 import com.coderpage.mine.app.tally.backup.BackupModelMetadata;
 import com.coderpage.mine.ui.BaseActivity;
+import com.joker.annotation.PermissionsDenied;
+import com.joker.annotation.PermissionsGranted;
+import com.joker.api.Permissions4M;
 
 import java.io.File;
 import java.util.Date;
@@ -46,6 +51,11 @@ public class SettingActivity extends BaseActivity
         implements UpdatableView<SettingModel, SettingQueryEnum, SettingUserActionEnum, IError> {
 
     private static final String TAG = makeLogTag(SettingActivity.class);
+
+    /** 申请写文件权限 CODE */
+    private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 1;
+    /** 申请读文件权限 CODE */
+    private static final int REQUEST_CODE_READ_EXTERNAL_STORAGE = 2;
 
     private Dialog mBackupProgressDialog;
 
@@ -91,6 +101,14 @@ public class SettingActivity extends BaseActivity
             String path = parseFilePathFromUri(this, uri);
             onBackupFileSelectedFromFileSystem(path);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        Permissions4M.onRequestPermissionsResult(this, requestCode, grantResults);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
@@ -179,6 +197,8 @@ public class SettingActivity extends BaseActivity
                             getContext(), R.string.tally_alert_restore_data_failure);
                 }
                 break;
+            default:
+                break;
         }
     }
 
@@ -197,17 +217,60 @@ public class SettingActivity extends BaseActivity
         return this;
     }
 
-    private View.OnClickListener mOnClickListener = (view) -> {
-        int id = view.getId();
-        switch (id) {
-            case R.id.lyDataExport:
+    /****** 权限申请 ******/
+    @PermissionsGranted({REQUEST_CODE_READ_EXTERNAL_STORAGE, REQUEST_CODE_WRITE_EXTERNAL_STORAGE})
+    public void onPermissionsGranted(int code) {
+        switch (code) {
+            case REQUEST_CODE_READ_EXTERNAL_STORAGE:
+                showBackupFileSelectDialog();
+                break;
+            case REQUEST_CODE_WRITE_EXTERNAL_STORAGE:
                 showBackupProgressDialog(ResUtils.getString(
                         getContext(), R.string.tally_alert_backup));
                 mUserActionListener.onUserAction(
                         SettingUserActionEnum.BACKUP_TO_JSON_FILE, new Bundle());
                 break;
+            default:
+                break;
+        }
+    }
+
+    @PermissionsDenied({REQUEST_CODE_READ_EXTERNAL_STORAGE, REQUEST_CODE_WRITE_EXTERNAL_STORAGE})
+    public void onPermissionsDenied(int code) {
+        switch (code) {
+            case REQUEST_CODE_READ_EXTERNAL_STORAGE:
+                UIUtils.showToastShort(SettingActivity.this,
+                        R.string.permission_request_failed_read_external_storage);
+                break;
+            case REQUEST_CODE_WRITE_EXTERNAL_STORAGE:
+                UIUtils.showToastShort(SettingActivity.this,
+                        R.string.permission_request_failed_write_external_storage);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private View.OnClickListener mOnClickListener = (view) -> {
+        int id = view.getId();
+        switch (id) {
+            case R.id.lyDataExport:
+                Permissions4M.get(SettingActivity.this)
+                        .requestForce(true)
+                        .requestUnderM(false)
+                        .requestPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        .requestCodes(REQUEST_CODE_WRITE_EXTERNAL_STORAGE)
+                        .request();
+                break;
             case R.id.lyDataImport:
-                showBackupFileSelectDialog();
+                Permissions4M.get(SettingActivity.this)
+                        .requestForce(true)
+                        .requestUnderM(false)
+                        .requestPermissions(Manifest.permission.READ_EXTERNAL_STORAGE)
+                        .requestCodes(REQUEST_CODE_READ_EXTERNAL_STORAGE)
+                        .request();
+                break;
+            default:
                 break;
         }
     };
