@@ -98,3 +98,9 @@
 ## fastjson
 -dontwarn com.alibaba.fastjson.**
 -keep class com.alibaba.fastjson.** { *; }
+
+## permission4m
+-dontwarn com.joker.api.**
+-keep class com.joker.api.** {*;}
+-keep interface com.joker.api.** { *; }
+-keep class **$$PermissionsProxy { *; }
