@@ -143,6 +143,8 @@ public class MainActivity extends BaseActivity
             case R.id.menu_search:
                 startActivity(new Intent(this, SearchActivity.class));
                 break;
+            default:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -167,6 +169,8 @@ public class MainActivity extends BaseActivity
             case R.id.ivBottomMenu:
                 showBottomSheet();
                 break;
+            default:
+                break;
         }
     };
 
@@ -190,6 +194,8 @@ public class MainActivity extends BaseActivity
                 case R.id.lyBtnChart:
                     startActivity(new Intent(this, ChartActivity.class));
                     bottomSheetDialog.dismiss();
+                    break;
+                default:
                     break;
             }
         };
@@ -251,6 +257,8 @@ public class MainActivity extends BaseActivity
                 mAllExpenseAdapter.refreshData(model.getTodayExpenseList());
                 refreshToadyExpenseTip(model);
                 break;
+            default:
+                break;
         }
     }
 
@@ -284,6 +292,8 @@ public class MainActivity extends BaseActivity
                     mAllExpenseAdapter.refreshData(model.getTodayExpenseList());
                     refreshToadyExpenseTip(model);
                 }
+                break;
+            default:
                 break;
         }
     }

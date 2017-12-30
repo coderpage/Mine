@@ -82,4 +82,13 @@ public class CommonUtils {
         }
         return obj1.equals(obj2);
     }
+
+    public static int string2int(String string) {
+        try {
+            return Integer.parseInt(string);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }

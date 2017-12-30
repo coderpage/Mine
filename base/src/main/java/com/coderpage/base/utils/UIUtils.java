@@ -1,9 +1,11 @@
 package com.coderpage.base.utils;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.StringRes;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 /**
@@ -55,5 +57,15 @@ public class UIUtils {
     public static int px2dp(Context context, float pxValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
+    }
+
+    /**
+     * 计算窗口大小
+     */
+    public static Point getWindowSize(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Point point = new Point();
+        wm.getDefaultDisplay().getSize(point);
+        return point;
     }
 }

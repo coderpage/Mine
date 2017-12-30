@@ -1,49 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/spacing_micro"
+    android:layout_marginRight="@dimen/spacing_micro"
+    android:layout_marginTop="@dimen/padding_normal"
+    app:cardCornerRadius="@dimen/cardDefaultCornerRadius"
+    app:cardElevation="@dimen/cardDefaultElevation"
+    card_view:context=".app.tally.chart.ChartActivity"
+    card_view:showIn="@layout/activity_tally_chart">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="36dp">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/tvMonth"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="@dimen/padding_normal"
-            android:gravity="center"
-            android:textColor="@color/appTextColorPrimary"
-            android:textSize="@dimen/app_text_size_medium"/>
-
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/ivMonthSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:paddingRight="@dimen/padding_normal"
-            app:srcCompat="@drawable/ic_month_switch"/>
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="180dp"
-        android:background="@color/white"
-        android:orientation="vertical">
-
-        <View
-            style="@style/Divider"
+        <FrameLayout
+            android:id="@+id/lyTitle"
             android:layout_width="match_parent"
-            android:layout_height="1px"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="42dp">
+            android:layout_height="36dp">
 
             <TextView
                 android:id="@+id/tvMonthExpenseTip"
@@ -51,34 +28,28 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="@dimen/padding_normal"
-                android:gravity="center"
-                android:textColor="@color/appTextColorPrimary"
-                android:textSize="16sp"/>
+                android:gravity="left|center_vertical"
+                android:textColor="@color/appTextColorLabel"
+                android:textSize="@dimen/app_text_size_medium"/>
 
-            <!--<TextView-->
-                <!--android:id="@+id/tvMonthDailyChartSwitcher"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_alignParentRight="true"-->
-                <!--android:layout_marginRight="@dimen/padding_normal"-->
-                <!--android:gravity="center"-->
-                <!--android:text="@string/tally_switch_2_monthly_expense"-->
-                <!--android:textColor="@color/appTextColorPrimary"-->
-                <!--android:textSize="16sp"/>-->
-        </RelativeLayout>
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/ivSwitchChartMode"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="right|center_vertical"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:padding="@dimen/spacing_micro"
+                app:srcCompat="@drawable/ic_more_horiz"/>
+        </FrameLayout>
 
-        <com.coderpage.mine.app.tally.chart.widget.DailyExpenseLineChart
+        <com.coderpage.mine.app.tally.chart.widget.ExpenseLineChart
             android:id="@+id/lineChart"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/spacing_normal"
-            android:layout_weight="1"/>
+            android:layout_height="140dp"
+            android:layout_below="@id/lyTitle"
+            android:layout_marginBottom="@dimen/spacing_normal"/>
 
-        <View
-            style="@style/Divider"
-            android:layout_width="match_parent"
-            android:layout_height="1px"/>
+    </RelativeLayout>
 
-    </LinearLayout>
-
-</LinearLayout>
+</android.support.v7.widget.CardView>

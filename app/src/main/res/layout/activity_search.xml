@@ -1,54 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.coderpage.mine.app.tally.search.SearchActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        style="@style/Widget.Toolbar"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <com.coderpage.mine.app.tally.search.SearchHistoryView
+        android:id="@+id/lySearchHistoryView"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:titleTextColor="@color/appTextColorPrimary">
+        android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:paddingTop="@dimen/toolbar_height"
+        android:visibility="gone"/>
 
-        <EditText
-            android:id="@+id/etSearch"
-            style="@style/SearchEditText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="@string/tally_search_et_hint"
-            android:imeActionLabel="@string/searchable_label"
-            android:imeOptions="actionSearch|flagNoExtractUi"/>
-
-    </android.support.v7.widget.Toolbar>
-
-    <View
-        android:id="@+id/ivToolbarShadow"
+    <com.coderpage.mine.app.tally.search.SearchResultView
+        android:id="@+id/lySearchResultView"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/shadow_height"
-        android:background="@drawable/shadow_appbar"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_micro"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:paddingTop="@dimen/toolbar_height"
+        android:visibility="gone"/>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:background="@color/transparent"
+        android:orientation="vertical">
 
-        <com.coderpage.mine.app.tally.search.SearchHistoryView
-            android:id="@+id/lySearchHistoryView"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/Widget.Toolbar"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="@color/appTextColorPrimary">
 
-        <com.coderpage.mine.app.tally.search.SearchResultView
-            android:id="@+id/lySearchResultView"
+            <EditText
+                android:id="@+id/etSearch"
+                style="@style/SearchEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/tally_search_et_hint"
+                android:imeActionLabel="@string/searchable_label"
+                android:imeOptions="actionSearch|flagNoExtractUi"/>
+
+        </android.support.v7.widget.Toolbar>
+
+        <View
+            android:id="@+id/ivToolbarShadow"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
-    </FrameLayout>
-</LinearLayout>
+            android:layout_height="@dimen/shadow_height"
+            android:background="@drawable/shadow_appbar"/>
+
+    </LinearLayout>
+
+</FrameLayout>

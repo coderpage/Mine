@@ -18,11 +18,13 @@ import java.util.UUID;
 
 public class PreferencesUtils {
 
-    // preferences key of client changeable uuid
-    // value keep by this key changed after app reinstall or clear files
+    /**
+     * preferences key of client changeable uuid
+     * value keep by this key changed after app reinstall or clear files
+     */
     private static final String PRE_CLIENT_CHANGEABLE_UUID = "pre_client_changeable_uuid";
 
-    // search history
+    /** search history */
     private static final String PRE_SEARCH_HISTORY_KEYWORDS = "pre_search_history_keywords";
 
     /**

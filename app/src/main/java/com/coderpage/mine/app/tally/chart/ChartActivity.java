@@ -8,17 +8,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.coderpage.base.common.IError;
-import com.coderpage.base.utils.AndroidUtils;
 import com.coderpage.base.utils.ResUtils;
 import com.coderpage.framework.Presenter;
 import com.coderpage.framework.PresenterImpl;
@@ -26,11 +25,14 @@ import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.chart.data.DailyExpense;
 import com.coderpage.mine.app.tally.chart.data.Month;
+import com.coderpage.mine.app.tally.chart.data.MonthlyExpense;
+import com.coderpage.mine.app.tally.chart.widget.ExpenseLineChart;
 import com.coderpage.mine.app.tally.data.Expense;
+import com.coderpage.mine.app.tally.ui.widget.MonthSelectDialog;
+import com.coderpage.mine.app.tally.utils.PopupUtils;
 import com.coderpage.mine.app.tally.utils.TimeUtils;
 import com.coderpage.mine.ui.BaseActivity;
 import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -42,14 +44,17 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.coderpage.base.utils.LogUtils.makeLogTag;
 import static com.coderpage.base.utils.UIUtils.dp2px;
-import static com.coderpage.mine.R.id.lineChart;
 import static com.coderpage.mine.app.tally.chart.ChartModel.ChartQueryEnum;
 import static com.coderpage.mine.app.tally.chart.ChartModel.ChartUserActionEnum;
 
@@ -61,16 +66,16 @@ public class ChartActivity extends BaseActivity implements
         UpdatableView<ChartModel, ChartModel.ChartQueryEnum,
                 ChartModel.ChartUserActionEnum, IError> {
 
+    private static final String TAG = makeLogTag(ChartActivity.class);
+
     private static final String EXTRA_YEAR = "extra_year";
     private static final String EXTRA_MONTH = "extra_month";
 
-    private LineChart mLineChart;
+    private ExpenseLineChart mLineChart;
     private TextView mMonthTv;
-    private TextView mLineChartMonthExpenseTipTv;
-    private TextView mLineChartMonthDailySwitcherTv;
+    private TextView mLineChartExpenseTipTv;
     private TextView mMonthTotalTv;
     private PieChart mPieChart;
-    private PopupWindow mMonthSwitchPopupWindow;
     private RecyclerView mCategoryMonthRecycler;
     private MonthCategoryExpenseAdapter mMonthCategoryAdapter;
 
@@ -79,6 +84,7 @@ public class ChartActivity extends BaseActivity implements
     private Presenter mPresenter;
     private ChartModel mModel;
     private UserActionListener<ChartModel.ChartUserActionEnum> mUserActionListener;
+    private DecimalFormat mDecimalFormat = new DecimalFormat(".00");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,17 +97,18 @@ public class ChartActivity extends BaseActivity implements
 
     private void initData() {
         Intent intent = getIntent();
-        if (intent == null) return;
+        if (intent == null) {
+            return;
+        }
         mInitYear = intent.getIntExtra(EXTRA_YEAR, -1);
         mInitMonth = intent.getIntExtra(EXTRA_MONTH, -1);
     }
 
     private void initView() {
-        mLineChart = (LineChart) findViewById(lineChart);
-        setupLineChart();
+        mLineChart = (ExpenseLineChart) findViewById(R.id.lineChart);
+        setupBaseLineChart();
         mMonthTv = (TextView) findViewById(R.id.tvMonth);
-        mLineChartMonthExpenseTipTv = (TextView) findViewById(R.id.tvMonthExpenseTip);
-//        mLineChartMonthDailySwitcherTv = (TextView) findViewById(R.id.tvMonthDailyChartSwitcher);
+        mLineChartExpenseTipTv = (TextView) findViewById(R.id.tvMonthExpenseTip);
         mMonthTotalTv = (TextView) findViewById(R.id.tvMonthExpenseTotal);
         mPieChart = (PieChart) findViewById(R.id.pieChart);
         mCategoryMonthRecycler = (RecyclerView) findViewById(R.id.recyclerCategoryExpense);
@@ -115,8 +122,7 @@ public class ChartActivity extends BaseActivity implements
         mCategoryMonthRecycler.setAdapter(mMonthCategoryAdapter);
         setupPieChart();
 
-//        mLineChartMonthDailySwitcherTv.setOnClickListener(mOnClickListener);
-        findViewById(R.id.ivMonthSwitch).setOnClickListener(mOnClickListener);
+        findViewById(R.id.ivSwitchChartMode).setOnClickListener(mOnclickListener);
     }
 
     private void initPresenter() {
@@ -148,16 +154,32 @@ public class ChartActivity extends BaseActivity implements
         setToolbarAsBack((v) -> finish());
     }
 
-    private void setupLineChart() {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_tally_chart, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.menu_date_select:
+                mUserActionListener.onUserAction(ChartUserActionEnum.SHOW_HISTORY_MONTH_LIST, null);
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    private void setupBaseLineChart() {
         mLineChart.setDescription(null);
         mLineChart.getLegend().setEnabled(false);
         mLineChart.setDragEnabled(true);
         mLineChart.setScaleEnabled(true);
-        mLineChart.setViewPortOffsets(
-                dp2px(getContext(), 16F),
-                dp2px(getContext(), 32F),
-                dp2px(getContext(), 16F),
-                0);
 
         XAxis xAxis = mLineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -179,6 +201,53 @@ public class ChartActivity extends BaseActivity implements
         axisLeft.setDrawZeroLine(true);
         axisLeft.setZeroLineWidth(0.2F);
         axisLeft.setZeroLineColor(ResUtils.getColor(getContext(), R.color.colorHint));
+    }
+
+    private void setupDailyLineChart() {
+        mLineChart.setViewPortOffsets(
+                dp2px(getContext(), 16F),
+                dp2px(getContext(), 32F),
+                dp2px(getContext(), 16F),
+                0);
+
+        YAxis axisLeft = mLineChart.getAxisLeft();
+        axisLeft.setDrawZeroLine(true);
+
+        XAxis xAxis = mLineChart.getXAxis();
+        xAxis.setEnabled(false);
+    }
+
+    private void setupMonthlyLineChart(List<Entry> entryList) {
+        mLineChart.setViewPortOffsets(
+                dp2px(getContext(), 16F),
+                dp2px(getContext(), 32F),
+                dp2px(getContext(), 16F),
+                dp2px(getContext(), 16F));
+
+        YAxis axisLeft = mLineChart.getAxisLeft();
+        axisLeft.setDrawZeroLine(false);
+
+        XAxis xAxis = mLineChart.getXAxis();
+        xAxis.setEnabled(true);
+        xAxis.setDrawLabels(true);
+        xAxis.setTextColor(ResUtils.getColor(getContext(), R.color.appTextColorLabel));
+
+        List<String> xAxisLabels = new ArrayList<>(entryList.size());
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        for (Entry entry : entryList) {
+            MonthlyExpense expense = (MonthlyExpense) entry.getData();
+            Month month = expense.getMonth();
+            String label = month.getYear() == currentYear ?
+                    getString(R.string.string_format_date_m, month.getMonth()) :
+                    month.getYear() + "/" + month.getMonth();
+            xAxisLabels.add(label);
+        }
+        xAxis.setValueFormatter((value, axis) -> {
+            if (xAxisLabels.size() > value) {
+                return xAxisLabels.get((int) value);
+            }
+            return String.valueOf(false);
+        });
     }
 
     private void setupPieChart() {
@@ -245,8 +314,12 @@ public class ChartActivity extends BaseActivity implements
 
     private void showDailyExpenseLineChart(List<Entry> entries) {
         if (entries == null || entries.isEmpty()) {
+            // TODO showEmptyData
             return;
         }
+
+        setupDailyLineChart();
+
         LineDataSet lineDataSet = new LineDataSet(entries, "");
         lineDataSet.setMode(LineDataSet.Mode.LINEAR);
         lineDataSet.setLabel(null);
@@ -259,14 +332,91 @@ public class ChartActivity extends BaseActivity implements
         lineDataSet.setDrawVerticalHighlightIndicator(true);
         lineDataSet.setHighLightColor(ResUtils.getColor(getContext(), R.color.colorHint));
 
+        int dayCountOfMonth = TimeUtils.getDaysTotalOfMonth(
+                mModel.getDisplayMonth().getYear(), mModel.getDisplayMonth().getMonth());
+        LineData lineData = new LineData(lineDataSet);
+
+        mLineChart.setData(lineData);
+        mLineChart.setSourceType(ExpenseLineChart.TYPE_DAILY_OF_MONTH);
+        mLineChart.getXAxis().setAxisMinimum(0);
+        mLineChart.getXAxis().setAxisMaximum(dayCountOfMonth);
+        mLineChart.resetVisibleXRange();
+        mLineChart.animateY(1400, Easing.EasingOption.EaseInOutQuart);
+    }
+
+    private void showMonthlyExpenseLineChart(List<MonthlyExpense> data) {
+        List<Entry> entries = generateMonthlyExpenseLineChartEntries(data);
+        if (data == null || data.isEmpty()) {
+            // TODO show empty data
+            return;
+        }
+
+        setupMonthlyLineChart(entries);
+
+        LineDataSet lineDataSet = new LineDataSet(entries, "");
+        lineDataSet.setMode(LineDataSet.Mode.LINEAR);
+        lineDataSet.setLabel(null);
+        lineDataSet.setDrawCircleHole(false);
+        lineDataSet.setDrawValues(true);
+        lineDataSet.setValueTextColor(ResUtils.getColor(this, R.color.appTextColorLabel));
+        lineDataSet.setValueTextSize(12);
+        lineDataSet.setColor(ResUtils.getColor(this, R.color.chartLine));
+        lineDataSet.setLineWidth(2.0F);
+        lineDataSet.setDrawCircles(true);
+        lineDataSet.setCircleColor(ResUtils.getColor(this, R.color.chartLine));
+        lineDataSet.setDrawHorizontalHighlightIndicator(false);
+        lineDataSet.setDrawVerticalHighlightIndicator(false);
 
         LineData lineData = new LineData(lineDataSet);
         mLineChart.setData(lineData);
-        mLineChart.getXAxis().setAxisMaximum(TimeUtils.getDaysTotalOfMonth(
-                mModel.getDisplayMonth().getYear(),
-                mModel.getDisplayMonth().getMonth()));
-        mLineChart.getXAxis().setAxisMinimum(0);
+        mLineChart.setSourceType(ExpenseLineChart.TYPE_MONTHLY);
+        mLineChart.getXAxis().setAxisMaximum(lineData.getXMax());
+        mLineChart.getXAxis().setAxisMinimum(lineData.getXMin());
+        mLineChart.setVisibleXRange(0, 5);
+
         mLineChart.animateY(1400, Easing.EasingOption.EaseInOutQuart);
+    }
+
+    private List<Entry> generateMonthlyExpenseLineChartEntries(List<MonthlyExpense> expenseList) {
+        List<Entry> result = new ArrayList<>(expenseList != null ? expenseList.size() : 0);
+        if (expenseList == null || expenseList.isEmpty()) {
+            return result;
+        }
+
+        MonthlyExpense preMonthlyExpense = null;
+        // 处理后的月份消费数据集合
+        List<MonthlyExpense> formattedList = new ArrayList<>();
+        // 本循环是为了处理月份中断问题，从数据库中只会取出有消费记录的月份
+        // 因此会出现月份中断的问题，但是在绘图时月份是连续的，此处是为了将没有消费记录的月份穿插起来
+        for (MonthlyExpense expense : expenseList) {
+            if (preMonthlyExpense == null) {
+                preMonthlyExpense = expense;
+                formattedList.add(expense);
+                continue;
+            }
+
+            while (!preMonthlyExpense.getMonth().next().equals(expense.getMonth())) {
+                Month next = preMonthlyExpense.getMonth().next();
+                MonthlyExpense nextMonthlyExpense = new MonthlyExpense();
+                nextMonthlyExpense.setMonth(next);
+                nextMonthlyExpense.setTotal(0f);
+
+                preMonthlyExpense = nextMonthlyExpense;
+                formattedList.add(nextMonthlyExpense);
+            }
+
+            preMonthlyExpense = expense;
+            formattedList.add(expense);
+        }
+
+        for (int i = 0; i < formattedList.size(); i++) {
+            MonthlyExpense expense = formattedList.get(i);
+            Entry entry = new Entry(i, expense.getTotal());
+            entry.setData(expense);
+            result.add(entry);
+        }
+
+        return result;
     }
 
     @Override
@@ -280,8 +430,11 @@ public class ChartActivity extends BaseActivity implements
                 reDrawPieChart(model.getMonthExpenseList());
                 float monthTotal = calculateMonthTotal(model.getMonthExpenseList());
                 mMonthTotalTv.setText(
-                        getString(R.string.tally_amount_cny, String.valueOf(monthTotal)));
+                        getString(R.string.tally_amount_cny, mDecimalFormat.format(monthTotal)));
                 mMonthCategoryAdapter.refreshData(model.getMonthCategoryExpenseList());
+                mLineChartExpenseTipTv.setText(getString(R.string.tally_daily_expense_tip));
+                break;
+            default:
                 break;
         }
     }
@@ -300,10 +453,6 @@ public class ChartActivity extends BaseActivity implements
                 }
                 break;
             case SWITCH_MONTH:
-                if (mMonthSwitchPopupWindow != null
-                        && mMonthSwitchPopupWindow.isShowing()) {
-                    mMonthSwitchPopupWindow.dismiss();
-                }
                 if (success) {
                     showMonthTipViews(
                             model.getDisplayMonth().getYear(), model.getDisplayMonth().getMonth());
@@ -313,9 +462,27 @@ public class ChartActivity extends BaseActivity implements
 
                     float monthTotal = calculateMonthTotal(model.getMonthExpenseList());
                     mMonthTotalTv.setText(
-                            getString(R.string.tally_amount_cny, String.valueOf(monthTotal)));
+                            getString(R.string.tally_amount_cny, mDecimalFormat.format(monthTotal)));
                     mMonthCategoryAdapter.refreshData(model.getMonthCategoryExpenseList());
+                    mLineChartExpenseTipTv.setText(getString(R.string.tally_daily_expense_tip));
                 }
+                break;
+
+            case SWITCH_TO_DAILY_DATA:
+                if (success) {
+                    List<DailyExpense> monthDailyExpenseList = model.getMonthDailyExpenseList();
+                    showDailyExpenseLineChart(generateLineData(monthDailyExpenseList));
+                    mLineChartExpenseTipTv.setText(getString(R.string.tally_daily_expense_tip));
+                }
+                break;
+
+            case SWITCH_TO_MONTHLY_DATA:
+                if (success) {
+                    showMonthlyExpenseLineChart(model.getMonthlyExpenseList());
+                    mLineChartExpenseTipTv.setText(getString(R.string.tally_monthly_expense_tip));
+                }
+                break;
+            default:
                 break;
         }
     }
@@ -345,8 +512,7 @@ public class ChartActivity extends BaseActivity implements
 
     private void showMonthTipViews(int year, int month) {
         mMonthTv.setText(getString(R.string.tally_month_info_format,
-                String.format(Locale.getDefault(), "%1$02d", month), year));
-        mLineChartMonthExpenseTipTv.setText(getString(R.string.tally_month_expense_tip_format, month));
+                year, String.format(Locale.getDefault(), "%1$02d", month)));
     }
 
     /**
@@ -355,23 +521,16 @@ public class ChartActivity extends BaseActivity implements
      * @param historyMonthList
      */
     private void showMonthSwitchPopupWindow(List<Month> historyMonthList) {
-        View popupView = LayoutInflater.from(ChartActivity.this)
-                .inflate(R.layout.layout_tally_chartview_monthpopup, null);
-        ListView monthListView = (ListView) popupView.findViewById(R.id.listView);
-        if (mMonthSwitchPopupWindow == null) {
-            mMonthSwitchPopupWindow = new PopupWindow(getContext(), null, 0, R.style.Widget_PopupWindow);
-            monthListView.setAdapter(new MonthAdapter(getContext(), historyMonthList));
-            mMonthSwitchPopupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
-            mMonthSwitchPopupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-            mMonthSwitchPopupWindow.setContentView(popupView);
-            mMonthSwitchPopupWindow.setOutsideTouchable(true);
-        }
-        if (!mMonthSwitchPopupWindow.isShowing()) {
-            mMonthSwitchPopupWindow.showAsDropDown(findViewById(R.id.ivMonthSwitch),
-                    -AndroidUtils.dip2px(getContext(), 24 + 16 + 16),
-                    // xOff = (width of ivMonthSwitch) + (padding of ivMonthSwitch) + (right padding)
-                    0);
-        }
+        new MonthSelectDialog(this, historyMonthList, new MonthSelectDialog.DateSelectListener() {
+            @Override
+            public void onMonthSelect(MonthSelectDialog dialog, Month month) {
+                Bundle args = new Bundle(2);
+                args.putInt(EXTRA_YEAR, month.getYear());
+                args.putInt(EXTRA_MONTH, month.getMonth());
+                mUserActionListener.onUserAction(ChartUserActionEnum.SWITCH_MONTH, args);
+                dialog.dismiss();
+            }
+        }, mModel.getDisplayMonth()).show();
     }
 
     @Override
@@ -389,57 +548,39 @@ public class ChartActivity extends BaseActivity implements
         mUserActionListener = listener;
     }
 
-    private View.OnClickListener mOnClickListener = (view) -> {
+    private View.OnClickListener mOnclickListener = (view) -> {
         int id = view.getId();
         switch (id) {
-            case R.id.ivMonthSwitch:
-                mUserActionListener.onUserAction(ChartUserActionEnum.SHOW_HISTORY_MONTH_LIST, null);
+            case R.id.ivSwitchChartMode:
+                showChartModeSwitchPopup(view);
+                break;
+            default:
                 break;
         }
     };
 
-    private class MonthAdapter extends BaseAdapter {
-        private Context mContext;
-        private LayoutInflater mInflater;
-        private List<Month> mMonthList;
+    private void showChartModeSwitchPopup(View anchor) {
 
-        MonthAdapter(Context context, List<Month> monthList) {
-            mMonthList = monthList;
-            mContext = context;
-            mInflater = LayoutInflater.from(mContext);
-        }
+        final String menuTextSwitch2Daily = getString(R.string.tally_switch_2_daily_expense);
+        final String menuTextSwitch2Monthly = getString(R.string.tally_switch_2_monthly_expense);
+        List<String> menus = Arrays.asList(menuTextSwitch2Daily, menuTextSwitch2Monthly);
 
-        @Override
-        public int getCount() {
-            return mMonthList.size();
-        }
+        ListPopupWindow popupWindow = PopupUtils.createPopupMenuWindow(ChartActivity.this, anchor, menus);
 
-        @Override
-        public Object getItem(int position) {
-            return mMonthList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.list_item_string_simple, parent, false);
+        popupWindow.setHorizontalOffset(-getResources().getDimensionPixelSize(R.dimen.spacing_normal));
+        popupWindow.setVerticalOffset(getResources().getDimensionPixelSize(R.dimen.spacing_normal));
+        popupWindow.setDropDownGravity(Gravity.END);
+        popupWindow.setOnItemClickListener((parent, view, position, id) -> {
+            popupWindow.dismiss();
+            String menuText = menus.get(position);
+            if (menuTextSwitch2Daily.equals(menuText)) {
+                mUserActionListener.onUserAction(ChartUserActionEnum.SWITCH_TO_DAILY_DATA, null);
+            } else if (menuTextSwitch2Monthly.equals(menuText)) {
+                mUserActionListener.onUserAction(ChartUserActionEnum.SWITCH_TO_MONTHLY_DATA, null);
             }
-            Month month = mMonthList.get(position);
-            TextView textView = (TextView) convertView.findViewById(R.id.tvText);
-            textView.setText(month.getYear() + "/" + month.getMonth());
-            convertView.setOnClickListener((view) -> {
-                Bundle args = new Bundle(2);
-                args.putInt(EXTRA_YEAR, month.getYear());
-                args.putInt(EXTRA_MONTH, month.getMonth());
-                mUserActionListener.onUserAction(ChartUserActionEnum.SWITCH_MONTH, args);
-            });
-            return convertView;
-        }
-    }
+        });
+        popupWindow.show();
 
+
+    }
 }

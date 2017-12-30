@@ -4,11 +4,11 @@ import android.content.Context;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.coderpage.base.cache.Cache;
 import com.coderpage.base.common.Callback;
 import com.coderpage.base.common.IError;
 import com.coderpage.base.common.NonThrowError;
 import com.coderpage.mine.app.tally.common.error.ErrorCode;
-import com.coderpage.base.cache.Cache;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -153,6 +153,6 @@ class BackupCache {
         }
 
         File[] files = imageFolder.listFiles();
-        return Arrays.asList(files);
+        return files == null ? new ArrayList<>(0) : Arrays.asList(files);
     }
 }

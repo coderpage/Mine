@@ -55,8 +55,7 @@
         android:orientation="vertical">
 
         <include
-            layout="@layout/toolbar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+            layout="@layout/toolbar"/>
 
         <View
             android:id="@+id/ivToolbarShadow"

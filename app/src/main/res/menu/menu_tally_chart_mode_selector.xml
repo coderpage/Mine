@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/switchDailyMode"
+        android:title="@string/tally_switch_2_daily_expense"
+        app:showAsAction="collapseActionView"/>
+
+    <item
+        android:id="@+id/switchMonthlyMode"
+        android:title="@string/tally_switch_2_monthly_expense"
+        app:showAsAction="collapseActionView"/>
+</menu>
