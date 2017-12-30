@@ -257,6 +257,8 @@ public class MainActivity extends BaseActivity
                 mAllExpenseAdapter.refreshData(model.getTodayExpenseList());
                 refreshToadyExpenseTip(model);
                 break;
+            default:
+                break;
         }
     }
 
@@ -290,6 +292,8 @@ public class MainActivity extends BaseActivity
                     mAllExpenseAdapter.refreshData(model.getTodayExpenseList());
                     refreshToadyExpenseTip(model);
                 }
+                break;
+            default:
                 break;
         }
     }

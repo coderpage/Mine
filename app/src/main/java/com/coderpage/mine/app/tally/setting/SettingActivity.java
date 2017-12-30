@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coderpage.base.common.IError;
+import com.coderpage.base.utils.FileUtils;
 import com.coderpage.base.utils.ResUtils;
 import com.coderpage.base.utils.UIUtils;
 import com.coderpage.framework.Presenter;
@@ -98,7 +98,7 @@ public class SettingActivity extends BaseActivity
         if (resultCode == Activity.RESULT_OK) {
             // Get the Uri of the selected file
             Uri uri = data.getData();
-            String path = parseFilePathFromUri(this, uri);
+            String path = FileUtils.getPath(this, uri);
             onBackupFileSelectedFromFileSystem(path);
         }
     }
@@ -323,32 +323,30 @@ public class SettingActivity extends BaseActivity
     private void showBackupFileSelectDialog() {
         List<File> fileList = Backup.listBackupFiles(getBaseContext());
 
-        if (!fileList.isEmpty()) {
-            String[] fileItems = new String[fileList.size()];
-            for (int i = 0; i < fileItems.length; i++) {
-                fileItems[i] = fileList.get(i).getName();
-            }
-            AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
-            builder.setItems(fileItems, (dialog, which) -> {
-                dialog.dismiss();
-                showBackupProgressDialog(ResUtils.getString(
-                        getContext(), R.string.tally_alert_reading_backup_file));
-                Bundle args = new Bundle();
-                args.putString(EXTRA_FILE_PATH, fileList.get(which).getAbsolutePath());
-                mUserActionListener.onUserAction(SettingUserActionEnum.READ_BACKUP_JSON_FILE, args);
-            });
-            builder.setPositiveButton(
-                    R.string.dialog_btn_choose_local_file, (dialog, which) -> {
-                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                        intent.setType("*/*");
-                        intent.addCategory(Intent.CATEGORY_OPENABLE);
-                        startActivityForResult(intent, 1);
-                    });
-            builder.setNegativeButton(R.string.dialog_btn_cancel, (dialog, which) -> {
-                dialog.dismiss();
-            });
-            builder.create().show();
+        String[] fileItems = new String[fileList.size()];
+        for (int i = 0; i < fileItems.length; i++) {
+            fileItems[i] = fileList.get(i).getName();
         }
+        AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
+        builder.setItems(fileItems, (dialog, which) -> {
+            dialog.dismiss();
+            showBackupProgressDialog(ResUtils.getString(
+                    getContext(), R.string.tally_alert_reading_backup_file));
+            Bundle args = new Bundle();
+            args.putString(EXTRA_FILE_PATH, fileList.get(which).getAbsolutePath());
+            mUserActionListener.onUserAction(SettingUserActionEnum.READ_BACKUP_JSON_FILE, args);
+        });
+        builder.setPositiveButton(
+                R.string.dialog_btn_choose_local_file, (dialog, which) -> {
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.setType("*/*");
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    startActivityForResult(intent, 1);
+                });
+        builder.setNegativeButton(R.string.dialog_btn_cancel, (dialog, which) -> {
+            dialog.dismiss();
+        });
+        builder.create().show();
     }
 
     private void showRestoreDataConfirmDialog(SettingModel model) {
@@ -381,30 +379,5 @@ public class SettingActivity extends BaseActivity
         confirmDialog.show();
     }
 
-    private static String parseFilePathFromUri(Context context, Uri uri) {
-        if ("content".equalsIgnoreCase(uri.getScheme())) {
-            try {
-                Cursor cursor = context.getContentResolver().query(
-                        uri,
-                        new String[]{"_data"},
-                        null,
-                        null,
-                        null);
-                if (cursor == null) {
-                    return "";
-                }
-                int dataColumnIndex = cursor.getColumnIndexOrThrow("_data");
-                if (cursor.moveToFirst()) {
-                    return cursor.getString(dataColumnIndex);
-                }
-                cursor.close();
-            } catch (Exception e) {
-                // no-op
-            }
-        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return uri.getPath();
-        }
-        return "";
-    }
 
 }

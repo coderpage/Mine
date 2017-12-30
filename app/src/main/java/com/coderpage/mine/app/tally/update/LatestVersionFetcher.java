@@ -77,7 +77,7 @@ class LatestVersionFetcher implements SourceFetcher {
             }
             result.setData(body.getLatestVersion());
             return result;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             result.setErr(new Error(ErrorCode.UNKNOWN, e.getMessage()));
             return result;
