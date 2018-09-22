@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data class=".tally.module.edit.income.IncomeCategoryItemBinding">
+
+        <variable
+            name="category"
+            type="com.coderpage.mine.app.tally.module.edit.model.Category" />
+
+        <variable
+            name="vm"
+            type="com.coderpage.mine.app.tally.module.edit.income.IncomeViewModel" />
+
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:onClick="@{() -> vm.onCategoryClick(category)}"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_micro">
+
+        <FrameLayout
+            selected="@{category.select}"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/bg_category_income"
+            android:padding="6dp">
+
+            <android.support.v7.widget.AppCompatImageView
+                categoryIcon="@{category.internal.icon}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/spacing_micro"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="@{category.internal.name}"
+            android:textColor="@color/appTextColorLabel"
+            android:textSize="@dimen/app_text_size_small" />
+    </LinearLayout>
+
+</layout>

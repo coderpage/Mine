@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data class=".tall.module.edit.IncomeFragmentBinding">
+
+        <variable
+            name="activity"
+            type="android.app.Activity" />
+
+        <variable
+            name="category"
+            type="com.coderpage.mine.app.tally.module.edit.model.Category" />
+
+        <variable
+            name="vm"
+            type="com.coderpage.mine.app.tally.module.edit.income.IncomeViewModel" />
+    </data>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/lyAmountContainer"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@color/white">
+
+                <FrameLayout
+                    android:id="@+id/ly_select_category_icon"
+                    selected="@{true}"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/padding_normal"
+                    android:background="@drawable/bg_category_income"
+                    android:padding="6dp">
+
+                    <android.support.v7.widget.AppCompatImageView
+                        categoryIcon="@{category.internal.icon}"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tvCategoryName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/spacing_normal"
+                    android:layout_toRightOf="@id/ly_select_category_icon"
+                    android:gravity="center"
+                    android:text="@{category.internal.name}"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="@dimen/app_text_size_normal" />
+
+                <TextView
+                    android:id="@+id/tvAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:paddingRight="@dimen/padding_normal"
+                    android:text="@{vm.amountText}"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="@dimen/app_text_size_large" />
+
+            </RelativeLayout>
+
+            <include
+                layout="@layout/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_gravity="bottom" />
+
+            <com.coderpage.mine.app.tally.module.edit.widget.CategoryViewPager
+                android:id="@+id/category_viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@color/white">
+
+                <include
+                    layout="@layout/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_gravity="top" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvDesc"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_marginLeft="@dimen/padding_normal"
+                        android:layout_weight="1"
+                        android:background="@color/transparent"
+                        android:ellipsize="end"
+                        android:gravity="start|center_vertical"
+                        android:hint="@string/tally_add_record_note"
+                        android:maxLines="1"
+                        android:onClick="@{() -> vm.onDescClick(activity)}"
+                        android:text="@{vm.desc}"
+                        android:textColor="?android:textColorSecondary"
+                        android:textSize="@dimen/app_text_size_medium" />
+
+                    <TextView
+                        android:id="@+id/tvDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/padding_normal"
+                        android:layout_marginRight="@dimen/padding_normal"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:onClick="@{() -> vm.onDateClick(activity)}"
+                        android:text="@{vm.dateText}" />
+                </LinearLayout>
+
+                <include
+                    layout="@layout/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_gravity="bottom" />
+            </FrameLayout>
+
+            <com.coderpage.mine.app.tally.ui.widget.NumInputView
+                android:id="@+id/numInputView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:elevation="4dp"
+                android:orientation="vertical" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</layout>

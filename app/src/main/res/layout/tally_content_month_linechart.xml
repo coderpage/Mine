@@ -10,7 +10,7 @@
     android:layout_marginTop="@dimen/padding_normal"
     app:cardCornerRadius="@dimen/cardDefaultCornerRadius"
     app:cardElevation="@dimen/cardDefaultElevation"
-    card_view:context=".app.tally.chart.ChartActivity"
+    card_view:context=".app.tally.module.chart.ChartActivity"
     card_view:showIn="@layout/activity_tally_chart">
 
     <RelativeLayout
@@ -43,7 +43,7 @@
                 app:srcCompat="@drawable/ic_more_horiz"/>
         </FrameLayout>
 
-        <com.coderpage.mine.app.tally.chart.widget.ExpenseLineChart
+        <com.coderpage.mine.app.tally.module.chart.widget.ExpenseLineChart
             android:id="@+id/lineChart"
             android:layout_width="match_parent"
             android:layout_height="140dp"

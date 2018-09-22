@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+
+    <data class=".tally.module.edit.RecordEditActivityBinding">
+
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+
+                <include layout="@layout/toolbar" />
+
+                <com.coderpage.base.widget.MTabLayout
+                    android:id="@+id/tabLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:paddingBottom="@dimen/spacing_micro"
+                    android:paddingTop="@dimen/spacing_micro"
+                    app:mTabGravity="center"
+                    app:mTabIndicatorColor="@color/black"
+                    app:mTabIndicatorHeight="3dp"
+                    app:mTabIndicatorWidth="32dp"
+                    app:mTabMinWidth="60dp"
+                    app:mTabMode="fixed"
+                    app:mTabPadding="@dimen/spacing_micro"
+                    app:mTabSelectedTextColor="@color/black"
+                    app:mTabTextColor="@color/appTextColorSecondary"
+                    app:mTabTextSize="@dimen/app_text_size_normal" />
+
+            </FrameLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+</layout>

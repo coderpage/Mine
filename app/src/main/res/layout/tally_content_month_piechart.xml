@@ -11,7 +11,7 @@
     android:background="@color/white"
     app:cardCornerRadius="@dimen/cardDefaultCornerRadius"
     app:cardElevation="@dimen/cardDefaultElevation"
-    card_view:context=".app.tally.chart.ChartActivity"
+    card_view:context=".app.tally.module.chart.ChartActivity"
     card_view:showIn="@layout/activity_tally_chart">
 
     <LinearLayout

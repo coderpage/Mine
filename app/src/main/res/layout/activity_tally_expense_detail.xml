@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.coderpage.mine.app.tally.detail.ExpenseDetailActivity">
+    tools:context=".app.tally.module.detail.ExpenseDetailActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
             android:transitionName="sharedRoot"
             app:cardCornerRadius="@dimen/cardDefaultCornerRadius"
             app:cardElevation="@dimen/cardDefaultElevation"
-            card_view:context=".app.tally.detail.ExpenseDetailActivity"
+            card_view:context=".app.tally.module.detail.ExpenseDetailActivity"
             card_view:showIn="@layout/activity_tally">
 
             <LinearLayout

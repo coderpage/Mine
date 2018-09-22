@@ -21,7 +21,7 @@
     <color name="shadow_start_color">#22000000</color>
     <color name="shadow_start_color_medium">#11000000</color>
 
-    <color name="colorPrimary">#fafafa</color>
+    <color name="colorPrimary">#ffffff</color>
     <color name="colorPrimaryDark">#b2b2b2</color>
     <color name="colorAccent">#0F956F</color>
 
@@ -44,15 +44,15 @@
     <color name="divider">#dcdcdc</color>
     <color name="colorHint">#66000000</color>
 
-    <color name="categoryColor1">#afb341</color>
-    <color name="categoryColor2">#81aca9</color>
-    <color name="categoryColor3">#6b83b7</color>
-    <color name="categoryColor4">#b47ca7</color>
-    <color name="categoryColor5">#e2728e</color>
-    <color name="categoryColor6">#6797a8</color>
-    <color name="categoryColor7">#ed9241</color>
-    <color name="categoryColor8">#f19834</color>
-    <color name="categoryColor9">#9e7866</color>
+    <color name="categoryColor1">#ff8a80</color>
+    <color name="categoryColor2">#ffd180</color>
+    <color name="categoryColor3">#ffff8d</color>
+    <color name="categoryColor4">#ccff90</color>
+    <color name="categoryColor5">#a7ffeb</color>
+    <color name="categoryColor6">#80d8ff</color>
+    <color name="categoryColor7">#82b1ff</color>
+    <color name="categoryColor8">#b388ff</color>
+    <color name="categoryColor9">#f8bbd0</color>
     <color name="categoryColor10">#9c939e</color>
     <color name="categoryColor11">#d1b95d</color>
     <color name="categoryColor12">#475999</color>
@@ -68,5 +68,22 @@
     <color name="chartLine">#FF5722</color>
     <color name="markerViewBg">@color/transparent</color>
     <color name="markerViewBgStroke">@color/colorHint</color>
+
+    <color name="libupdate_warning">#e53935</color>
+
+    <color name="bgDateTag">#08000000</color>
+
+    <color name="expenseColor">#f2615e</color>
+    <color name="incomeColor">#60b9ff</color>
+
+    <color name="icCategoryIncomeNormal">#3f000000</color>
+    <color name="icCategoryIncomeSelected">#ffffff</color>
+    <color name="bgCategoryIncomeNormal">#08000000</color>
+    <color name="bgCategoryIncomeSelected">@color/incomeColor</color>
+
+    <color name="icCategoryExpenseNormal">#3f000000</color>
+    <color name="icCategoryExpenseSelected">#ffffff</color>
+    <color name="bgCategoryExpenseNormal">#08000000</color>
+    <color name="bgCategoryExpenseSelected">@color/expenseColor</color>
 
 </resources>

@@ -9,7 +9,7 @@
     android:foreground="?attr/selectableItemBackground"
     app:cardCornerRadius="@dimen/cardDefaultCornerRadius"
     app:cardElevation="@dimen/cardDefaultElevation"
-    card_view:context=".app.tally.main.MainActivity"
+    card_view:context=".app.tally.module.main.MainActivity"
     card_view:showIn="@layout/activity_tally">
 
     <LinearLayout

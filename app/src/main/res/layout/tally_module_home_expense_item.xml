@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data class=".tally.module.home.ExpenseItemBinding">
+
+        <variable
+            name="activity"
+            type="android.app.Activity" />
+
+        <variable
+            name="data"
+            type="com.coderpage.mine.app.tally.persistence.model.Expense" />
+
+        <variable
+            name="vm"
+            type="com.coderpage.mine.app.tally.module.home.HomeViewModel" />
+
+    </data>
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/cardVerticalMargin"
+        android:layout_marginLeft="@dimen/padding_normal"
+        android:layout_marginRight="@dimen/padding_normal"
+        android:layout_marginTop="@dimen/cardVerticalMargin"
+        android:clickable="true"
+        android:onLongClick="@{() -> vm.onExpenseItemLongClick(activity, data)}"
+        android:foreground="?attr/selectableItemBackground"
+        android:minHeight="66dp"
+        app:cardCornerRadius="@dimen/cardDefaultCornerRadius"
+        app:cardElevation="@dimen/cardDefaultElevation"
+        app:contentPaddingBottom="@dimen/padding_micro"
+        app:contentPaddingTop="@dimen/padding_micro">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/padding_normal"
+                android:layout_weight="1.0"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <FrameLayout
+                        selected="@{true}"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:background="@drawable/bg_category_expense"
+                        android:padding="4dp">
+
+                        <android.support.v7.widget.AppCompatImageView
+                            android:id="@+id/ivCategoryIcon"
+                            categoryIcon="@{data.categoryIcon}"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical" />
+
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/tvCategoryName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/spacing_micro"
+                        android:gravity="start|center_vertical"
+                        android:text="@{data.categoryName}"
+                        android:textColor="@color/appTextColorPrimary"
+                        android:textSize="@dimen/app_text_size_medium" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvRecordDec"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_micro"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginTop="@dimen/spacing_micro"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingRight="@dimen/padding_normal"
+                    android:text="@{data.desc}"
+                    android:textColor="@color/appTextColorSecondary"
+                    android:textSize="@dimen/app_text_size_small" />
+
+                <TextView
+                    android:id="@+id/tvTime"
+                    textDisplayTime="@{data.time}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="22dp"
+                    android:background="@color/bgDateTag"
+                    android:paddingLeft="@dimen/spacing_micro"
+                    android:paddingRight="@dimen/spacing_micro"
+                    android:textColor="@color/appTextColorThird"
+                    android:textSize="@dimen/app_text_size_small" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvAmount"
+                style="@style/TextAppearance.Headline"
+                textMoney="@{data.amount}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="@dimen/padding_normal"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</layout>

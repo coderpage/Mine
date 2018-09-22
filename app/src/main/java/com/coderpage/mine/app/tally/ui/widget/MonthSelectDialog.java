@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.coderpage.base.utils.CommonUtils;
 import com.coderpage.base.utils.UIUtils;
 import com.coderpage.mine.R;
-import com.coderpage.mine.app.tally.chart.data.Month;
+import com.coderpage.mine.app.tally.module.chart.data.Month;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,7 +29,7 @@ import static com.coderpage.base.utils.LogUtils.makeLogTag;
  * @author lc. 2017-10-12 21:22
  * @since 0.5.1
  *
- * 选择年份和月份；用于 {@link com.coderpage.mine.app.tally.chart.ChartActivity}
+ * 选择年份和月份；用于 {@link com.coderpage.mine.app.tally.module.chart.ChartActivity}
  */
 
 public class MonthSelectDialog extends Dialog {

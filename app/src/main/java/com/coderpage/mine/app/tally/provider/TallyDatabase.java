@@ -19,7 +19,7 @@ import java.util.Map;
 
 class TallyDatabase extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "sql_tally"; // sqlite db name
+    private static final String DATABASE_NAME = "sql_tally_temp"; // sqlite db name
 
     private static final int VERSION_0_1_0 = 1; // db version of app version 0.1.0
     private static final int VERSION_0_4_0 = 40; // db version of app version 0.4.0

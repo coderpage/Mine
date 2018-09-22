@@ -224,7 +224,7 @@ public class ExpenseEditActivity extends BaseActivity
     private void refreshDesc(ExpenseEditModel model) {
         String desc = model.getExpenseItem().getDesc();
         if (TextUtils.isEmpty(desc)) {
-            mDescTv.setText(R.string.tally_add_expense_note);
+            mDescTv.setText(R.string.tally_add_record_note);
             return;
         }
         mDescTv.setText(desc);
@@ -308,7 +308,7 @@ public class ExpenseEditActivity extends BaseActivity
     }
 
     private void showDescEditDialog() {
-        View view = getLayoutInflater().inflate(R.layout.dialog_tally_expense_desc_edit, null);
+        View view = getLayoutInflater().inflate(R.layout.dialog_tally_record_desc_edit, null);
         EditText editText = (EditText) view.findViewById(R.id.etText);
         String desc = mModel.getExpenseItem().getDesc();
         if (!TextUtils.isEmpty(desc)) {
@@ -316,7 +316,7 @@ public class ExpenseEditActivity extends BaseActivity
             editText.setSelection(desc.length());
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        AlertDialog dialog = builder.setTitle(R.string.tally_add_expense_note)
+        AlertDialog dialog = builder.setTitle(R.string.tally_add_record_note)
                 .setView(view)
                 .setNegativeButton(R.string.cancel, null)
                 .setPositiveButton(R.string.confirm, (dialogInterface, which) -> {

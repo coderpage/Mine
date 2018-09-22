@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.coderpage.mine.app.tally.module.edit.widget.CategoryGridView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/gvCategoryIcon"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:horizontalSpacing="@dimen/spacing_micro"
+    android:numColumns="5"
+    android:padding="@dimen/padding_normal"
+    android:verticalSpacing="@dimen/spacing_normal" />

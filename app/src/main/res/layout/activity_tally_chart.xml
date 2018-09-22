@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".app.tally.chart.ChartActivity">
+    tools:context=".app.tally.module.chart.ChartActivity">
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/lyContainer"

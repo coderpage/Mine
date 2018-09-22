@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.coderpage.mine.app.tally.edit.ExpenseEditActivity">
+    tools:context=".app.tally.edit.ExpenseEditActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -104,7 +104,7 @@
                     android:background="@color/transparent"
                     android:ellipsize="end"
                     android:gravity="start|center_vertical"
-                    android:hint="@string/tally_add_expense_note"
+                    android:hint="@string/tally_add_record_note"
                     android:maxLines="1"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="@dimen/app_text_size_medium"/>

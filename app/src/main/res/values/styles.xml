@@ -23,6 +23,10 @@
 
     <style name="Theme.Tally" parent="Theme.Base"/>
 
+    <style name="Theme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 
     <style name="TextAppearance" parent="TextAppearance.AppCompat"/>
 

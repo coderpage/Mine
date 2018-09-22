@@ -70,15 +70,21 @@
 
     <!-- toolbar title of tall expense record add activity -->
     <string name="tally_toolbar_title_add_record">记一笔</string>
-    <string name="tally_add_record">记一笔&#8230;</string>
+    <string name="tally_add_record">记一笔</string>
     <string name="tally_amount_cny">￥%s</string>
     <string name="tally_sum_of_amount_month">本月账单总额</string>
     <string name="tally_calendar_title_format" formatted="false">%d年%d月</string>
     <string name="tally_expense_note">备注</string>
-    <string name="tally_add_expense_note">添加备注</string>
+    <string name="tally_add_record_note">添加备注</string>
     <string name="tally_today_no_expense_record_tip">今天没花钱？快去记一笔~</string>
     <string name="tally_toady_expense_total">今日消费 %s 元</string>
     <string name="tally_check_month_expense">查看月账单</string>
+    <string name="tally_current_month_expense_amount">本月支出</string>
+    <string name="tally_current_month_income_amount">本月收入</string>
+
+    <!-- record edit activity -->
+    <string name="tally_edit_title_expense">支出</string>
+    <string name="tally_edit_title_income">收入</string>
 
     <!-- search activity -->
     <string name="tally_clear_search_history">清除所有</string>
@@ -119,22 +125,40 @@
     <string name="tyCommunication">通讯</string>
     <string name="tyTheFavorPattern">人情往来</string>
 
-    <string name="tyIcOther">Other</string>
-    <string name="tyIcCanYin">CanYin</string>
-    <string name="tyIcJiaoTong">JiaoTong</string>
-    <string name="tyIcGouWu">GouWu</string>
-    <string name="tyIcFuShi">FuShi</string>
-    <string name="tyIcRiYongPin">RiYongPin</string>
-    <string name="tyIcYuLe">YuLe</string>
-    <string name="tyIcShiCai">ShiCai</string>
-    <string name="tyIcLingShi">LingShi</string>
-    <string name="tyIcYanJiuCha">YanJiuCha</string>
-    <string name="tyIcXueXi">XueXi</string>
-    <string name="tyIcYiLiao">YiLiao</string>
-    <string name="tyIcZhuFang">ZhuFang</string>
-    <string name="tyIcShuiDianMei">ShuiDianMei</string>
-    <string name="tyIcTongXun">TongXun</string>
-    <string name="tyIcRenQing">RenQing</string>
+    <!--<string name="tyIcOther">Other</string>-->
+    <!--<string name="tyIcCanYin">CanYin</string>-->
+    <!--<string name="tyIcJiaoTong">JiaoTong</string>-->
+    <!--<string name="tyIcGouWu">GouWu</string>-->
+    <!--<string name="tyIcFuShi">FuShi</string>-->
+    <!--<string name="tyIcRiYongPin">RiYongPin</string>-->
+    <!--<string name="tyIcYuLe">YuLe</string>-->
+    <!--<string name="tyIcShiCai">ShiCai</string>-->
+    <!--<string name="tyIcLingShi">LingShi</string>-->
+    <!--<string name="tyIcYanJiuCha">YanJiuCha</string>-->
+    <!--<string name="tyIcXueXi">XueXi</string>-->
+    <!--<string name="tyIcYiLiao">YiLiao</string>-->
+    <!--<string name="tyIcZhuFang">ZhuFang</string>-->
+    <!--<string name="tyIcShuiDianMei">ShuiDianMei</string>-->
+    <!--<string name="tyIcTongXun">TongXun</string>-->
+    <!--<string name="tyIcRenQing">RenQing</string>-->
+
+    <string name="tyIncomeSalary">薪资</string>
+    <string name="tyIncomeReward">奖金</string>
+    <string name="tyIncomeLend">借入</string>
+    <string name="tyIncomeDun">收债</string>
+    <string name="tyIncomeInterest">利息收入</string>
+    <string name="tyIncomeInvestRecovery">投资回收</string>
+    <string name="tyIncomeInvestProfit">投资收益</string>
+    <string name="tyIncomeUnexpected">意外所得</string>
+
+    <!--<string name="tyIcXinZi">XinZi</string>-->
+    <!--<string name="tyIcJiangJin">JiangJin</string>-->
+    <!--<string name="tyIcJieRu">JieRu</string>-->
+    <!--<string name="tyIcShouZhai">ShouZhai</string>-->
+    <!--<string name="tyIcLixiShouRu">LixiShouRu</string>-->
+    <!--<string name="tyIcTouZiHuiShou">TouZiHuiShou</string>-->
+    <!--<string name="tyIcYiWaiSuoDe">YiWaiSuoDe</string>-->
+    <!--<string name="tyIcTouZiShouYi">TouZiShouYi</string>-->
 
     <string name="cancel">取消</string>
     <string name="confirm">确定</string>
@@ -154,5 +178,15 @@
     <string name="symbol_reduce">-</string>
     <string name="symbol_dot">.</string>
     <string name="ok">OK</string>
+
+    <string name="libupdate_alert_on_checking_new_version">正在检查新版本</string>
+    <string name="libupdate_alert_new_version_title" formatted="false">新版本 %s (%s)</string>
+    <string name="libupdate_alert_cancel">取消</string>
+    <string name="libupdate_alert_confirm_download">下载安装</string>
+    <string name="libupdate_alert_do_not_remind_again">不再提示</string>
+    <string name="libupdate_alert_without_wifi">未连接WIFI，将耗费%sM数据流量！</string>
+
+    <string name="libupdate_toast_already_latest_version">已经是最新版本</string>
+    <string name="libupdate_toast_http_error" formatted="false">请求出错 Err(%s,%s)</string>
 
 </resources>

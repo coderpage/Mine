@@ -1,9 +1,7 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
     defaultConfig {
         applicationId "com.coderpage.mine"
         minSdkVersion rootProject.minSdkVersion
@@ -23,7 +21,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -33,6 +31,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding {
+        enabled = true
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -41,35 +42,26 @@ android {
         checkReleaseBuilds true
         abortOnError false
     }
-    productFlavors {
-        yingyongbao {}
-        xiaomi {}
-        huawei {}
-        offical {}
-    }
+//    productFlavors {
+//        yingyongbao {}
+//        xiaomi {}
+//        huawei {}
+//        offical {}
+//    }
 }
 
-//apply plugin: 'bugly'
+//apply plugin: 'com.coderpage.app'
 //
-//bugly {
-//    appId = rootProject.buglyAppId
-//    appKey = rootProject.buglyAppKey
+//uploader {
+////    apiServer = 'http://127.0.0.1:8001'
+//    token = rootProject.releaseToken
+//    appName = '我的记账本'
+//    changeLog = file("${rootDir}/source/changelog/${rootProject.appVersionName}").text;
+//    isRelease = true
 //}
-
-apply plugin: 'com.coderpage.app'
-
-uploader {
-//    apiServer = 'http://127.0.0.1:8001'
-    token = rootProject.releaseToken
-    appName = '我的记账本'
-    changeLog = file("${rootDir}/source/changelog/${rootProject.appVersionName}").text;
-    isRelease = true
-}
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':framework')
-    compile project(':libupdate')
     compile rootProject.appCompat
     compile rootProject.recyclerview
     compile rootProject.design
@@ -79,14 +71,19 @@ dependencies {
     compile rootProject.mpAndroidChart
     compile rootProject.buglyCrashReport
     compile rootProject.fastjson
+    compile rootProject.retrofit
     compile rootProject.retrofitConverterFastjson
+    compile rootProject.okhttp3InterceptorLogging
     compile rootProject.permissions4m
+    compile rootProject.eventBus
+    compile rootProject.archRoomRuntime
+    compile rootProject.archLifecycleExtension
+    compile rootProject.archViewmodel
+    compile rootProject.archLiveData
+    compile rootProject.archLifecycleRuntime
+    compile rootProject.refreshLayout
+    compile rootProject.constraintLayout
+    annotationProcessor rootProject.archLifecycleCompiler
+    annotationProcessor rootProject.archRoomCompiler
     annotationProcessor rootProject.permissions4mProcessor
-
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-
-    testCompile rootProject.junit
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }

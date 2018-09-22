@@ -1,14 +1,10 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
     repositories {
         google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0'
-        classpath 'me.tatarka:gradle-retrolambda:3.6.0'
-        classpath 'com.tencent.bugly:symtabfileuploader:2.1.0'
+        classpath 'com.android.tools.build:gradle:3.0.1'
     }
 }
 
@@ -24,9 +20,10 @@ ext {
 
     minSdkVersion = 14
     targetSdkVersion = 25
-    compileSdkVersion = 25
-    buildToolsVersion = '26.0.1'
-    androidSupportVersion = '25.3.1'
+    compileSdkVersion = 26
+    buildToolsVersion = '27.0.3'
+    androidSupportVersion = '26.1.0'
+    archVersion = '1.1.1'
     appCompat = "com.android.support:appcompat-v7:${androidSupportVersion}"
     supportV4 = "com.android.support:support-v4:${androidSupportVersion}"
     design = "com.android.support:design:${androidSupportVersion}"
@@ -35,6 +32,14 @@ ext {
     percentLayout = "com.android.support:percent:${androidSupportVersion}"
     eventBus = 'org.greenrobot:eventbus:3.0.0'
     recyclerview = "com.android.support:recyclerview-v7:${androidSupportVersion}"
+    constraintLayout = "com.android.support.constraint:constraint-layout:1.0.2"
+    archRoomRuntime = "android.arch.persistence.room:runtime:1.0.0"
+    archLifecycleExtension = "android.arch.lifecycle:extensions:${archVersion}"
+    archViewmodel = "android.arch.lifecycle:viewmodel:${archVersion}"
+    archLiveData = "android.arch.lifecycle:livedata:${archVersion}"
+    archLifecycleRuntime = "android.arch.lifecycle:runtime:${archVersion}"
+    archLifecycleCompiler = "android.arch.lifecycle:compiler:${archVersion}"
+    archRoomCompiler = "android.arch.persistence.room:compiler:1.0.0"
 
     materialCalendarview = "com.prolificinteractive:material-calendarview:1.4.3"
     mpAndroidChart = "com.github.PhilJay:MPAndroidChart:v3.0.2"
@@ -42,6 +47,7 @@ ext {
     fastjson = "com.alibaba:fastjson:1.1.57.android"
     permissions4m = "com.github.jokermonn:permissions4m:2.1.2-lib"
     permissions4mProcessor = "com.github.jokermonn:permissions4m:2.1.2-processor"
+    refreshLayout = 'com.lcodecorex:tkrefreshlayout:1.0.7'
 
     retrofit = 'com.squareup.retrofit2:retrofit:2.0.0'
     retrofitConverterGson = 'com.squareup.retrofit2:converter-gson:2.0.0'

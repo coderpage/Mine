@@ -5,9 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.coderpage.mine.app.tally.search.SearchActivity">
+    tools:context=".app.tally.module.search.SearchActivity">
 
-    <com.coderpage.mine.app.tally.search.SearchHistoryView
+    <com.coderpage.mine.app.tally.module.search.SearchHistoryView
         android:id="@+id/lySearchHistoryView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +16,7 @@
         android:paddingTop="@dimen/toolbar_height"
         android:visibility="gone"/>
 
-    <com.coderpage.mine.app.tally.search.SearchResultView
+    <com.coderpage.mine.app.tally.module.search.SearchResultView
         android:id="@+id/lySearchResultView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

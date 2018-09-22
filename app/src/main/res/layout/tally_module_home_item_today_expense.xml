@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+
+    <data class=".tally.module.home.TodayExpenseItemBinding">
+
+        <import type="com.coderpage.mine.app.tally.common.utils.TallyUtils" />
+
+        <variable
+            name="activity"
+            type="android.app.Activity" />
+
+        <variable
+            name="vm"
+            type="com.coderpage.mine.app.tally.module.home.HomeViewModel" />
+
+        <variable
+            name="data"
+            type="com.coderpage.mine.app.tally.module.home.model.HomeTodayExpenseModel" />
+
+    </data>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/recycler_item_divider">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="@{data.toadyExpenseAmount > 0 ? @string/tally_toady_expense_total(data.displayExpenseAmount) : @string/tally_today_no_expense_record_tip}"
+            android:textColor="@color/appTextColorSecondary"
+            android:textSize="@dimen/app_text_size_medium" />
+
+    </FrameLayout>
+</layout>
