@@ -11,6 +11,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.support.v7.app.AlertDialog;
 import android.util.Pair;
+import android.view.View;
 
 import com.coderpage.base.common.Callback;
 import com.coderpage.base.common.IError;
@@ -22,6 +23,7 @@ import com.coderpage.mine.app.tally.eventbus.EventExpenseUpdate;
 import com.coderpage.mine.app.tally.eventbus.EventIncomeAdd;
 import com.coderpage.mine.app.tally.eventbus.EventIncomeDelete;
 import com.coderpage.mine.app.tally.eventbus.EventIncomeUpdate;
+import com.coderpage.mine.app.tally.module.detail.RecordDetailActivity;
 import com.coderpage.mine.app.tally.module.edit.RecordEditActivity;
 import com.coderpage.mine.app.tally.module.home.model.HomeDisplayData;
 import com.coderpage.mine.app.tally.module.home.model.HomeMonthModel;
@@ -79,8 +81,13 @@ public class HomeViewModel extends AndroidViewModel implements LifecycleObserver
     }
 
     /** 消费记录 ITEM 点击 */
-    public void onExpenseItemClick(Activity activity, HomeDisplayData data) {
+    public void onExpenseItemClick(Activity activity, Expense expense) {
+        RecordDetailActivity.openExpenseDetail(activity, expense.getId());
+    }
 
+    /** 收入记录 ITEM 点击 */
+    public void onIncomeItemClick(Activity activity, Income income, View view) {
+        RecordDetailActivity.openIncomeDetail(activity, income.getId());
     }
 
     /** 消费记录 ITEM 长按 */

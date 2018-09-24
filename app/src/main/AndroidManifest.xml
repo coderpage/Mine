@@ -81,6 +81,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Tally" />
 
+        <activity
+            android:name=".app.tally.module.detail.RecordDetailActivity"
+            android:label="@string/tally_toolbar_title_detail"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Tally" />
+
         <!-- 账单数据库 provider -->
         <provider
             android:name=".app.tally.provider.TallyProvider"

@@ -109,7 +109,7 @@ public class ExpenseDetailActivity extends BaseActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_expense_detail, menu);
+        getMenuInflater().inflate(R.menu.menu_tally_record_detail, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
