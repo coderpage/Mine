@@ -114,7 +114,7 @@ public class RecordDetailViewModel extends BaseViewModel implements LifecycleObs
 
                 @Override
                 public void failure(IError iError) {
-                    showTostShort(iError.msg());
+                    showToastShort(iError.msg());
                 }
             });
         } else {
@@ -135,7 +135,7 @@ public class RecordDetailViewModel extends BaseViewModel implements LifecycleObs
 
                 @Override
                 public void failure(IError iError) {
-                    showTostShort(iError.msg());
+                    showToastShort(iError.msg());
                 }
             });
         }

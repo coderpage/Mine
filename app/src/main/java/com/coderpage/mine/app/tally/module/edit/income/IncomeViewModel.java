@@ -242,7 +242,7 @@ public class IncomeViewModel extends AndroidViewModel {
             income.setSyncId(AndroidUtils.generateUUID());
         }
         income.setAmount(mAmount);
-        income.setTime(System.currentTimeMillis());
+        income.setTime(mDate);
         income.setDesc(TextUtils.isEmpty(mDesc.get()) ? "" : mDesc.get());
         income.setCategoryId(category.getInternal().getId());
         income.setCategoryIcon(category.getInternal().getIcon());

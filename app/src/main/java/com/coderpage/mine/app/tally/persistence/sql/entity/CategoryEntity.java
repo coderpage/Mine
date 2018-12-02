@@ -11,7 +11,7 @@ import android.support.annotation.NonNull;
  * @since 0.6.0
  */
 
-@Entity(tableName = "category", indices = {@Index(value = {"category_unique_name"}, unique = true), @Index(value = {"category_name"}, unique = true)})
+@Entity(tableName = "category", indices = {@Index(value = {"category_unique_name"}, unique = true)})
 public class CategoryEntity {
 
     public static final int TYPE_EXPENSE = 0;

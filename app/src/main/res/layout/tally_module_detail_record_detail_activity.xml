@@ -45,12 +45,10 @@
             android:layout_marginTop="@dimen/padding_normal"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
-            android:transitionName="sharedRoot"
             app:cardCornerRadius="@dimen/cardDefaultCornerRadius"
             app:cardElevation="@dimen/cardDefaultElevation"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
-            card_view:context=".app.tally.module.detail.ExpenseDetailActivity"
-            card_view:showIn="@layout/activity_tally">
+            card_view:context=".app.tally.module.detail.RecordDetailActivity">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -71,8 +69,7 @@
                         android:layout_height="36dp"
                         android:layout_centerVertical="true"
                         android:background="@{data.type == vm.TYPE_EXPENSE ? @drawable/bg_category_expense : @drawable/bg_category_income}"
-                        android:padding="@dimen/spacing_normal"
-                        android:transitionName="sharedCategoryIcon">
+                        android:padding="@dimen/spacing_normal">
 
                         <android.support.v7.widget.AppCompatImageView
                             categoryIcon="@{data.categoryIcon}"
@@ -92,8 +89,7 @@
                         android:gravity="center_vertical"
                         android:text="@{data.categoryName}"
                         android:textColor="?android:textColorPrimary"
-                        android:textSize="@dimen/app_text_size_medium"
-                        android:transitionName="sharedCategoryName" />
+                        android:textSize="@dimen/app_text_size_medium"/>
 
                     <!-- 金额 -->
                     <TextView
@@ -104,8 +100,7 @@
                         android:gravity="center_vertical"
                         android:text="@{data.amount}"
                         android:textColor="?android:textColorPrimary"
-                        android:textSize="@dimen/app_text_size_medium"
-                        android:transitionName="sharedAmount" />
+                        android:textSize="@dimen/app_text_size_medium"/>
 
                 </RelativeLayout>
 
@@ -150,8 +145,7 @@
                             android:paddingTop="@dimen/spacing_normal"
                             android:text="@{data.desc}"
                             android:textColor="?android:textColorSecondary"
-                            android:textSize="@dimen/app_text_size_small"
-                            android:transitionName="sharedDesc" />
+                            android:textSize="@dimen/app_text_size_small" />
                     </FrameLayout>
 
                 </RelativeLayout>
@@ -188,8 +182,7 @@
                         android:singleLine="true"
                         android:text="@{data.time}"
                         android:textColor="?android:textColorSecondary"
-                        android:textSize="@dimen/app_text_size_small"
-                        android:transitionName="sharedDesc" />
+                        android:textSize="@dimen/app_text_size_small" />
 
                 </RelativeLayout>
 

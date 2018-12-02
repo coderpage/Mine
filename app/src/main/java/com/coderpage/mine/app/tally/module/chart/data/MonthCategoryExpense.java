@@ -6,12 +6,18 @@ package com.coderpage.mine.app.tally.module.chart.data;
 
 public class MonthCategoryExpense {
 
-    private Month month; // 月份
-    private long categoryId; // 分类 ID
-    private int categoryIcon; // 分类图标
-    private String categoryName; // 分类名称
-    private float monthExpenseTotal; // 月消费总额
-    private float categoryExpenseTotal; // 本月该分类消费总额
+    /** 月份 */
+    private Month month;
+    /** 分类 ID */
+    private long categoryId;
+    /** 分类图标 */
+    private int categoryIcon;
+    /** 分类名称 */
+    private String categoryName;
+    /** 月总额 */
+    private float monthExpenseTotal;
+    /** 该分类消费总额 */
+    private float categoryExpenseTotal;
 
     public Month getMonth() {
         return month;

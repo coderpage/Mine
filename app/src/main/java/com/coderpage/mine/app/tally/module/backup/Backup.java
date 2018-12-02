@@ -1,13 +1,8 @@
 package com.coderpage.mine.app.tally.module.backup;
 
-import android.content.ContentProviderOperation;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.OperationApplicationException;
-import android.database.Cursor;
 import android.os.Build;
-import android.os.RemoteException;
+import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.coderpage.base.common.Callback;
@@ -16,7 +11,12 @@ import com.coderpage.base.common.NonThrowError;
 import com.coderpage.concurrency.AsyncTaskExecutor;
 import com.coderpage.mine.BuildConfig;
 import com.coderpage.mine.app.tally.common.error.ErrorCode;
-import com.coderpage.mine.app.tally.provider.TallyContract;
+import com.coderpage.mine.app.tally.persistence.model.CategoryModel;
+import com.coderpage.mine.app.tally.persistence.model.Expense;
+import com.coderpage.mine.app.tally.persistence.sql.TallyDatabase;
+import com.coderpage.mine.app.tally.persistence.sql.dao.CategoryDao;
+import com.coderpage.mine.app.tally.persistence.sql.entity.CategoryEntity;
+import com.coderpage.mine.app.tally.persistence.sql.entity.ExpenseEntity;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -45,6 +45,10 @@ public class Backup {
      * 回调包括 {@link BackupProgress#READ_DATA} {@link BackupProgress#WRITE_FILE}
      */
     public interface BackupProgressListener extends Callback<Void, IError> {
+        /**
+         * 回到
+         * @param backupProgress progress
+         */
         void onProgressUpdate(BackupProgress backupProgress);
     }
 
@@ -59,6 +63,11 @@ public class Backup {
      * 恢复文件过程回调；
      */
     public interface RestoreProgressListener extends Callback<BackupModel, IError> {
+        /**
+         * 更新回调
+         *
+         * @param restoreProgress progress
+         */
         void onProgressUpdate(RestoreProgress restoreProgress);
     }
 
@@ -80,7 +89,7 @@ public class Backup {
     public static void backupToJsonFile(Context context, BackupProgressListener listener) {
         AsyncTaskExecutor.execute(() -> {
             listener.onProgressUpdate(BackupProgress.READ_DATA);
-            BackupModel backupModel = readData(context);
+            BackupModel backupModel = readData();
 
             listener.onProgressUpdate(BackupProgress.WRITE_FILE);
             new BackupCache(context).backup2JsonFile(backupModel, listener);
@@ -166,12 +175,12 @@ public class Backup {
                                                  RestoreProgressListener listener) {
         AsyncTaskExecutor.execute(() -> {
             listener.onProgressUpdate(RestoreProgress.RESTORE_TO_DB);
-            ContentResolver contentResolver = context.getContentResolver();
 
+            BackupModelMetadata metadata = backupModel.getMetadata();
             // 恢复分类表数据
             List<BackupModelCategory> categoryList = backupModel.getCategoryList();
             if (categoryList != null && !categoryList.isEmpty()) {
-                boolean restoreCategoryOk = restoreCategoryTable(contentResolver, categoryList);
+                boolean restoreCategoryOk = restoreCategoryTable(metadata, categoryList);
                 if (!restoreCategoryOk) {
                     listener.failure(new NonThrowError(ErrorCode.SQL_ERR, "恢复分类数据失败"));
                 }
@@ -180,7 +189,7 @@ public class Backup {
             // 恢复消费表数据
             List<BackupModelExpense> expenseList = backupModel.getExpenseList();
             if (expenseList != null && !expenseList.isEmpty()) {
-                boolean restoreExpenseOk = restoreExpenseTable(contentResolver, expenseList);
+                boolean restoreExpenseOk = restoreExpenseTable(metadata, expenseList);
                 if (!restoreExpenseOk) {
                     listener.failure(new NonThrowError(ErrorCode.SQL_ERR, "恢复消费数据失败"));
                 }
@@ -194,149 +203,130 @@ public class Backup {
      * 读取默认备份文件目录中所有的备份文件。
      *
      * @param context {@link Context}
-     *
      * @return 默认备份文件存放目录中的所有备份文件
      */
     public static List<File> listBackupFiles(Context context) {
         return new BackupCache(context).listBackupFiles();
     }
 
-    private static boolean restoreCategoryTable(ContentResolver contentResolver,
+    private static boolean restoreCategoryTable(BackupModelMetadata metadata,
                                                 List<BackupModelCategory> categoryList) {
-        ArrayList<ContentProviderOperation> categoryRestoreOps = new ArrayList<>();
-        for (BackupModelCategory category : categoryList) {
-            ContentValues values = new ContentValues();
-            values.put(TallyContract.Category.NAME, category.getName());
-            values.put(TallyContract.Category.ICON, category.getIcon());
-            ContentProviderOperation cpo = ContentProviderOperation
-                    .newInsert(TallyContract.Category.CONTENT_URI)
-                    .withValues(values)
-                    .build();
-            categoryRestoreOps.add(cpo);
+        CategoryDao categoryDao = TallyDatabase.getInstance().categoryDao();
+
+        CategoryEntity[] insertArray = new CategoryEntity[categoryList.size()];
+        for (int i = 0; i < categoryList.size(); i++) {
+            BackupModelCategory backupCategory = categoryList.get(i);
+            CategoryEntity entity = new CategoryEntity();
+            entity.setName(backupCategory.getName());
+            entity.setIcon(backupCategory.getIcon());
+            entity.setAccountId(backupCategory.getAccountId());
+            entity.setSyncStatus(backupCategory.getSyncStatus());
+            // 0.6.0 版本之前没有 type 之分，全部为支出分类类型
+            entity.setType(metadata.getClientVersionCode() < 60 ?
+                    CategoryEntity.TYPE_EXPENSE : backupCategory.getType());
+            // 0.6.0 版本之前没有 uniqueCategoryName，全部统一使用 categoryName
+            entity.setUniqueName(TextUtils.isEmpty(backupCategory.getUniqueName()) ?
+                    backupCategory.getName() : backupCategory.getUniqueName());
+
+            insertArray[i] = entity;
         }
+
         try {
-            contentResolver.applyBatch(TallyContract.CONTENT_AUTHORITY, categoryRestoreOps);
+            categoryDao.insert(insertArray);
             return true;
-        } catch (RemoteException e) {
-            LOGE(TAG, "恢复数据失败-分类表", e);
-        } catch (OperationApplicationException e) {
+        } catch (Exception e) {
             LOGE(TAG, "恢复数据失败-分类表", e);
         }
+
         return false;
     }
 
-    private static boolean restoreExpenseTable(ContentResolver contentResolver,
+    private static boolean restoreExpenseTable(BackupModelMetadata metadata,
                                                List<BackupModelExpense> expenseList) {
-        Cursor cursor = contentResolver.query(
-                TallyContract.Category.CONTENT_URI,
-                new String[]{TallyContract.Category._ID, TallyContract.Category.NAME},
-                null,
-                null,
-                null);
-        if (cursor == null) {
-            LOGE(TAG, "查询分类数据失败");
-            return false;
-        }
-        HashMap<String, Long> getCategoryIdByName = new HashMap<>(cursor.getCount());
-        while (cursor.moveToNext()) {
-            long categoryId = cursor.getLong(cursor.getColumnIndex(TallyContract.Category._ID));
-            String categoryName = cursor.getString(
-                    cursor.getColumnIndex(TallyContract.Category.NAME));
-            getCategoryIdByName.put(categoryName, categoryId);
-        }
-        cursor.close();
+        TallyDatabase database = TallyDatabase.getInstance();
+        List<CategoryModel> categoryList = database.categoryDao().allExpenseCategory();
 
-        ArrayList<ContentProviderOperation> expenseRestoreOps = new ArrayList<>();
-        for (BackupModelExpense expense : expenseList) {
-            ContentValues values = new ContentValues();
-            values.put(TallyContract.Expense.CATEGORY_ID, getCategoryIdByName.get(expense.getCategory()));
-            values.put(TallyContract.Expense.CATEGORY, expense.getCategory());
-            values.put(TallyContract.Expense.SYNC_ID, expense.getSyncId());
-            values.put(TallyContract.Expense.TIME, expense.getTime());
-            values.put(TallyContract.Expense.ACCOUNT_ID, expense.getAccountId());
-            values.put(TallyContract.Expense.AMOUNT, expense.getAmount());
-            values.put(TallyContract.Expense.DESC, expense.getDesc());
-            ContentProviderOperation cpo = ContentProviderOperation
-                    .newInsert(TallyContract.Expense.CONTENT_URI)
-                    .withValues(values)
-                    .build();
-            expenseRestoreOps.add(cpo);
+        // categoryName - categoryUniqueName Map
+        HashMap<String, String> getCategoryUniqueNameByName = new HashMap<>();
+
+        for (CategoryModel category : categoryList) {
+            getCategoryUniqueNameByName.put(category.getName(), category.getUniqueName());
         }
+
+        ExpenseEntity[] insertArray = new ExpenseEntity[expenseList.size()];
+        for (int i = 0; i < expenseList.size(); i++) {
+            BackupModelExpense backupExpense = expenseList.get(i);
+
+            // 从 0.6.0 版本之后，使用 categoryUniqueName 来保证分类唯一
+            String categoryUniqueName = backupExpense.getCategoryUniqueName();
+            // 如果备份数据中记录了 categoryUniqueName，使用 categoryUniqueName
+            if (!TextUtils.isEmpty(categoryUniqueName)) {
+                categoryUniqueName = getCategoryUniqueNameByName.get(backupExpense.getCategory());
+                categoryUniqueName = TextUtils.isEmpty(categoryUniqueName) ? "" : categoryUniqueName;
+            }
+
+            ExpenseEntity entity = new ExpenseEntity();
+            entity.setAccountId(backupExpense.getAccountId());
+            entity.setAmount(backupExpense.getAmount());
+            entity.setTime(backupExpense.getTime());
+            entity.setCategoryUniqueName(categoryUniqueName);
+            entity.setDesc(backupExpense.getDesc());
+            entity.setSyncId(backupExpense.getSyncId());
+            entity.setSyncStatus(backupExpense.getSyncStatus());
+
+            insertArray[i] = entity;
+        }
+
         try {
-            contentResolver.applyBatch(TallyContract.CONTENT_AUTHORITY, expenseRestoreOps);
+            database.expenseDao().insert(insertArray);
             return true;
-        } catch (RemoteException e) {
-            LOGE(TAG, "恢复数据失败-消费记录表", e);
-        } catch (OperationApplicationException e) {
+        } catch (Exception e) {
             LOGE(TAG, "恢复数据失败-消费记录表", e);
         }
+
         return false;
     }
 
     /**
      * 读取数据库数据并格式化为{@link BackupModel}
      *
-     * @param context {@link Context}
-     *
      * @return 返回从数据库读取的所有数据
      */
-    private static BackupModel readData(Context context) {
+    private static BackupModel readData() {
 
         List<BackupModelCategory> categoryList = new ArrayList<>();
         List<BackupModelExpense> expenseList = null;
         BackupModelMetadata metadata = new BackupModelMetadata();
 
-        ContentResolver contentResolver = context.getContentResolver();
+        TallyDatabase database = TallyDatabase.getInstance();
 
-        Cursor categoryCursor = contentResolver.query(
-                TallyContract.Category.CONTENT_URI, null, null, null, null);
-        if (categoryCursor != null) {
-            while (categoryCursor.moveToNext()) {
-                String categoryName = categoryCursor.getString(
-                        categoryCursor.getColumnIndex(TallyContract.Category.NAME));
-                String icon = categoryCursor.getString(
-                        categoryCursor.getColumnIndex(TallyContract.Category.ICON));
-                BackupModelCategory category = new BackupModelCategory();
-                category.setName(categoryName);
-                category.setIcon(icon);
-                categoryList.add(category);
-            }
-            categoryCursor.close();
+        List<CategoryEntity> categoryEntityList = database.categoryDao().allCategory();
+        for (CategoryEntity entity: categoryEntityList){
+            BackupModelCategory category = new BackupModelCategory();
+            category.setName(entity.getName());
+            category.setUniqueName(entity.getUniqueName());
+            category.setIcon(entity.getIcon());
+            category.setAccountId(entity.getAccountId());
+            category.setType(entity.getType());
+            category.setSyncStatus(entity.getSyncStatus());
+
+            categoryList.add(category);
         }
 
-        Cursor expenseCursor = contentResolver.query(
-                TallyContract.Expense.CONTENT_URI, null, null, null, null);
-        if (expenseCursor != null) {
+        List<Expense> expenseEntityList = database.expenseDao().queryAll();
+        expenseList = new ArrayList<>(expenseEntityList.size());
+        for (Expense entity: expenseEntityList){
+            BackupModelExpense expense = new BackupModelExpense();
+            expense.setAmount(entity.getAmount());
+            expense.setDesc(entity.getDesc());
+            expense.setCategory(entity.getCategoryName());
+            expense.setTime(entity.getTime());
+            expense.setSyncId(entity.getSyncId());
+            expense.setAccountId(entity.getAccountId());
+            expense.setSyncStatus(entity.getSyncStatus());
+            expense.setCategoryUniqueName(entity.getCategoryUniqueName());
 
-            expenseList = new ArrayList<>(expenseCursor.getCount());
-
-            int amountIndex = expenseCursor.getColumnIndex(TallyContract.Expense.AMOUNT);
-            int descIndex = expenseCursor.getColumnIndex(TallyContract.Expense.DESC);
-            int categoryIndex = expenseCursor.getColumnIndex(TallyContract.Expense.CATEGORY);
-            int timeIndex = expenseCursor.getColumnIndex(TallyContract.Expense.TIME);
-            int syncIdIndex = expenseCursor.getColumnIndex(TallyContract.Expense.SYNC_ID);
-            int accountIdIndex = expenseCursor.getColumnIndex(TallyContract.Expense.ACCOUNT_ID);
-
-            while (expenseCursor.moveToNext()) {
-
-                float amount = expenseCursor.getFloat(amountIndex);
-                long time = expenseCursor.getLong(timeIndex);
-                long accountId = expenseCursor.getLong(accountIdIndex);
-                String syncId = expenseCursor.getString(syncIdIndex);
-                String desc = expenseCursor.getString(descIndex);
-                String category = expenseCursor.getString(categoryIndex);
-
-                BackupModelExpense expense = new BackupModelExpense();
-                expense.setAmount(amount);
-                expense.setDesc(desc);
-                expense.setCategory(category);
-                expense.setTime(time);
-                expense.setSyncId(syncId);
-                expense.setAccountId(accountId);
-
-                expenseList.add(expense);
-            }
-            expenseCursor.close();
+            expenseList.add(expense);
         }
 
         metadata.setBackupDate(System.currentTimeMillis());

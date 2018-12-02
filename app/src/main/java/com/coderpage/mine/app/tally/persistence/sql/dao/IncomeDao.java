@@ -8,6 +8,8 @@ import android.arch.persistence.room.RoomWarnings;
 import android.arch.persistence.room.Update;
 
 import com.coderpage.mine.app.tally.persistence.model.Income;
+import com.coderpage.mine.app.tally.persistence.model.IncomeCategoryGroup;
+import com.coderpage.mine.app.tally.persistence.model.IncomeGroup;
 import com.coderpage.mine.app.tally.persistence.sql.entity.InComeEntity;
 
 import java.util.List;
@@ -27,7 +29,9 @@ public interface IncomeDao {
      * @return 查询到的记录
      */
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("select * from income left outer join category on income.income_category_id=category.category_id " +
+    @Query("select * " +
+            "from income " +
+            "left outer join category on income.income_category_id=category.category_id " +
             "where income_id = :id")
     Income queryById(long id);
 
@@ -66,7 +70,10 @@ public interface IncomeDao {
      * @return 查询到的所有记录
      */
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("select * from income left outer join category on income.income_category_unique_name=category.category_unique_name where income_time >= :start and income_time <= :end")
+    @Query("select * " +
+            "from income " +
+            "left outer join category on income.income_category_unique_name=category.category_unique_name " +
+            "where income_time >= :start and income_time <= :end")
     List<Income> queryBetweenTime(long start, long end);
 
 
@@ -79,7 +86,62 @@ public interface IncomeDao {
      * @return 查询到的所有记录
      */
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("select * from income left outer join category on income.income_category_unique_name=category.category_unique_name " +
-            "where income_time >= :start and income_time<= :end order by income_time DESC")
+    @Query("select * " +
+            "from income left outer join category on income.income_category_unique_name=category.category_unique_name " +
+            "where income_time >= :start and income_time<= :end " +
+            "order by income_time DESC")
     List<Income> queryBetweenTimeTimeDesc(long start, long end);
+
+    /**
+     * 查询第一笔收入
+     *
+     * @return 第一笔收入
+     */
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("select * from income order by income_time ASC limit 1")
+    Income queryFirst();
+
+    /**
+     * 查询指定时间区间内的月收入数据
+     *
+     * @param start 开始时间
+     * @param end   结束时间
+     * @return 查询到的月收入数据
+     */
+    @Query("select count(*),sum(income_amount),income_time " +
+            "from income " +
+            "where income_time >= :start and income_time<= :end " +
+            "group by strftime('%Y-%m', datetime(income_time/1000, 'unixepoch', 'localtime')) " +
+            "order by income_time ASC")
+    List<IncomeGroup> queryIncomeMonthGroup(long start, long end);
+
+    /**
+     * 查询指定时间区间内的日收入数据
+     *
+     * @param start 开始时间
+     * @param end   结束时间
+     * @return 查询到的日收入数据
+     */
+    @Query("select count(*),sum(income_amount),income_time " +
+            "from income " +
+            "where income_time >= :start and income_time<= :end " +
+            "group by strftime('%Y-%m-%d', datetime(income_time/1000, 'unixepoch', 'localtime')) " +
+            "order by income_time ASC")
+    List<IncomeGroup> queryIncomeDailyGroup(long start, long end);
+
+    /**
+     * 查询指定时间区间内的分类收入数据
+     *
+     * @param start 开始时间
+     * @param end   结束时间
+     * @return 查询到的分类收入数据
+     */
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("select category.category_id,count(*),sum(income_amount),income_time,category_name,category_icon " +
+            "from income " +
+            "left outer join category on income.income_category_id=category.category_id " +
+            "where income_time >= :start and income_time<= :end " +
+            "group by category.category_id " +
+            "order by sum(income_amount) ASC")
+    List<IncomeCategoryGroup> queryIncomeCategoryGroup(long start, long end);
 }

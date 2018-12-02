@@ -10,24 +10,36 @@ import com.alibaba.fastjson.annotation.JSONField;
 @Keep
 public class BackupModelExpense {
 
+    /** 金额 */
     @JSONField(name = "1")
-    private float amount;
+    private double amount;
+    /** 备注 */
     @JSONField(name = "2")
     private String desc;
+    /** 分类名称 */
     @JSONField(name = "3")
     private String category;
+    /** 记录时间 */
     @JSONField(name = "4")
     private long time;
+    /** 同步 ID */
     @JSONField(name = "5")
     private String syncId;
+    /** 用户 ID */
     @JSONField(name = "6")
     private long accountId;
+    /** 分类唯一名称 */
+    @JSONField(name = "7")
+    private String categoryUniqueName;
+    /** 同步状态 */
+    @JSONField(name = "8")
+    private int syncStatus;
 
-    public float getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(float amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
@@ -69,5 +81,21 @@ public class BackupModelExpense {
 
     public void setAccountId(long accountId) {
         this.accountId = accountId;
+    }
+
+    public String getCategoryUniqueName() {
+        return categoryUniqueName;
+    }
+
+    public void setCategoryUniqueName(String categoryUniqueName) {
+        this.categoryUniqueName = categoryUniqueName;
+    }
+
+    public int getSyncStatus() {
+        return syncStatus;
+    }
+
+    public void setSyncStatus(int syncStatus) {
+        this.syncStatus = syncStatus;
     }
 }

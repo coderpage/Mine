@@ -57,4 +57,12 @@
         <attr name="android:layout" />
     </declare-styleable>
 
+    <declare-styleable name="ViewPagerFocusView">
+        <attr name="vpfIndicatorWidth" format="dimension" />
+        <attr name="vpfIndicatorHeight" format="dimension" />
+        <attr name="vpfIndicatorInterval" format="dimension" />
+        <attr name="vpfIndicatorColorNormal" format="color" />
+        <attr name="vpfIndicatorColorSelect" format="color" />
+    </declare-styleable>
+
 </resources>

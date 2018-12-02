@@ -88,6 +88,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+
+                <com.coderpage.mine.app.tally.ui.widget.ViewPagerFocusView
+                    android:id="@+id/focusView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="@dimen/spacing_normal"
+                    app:vpfIndicatorColorNormal="@color/icCategoryExpenseNormal"
+                    app:vpfIndicatorColorSelect="@color/black"
+                    app:vpfIndicatorHeight="4dp"
+                    app:vpfIndicatorInterval="@dimen/spacing_normal"
+                    app:vpfIndicatorWidth="4dp" />
+            </FrameLayout>
+
         </LinearLayout>
 
         <LinearLayout

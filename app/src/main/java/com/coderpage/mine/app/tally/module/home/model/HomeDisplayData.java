@@ -9,6 +9,9 @@ package com.coderpage.mine.app.tally.module.home.model;
 
 public class HomeDisplayData {
 
+    /** 模块类型：底部 VIEW */
+    public static final int TYPE_BOTTOM = -1;
+
     /** 模块类型：本月消费、本月收入数据模块 */
     public static final int TYPE_MONTH_INFO = 1;
 

@@ -59,6 +59,7 @@ public class ExpenseFragment extends Fragment {
 
         mCategoryPageAdapter = new ExpenseCategoryPageAdapter(getActivity(), mViewModel);
         mBinding.categoryViewpager.setAdapter(mCategoryPageAdapter);
+        mBinding.focusView.setupWithViewPager(mBinding.categoryViewpager);
     }
 
     private void subscribeUi() {

@@ -5,7 +5,7 @@ import android.widget.TextView;
 
 import com.coderpage.base.utils.ResUtils;
 import com.coderpage.mine.R;
-import com.coderpage.mine.app.tally.module.chart.data.DailyExpense;
+import com.coderpage.mine.app.tally.module.chart.data.DailyData;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
@@ -37,8 +37,8 @@ public class DailyExpenseMarkerView extends MarkerView {
 
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
-        DailyExpense expense = (DailyExpense) e.getData();
-        mExpenseAmountTv.setText(mDecimalFormat.format(expense.getExpense()));
+        DailyData expense = (DailyData) e.getData();
+        mExpenseAmountTv.setText(mDecimalFormat.format(expense.getAmount()));
         mDateTv.setText(mDateFormat.format(new Date(expense.getTimeMillis())));
         super.refreshContent(e, highlight);
     }

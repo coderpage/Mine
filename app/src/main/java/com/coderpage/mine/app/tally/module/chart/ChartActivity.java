@@ -23,9 +23,9 @@ import com.coderpage.framework.Presenter;
 import com.coderpage.framework.PresenterImpl;
 import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
-import com.coderpage.mine.app.tally.module.chart.data.DailyExpense;
+import com.coderpage.mine.app.tally.module.chart.data.DailyData;
 import com.coderpage.mine.app.tally.module.chart.data.Month;
-import com.coderpage.mine.app.tally.module.chart.data.MonthlyExpense;
+import com.coderpage.mine.app.tally.module.chart.data.MonthlyData;
 import com.coderpage.mine.app.tally.module.chart.widget.ExpenseLineChart;
 import com.coderpage.mine.app.tally.data.Expense;
 import com.coderpage.mine.app.tally.ui.widget.MonthSelectDialog;
@@ -235,7 +235,7 @@ public class ChartActivity extends BaseActivity implements
         List<String> xAxisLabels = new ArrayList<>(entryList.size());
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         for (Entry entry : entryList) {
-            MonthlyExpense expense = (MonthlyExpense) entry.getData();
+            MonthlyData expense = (MonthlyData) entry.getData();
             Month month = expense.getMonth();
             String label = month.getYear() == currentYear ?
                     getString(R.string.string_format_date_m, month.getMonth()) :
@@ -344,7 +344,7 @@ public class ChartActivity extends BaseActivity implements
         mLineChart.animateY(1400, Easing.EasingOption.EaseInOutQuart);
     }
 
-    private void showMonthlyExpenseLineChart(List<MonthlyExpense> data) {
+    private void showMonthlyExpenseLineChart(List<MonthlyData> data) {
         List<Entry> entries = generateMonthlyExpenseLineChartEntries(data);
         if (data == null || data.isEmpty()) {
             // TODO show empty data
@@ -377,18 +377,18 @@ public class ChartActivity extends BaseActivity implements
         mLineChart.animateY(1400, Easing.EasingOption.EaseInOutQuart);
     }
 
-    private List<Entry> generateMonthlyExpenseLineChartEntries(List<MonthlyExpense> expenseList) {
+    private List<Entry> generateMonthlyExpenseLineChartEntries(List<MonthlyData> expenseList) {
         List<Entry> result = new ArrayList<>(expenseList != null ? expenseList.size() : 0);
         if (expenseList == null || expenseList.isEmpty()) {
             return result;
         }
 
-        MonthlyExpense preMonthlyExpense = null;
+        MonthlyData preMonthlyExpense = null;
         // 处理后的月份消费数据集合
-        List<MonthlyExpense> formattedList = new ArrayList<>();
+        List<MonthlyData> formattedList = new ArrayList<>();
         // 本循环是为了处理月份中断问题，从数据库中只会取出有消费记录的月份
         // 因此会出现月份中断的问题，但是在绘图时月份是连续的，此处是为了将没有消费记录的月份穿插起来
-        for (MonthlyExpense expense : expenseList) {
+        for (MonthlyData expense : expenseList) {
             if (preMonthlyExpense == null) {
                 preMonthlyExpense = expense;
                 formattedList.add(expense);
@@ -397,9 +397,9 @@ public class ChartActivity extends BaseActivity implements
 
             while (!preMonthlyExpense.getMonth().next().equals(expense.getMonth())) {
                 Month next = preMonthlyExpense.getMonth().next();
-                MonthlyExpense nextMonthlyExpense = new MonthlyExpense();
+                MonthlyData nextMonthlyExpense = new MonthlyData();
                 nextMonthlyExpense.setMonth(next);
-                nextMonthlyExpense.setTotal(0f);
+                nextMonthlyExpense.setAmount(0f);
 
                 preMonthlyExpense = nextMonthlyExpense;
                 formattedList.add(nextMonthlyExpense);
@@ -410,8 +410,8 @@ public class ChartActivity extends BaseActivity implements
         }
 
         for (int i = 0; i < formattedList.size(); i++) {
-            MonthlyExpense expense = formattedList.get(i);
-            Entry entry = new Entry(i, expense.getTotal());
+            MonthlyData expense = formattedList.get(i);
+            Entry entry = new Entry(i, expense.getAmount());
             entry.setData(expense);
             result.add(entry);
         }
@@ -425,7 +425,7 @@ public class ChartActivity extends BaseActivity implements
             case LOAD_CURRENT_MONTH_DATA:
                 showMonthTipViews(
                         model.getDisplayMonth().getYear(), model.getDisplayMonth().getMonth());
-                List<DailyExpense> monthDailyExpenseList = model.getMonthDailyExpenseList();
+                List<DailyData> monthDailyExpenseList = model.getMonthDailyExpenseList();
                 showDailyExpenseLineChart(generateLineData(monthDailyExpenseList));
                 reDrawPieChart(model.getMonthExpenseList());
                 float monthTotal = calculateMonthTotal(model.getMonthExpenseList());
@@ -456,7 +456,7 @@ public class ChartActivity extends BaseActivity implements
                 if (success) {
                     showMonthTipViews(
                             model.getDisplayMonth().getYear(), model.getDisplayMonth().getMonth());
-                    List<DailyExpense> monthDailyExpenseList = model.getMonthDailyExpenseList();
+                    List<DailyData> monthDailyExpenseList = model.getMonthDailyExpenseList();
                     showDailyExpenseLineChart(generateLineData(monthDailyExpenseList));
                     reDrawPieChart(model.getMonthExpenseList());
 
@@ -470,7 +470,7 @@ public class ChartActivity extends BaseActivity implements
 
             case SWITCH_TO_DAILY_DATA:
                 if (success) {
-                    List<DailyExpense> monthDailyExpenseList = model.getMonthDailyExpenseList();
+                    List<DailyData> monthDailyExpenseList = model.getMonthDailyExpenseList();
                     showDailyExpenseLineChart(generateLineData(monthDailyExpenseList));
                     mLineChartExpenseTipTv.setText(getString(R.string.tally_daily_expense_tip));
                 }
@@ -492,10 +492,10 @@ public class ChartActivity extends BaseActivity implements
 
     }
 
-    private List<Entry> generateLineData(List<DailyExpense> monthDailyExpenseList) {
+    private List<Entry> generateLineData(List<DailyData> monthDailyExpenseList) {
         List<Entry> entries = new ArrayList<>();
-        for (DailyExpense expense : monthDailyExpenseList) {
-            Entry entry = new Entry(expense.getDayOfMonth(), expense.getExpense());
+        for (DailyData expense : monthDailyExpenseList) {
+            Entry entry = new Entry(expense.getDayOfMonth(), expense.getAmount());
             entry.setData(expense);
             entries.add(entry);
         }

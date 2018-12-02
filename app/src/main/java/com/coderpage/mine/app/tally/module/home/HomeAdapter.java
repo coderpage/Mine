@@ -122,6 +122,11 @@ class HomeAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             case HomeDisplayData.TYPE_IN_COME_ITEM:
                 return new ViewHolderIncomeItem(mActivity, mViewModel,
                         DataBindingUtil.inflate(mInflater, R.layout.tally_module_home_income_item, parent, false));
+
+            // 底部 View
+            case HomeDisplayData.TYPE_BOTTOM:
+                return new ViewHolderBottom(mInflater.inflate(R.layout.tally_module_home_item_bottom, parent, false));
+
             default:
                 return null;
         }

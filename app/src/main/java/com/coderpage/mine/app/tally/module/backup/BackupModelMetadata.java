@@ -15,6 +15,11 @@ import com.alibaba.fastjson.annotation.JSONField;
 public class BackupModelMetadata {
 
     /**
+     * 执行备份操作时客户端应用版本 version code
+     */
+    @JSONField(name = "client_version_code")
+    private int clientVersionCode;
+    /**
      * 执行备份操作时客户端应用版本；
      */
     @JSONField(name = "client_version")
@@ -34,6 +39,14 @@ public class BackupModelMetadata {
      */
     @JSONField(name = "expense_number")
     private long expenseNumber;
+
+    public int getClientVersionCode() {
+        return clientVersionCode;
+    }
+
+    public void setClientVersionCode(int clientVersionCode) {
+        this.clientVersionCode = clientVersionCode;
+    }
 
     public String getClientVersion() {
         return clientVersion;

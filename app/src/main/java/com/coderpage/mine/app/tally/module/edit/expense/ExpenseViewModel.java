@@ -244,7 +244,7 @@ public class ExpenseViewModel extends AndroidViewModel {
             expense.setSyncId(AndroidUtils.generateUUID());
         }
         expense.setAmount(mAmount);
-        expense.setTime(System.currentTimeMillis());
+        expense.setTime(mDate);
         expense.setDesc(TextUtils.isEmpty(mDesc.get()) ? "" : mDesc.get());
         expense.setCategoryId(category.getInternal().getId());
         expense.setCategoryIcon(category.getInternal().getIcon());

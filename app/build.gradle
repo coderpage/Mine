@@ -61,29 +61,31 @@ android {
 //}
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile rootProject.appCompat
-    compile rootProject.recyclerview
-    compile rootProject.design
-    compile rootProject.percentLayout
-    compile rootProject.cardView
-    compile rootProject.materialCalendarview
-    compile rootProject.mpAndroidChart
-    compile rootProject.buglyCrashReport
-    compile rootProject.fastjson
-    compile rootProject.retrofit
-    compile rootProject.retrofitConverterFastjson
-    compile rootProject.okhttp3InterceptorLogging
-    compile rootProject.permissions4m
-    compile rootProject.eventBus
-    compile rootProject.archRoomRuntime
-    compile rootProject.archLifecycleExtension
-    compile rootProject.archViewmodel
-    compile rootProject.archLiveData
-    compile rootProject.archLifecycleRuntime
-    compile rootProject.refreshLayout
-    compile rootProject.constraintLayout
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    api rootProject.appCompat
+    api rootProject.recyclerview
+    api rootProject.design
+    api rootProject.percentLayout
+    api rootProject.cardView
+    api rootProject.materialCalendarview
+    api rootProject.mpAndroidChart
+    api rootProject.buglyCrashReport
+    api rootProject.fastjson
+    api rootProject.retrofit
+    api rootProject.retrofitConverterFastjson
+    api rootProject.okhttp3InterceptorLogging
+    api rootProject.permissions4m
+    api rootProject.eventBus
+    api rootProject.archRoomRuntime
+    api rootProject.archLifecycleExtension
+    api rootProject.archViewmodel
+    api rootProject.archLiveData
+    api rootProject.archLifecycleRuntime
+    api rootProject.refreshLayout
+    api rootProject.constraintLayout
     annotationProcessor rootProject.archLifecycleCompiler
     annotationProcessor rootProject.archRoomCompiler
     annotationProcessor rootProject.permissions4mProcessor
+
+    testImplementation rootProject.junit
 }

@@ -41,6 +41,15 @@ public interface CategoryDao {
     List<CategoryModel> allIncomeCategory();
 
     /**
+     * 查询所有分类
+     *
+     * @return 所有分类
+     */
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("select * from category order by category_order DESC")
+    List<CategoryEntity> allCategory();
+
+    /**
      * 插入分类
      *
      * @param entity 分类

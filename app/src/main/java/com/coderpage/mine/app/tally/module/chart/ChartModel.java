@@ -16,10 +16,10 @@ import com.coderpage.concurrency.AsyncTaskExecutor;
 import com.coderpage.framework.Model;
 import com.coderpage.framework.QueryEnum;
 import com.coderpage.framework.UserActionEnum;
-import com.coderpage.mine.app.tally.module.chart.data.DailyExpense;
+import com.coderpage.mine.app.tally.module.chart.data.DailyData;
 import com.coderpage.mine.app.tally.module.chart.data.Month;
 import com.coderpage.mine.app.tally.module.chart.data.MonthCategoryExpense;
-import com.coderpage.mine.app.tally.module.chart.data.MonthlyExpense;
+import com.coderpage.mine.app.tally.module.chart.data.MonthlyData;
 import com.coderpage.mine.app.tally.data.Expense;
 import com.coderpage.mine.app.tally.provider.TallyContract;
 import com.coderpage.mine.app.tally.utils.TimeUtils;
@@ -47,9 +47,9 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
     private Month mDisplayMonth;
     private List<Month> mMonthList = new ArrayList<>();
     private List<Expense> mMonthExpenseList = new ArrayList<>();
-    private List<DailyExpense> mMonthDailyExpenseList = new ArrayList<>();
+    private List<DailyData> mMonthDailyExpenseList = new ArrayList<>();
     private List<MonthCategoryExpense> mMonthCategoryExpenseList = new ArrayList<>();
-    private List<MonthlyExpense> mMonthlyExpenseList = new ArrayList<>();
+    private List<MonthlyData> mMonthlyExpenseList = new ArrayList<>();
 
     ChartModel(Context context) {
         mContext = context;
@@ -59,7 +59,7 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
         return mMonthList;
     }
 
-    List<DailyExpense> getMonthDailyExpenseList() {
+    List<DailyData> getMonthDailyExpenseList() {
         return mMonthDailyExpenseList;
     }
 
@@ -71,7 +71,7 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
         return mMonthCategoryExpenseList;
     }
 
-    public List<MonthlyExpense> getMonthlyExpenseList() {
+    public List<MonthlyData> getMonthlyExpenseList() {
         return mMonthlyExpenseList;
     }
 
@@ -178,9 +178,9 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
                     callback.onModelUpdated(ChartModel.this, action);
                     break;
                 }
-                loadMonthlyExpenseData(new Callback<List<MonthlyExpense>, IError>() {
+                loadMonthlyExpenseData(new Callback<List<MonthlyData>, IError>() {
                     @Override
-                    public void success(List<MonthlyExpense> monthlyExpenses) {
+                    public void success(List<MonthlyData> monthlyExpenses) {
                         mMonthlyExpenseList.clear();
                         mMonthlyExpenseList.addAll(monthlyExpenses);
                         callback.onModelUpdated(ChartModel.this, action);
@@ -252,11 +252,11 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
         }.executeOnExecutor(AsyncTaskExecutor.executor());
     }
 
-    private void loadMonthlyExpenseData(Callback<List<MonthlyExpense>, IError> callback) {
-        new AsyncTask<Void, Void, List<MonthlyExpense>>() {
+    private void loadMonthlyExpenseData(Callback<List<MonthlyData>, IError> callback) {
+        new AsyncTask<Void, Void, List<MonthlyData>>() {
             @Override
-            protected List<MonthlyExpense> doInBackground(Void... params) {
-                List<MonthlyExpense> result = new ArrayList<>();
+            protected List<MonthlyData> doInBackground(Void... params) {
+                List<MonthlyData> result = new ArrayList<>();
 
                 // 完整查询 SQL 如下所示
                 // SELECT sum(expense_amount), expense_time FROM expense group by
@@ -289,9 +289,9 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
                     int year = calendar.get(Calendar.YEAR);
                     int monthOfYear = calendar.get(Calendar.MONTH) + 1;
                     Month month = new Month(year, monthOfYear);
-                    MonthlyExpense monthlyExpense = new MonthlyExpense();
+                    MonthlyData monthlyExpense = new MonthlyData();
                     monthlyExpense.setMonth(month);
-                    monthlyExpense.setTotal(sum);
+                    monthlyExpense.setAmount(sum);
 
                     result.add(monthlyExpense);
                 }
@@ -301,14 +301,14 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
             }
 
             @Override
-            protected void onPostExecute(List<MonthlyExpense> monthlyExpenses) {
+            protected void onPostExecute(List<MonthlyData> monthlyExpenses) {
                 callback.success(monthlyExpenses);
             }
         }.executeOnExecutor(AsyncTaskExecutor.executor());
     }
 
-    private List<DailyExpense> generateDailyExpense(int year, int month, List<Expense> list) {
-        SparseArray<DailyExpense> dailyExpenseSparseArray = new SparseArray<>(31);
+    private List<DailyData> generateDailyExpense(int year, int month, List<Expense> list) {
+        SparseArray<DailyData> dailyExpenseSparseArray = new SparseArray<>(31);
         Calendar calendar = Calendar.getInstance();
         int currentYear = calendar.get(Calendar.YEAR);
         int currentMonth = calendar.get(Calendar.MONTH) + 1;
@@ -316,14 +316,14 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
         for (Expense item : list) {
             calendar.setTimeInMillis(item.getTime());
             int day = calendar.get(Calendar.DAY_OF_MONTH);
-            DailyExpense expense = dailyExpenseSparseArray.get(day, null);
+            DailyData expense = dailyExpenseSparseArray.get(day, null);
             if (expense == null) {
-                expense = new DailyExpense();
+                expense = new DailyData();
                 dailyExpenseSparseArray.put(day, expense);
             }
             expense.setTimeMillis(item.getTime());
             expense.setDayOfMonth(day);
-            expense.setExpense(expense.getExpense() + item.getAmount());
+            expense.setAmount(expense.getAmount() + item.getAmount());
         }
 
         int daysOfMonth;
@@ -332,16 +332,16 @@ class ChartModel implements Model<ChartModel.ChartQueryEnum, ChartModel.ChartUse
         } else {
             daysOfMonth = TimeUtils.getDaysTotalOfMonth(year, month);
         }
-        List<DailyExpense> results = new ArrayList<>(daysOfMonth);
+        List<DailyData> results = new ArrayList<>(daysOfMonth);
         for (int i = 1; i <= daysOfMonth; i++) {
-            DailyExpense expense = dailyExpenseSparseArray.get(i, null);
+            DailyData expense = dailyExpenseSparseArray.get(i, null);
             if (expense == null) {
                 calendar.set(Calendar.MONTH, month - 1);
                 calendar.set(Calendar.DAY_OF_MONTH, i);
-                expense = new DailyExpense();
+                expense = new DailyData();
                 expense.setTimeMillis(calendar.getTimeInMillis());
                 expense.setDayOfMonth(i);
-                expense.setExpense(0);
+                expense.setAmount(0);
             }
             results.add(expense);
         }

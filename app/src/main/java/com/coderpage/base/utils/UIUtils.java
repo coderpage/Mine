@@ -1,9 +1,12 @@
 package com.coderpage.base.utils;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.ColorRes;
 import android.support.annotation.StringRes;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -67,5 +70,23 @@ public class UIUtils {
         Point point = new Point();
         wm.getDefaultDisplay().getSize(point);
         return point;
+    }
+
+    /** 获取颜色值 */
+    public static int getColor(Context context, @ColorRes int colorRes) {
+        try {
+            return context.getResources().getColor(colorRes);
+        } catch (Resources.NotFoundException e) {
+            return Color.TRANSPARENT;
+        }
+    }
+
+    /** 获取字符串资源 */
+    public static String getString(Context context, @StringRes int stringRes, Object... args) {
+        try {
+            return context.getResources().getString(stringRes, args);
+        } catch (Resources.NotFoundException e) {
+            return "";
+        }
     }
 }

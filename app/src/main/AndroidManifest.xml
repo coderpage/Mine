@@ -80,10 +80,14 @@
             android:label="@string/tally_toolbar_title_detail"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Tally" />
-
         <activity
             android:name=".app.tally.module.detail.RecordDetailActivity"
             android:label="@string/tally_toolbar_title_detail"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Tally" />
+        <activity
+            android:name=".app.tally.module.chart.TallyChartActivity"
+            android:label="@string/tally_toolbar_title_chart"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Tally" />
 

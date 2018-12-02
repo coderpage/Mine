@@ -1,5 +1,6 @@
 package com.coderpage.mine.ui;
 
+import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
@@ -72,5 +73,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         return R.color.colorPrimary;
     }
 
+    protected Activity self(){
+        return this;
+    }
 
 }

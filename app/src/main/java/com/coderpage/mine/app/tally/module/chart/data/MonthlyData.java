@@ -7,10 +7,12 @@ import java.util.Locale;
  * @since 0.5.1
  */
 
-public class MonthlyExpense {
+public class MonthlyData {
 
+    /** 月份 */
     private Month month;
-    private float total;
+    /** 月总金额 */
+    private float amount;
 
     public Month getMonth() {
         return month;
@@ -20,16 +22,16 @@ public class MonthlyExpense {
         this.month = month;
     }
 
-    public float getTotal() {
-        return total;
+    public float getAmount() {
+        return amount;
     }
 
-    public void setTotal(float total) {
-        this.total = total;
+    public void setAmount(float amount) {
+        this.amount = amount;
     }
 
     @Override
     public String toString() {
-        return String.format(Locale.US, "[month=%s,total=%f]", String.valueOf(month), total);
+        return String.format(Locale.US, "[month=%s,total=%f]", String.valueOf(month), amount);
     }
 }

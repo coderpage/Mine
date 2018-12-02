@@ -9,9 +9,14 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.OnLifecycleEvent;
+import android.content.Intent;
+import android.os.Build;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.app.AlertDialog;
 import android.util.Pair;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.coderpage.base.common.Callback;
 import com.coderpage.base.common.IError;
@@ -23,11 +28,15 @@ import com.coderpage.mine.app.tally.eventbus.EventExpenseUpdate;
 import com.coderpage.mine.app.tally.eventbus.EventIncomeAdd;
 import com.coderpage.mine.app.tally.eventbus.EventIncomeDelete;
 import com.coderpage.mine.app.tally.eventbus.EventIncomeUpdate;
+import com.coderpage.mine.app.tally.module.about.AboutActivity;
+import com.coderpage.mine.app.tally.module.chart.TallyChartActivity;
 import com.coderpage.mine.app.tally.module.detail.RecordDetailActivity;
 import com.coderpage.mine.app.tally.module.edit.RecordEditActivity;
 import com.coderpage.mine.app.tally.module.home.model.HomeDisplayData;
 import com.coderpage.mine.app.tally.module.home.model.HomeMonthModel;
 import com.coderpage.mine.app.tally.module.home.model.HomeTodayExpenseModel;
+import com.coderpage.mine.app.tally.module.records.RecordsActivity;
+import com.coderpage.mine.app.tally.module.setting.SettingActivity;
 import com.coderpage.mine.app.tally.persistence.model.Expense;
 import com.coderpage.mine.app.tally.persistence.model.Income;
 
@@ -75,9 +84,57 @@ public class HomeViewModel extends AndroidViewModel implements LifecycleObserver
         RecordEditActivity.openAsAddNewExpense(activity);
     }
 
+    /** 底部菜单按钮点击 */
+    public void onBottomMenuClick(Activity activity) {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.Widget_Dialog_BottomSheet);
+        View.OnClickListener menuClickListener = (v) -> {
+            int id = v.getId();
+            switch (id) {
+                case R.id.lyBtnAbout:
+                    activity.startActivity(new Intent(activity, AboutActivity.class));
+                    bottomSheetDialog.dismiss();
+                    break;
+                case R.id.lyBtnSetting:
+                    activity.startActivity(new Intent(activity, SettingActivity.class));
+                    bottomSheetDialog.dismiss();
+                    break;
+                case R.id.lyBtnExpenseRecords:
+                    activity.startActivity(new Intent(activity, RecordsActivity.class));
+                    bottomSheetDialog.dismiss();
+                    break;
+                case R.id.lyBtnChart:
+                    activity.startActivity(new Intent(activity, TallyChartActivity.class));
+                    bottomSheetDialog.dismiss();
+                    break;
+                default:
+                    break;
+            }
+        };
+
+        View view = activity.getLayoutInflater().inflate(R.layout.widget_tally_bottom_menu_sheet, null);
+        view.findViewById(R.id.lyBtnAbout).setOnClickListener(menuClickListener);
+        view.findViewById(R.id.lyBtnSetting).setOnClickListener(menuClickListener);
+        view.findViewById(R.id.lyBtnExpenseRecords).setOnClickListener(menuClickListener);
+        view.findViewById(R.id.lyBtnChart).setOnClickListener(menuClickListener);
+
+        bottomSheetDialog.setContentView(view);
+        bottomSheetDialog.setCanceledOnTouchOutside(true);
+        bottomSheetDialog.show();
+
+        Window window = bottomSheetDialog.getWindow();
+        if (window == null) {
+            return;
+        }
+        window.setWindowAnimations(R.style.BottomSheetAnimation);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(activity.getResources().getColor(R.color.colorPrimaryDark));
+        }
+    }
+
     /** 本月消费、收入数据模块点击 */
     public void onMonthInfoClick(Activity activity) {
-
+        activity.startActivity(new Intent(activity, TallyChartActivity.class));
     }
 
     /** 消费记录 ITEM 点击 */

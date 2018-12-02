@@ -68,6 +68,7 @@
     <color name="chartLine">#FF5722</color>
     <color name="markerViewBg">@color/transparent</color>
     <color name="markerViewBgStroke">@color/colorHint</color>
+    <color name="chartGridLine">#efefef</color>
 
     <color name="libupdate_warning">#e53935</color>
 

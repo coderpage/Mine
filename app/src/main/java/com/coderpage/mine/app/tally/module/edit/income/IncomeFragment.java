@@ -56,6 +56,7 @@ public class IncomeFragment extends Fragment {
 
         mCategoryPageAdapter = new IncomeCategoryPageAdapter(getActivity(), mViewModel);
         mBinding.categoryViewpager.setAdapter(mCategoryPageAdapter);
+        mBinding.focusView.setupWithViewPager(mBinding.categoryViewpager);
     }
 
     private void subscribeUi() {

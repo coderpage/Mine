@@ -38,6 +38,11 @@
     <string name="tally_month_info_format" formatted="false">%d年%s月</string>
     <string name="tally_daily_expense_tip">日消费折线图</string>
     <string name="tally_monthly_expense_tip">月消费折线图</string>
+    <string name="tally_checkbox_expense">支出</string>
+    <string name="tally_checkbox_income">收入</string>
+    <string name="tally_switch_to_daily_chart">切换日账单</string>
+    <string name="tally_switch_to_yearly_chart">切换年账单</string>
+    <string name="tally_month_format">%d月</string>
 
     <!-- setting activity -->
     <string name="tally_setting_btn_data_export">导出数据</string>
@@ -70,7 +75,7 @@
 
     <!-- toolbar title of tall expense record add activity -->
     <string name="tally_toolbar_title_add_record">记一笔</string>
-    <string name="tally_add_record">记一笔</string>
+    <string name="tally_add_record">记一笔&#8230;</string>
     <string name="tally_amount_cny">￥%s</string>
     <string name="tally_sum_of_amount_month">本月账单总额</string>
     <string name="tally_calendar_title_format" formatted="false">%d年%d月</string>
@@ -125,23 +130,6 @@
     <string name="tyCommunication">通讯</string>
     <string name="tyTheFavorPattern">人情往来</string>
 
-    <!--<string name="tyIcOther">Other</string>-->
-    <!--<string name="tyIcCanYin">CanYin</string>-->
-    <!--<string name="tyIcJiaoTong">JiaoTong</string>-->
-    <!--<string name="tyIcGouWu">GouWu</string>-->
-    <!--<string name="tyIcFuShi">FuShi</string>-->
-    <!--<string name="tyIcRiYongPin">RiYongPin</string>-->
-    <!--<string name="tyIcYuLe">YuLe</string>-->
-    <!--<string name="tyIcShiCai">ShiCai</string>-->
-    <!--<string name="tyIcLingShi">LingShi</string>-->
-    <!--<string name="tyIcYanJiuCha">YanJiuCha</string>-->
-    <!--<string name="tyIcXueXi">XueXi</string>-->
-    <!--<string name="tyIcYiLiao">YiLiao</string>-->
-    <!--<string name="tyIcZhuFang">ZhuFang</string>-->
-    <!--<string name="tyIcShuiDianMei">ShuiDianMei</string>-->
-    <!--<string name="tyIcTongXun">TongXun</string>-->
-    <!--<string name="tyIcRenQing">RenQing</string>-->
-
     <string name="tyIncomeSalary">薪资</string>
     <string name="tyIncomeReward">奖金</string>
     <string name="tyIncomeLend">借入</string>
@@ -150,15 +138,6 @@
     <string name="tyIncomeInvestRecovery">投资回收</string>
     <string name="tyIncomeInvestProfit">投资收益</string>
     <string name="tyIncomeUnexpected">意外所得</string>
-
-    <!--<string name="tyIcXinZi">XinZi</string>-->
-    <!--<string name="tyIcJiangJin">JiangJin</string>-->
-    <!--<string name="tyIcJieRu">JieRu</string>-->
-    <!--<string name="tyIcShouZhai">ShouZhai</string>-->
-    <!--<string name="tyIcLixiShouRu">LixiShouRu</string>-->
-    <!--<string name="tyIcTouZiHuiShou">TouZiHuiShou</string>-->
-    <!--<string name="tyIcYiWaiSuoDe">YiWaiSuoDe</string>-->
-    <!--<string name="tyIcTouZiShouYi">TouZiShouYi</string>-->
 
     <string name="cancel">取消</string>
     <string name="confirm">确定</string>
