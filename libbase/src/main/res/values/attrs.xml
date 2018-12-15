@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="ProgressWheel">
+        <attr name="matProg_progressIndeterminate" format="boolean"/>
+        <attr name="matProg_barColor" format="color"/>
+        <attr name="matProg_rimColor" format="color"/>
+        <attr name="matProg_rimWidth" format="dimension"/>
+        <attr name="matProg_spinSpeed" format="float"/>
+        <attr name="matProg_barSpinCycleTime" format="integer"/>
+        <attr name="matProg_circleRadius" format="dimension"/>
+        <attr name="matProg_fillRadius" format="boolean"/>
+        <attr name="matProg_barWidth" format="dimension"/>
+        <attr name="matProg_linearProgress" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="MTabLayout">
+        <attr name="mTabIndicatorWidth" format="dimension" />
+        <attr name="mTabIndicatorHeight" format="dimension" />
+        <attr name="mTabIndicatorColor" format="color" />
+        <attr name="mTabPadding" format="dimension" />
+        <attr name="mTabPaddingStart" format="dimension" />
+        <attr name="mTabPaddingTop" format="dimension" />
+        <attr name="mTabPaddingEnd" format="dimension" />
+        <attr name="mTabPaddingBottom" format="dimension" />
+        <attr name="mTabTextColor" format="color" />
+        <attr name="mTabSelectedTextColor" format="color" />
+        <attr name="mTabTextSize" format="dimension" />
+        <attr name="mTabMinWidth" format="dimension" />
+        <attr name="mTabMaxWidth" format="dimension" />
+        <attr name="mTabBackground" format="reference" />
+        <attr name="mTabContentStart" format="dimension" />
+
+        <attr name="mTabMode">
+            <enum name="scrollable" value="0" />
+            <enum name="fixed" value="1" />
+        </attr>
+        <attr name="mTabGravity">
+            <enum name="fill" value="0" />
+            <enum name="center" value="1" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="MTabItem">
+        <attr name="android:text" />
+        <attr name="android:icon" />
+        <attr name="android:layout" />
+    </declare-styleable>
+
+    <declare-styleable name="ViewPagerFocusView">
+        <attr name="vpfIndicatorWidth" format="dimension" />
+        <attr name="vpfIndicatorHeight" format="dimension" />
+        <attr name="vpfIndicatorInterval" format="dimension" />
+        <attr name="vpfIndicatorColorNormal" format="color" />
+        <attr name="vpfIndicatorColorSelect" format="color" />
+    </declare-styleable>
+
+</resources>

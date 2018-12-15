@@ -70,8 +70,6 @@
     <color name="markerViewBgStroke">@color/colorHint</color>
     <color name="chartGridLine">#efefef</color>
 
-    <color name="libupdate_warning">#e53935</color>
-
     <color name="bgDateTag">#08000000</color>
 
     <color name="expenseColor">#f2615e</color>

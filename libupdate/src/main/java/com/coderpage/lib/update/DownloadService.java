@@ -15,8 +15,6 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
-import com.coderpage.mine.BuildConfig;
-import com.coderpage.mine.R;
 
 import java.io.File;
 

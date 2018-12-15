@@ -1,4 +1,4 @@
-package com.coderpage.base.widget;
+package com.coderpage.lib.update;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -17,7 +17,6 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 
-import com.coderpage.mine.R;
 
 
 /**
@@ -98,8 +97,7 @@ public class ProgressWheel extends View {
         setAnimationEnabled();
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private void setAnimationEnabled() {
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1) private void setAnimationEnabled() {
         int currentApiVersion = Build.VERSION.SDK_INT;
 
         float animationValue;
@@ -273,7 +271,7 @@ public class ProgressWheel extends View {
     //----------------------------------
     //Animation stuff
     //----------------------------------
-    @Override
+
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
@@ -711,12 +709,10 @@ public class ProgressWheel extends View {
         //required field that makes Parcelables from a Parcel
         public static final Creator<WheelSavedState> CREATOR =
                 new Creator<WheelSavedState>() {
-                    @Override
                     public WheelSavedState createFromParcel(Parcel in) {
                         return new WheelSavedState(in);
                     }
 
-                    @Override
                     public WheelSavedState[] newArray(int size) {
                         return new WheelSavedState[size];
                     }

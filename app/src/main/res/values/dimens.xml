@@ -44,17 +44,5 @@
     <dimen name="tally_card_item_elevation">0dp</dimen>
     <dimen name="tally_card_item_corner_adius">4dp</dimen>
 
-    <dimen name="libupdate_spacing_xmicro">2dp</dimen>
-    <dimen name="libupdate_spacing_micro">4dp</dimen>
-    <dimen name="libupdate_spacing_normal">8dp</dimen>
-    <dimen name="libupdate_spacing_large">16dp</dimen>
-    <dimen name="libupdate_padding_micro">8dp</dimen>
-    <dimen name="libupdate_padding_normal">16dp</dimen>
-    <dimen name="libupdate_padding_large">24dp</dimen>
 
-    <dimen name="libupdate_text_size_xsmall">11sp</dimen>
-    <dimen name="libupdate_text_size_small">12sp</dimen>
-    <dimen name="libupdate_text_size_medium">14sp</dimen>
-    <dimen name="libupdate_text_size_normal">16sp</dimen>
-    <dimen name="libupdate_text_size_large">18sp</dimen>
 </resources>

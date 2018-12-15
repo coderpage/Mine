@@ -158,14 +158,4 @@
     <string name="symbol_dot">.</string>
     <string name="ok">OK</string>
 
-    <string name="libupdate_alert_on_checking_new_version">正在检查新版本</string>
-    <string name="libupdate_alert_new_version_title" formatted="false">新版本 %s (%s)</string>
-    <string name="libupdate_alert_cancel">取消</string>
-    <string name="libupdate_alert_confirm_download">下载安装</string>
-    <string name="libupdate_alert_do_not_remind_again">不再提示</string>
-    <string name="libupdate_alert_without_wifi">未连接WIFI，将耗费%sM数据流量！</string>
-
-    <string name="libupdate_toast_already_latest_version">已经是最新版本</string>
-    <string name="libupdate_toast_http_error" formatted="false">请求出错 Err(%s,%s)</string>
-
 </resources>

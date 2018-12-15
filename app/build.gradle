@@ -62,6 +62,8 @@ android {
 
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
+    api project(':libbase')
+    api project(':libupdate')
     api rootProject.appCompat
     api rootProject.recyclerview
     api rootProject.design
@@ -86,6 +88,5 @@ dependencies {
     annotationProcessor rootProject.archLifecycleCompiler
     annotationProcessor rootProject.archRoomCompiler
     annotationProcessor rootProject.permissions4mProcessor
-
     testImplementation rootProject.junit
 }

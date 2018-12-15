@@ -7,7 +7,7 @@ import android.support.v7.content.res.AppCompatResources;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.coderpage.mine.R;
+import com.coderpage.base.R;
 
 
 /**

@@ -30,6 +30,7 @@ public class ApkModelImpl implements ApkModel {
 
     private long apkSizeBytes;
 
+    @Override
     public long getBuildCode() {
         return buildCode;
     }
@@ -47,6 +48,7 @@ public class ApkModelImpl implements ApkModel {
         this.name = name;
     }
 
+    @Override
     public String getVersion() {
         return version;
     }
@@ -55,6 +57,7 @@ public class ApkModelImpl implements ApkModel {
         this.version = version;
     }
 
+    @Override
     public String getChangelog() {
         return changelog;
     }
@@ -63,6 +66,7 @@ public class ApkModelImpl implements ApkModel {
         this.changelog = changelog;
     }
 
+    @Override
     public String getDownloadUrl() {
         return downloadUrl;
     }
