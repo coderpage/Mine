@@ -12,11 +12,11 @@ import com.coderpage.concurrency.AsyncTaskExecutor;
 import com.coderpage.mine.BuildConfig;
 import com.coderpage.mine.app.tally.common.error.ErrorCode;
 import com.coderpage.mine.app.tally.persistence.model.CategoryModel;
-import com.coderpage.mine.app.tally.persistence.model.Expense;
+import com.coderpage.mine.app.tally.persistence.model.Record;
 import com.coderpage.mine.app.tally.persistence.sql.TallyDatabase;
 import com.coderpage.mine.app.tally.persistence.sql.dao.CategoryDao;
 import com.coderpage.mine.app.tally.persistence.sql.entity.CategoryEntity;
-import com.coderpage.mine.app.tally.persistence.sql.entity.ExpenseEntity;
+import com.coderpage.mine.app.tally.persistence.sql.entity.RecordEntity;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -47,6 +47,7 @@ public class Backup {
     public interface BackupProgressListener extends Callback<Void, IError> {
         /**
          * 回到
+         *
          * @param backupProgress progress
          */
         void onProgressUpdate(BackupProgress backupProgress);
@@ -187,7 +188,7 @@ public class Backup {
             }
 
             // 恢复消费表数据
-            List<BackupModelExpense> expenseList = backupModel.getExpenseList();
+            List<BackupModelRecord> expenseList = backupModel.getExpenseList();
             if (expenseList != null && !expenseList.isEmpty()) {
                 boolean restoreExpenseOk = restoreExpenseTable(metadata, expenseList);
                 if (!restoreExpenseOk) {
@@ -224,9 +225,9 @@ public class Backup {
             // 0.6.0 版本之前没有 type 之分，全部为支出分类类型
             entity.setType(metadata.getClientVersionCode() < 60 ?
                     CategoryEntity.TYPE_EXPENSE : backupCategory.getType());
-            // 0.6.0 版本之前没有 uniqueCategoryName，全部统一使用 categoryName
+            // 0.6.0 版本之前没有 uniqueCategoryName，全部统一使用 category icon
             entity.setUniqueName(TextUtils.isEmpty(backupCategory.getUniqueName()) ?
-                    backupCategory.getName() : backupCategory.getUniqueName());
+                    backupCategory.getIcon() : backupCategory.getUniqueName());
 
             insertArray[i] = entity;
         }
@@ -242,9 +243,9 @@ public class Backup {
     }
 
     private static boolean restoreExpenseTable(BackupModelMetadata metadata,
-                                               List<BackupModelExpense> expenseList) {
+                                               List<BackupModelRecord> expenseList) {
         TallyDatabase database = TallyDatabase.getInstance();
-        List<CategoryModel> categoryList = database.categoryDao().allExpenseCategory();
+        List<CategoryModel> categoryList = database.categoryDao().allCategory();
 
         // categoryName - categoryUniqueName Map
         HashMap<String, String> getCategoryUniqueNameByName = new HashMap<>();
@@ -253,19 +254,19 @@ public class Backup {
             getCategoryUniqueNameByName.put(category.getName(), category.getUniqueName());
         }
 
-        ExpenseEntity[] insertArray = new ExpenseEntity[expenseList.size()];
+        RecordEntity[] insertArray = new RecordEntity[expenseList.size()];
         for (int i = 0; i < expenseList.size(); i++) {
-            BackupModelExpense backupExpense = expenseList.get(i);
+            BackupModelRecord backupExpense = expenseList.get(i);
 
             // 从 0.6.0 版本之后，使用 categoryUniqueName 来保证分类唯一
             String categoryUniqueName = backupExpense.getCategoryUniqueName();
             // 如果备份数据中记录了 categoryUniqueName，使用 categoryUniqueName
-            if (!TextUtils.isEmpty(categoryUniqueName)) {
+            if (TextUtils.isEmpty(categoryUniqueName)) {
                 categoryUniqueName = getCategoryUniqueNameByName.get(backupExpense.getCategory());
                 categoryUniqueName = TextUtils.isEmpty(categoryUniqueName) ? "" : categoryUniqueName;
             }
 
-            ExpenseEntity entity = new ExpenseEntity();
+            RecordEntity entity = new RecordEntity();
             entity.setAccountId(backupExpense.getAccountId());
             entity.setAmount(backupExpense.getAmount());
             entity.setTime(backupExpense.getTime());
@@ -273,6 +274,7 @@ public class Backup {
             entity.setDesc(backupExpense.getDesc());
             entity.setSyncId(backupExpense.getSyncId());
             entity.setSyncStatus(backupExpense.getSyncStatus());
+            entity.setType(backupExpense.getType());
 
             insertArray[i] = entity;
         }
@@ -295,13 +297,13 @@ public class Backup {
     private static BackupModel readData() {
 
         List<BackupModelCategory> categoryList = new ArrayList<>();
-        List<BackupModelExpense> expenseList = null;
+        List<BackupModelRecord> expenseList = null;
         BackupModelMetadata metadata = new BackupModelMetadata();
 
         TallyDatabase database = TallyDatabase.getInstance();
 
-        List<CategoryEntity> categoryEntityList = database.categoryDao().allCategory();
-        for (CategoryEntity entity: categoryEntityList){
+        List<CategoryModel> categoryEntityList = database.categoryDao().allCategory();
+        for (CategoryModel entity : categoryEntityList) {
             BackupModelCategory category = new BackupModelCategory();
             category.setName(entity.getName());
             category.setUniqueName(entity.getUniqueName());
@@ -313,10 +315,10 @@ public class Backup {
             categoryList.add(category);
         }
 
-        List<Expense> expenseEntityList = database.expenseDao().queryAll();
+        List<Record> expenseEntityList = database.expenseDao().queryAll();
         expenseList = new ArrayList<>(expenseEntityList.size());
-        for (Expense entity: expenseEntityList){
-            BackupModelExpense expense = new BackupModelExpense();
+        for (Record entity : expenseEntityList) {
+            BackupModelRecord expense = new BackupModelRecord();
             expense.setAmount(entity.getAmount());
             expense.setDesc(entity.getDesc());
             expense.setCategory(entity.getCategoryName());
@@ -325,6 +327,7 @@ public class Backup {
             expense.setAccountId(entity.getAccountId());
             expense.setSyncStatus(entity.getSyncStatus());
             expense.setCategoryUniqueName(entity.getCategoryUniqueName());
+            expense.setType(entity.getType());
 
             expenseList.add(expense);
         }
@@ -332,7 +335,7 @@ public class Backup {
         metadata.setBackupDate(System.currentTimeMillis());
         metadata.setClientVersion(BuildConfig.VERSION_NAME);
         metadata.setDeviceName(Build.MODEL);
-        metadata.setExpenseNumber(expenseList == null ? 0 : expenseList.size());
+        metadata.setExpenseNumber(expenseList.size());
 
         BackupModel backupModel = new BackupModel();
 

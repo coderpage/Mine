@@ -47,7 +47,7 @@ public interface CategoryDao {
      */
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("select * from category order by category_order DESC")
-    List<CategoryEntity> allCategory();
+    List<CategoryModel> allCategory();
 
     /**
      * 插入分类

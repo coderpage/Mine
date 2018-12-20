@@ -1,6 +1,6 @@
 package com.coderpage.mine.app.tally.eventbus;
 
-import com.coderpage.mine.app.tally.persistence.model.Income;
+import com.coderpage.mine.app.tally.persistence.model.Record;
 
 /**
  * @author lc. 2018-09-18 23:27
@@ -9,13 +9,13 @@ import com.coderpage.mine.app.tally.persistence.model.Income;
 
 public class EventIncomeUpdate {
 
-    private Income income;
+    private Record income;
 
-    public EventIncomeUpdate(Income income){
+    public EventIncomeUpdate(Record income){
         this.income = income;
     }
 
-    public Income getIncome() {
+    public Record getIncome() {
         return income;
     }
 }

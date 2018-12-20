@@ -1,6 +1,6 @@
 package com.coderpage.mine.app.tally.eventbus;
 
-import com.coderpage.mine.app.tally.persistence.model.Expense;
+import com.coderpage.mine.app.tally.persistence.model.Record;
 
 /**
  * @author lc. 2018-09-02 20:29
@@ -9,13 +9,13 @@ import com.coderpage.mine.app.tally.persistence.model.Expense;
 
 public class EventExpenseUpdate {
 
-    private Expense expense;
+    private Record expense;
 
-    public EventExpenseUpdate(Expense expense) {
+    public EventExpenseUpdate(Record expense) {
         this.expense = expense;
     }
 
-    public Expense getExpense() {
+    public Record getExpense() {
         return expense;
     }
 }

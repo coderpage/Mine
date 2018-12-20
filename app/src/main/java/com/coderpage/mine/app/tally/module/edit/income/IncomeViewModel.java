@@ -23,7 +23,7 @@ import com.coderpage.mine.app.tally.eventbus.EventIncomeAdd;
 import com.coderpage.mine.app.tally.eventbus.EventIncomeUpdate;
 import com.coderpage.mine.app.tally.module.edit.model.Category;
 import com.coderpage.mine.app.tally.persistence.model.CategoryModel;
-import com.coderpage.mine.app.tally.persistence.model.Income;
+import com.coderpage.mine.app.tally.persistence.model.Record;
 import com.coderpage.mine.app.tally.ui.widget.NumInputView;
 import com.coderpage.mine.app.tally.utils.DatePickUtils;
 import com.coderpage.mine.utils.AndroidUtils;
@@ -51,7 +51,7 @@ public class IncomeViewModel extends AndroidViewModel {
     private long mIncomeId;
     private long mDate;
     private double mAmount;
-    private Income mIncome;
+    private Record mIncome;
     private IncomeRepository mRepository;
 
     /** 金额 */
@@ -184,11 +184,11 @@ public class IncomeViewModel extends AndroidViewModel {
             return;
         }
         mIncomeId = incomeId;
-        mRepository.queryIncomeById(mIncomeId, expense -> {
-            if (expense == null) {
+        mRepository.queryIncomeById(mIncomeId, record -> {
+            if (record == null) {
                 return;
             }
-            mIncome = expense;
+            mIncome = record;
             mAmount = mIncome.getAmount();
             mDate = mIncome.getTime();
             mDesc.set(mIncome.getDesc());
@@ -234,17 +234,17 @@ public class IncomeViewModel extends AndroidViewModel {
         }
 
         boolean isNewRecord = mIncome == null;
-        Income income;
+        Record income;
         if (mIncome != null) {
             income = mIncome;
         } else {
-            income = new Income();
+            income = new Record();
+            income.setType(Record.TYPE_INCOME);
             income.setSyncId(AndroidUtils.generateUUID());
         }
         income.setAmount(mAmount);
         income.setTime(mDate);
         income.setDesc(TextUtils.isEmpty(mDesc.get()) ? "" : mDesc.get());
-        income.setCategoryId(category.getInternal().getId());
         income.setCategoryIcon(category.getInternal().getIcon());
         income.setCategoryName(category.getInternal().getName());
         income.setCategoryUniqueName(category.getInternal().getUniqueName());

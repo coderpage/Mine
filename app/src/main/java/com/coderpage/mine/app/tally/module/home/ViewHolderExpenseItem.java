@@ -3,7 +3,7 @@ package com.coderpage.mine.app.tally.module.home;
 import android.app.Activity;
 
 import com.coderpage.mine.app.tally.module.home.model.HomeDisplayData;
-import com.coderpage.mine.app.tally.persistence.model.Expense;
+import com.coderpage.mine.app.tally.persistence.model.Record;
 import com.coderpage.mine.tally.module.home.ExpenseItemBinding;
 
 /**
@@ -25,8 +25,8 @@ class ViewHolderExpenseItem extends BaseViewHolder {
 
     @Override
     void bindData(HomeDisplayData data) {
-        if (data != null && data.getInternal() != null && data.getInternal() instanceof Expense) {
-            Expense expense = (Expense) data.getInternal();
+        if (data != null && data.getInternal() != null && data.getInternal() instanceof Record) {
+            Record expense = (Record) data.getInternal();
             mBinding.setActivity(mActivity);
             mBinding.setVm(mViewModel);
             mBinding.setData(expense);

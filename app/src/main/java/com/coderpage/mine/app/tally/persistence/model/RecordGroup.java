@@ -3,22 +3,22 @@ package com.coderpage.mine.app.tally.persistence.model;
 import android.arch.persistence.room.ColumnInfo;
 
 /**
- * @author lc. 2018-10-08 21:44
+ * @author lc.
  * @since 0.6.0
  */
 
-public class IncomeGroup {
+public class RecordGroup {
 
     /** 记录数量 */
     @ColumnInfo(name = "count(*)")
     private long count;
 
     /** 时间 */
-    @ColumnInfo(name = "income_time")
+    @ColumnInfo(name = "record_time")
     private long time;
 
     /** 总金额 */
-    @ColumnInfo(name = "sum(income_amount)")
+    @ColumnInfo(name = "sum(record_amount)")
     private float amount;
 
     public long getCount() {

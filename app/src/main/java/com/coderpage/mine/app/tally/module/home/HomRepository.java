@@ -9,11 +9,9 @@ import com.coderpage.base.common.Result;
 import com.coderpage.base.common.SimpleCallback;
 import com.coderpage.base.error.ErrorCode;
 import com.coderpage.concurrency.MineExecutors;
-import com.coderpage.mine.app.tally.persistence.model.Expense;
-import com.coderpage.mine.app.tally.persistence.model.Income;
+import com.coderpage.mine.app.tally.persistence.model.Record;
 import com.coderpage.mine.app.tally.persistence.sql.TallyDatabase;
-import com.coderpage.mine.app.tally.persistence.sql.entity.ExpenseEntity;
-import com.coderpage.mine.app.tally.persistence.sql.entity.InComeEntity;
+import com.coderpage.mine.app.tally.persistence.sql.entity.RecordEntity;
 import com.coderpage.mine.app.tally.utils.DateUtils;
 
 import java.util.ArrayList;
@@ -40,9 +38,9 @@ class HomRepository {
     /** 本月各个分类消费数据 */
     private List<Pair<String, Double>> mCategoryExpenseTotal = new ArrayList<>();
     /** 今日消费记录 */
-    private List<Expense> mTodayExpenseList = new ArrayList<>();
+    private List<Record> mTodayExpenseList = new ArrayList<>();
     /** 今日支出记录 */
-    private List<Income> mTodayInComeList = new ArrayList<>();
+    private List<Record> mTodayInComeList = new ArrayList<>();
 
     double getTodayExpenseTotalAmount() {
         return mTodayExpenseTotalAmount;
@@ -64,11 +62,11 @@ class HomRepository {
         return mCategoryExpenseTotal;
     }
 
-    List<Expense> getTodayExpenseList() {
+    List<Record> getTodayExpenseList() {
         return mTodayExpenseList;
     }
 
-    List<Income> getTodayInComeList() {
+    List<Record> getTodayInComeList() {
         return mTodayInComeList;
     }
 
@@ -83,15 +81,15 @@ class HomRepository {
             long monthEndTime = System.currentTimeMillis();
 
             // 本月消费记录列表
-            List<Expense> expenseList =
+            List<Record> expenseList =
                     TallyDatabase.getInstance().expenseDao().queryBetweenTimeTimeDesc(monthStartTime, monthEndTime);
             // 本月支出记录
-            List<Income> incomeList =
+            List<Record> incomeList =
                     TallyDatabase.getInstance().incomeDao().queryBetweenTimeTimeDesc(monthStartTime, monthEndTime);
 
             if (expenseList != null) {
                 // 今日消费记录
-                List<Expense> todayExpenseList = new ArrayList<>();
+                List<Record> todayExpenseList = new ArrayList<>();
                 // 分类消费总额缓存
                 Map<String, Double> getAmountByCategoryName = new HashMap<>();
                 // 月消费总额
@@ -99,7 +97,7 @@ class HomRepository {
                 // 今日消费金额
                 double todayTotalAmount = 0;
 
-                for (Expense expense : expenseList) {
+                for (Record expense : expenseList) {
                     // 统计月消费总额
                     monthTotalAmount += expense.getAmount();
                     // 统计今日消费记录及总额
@@ -139,13 +137,13 @@ class HomRepository {
 
             if (incomeList != null) {
                 // 今日支出记录
-                List<Income> todayIncomeList = new ArrayList<>();
+                List<Record> todayIncomeList = new ArrayList<>();
                 // 月消费总额
                 double monthTotalAmount = 0;
                 // 今日消费金额
                 double todayTotalAmount = 0;
 
-                for (Income income : incomeList) {
+                for (Record income : incomeList) {
                     // 统计月消费总额
                     monthTotalAmount += income.getAmount();
                     // 统计今日消费记录及总额
@@ -171,7 +169,7 @@ class HomRepository {
     void deleteExpense(long expenseId, Callback<Void, IError> callback) {
         MineExecutors.ioExecutor().execute(() -> {
             try {
-                ExpenseEntity entity = new ExpenseEntity();
+                RecordEntity entity = new RecordEntity();
                 entity.setId(expenseId);
                 TallyDatabase.getInstance().expenseDao().delete(entity);
                 MineExecutors.executeOnUiThread(() -> callback.success(null));
@@ -185,7 +183,7 @@ class HomRepository {
     void deleteInCome(long incomeId, Callback<Void, IError> callback) {
         MineExecutors.ioExecutor().execute(() -> {
             try {
-                InComeEntity entity = new InComeEntity();
+                RecordEntity entity = new RecordEntity();
                 entity.setId(incomeId);
                 TallyDatabase.getInstance().incomeDao().delete(entity);
                 MineExecutors.executeOnUiThread(() -> callback.success(null));

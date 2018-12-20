@@ -9,8 +9,7 @@ import android.view.ViewGroup;
 
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.module.home.model.HomeDisplayData;
-import com.coderpage.mine.app.tally.persistence.model.Expense;
-import com.coderpage.mine.app.tally.persistence.model.Income;
+import com.coderpage.mine.app.tally.persistence.model.Record;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,13 +62,13 @@ class HomeAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                         return true;
 
                     case HomeDisplayData.TYPE_EXPENSE_ITEM:
-                        Expense oldExpense = (Expense) oldData.getInternal();
-                        Expense newExpense = (Expense) newData.getInternal();
+                        Record oldExpense = (Record) oldData.getInternal();
+                        Record newExpense = (Record) newData.getInternal();
                         return oldExpense.getId() == newExpense.getId();
 
                     case HomeDisplayData.TYPE_IN_COME_ITEM:
-                        Income oldIncome = (Income) oldData.getInternal();
-                        Income newIncome = (Income) newData.getInternal();
+                        Record oldIncome = (Record) oldData.getInternal();
+                        Record newIncome = (Record) newData.getInternal();
                         return oldIncome.getId() == newIncome.getId();
 
                     default:

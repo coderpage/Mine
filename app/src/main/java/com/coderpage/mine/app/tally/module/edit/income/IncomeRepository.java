@@ -5,7 +5,7 @@ import com.coderpage.base.common.Result;
 import com.coderpage.base.common.SimpleCallback;
 import com.coderpage.concurrency.MineExecutors;
 import com.coderpage.mine.app.tally.persistence.model.CategoryModel;
-import com.coderpage.mine.app.tally.persistence.model.Income;
+import com.coderpage.mine.app.tally.persistence.model.Record;
 import com.coderpage.mine.app.tally.persistence.sql.TallyDatabase;
 
 import java.util.List;
@@ -32,15 +32,15 @@ class IncomeRepository {
     }
 
     /** 通过 ID 查询收入记录 */
-    void queryIncomeById(long expenseId, SimpleCallback<Income> callback) {
+    void queryIncomeById(long expenseId, SimpleCallback<Record> callback) {
         MineExecutors.ioExecutor().execute(() -> {
-            Income income = mDataBase.incomeDao().queryById(expenseId);
+            Record income = mDataBase.incomeDao().queryById(expenseId);
             MineExecutors.executeOnUiThread(() -> callback.success(income));
         });
     }
 
     /** 保存记录 */
-    void saveIncome(Income income, SimpleCallback<Result<Long, IError>> callback) {
+    void saveIncome(Record income, SimpleCallback<Result<Long, IError>> callback) {
         MineExecutors.ioExecutor().execute(() -> {
             long id = mDataBase.incomeDao().insert(income.createEntity());
             MineExecutors.executeOnUiThread(() -> callback.success(new Result<>(id, null)));
@@ -48,7 +48,7 @@ class IncomeRepository {
     }
 
     /** 保存记录 */
-    void updateIncome(Income income, SimpleCallback<Result<Long, IError>> callback) {
+    void updateIncome(Record income, SimpleCallback<Result<Long, IError>> callback) {
         MineExecutors.ioExecutor().execute(() -> {
             long id = mDataBase.incomeDao().update(income.createEntity());
             MineExecutors.executeOnUiThread(() -> callback.success(new Result<>(id, null)));

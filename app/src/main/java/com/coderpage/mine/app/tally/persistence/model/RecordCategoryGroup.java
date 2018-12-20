@@ -3,11 +3,11 @@ package com.coderpage.mine.app.tally.persistence.model;
 import android.arch.persistence.room.ColumnInfo;
 
 /**
- * @author lc. 2018-10-14 10:16
+ * @author lc.
  * @since 0.6.0
  */
 
-public class ExpenseCategoryGroup {
+public class RecordCategoryGroup {
 
     /** 该分类 ID */
     @ColumnInfo(name = "category_id")
@@ -18,7 +18,7 @@ public class ExpenseCategoryGroup {
     private long count;
 
     /** 总金额 */
-    @ColumnInfo(name = "sum(expense_amount)")
+    @ColumnInfo(name = "sum(record_amount)")
     private double amount;
 
     /** 分类唯一不变名称 */

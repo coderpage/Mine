@@ -3,12 +3,13 @@ package com.coderpage.mine.app.tally.module.backup;
 import android.support.annotation.Keep;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.coderpage.mine.app.tally.persistence.model.Record;
 
 /**
  * @author abner-l. 2017-06-01
  */
 @Keep
-public class BackupModelExpense {
+public class BackupModelRecord {
 
     /** 金额 */
     @JSONField(name = "1")
@@ -34,6 +35,14 @@ public class BackupModelExpense {
     /** 同步状态 */
     @JSONField(name = "8")
     private int syncStatus;
+    /**
+     * 记录类型
+     *
+     * {@link Record#TYPE_EXPENSE}
+     * {@link Record#TYPE_INCOME}
+     */
+    @JSONField(name = "9")
+    private int type = Record.TYPE_EXPENSE;
 
     public double getAmount() {
         return amount;
@@ -97,5 +106,13 @@ public class BackupModelExpense {
 
     public void setSyncStatus(int syncStatus) {
         this.syncStatus = syncStatus;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

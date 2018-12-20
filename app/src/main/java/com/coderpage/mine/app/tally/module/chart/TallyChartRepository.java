@@ -8,12 +8,9 @@ import com.coderpage.mine.app.tally.module.chart.data.CategoryData;
 import com.coderpage.mine.app.tally.module.chart.data.DailyData;
 import com.coderpage.mine.app.tally.module.chart.data.Month;
 import com.coderpage.mine.app.tally.module.chart.data.MonthlyData;
-import com.coderpage.mine.app.tally.persistence.model.Expense;
-import com.coderpage.mine.app.tally.persistence.model.ExpenseCategoryGroup;
-import com.coderpage.mine.app.tally.persistence.model.ExpenseGroup;
-import com.coderpage.mine.app.tally.persistence.model.Income;
-import com.coderpage.mine.app.tally.persistence.model.IncomeCategoryGroup;
-import com.coderpage.mine.app.tally.persistence.model.IncomeGroup;
+import com.coderpage.mine.app.tally.persistence.model.Record;
+import com.coderpage.mine.app.tally.persistence.model.RecordCategoryGroup;
+import com.coderpage.mine.app.tally.persistence.model.RecordGroup;
 import com.coderpage.mine.app.tally.persistence.sql.TallyDatabase;
 
 import java.util.ArrayList;
@@ -35,8 +32,8 @@ class TallyChartRepository {
     void queryFirstRecordTime(Callback<Long, IError> callback) {
         MineExecutors.ioExecutor().execute(() -> {
             long firstTime = System.currentTimeMillis();
-            Expense expenseFirst = TallyDatabase.getInstance().expenseDao().queryFirst();
-            Income incomeFirst = TallyDatabase.getInstance().incomeDao().queryFirst();
+            Record expenseFirst = TallyDatabase.getInstance().expenseDao().queryFirst();
+            Record incomeFirst = TallyDatabase.getInstance().incomeDao().queryFirst();
             if (expenseFirst != null) {
                 firstTime = Math.min(firstTime, expenseFirst.getTime());
             }
@@ -56,12 +53,12 @@ class TallyChartRepository {
      */
     void queryDailyExpense(long start, long end, Callback<List<DailyData>, IError> callback) {
         MineExecutors.ioExecutor().execute(() -> {
-            List<ExpenseGroup> expenseList = TallyDatabase.getInstance().expenseDao()
+            List<RecordGroup> expenseList = TallyDatabase.getInstance().expenseDao()
                     .queryExpenseDailyGroup(start, end);
 
             Calendar calendar = Calendar.getInstance();
             List<DailyData> dailyList = new ArrayList<>(expenseList.size());
-            for (ExpenseGroup dailyGroup : expenseList) {
+            for (RecordGroup dailyGroup : expenseList) {
                 calendar.setTimeInMillis(dailyGroup.getTime());
                 DailyData dailyData = new DailyData();
                 dailyData.setAmount(dailyGroup.getAmount());
@@ -84,12 +81,12 @@ class TallyChartRepository {
      */
     void queryDailyInCome(long start, long end, Callback<List<DailyData>, IError> callback) {
         MineExecutors.ioExecutor().execute(() -> {
-            List<IncomeGroup> incomeGroupList = TallyDatabase.getInstance().incomeDao()
+            List<RecordGroup> incomeGroupList = TallyDatabase.getInstance().incomeDao()
                     .queryIncomeDailyGroup(start, end);
 
             Calendar calendar = Calendar.getInstance();
             List<DailyData> dailyList = new ArrayList<>(incomeGroupList.size());
-            for (IncomeGroup dailyGroup : incomeGroupList) {
+            for (RecordGroup dailyGroup : incomeGroupList) {
                 calendar.setTimeInMillis(dailyGroup.getTime());
                 DailyData dailyData = new DailyData();
                 dailyData.setAmount(dailyGroup.getAmount());
@@ -112,11 +109,11 @@ class TallyChartRepository {
     void queryMonthlyExpense(long start, long end, Callback<List<MonthlyData>, IError> callback) {
         MineExecutors.ioExecutor().execute(() -> {
             List<MonthlyData> result = new ArrayList<>();
-            List<ExpenseGroup> expenseMonthGroups = TallyDatabase.getInstance()
+            List<RecordGroup> expenseMonthGroups = TallyDatabase.getInstance()
                     .expenseDao().queryExpenseMonthGroup(start, end);
 
             Calendar calendar = Calendar.getInstance();
-            for (ExpenseGroup group : expenseMonthGroups) {
+            for (RecordGroup group : expenseMonthGroups) {
                 long time = group.getTime();
                 float sum = group.getAmount();
 
@@ -142,11 +139,11 @@ class TallyChartRepository {
     void queryMonthlyIncome(long start, long end, Callback<List<MonthlyData>, IError> callback) {
         MineExecutors.ioExecutor().execute(() -> {
             List<MonthlyData> result = new ArrayList<>();
-            List<IncomeGroup> incomeMonthGroups = TallyDatabase.getInstance()
+            List<RecordGroup> incomeMonthGroups = TallyDatabase.getInstance()
                     .incomeDao().queryIncomeMonthGroup(start, end);
 
             Calendar calendar = Calendar.getInstance();
-            for (IncomeGroup group : incomeMonthGroups) {
+            for (RecordGroup group : incomeMonthGroups) {
                 long time = group.getTime();
                 float sum = group.getAmount();
 
@@ -175,11 +172,11 @@ class TallyChartRepository {
         MineExecutors.ioExecutor().execute(() -> {
             List<CategoryData> result = new ArrayList<>();
 
-            List<ExpenseCategoryGroup> expenseCategoryGroups = TallyDatabase.getInstance()
+            List<RecordCategoryGroup> expenseCategoryGroups = TallyDatabase.getInstance()
                     .expenseDao().queryExpenseCategoryGroup(start, end);
 
             double amountTotal = 0;
-            for (ExpenseCategoryGroup group : expenseCategoryGroups) {
+            for (RecordCategoryGroup group : expenseCategoryGroups) {
                 CategoryData categoryData = new CategoryData();
                 categoryData.setStartDate(start);
                 categoryData.setEndDate(end);
@@ -211,11 +208,11 @@ class TallyChartRepository {
         MineExecutors.ioExecutor().execute(() -> {
             List<CategoryData> result = new ArrayList<>();
 
-            List<IncomeCategoryGroup> incomeCategoryGroups = TallyDatabase.getInstance()
+            List<RecordCategoryGroup> incomeCategoryGroups = TallyDatabase.getInstance()
                     .incomeDao().queryIncomeCategoryGroup(start, end);
 
             double amountTotal = 0;
-            for (IncomeCategoryGroup group : incomeCategoryGroups) {
+            for (RecordCategoryGroup group : incomeCategoryGroups) {
                 CategoryData categoryData = new CategoryData();
                 categoryData.setStartDate(start);
                 categoryData.setEndDate(end);

@@ -2,32 +2,36 @@ package com.coderpage.mine.app.tally.persistence.model;
 
 import android.arch.persistence.room.ColumnInfo;
 
-import com.coderpage.mine.app.tally.persistence.sql.entity.ExpenseEntity;
+import com.coderpage.mine.app.tally.persistence.sql.entity.RecordEntity;
 
 /**
- * @author lc. 2018-05-20 16:02
+ * @author lc.
  * @since 0.6.0
  */
 
-public class Expense {
+public class Record {
 
-    @ColumnInfo(name = "expense_id")
+    /** 记录类型: 支出 */
+    public static final int TYPE_EXPENSE = RecordEntity.TYPE_EXPENSE;
+    /** 记录类型: 收入 */
+    public static final int TYPE_INCOME = RecordEntity.TYPE_INCOME;
+
+    public Record() {
+    }
+
+    @ColumnInfo(name = "record_id")
     private long id;
 
-    /** 分类 ID */
-    @ColumnInfo(name = "expense_category_id")
-    private long categoryId;
-
     /** 账户 ID */
-    @ColumnInfo(name = "expense_account_id")
+    @ColumnInfo(name = "record_account_id")
     private long accountId;
 
     /** 记录时间（UNIX TIME） */
-    @ColumnInfo(name = "expense_time")
+    @ColumnInfo(name = "record_time")
     private long time;
 
     /** 分类唯一不变名称 */
-    @ColumnInfo(name = "expense_category_unique_name")
+    @ColumnInfo(name = "record_category_unique_name")
     private String categoryUniqueName;
 
     /** 分类名称 */
@@ -39,32 +43,36 @@ public class Expense {
     private String categoryIcon;
 
     /** 金额 */
-    @ColumnInfo(name = "expense_amount")
+    @ColumnInfo(name = "record_amount")
     private double amount;
 
     /** 备注 */
-    @ColumnInfo(name = "expense_desc")
+    @ColumnInfo(name = "record_desc")
     private String desc;
 
     /** 同步 ID */
-    @ColumnInfo(name = "expense_sync_id")
+    @ColumnInfo(name = "record_sync_id")
     private String syncId;
 
     /** 同步状态 */
-    @ColumnInfo(name = "expense_sync_status")
+    @ColumnInfo(name = "record_sync_status")
     private int syncStatus;
 
-    public ExpenseEntity createEntity(){
-        ExpenseEntity entity = new ExpenseEntity();
+    /** 记录类型 */
+    @ColumnInfo(name = "record_type")
+    private int type;
+
+    public RecordEntity createEntity() {
+        RecordEntity entity = new RecordEntity();
         entity.setId(getId());
         entity.setAccountId(getAccountId());
         entity.setAmount(getAmount());
-        entity.setCategoryId(getCategoryId());
         entity.setDesc(getDesc());
         entity.setSyncId(getSyncId());
         entity.setSyncStatus(getSyncStatus());
         entity.setTime(getTime());
         entity.setCategoryUniqueName(getCategoryUniqueName());
+        entity.setType(getType());
         return entity;
     }
 
@@ -74,14 +82,6 @@ public class Expense {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(long categoryId) {
-        this.categoryId = categoryId;
     }
 
     public long getAccountId() {
@@ -154,5 +154,13 @@ public class Expense {
 
     public void setSyncStatus(int syncStatus) {
         this.syncStatus = syncStatus;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

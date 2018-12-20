@@ -4,8 +4,8 @@ import com.coderpage.base.common.IError;
 import com.coderpage.base.common.Result;
 import com.coderpage.base.common.SimpleCallback;
 import com.coderpage.concurrency.MineExecutors;
-import com.coderpage.mine.app.tally.persistence.model.Expense;
 import com.coderpage.mine.app.tally.persistence.model.CategoryModel;
+import com.coderpage.mine.app.tally.persistence.model.Record;
 import com.coderpage.mine.app.tally.persistence.sql.TallyDatabase;
 
 import java.util.List;
@@ -32,15 +32,15 @@ class ExpenseRepository {
     }
 
     /** 通过 ID 查询支出记录 */
-    void queryExpenseById(long expenseId, SimpleCallback<Expense> callback) {
+    void queryExpenseById(long expenseId, SimpleCallback<Record> callback) {
         MineExecutors.ioExecutor().execute(() -> {
-            Expense expense = mDataBase.expenseDao().queryById(expenseId);
+            Record expense = mDataBase.expenseDao().queryById(expenseId);
             MineExecutors.executeOnUiThread(() -> callback.success(expense));
         });
     }
 
     /** 保存记录 */
-    void saveExpense(Expense expense, SimpleCallback<Result<Long, IError>> callback) {
+    void saveExpense(Record expense, SimpleCallback<Result<Long, IError>> callback) {
         MineExecutors.ioExecutor().execute(() -> {
             long id = mDataBase.expenseDao().insert(expense.createEntity());
             MineExecutors.executeOnUiThread(() -> callback.success(new Result<>(id, null)));
@@ -48,7 +48,7 @@ class ExpenseRepository {
     }
 
     /** 保存记录 */
-    void updateExpense(Expense expense, SimpleCallback<Result<Long, IError>> callback) {
+    void updateExpense(Record expense, SimpleCallback<Result<Long, IError>> callback) {
         MineExecutors.ioExecutor().execute(() -> {
             long id = mDataBase.expenseDao().update(expense.createEntity());
             MineExecutors.executeOnUiThread(() -> callback.success(new Result<>(id, null)));

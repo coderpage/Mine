@@ -23,7 +23,7 @@ import com.coderpage.mine.app.tally.eventbus.EventExpenseAdd;
 import com.coderpage.mine.app.tally.eventbus.EventExpenseUpdate;
 import com.coderpage.mine.app.tally.module.edit.model.Category;
 import com.coderpage.mine.app.tally.persistence.model.CategoryModel;
-import com.coderpage.mine.app.tally.persistence.model.Expense;
+import com.coderpage.mine.app.tally.persistence.model.Record;
 import com.coderpage.mine.app.tally.ui.widget.NumInputView;
 import com.coderpage.mine.app.tally.utils.DatePickUtils;
 import com.coderpage.mine.utils.AndroidUtils;
@@ -53,7 +53,7 @@ public class ExpenseViewModel extends AndroidViewModel {
     private long mExpenseId;
     private long mDate;
     private double mAmount;
-    private Expense mExpense;
+    private Record mExpense;
     private ExpenseRepository mRepository;
 
     /** 金额 */
@@ -236,17 +236,17 @@ public class ExpenseViewModel extends AndroidViewModel {
         }
 
         boolean isNewRecord = mExpense == null;
-        Expense expense;
+        Record expense;
         if (mExpense != null) {
             expense = mExpense;
         } else {
-            expense = new Expense();
+            expense = new Record();
+            expense.setType(Record.TYPE_EXPENSE);
             expense.setSyncId(AndroidUtils.generateUUID());
         }
         expense.setAmount(mAmount);
         expense.setTime(mDate);
         expense.setDesc(TextUtils.isEmpty(mDesc.get()) ? "" : mDesc.get());
-        expense.setCategoryId(category.getInternal().getId());
         expense.setCategoryIcon(category.getInternal().getIcon());
         expense.setCategoryName(category.getInternal().getName());
         expense.setCategoryUniqueName(category.getInternal().getUniqueName());

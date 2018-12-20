@@ -3,7 +3,7 @@ package com.coderpage.mine.app.tally.module.home;
 import android.app.Activity;
 
 import com.coderpage.mine.app.tally.module.home.model.HomeDisplayData;
-import com.coderpage.mine.app.tally.persistence.model.Income;
+import com.coderpage.mine.app.tally.persistence.model.Record;
 import com.coderpage.mine.tally.module.home.IncomeItemBinding;
 
 /**
@@ -26,8 +26,8 @@ public class ViewHolderIncomeItem extends BaseViewHolder {
 
     @Override
     void bindData(HomeDisplayData data) {
-        if (data != null && data.getInternal() != null && data.getInternal() instanceof Income) {
-            Income income = (Income) data.getInternal();
+        if (data != null && data.getInternal() != null && data.getInternal() instanceof Record) {
+            Record income = (Record) data.getInternal();
             mBinding.setActivity(mActivity);
             mBinding.setVm(mViewModel);
             mBinding.setData(income);

@@ -2,6 +2,8 @@ package com.coderpage.mine.app.tally.persistence.model;
 
 import android.arch.persistence.room.ColumnInfo;
 
+import com.coderpage.mine.app.tally.persistence.sql.entity.CategoryEntity;
+
 /**
  * @author lc. 2018-08-29 19:37
  * @since 0.6.0
@@ -10,6 +12,10 @@ import android.arch.persistence.room.ColumnInfo;
  */
 
 public class CategoryModel {
+
+    public static final int TYPE_EXPENSE = CategoryEntity.TYPE_EXPENSE;
+
+    public static final int TYPE_INCOME = CategoryEntity.TYPE_INCOME;
 
     /** 分类记录 ID */
     @ColumnInfo(name = "category_id")
@@ -30,6 +36,18 @@ public class CategoryModel {
     /** 排序 */
     @ColumnInfo(name = "category_order")
     private int order;
+
+    /** 分类类型 */
+    @ColumnInfo(name = "category_type")
+    private int type;
+
+    /** 用户 ID */
+    @ColumnInfo(name = "category_account_id")
+    private long accountId;
+
+    /** 同步状态 */
+    @ColumnInfo(name = "category_sync_status")
+    private int syncStatus;
 
     public long getId() {
         return id;
@@ -69,5 +87,29 @@ public class CategoryModel {
 
     public void setOrder(int order) {
         this.order = order;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public long getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(long accountId) {
+        this.accountId = accountId;
+    }
+
+    public int getSyncStatus() {
+        return syncStatus;
+    }
+
+    public void setSyncStatus(int syncStatus) {
+        this.syncStatus = syncStatus;
     }
 }

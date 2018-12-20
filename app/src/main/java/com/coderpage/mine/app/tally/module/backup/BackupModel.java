@@ -21,7 +21,7 @@ public class BackupModel {
     @JSONField(name = "category_list")
     private List<BackupModelCategory> categoryList;
     @JSONField(name = "expense_list")
-    private List<BackupModelExpense> expenseList;
+    private List<BackupModelRecord> expenseList;
 
     public BackupModelMetadata getMetadata() {
         return metadata;
@@ -39,11 +39,11 @@ public class BackupModel {
         this.categoryList = categoryList;
     }
 
-    public List<BackupModelExpense> getExpenseList() {
+    public List<BackupModelRecord> getExpenseList() {
         return expenseList;
     }
 
-    public void setExpenseList(List<BackupModelExpense> expenseList) {
+    public void setExpenseList(List<BackupModelRecord> expenseList) {
         this.expenseList = expenseList;
     }
 }

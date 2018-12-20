@@ -9,7 +9,7 @@
 
         <variable
             name="data"
-            type="com.coderpage.mine.app.tally.persistence.model.Expense" />
+            type="com.coderpage.mine.app.tally.persistence.model.Record" />
 
         <variable
             name="vm"

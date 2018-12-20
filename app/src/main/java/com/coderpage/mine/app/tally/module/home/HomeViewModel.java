@@ -37,8 +37,7 @@ import com.coderpage.mine.app.tally.module.home.model.HomeMonthModel;
 import com.coderpage.mine.app.tally.module.home.model.HomeTodayExpenseModel;
 import com.coderpage.mine.app.tally.module.records.RecordsActivity;
 import com.coderpage.mine.app.tally.module.setting.SettingActivity;
-import com.coderpage.mine.app.tally.persistence.model.Expense;
-import com.coderpage.mine.app.tally.persistence.model.Income;
+import com.coderpage.mine.app.tally.persistence.model.Record;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -138,17 +137,17 @@ public class HomeViewModel extends AndroidViewModel implements LifecycleObserver
     }
 
     /** 消费记录 ITEM 点击 */
-    public void onExpenseItemClick(Activity activity, Expense expense) {
+    public void onExpenseItemClick(Activity activity, Record expense) {
         RecordDetailActivity.openExpenseDetail(activity, expense.getId());
     }
 
     /** 收入记录 ITEM 点击 */
-    public void onIncomeItemClick(Activity activity, Income income, View view) {
+    public void onIncomeItemClick(Activity activity, Record income, View view) {
         RecordDetailActivity.openIncomeDetail(activity, income.getId());
     }
 
     /** 消费记录 ITEM 长按 */
-    public boolean onExpenseItemLongClick(Activity activity, Expense expense) {
+    public boolean onExpenseItemLongClick(Activity activity, Record expense) {
         new AlertDialog.Builder(activity).setItems(R.array.expenseItemLongClickOption, (dialog, which) -> {
             switch (which) {
                 case 0:
@@ -165,7 +164,7 @@ public class HomeViewModel extends AndroidViewModel implements LifecycleObserver
     }
 
     /** 消费记录 ITEM 长按 */
-    public boolean onIncomeItemLongClick(Activity activity, Income income) {
+    public boolean onIncomeItemLongClick(Activity activity, Record income) {
         new AlertDialog.Builder(activity).setItems(R.array.expenseItemLongClickOption, (dialog, which) -> {
             switch (which) {
                 case 0:
@@ -195,8 +194,8 @@ public class HomeViewModel extends AndroidViewModel implements LifecycleObserver
                 double todayExpenseTotalAmount = mRepository.getTodayExpenseTotalAmount();
 
                 List<Pair<String, Double>> categoryExpenseTotal = mRepository.getCategoryExpenseTotal();
-                List<Expense> todayExpenseList = mRepository.getTodayExpenseList();
-                List<Income> todayInComeList = mRepository.getTodayInComeList();
+                List<Record> todayExpenseList = mRepository.getTodayExpenseList();
+                List<Record> todayInComeList = mRepository.getTodayInComeList();
 
                 HomeMonthModel monthModel = new HomeMonthModel();
                 monthModel.setMonthExpenseAmount(monthExpenseTotalAmount);
@@ -211,13 +210,13 @@ public class HomeViewModel extends AndroidViewModel implements LifecycleObserver
                 dataList.add(new HomeDisplayData(HomeDisplayData.TYPE_TODAY_EXPENSE, todayExpenseModel));
 
                 if (todayInComeList != null) {
-                    for (Income income : todayInComeList) {
+                    for (Record income : todayInComeList) {
                         dataList.add(new HomeDisplayData(HomeDisplayData.TYPE_IN_COME_ITEM, income));
                     }
                 }
 
                 if (todayExpenseList != null) {
-                    for (Expense expense : todayExpenseList) {
+                    for (Record expense : todayExpenseList) {
                         dataList.add(new HomeDisplayData(HomeDisplayData.TYPE_EXPENSE_ITEM, expense));
                     }
                 }
@@ -228,7 +227,7 @@ public class HomeViewModel extends AndroidViewModel implements LifecycleObserver
     }
 
     /** 删除消费记录 */
-    private void deleteExpense(Expense expense) {
+    private void deleteExpense(Record expense) {
         if (expense == null) {
             return;
         }
@@ -246,7 +245,7 @@ public class HomeViewModel extends AndroidViewModel implements LifecycleObserver
     }
 
     /** 删除消费记录 */
-    private void deleteIncome(Income income) {
+    private void deleteIncome(Record income) {
         if (income == null) {
             return;
         }

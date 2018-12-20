@@ -1,30 +1,25 @@
 package com.coderpage.mine.app.tally.persistence.sql;
 
 import android.arch.persistence.db.SupportSQLiteDatabase;
-import android.arch.persistence.db.SupportSQLiteQueryBuilder;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.migration.Migration;
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
 import com.coderpage.base.utils.LogUtils;
-import com.coderpage.concurrency.MineExecutors;
 import com.coderpage.mine.MineApp;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.data.CategoryContant;
 import com.coderpage.mine.app.tally.data.CategoryIconHelper;
-import com.coderpage.mine.app.tally.persistence.model.CategoryModel;
 import com.coderpage.mine.app.tally.persistence.sql.dao.CategoryDao;
 import com.coderpage.mine.app.tally.persistence.sql.dao.ExpenseDao;
 import com.coderpage.mine.app.tally.persistence.sql.dao.IncomeDao;
 import com.coderpage.mine.app.tally.persistence.sql.entity.CategoryEntity;
-import com.coderpage.mine.app.tally.persistence.sql.entity.ExpenseEntity;
-import com.coderpage.mine.app.tally.persistence.sql.entity.InComeEntity;
+import com.coderpage.mine.app.tally.persistence.sql.entity.RecordEntity;
 import com.coderpage.mine.app.tally.provider.TallyContract;
 
 import java.util.ArrayList;
@@ -35,7 +30,7 @@ import java.util.List;
  * @since 0.6.0
  */
 
-@Database(entities = {ExpenseEntity.class, InComeEntity.class, CategoryEntity.class}, version = 60, exportSchema = false)
+@Database(entities = {RecordEntity.class, CategoryEntity.class}, version = 60, exportSchema = false)
 public abstract class TallyDatabase extends RoomDatabase {
     /** sqlite db name */
     private static final String DATABASE_NAME = "sql_tally";
@@ -92,160 +87,55 @@ public abstract class TallyDatabase extends RoomDatabase {
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             Context context = MineApp.getAppContext();
 
-            LogUtils.LOGI("TallyDatabase", "database on create callback");
-
+            List<CategoryItem> categoryList = new ArrayList<>();
             // 初始化支出分类
-            List<CategoryItem> expenseCategoryList = new ArrayList<>();
-            expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_OTHER_EXPENSE, context.getString(R.string.tyOther), CategoryIconHelper.IC_NAME_OTHER));
-            expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_CAN_YIN, context.getString(R.string.tyFoodAndBeverage), CategoryIconHelper.IC_NAME_CAN_YIN));
-            expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_JIAO_TONG, context.getString(R.string.tyTraffic), CategoryIconHelper.IC_NAME_JIAO_TONG));
-            expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_GOU_WU, context.getString(R.string.tyShopping), CategoryIconHelper.IC_NAME_GOU_WU));
-            expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_FU_SHI, context.getString(R.string.tyClothes), CategoryIconHelper.IC_NAME_FU_SHI));
-            expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_RI_YONG_PIN, context.getString(R.string.tyDailyNecessities), CategoryIconHelper.IC_NAME_RI_YONG_PIN));
-            expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_YU_LE, context.getString(R.string.tyEntertainment), CategoryIconHelper.IC_NAME_YU_LE));
-            expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_SHI_CAI, context.getString(R.string.tyFoodIngredients), CategoryIconHelper.IC_NAME_SHI_CAI));
-            expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_LING_SHI, context.getString(R.string.tySnacks), CategoryIconHelper.IC_NAME_LING_SHI));
-            expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_YAN_JIU_CHA, context.getString(R.string.tyTobaccoAnTea), CategoryIconHelper.IC_NAME_YAN_JIU_CHA));
-            expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_XUE_XI, context.getString(R.string.tyStudy), CategoryIconHelper.IC_NAME_XUE_XI));
-            expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_YI_LIAO, context.getString(R.string.tyMedical), CategoryIconHelper.IC_NAME_YI_LIAO));
-            expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_ZHU_FANG, context.getString(R.string.tyHouse), CategoryIconHelper.IC_NAME_ZHU_FANG));
-            expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_SHUI_DIAN_MEI, context.getString(R.string.tyWaterElectricityCoal), CategoryIconHelper.IC_NAME_SHUI_DIAN_MEI));
-            expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_TONG_XUN, context.getString(R.string.tyCommunication), CategoryIconHelper.IC_NAME_TONG_XUN));
-            expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_REN_QING, context.getString(R.string.tyTheFavorPattern), CategoryIconHelper.IC_NAME_REN_QING));
-
+            categoryList.add(expenseCategory(CategoryContant.NAME_OTHER_EXPENSE, context.getString(R.string.tyOther), CategoryIconHelper.IC_NAME_OTHER));
+            categoryList.add(expenseCategory(CategoryContant.NAME_CAN_YIN, context.getString(R.string.tyFoodAndBeverage), CategoryIconHelper.IC_NAME_CAN_YIN));
+            categoryList.add(expenseCategory(CategoryContant.NAME_JIAO_TONG, context.getString(R.string.tyTraffic), CategoryIconHelper.IC_NAME_JIAO_TONG));
+            categoryList.add(expenseCategory(CategoryContant.NAME_GOU_WU, context.getString(R.string.tyShopping), CategoryIconHelper.IC_NAME_GOU_WU));
+            categoryList.add(expenseCategory(CategoryContant.NAME_FU_SHI, context.getString(R.string.tyClothes), CategoryIconHelper.IC_NAME_FU_SHI));
+            categoryList.add(expenseCategory(CategoryContant.NAME_RI_YONG_PIN, context.getString(R.string.tyDailyNecessities), CategoryIconHelper.IC_NAME_RI_YONG_PIN));
+            categoryList.add(expenseCategory(CategoryContant.NAME_YU_LE, context.getString(R.string.tyEntertainment), CategoryIconHelper.IC_NAME_YU_LE));
+            categoryList.add(expenseCategory(CategoryContant.NAME_SHI_CAI, context.getString(R.string.tyFoodIngredients), CategoryIconHelper.IC_NAME_SHI_CAI));
+            categoryList.add(expenseCategory(CategoryContant.NAME_LING_SHI, context.getString(R.string.tySnacks), CategoryIconHelper.IC_NAME_LING_SHI));
+            categoryList.add(expenseCategory(CategoryContant.NAME_YAN_JIU_CHA, context.getString(R.string.tyTobaccoAnTea), CategoryIconHelper.IC_NAME_YAN_JIU_CHA));
+            categoryList.add(expenseCategory(CategoryContant.NAME_XUE_XI, context.getString(R.string.tyStudy), CategoryIconHelper.IC_NAME_XUE_XI));
+            categoryList.add(expenseCategory(CategoryContant.NAME_YI_LIAO, context.getString(R.string.tyMedical), CategoryIconHelper.IC_NAME_YI_LIAO));
+            categoryList.add(expenseCategory(CategoryContant.NAME_ZHU_FANG, context.getString(R.string.tyHouse), CategoryIconHelper.IC_NAME_ZHU_FANG));
+            categoryList.add(expenseCategory(CategoryContant.NAME_SHUI_DIAN_MEI, context.getString(R.string.tyWaterElectricityCoal), CategoryIconHelper.IC_NAME_SHUI_DIAN_MEI));
+            categoryList.add(expenseCategory(CategoryContant.NAME_TONG_XUN, context.getString(R.string.tyCommunication), CategoryIconHelper.IC_NAME_TONG_XUN));
+            categoryList.add(expenseCategory(CategoryContant.NAME_REN_QING, context.getString(R.string.tyTheFavorPattern), CategoryIconHelper.IC_NAME_REN_QING));
             // 初始化收入分类
-            List<CategoryItem> incomeCategoryList = new ArrayList<>();
-            incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_OTHER_IN_COME, context.getString(R.string.tyOther), CategoryIconHelper.IC_NAME_OTHER));
-            incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_XIN_ZI, context.getString(R.string.tyIncomeSalary), CategoryIconHelper.IC_NAME_XIN_ZI));
-            incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_JIANG_JIN, context.getString(R.string.tyIncomeReward), CategoryIconHelper.IC_NAME_JIANG_JIN));
-            incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_JIE_RU, context.getString(R.string.tyIncomeLend), CategoryIconHelper.IC_NAME_JIE_RU));
-            incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_SHOU_ZHAI, context.getString(R.string.tyIncomeDun), CategoryIconHelper.IC_NAME_SHOU_ZHAI));
-            incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_LI_XIN_SHOU_RU, context.getString(R.string.tyIncomeInterest), CategoryIconHelper.IC_NAME_LI_XIN_SHOU_RU));
-            incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_TOU_ZI_HUI_SHOU, context.getString(R.string.tyIncomeInvestRecovery), CategoryIconHelper.IC_NAME_TOU_ZI_HUI_SHOU));
-            incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_TOU_ZI_SHOU_YI, context.getString(R.string.tyIncomeInvestProfit), CategoryIconHelper.IC_NAME_TOU_ZI_SHOU_YI));
-            incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_YI_WAI_SUO_DE, context.getString(R.string.tyIncomeUnexpected), CategoryIconHelper.IC_NAME_YI_WAI_SUO_DE));
+            categoryList.add(incomeCategory(CategoryContant.NAME_OTHER_IN_COME, context.getString(R.string.tyOther), CategoryIconHelper.IC_NAME_OTHER));
+            categoryList.add(incomeCategory(CategoryContant.NAME_XIN_ZI, context.getString(R.string.tyIncomeSalary), CategoryIconHelper.IC_NAME_XIN_ZI));
+            categoryList.add(incomeCategory(CategoryContant.NAME_JIANG_JIN, context.getString(R.string.tyIncomeReward), CategoryIconHelper.IC_NAME_JIANG_JIN));
+            categoryList.add(incomeCategory(CategoryContant.NAME_JIE_RU, context.getString(R.string.tyIncomeLend), CategoryIconHelper.IC_NAME_JIE_RU));
+            categoryList.add(incomeCategory(CategoryContant.NAME_SHOU_ZHAI, context.getString(R.string.tyIncomeDun), CategoryIconHelper.IC_NAME_SHOU_ZHAI));
+            categoryList.add(incomeCategory(CategoryContant.NAME_LI_XIN_SHOU_RU, context.getString(R.string.tyIncomeInterest), CategoryIconHelper.IC_NAME_LI_XIN_SHOU_RU));
+            categoryList.add(incomeCategory(CategoryContant.NAME_TOU_ZI_HUI_SHOU, context.getString(R.string.tyIncomeInvestRecovery), CategoryIconHelper.IC_NAME_TOU_ZI_HUI_SHOU));
+            categoryList.add(incomeCategory(CategoryContant.NAME_TOU_ZI_SHOU_YI, context.getString(R.string.tyIncomeInvestProfit), CategoryIconHelper.IC_NAME_TOU_ZI_SHOU_YI));
+            categoryList.add(incomeCategory(CategoryContant.NAME_YI_WAI_SUO_DE, context.getString(R.string.tyIncomeUnexpected), CategoryIconHelper.IC_NAME_YI_WAI_SUO_DE));
 
             // 插入记录事务
             db.beginTransaction();
-
-            // 插入支出分类
-            for (CategoryItem categoryExpense : expenseCategoryList) {
+            // 插入分类
+            for (CategoryItem categoryItem : categoryList) {
                 ContentValues values = new ContentValues(4);
-                values.put("category_unique_name", categoryExpense.uniqueName);
-                values.put("category_name", categoryExpense.name);
-                values.put("category_icon", categoryExpense.icon);
-                values.put("category_type", CategoryEntity.TYPE_EXPENSE);
+                values.put("category_unique_name", categoryItem.uniqueName);
+                values.put("category_name", categoryItem.name);
+                values.put("category_icon", categoryItem.icon);
+                values.put("category_type", categoryItem.type);
                 values.put("category_order", 0);
                 values.put("category_account_id", 0);
                 values.put("category_sync_status", 0);
                 long id = db.insert("category", SQLiteDatabase.CONFLICT_NONE, values);
 
-                LogUtils.LOGI("TallyDatabase", "insert expense category. id:" + id + " name:" + categoryExpense.name);
+                LogUtils.LOGI("TallyDatabase", "insert expense category. id:" + id + " name:" + categoryItem.name);
             }
-
-            // 插入收入分类
-            for (CategoryItem categoryIncome : incomeCategoryList) {
-                ContentValues values = new ContentValues(4);
-                values.put("category_unique_name", categoryIncome.uniqueName);
-                values.put("category_name", categoryIncome.name);
-                values.put("category_icon", categoryIncome.icon);
-                values.put("category_type", CategoryEntity.TYPE_INCOME);
-                values.put("category_order", 0);
-                values.put("category_account_id", 0);
-                values.put("category_sync_status", 0);
-                long id = db.insert("category", SQLiteDatabase.CONFLICT_NONE, values);
-
-                LogUtils.LOGI("TallyDatabase", "insert expense category. id:" + id + " name:" + categoryIncome.name);
-            }
-
             db.setTransactionSuccessful();
             db.endTransaction();
         }
     };
-
-    private void initDatabase() {
-        MineExecutors.ioExecutor().execute(() -> {
-            List<CategoryModel> expenseCategoryList = categoryDao().allExpenseCategory();
-            if (expenseCategoryList == null || expenseCategoryList.isEmpty()) {
-                initExpenseCategory();
-            }
-
-            List<CategoryModel> incomeCategoryList = categoryDao().allIncomeCategory();
-            if (incomeCategoryList == null || incomeCategoryList.isEmpty()) {
-                initIncomeCategory();
-            }
-        });
-    }
-
-    private void initExpenseCategory() {
-        Context context = MineApp.getAppContext();
-
-        List<CategoryItem> expenseCategoryList = new ArrayList<>();
-
-        expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_OTHER_EXPENSE, context.getString(R.string.tyOther), CategoryIconHelper.IC_NAME_OTHER));
-        expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_CAN_YIN, context.getString(R.string.tyFoodAndBeverage), CategoryIconHelper.IC_NAME_CAN_YIN));
-        expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_JIAO_TONG, context.getString(R.string.tyTraffic), CategoryIconHelper.IC_NAME_JIAO_TONG));
-        expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_GOU_WU, context.getString(R.string.tyShopping), CategoryIconHelper.IC_NAME_GOU_WU));
-        expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_FU_SHI, context.getString(R.string.tyClothes), CategoryIconHelper.IC_NAME_FU_SHI));
-        expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_RI_YONG_PIN, context.getString(R.string.tyDailyNecessities), CategoryIconHelper.IC_NAME_RI_YONG_PIN));
-        expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_YU_LE, context.getString(R.string.tyEntertainment), CategoryIconHelper.IC_NAME_YU_LE));
-        expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_SHI_CAI, context.getString(R.string.tyFoodIngredients), CategoryIconHelper.IC_NAME_SHI_CAI));
-        expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_LING_SHI, context.getString(R.string.tySnacks), CategoryIconHelper.IC_NAME_LING_SHI));
-        expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_YAN_JIU_CHA, context.getString(R.string.tyTobaccoAnTea), CategoryIconHelper.IC_NAME_YAN_JIU_CHA));
-        expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_XUE_XI, context.getString(R.string.tyStudy), CategoryIconHelper.IC_NAME_XUE_XI));
-        expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_YI_LIAO, context.getString(R.string.tyMedical), CategoryIconHelper.IC_NAME_YI_LIAO));
-        expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_ZHU_FANG, context.getString(R.string.tyHouse), CategoryIconHelper.IC_NAME_ZHU_FANG));
-        expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_SHUI_DIAN_MEI, context.getString(R.string.tyWaterElectricityCoal), CategoryIconHelper.IC_NAME_SHUI_DIAN_MEI));
-        expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_TONG_XUN, context.getString(R.string.tyCommunication), CategoryIconHelper.IC_NAME_TONG_XUN));
-        expenseCategoryList.add(new CategoryItem(CategoryContant.NAME_REN_QING, context.getString(R.string.tyTheFavorPattern), CategoryIconHelper.IC_NAME_REN_QING));
-
-        CategoryEntity[] entityArray = new CategoryEntity[expenseCategoryList.size()];
-
-        for (int i = 0; i < expenseCategoryList.size(); i++) {
-            CategoryItem categoryIncome = expenseCategoryList.get(i);
-
-            CategoryEntity entity = new CategoryEntity();
-            entity.setUniqueName(categoryIncome.uniqueName);
-            entity.setName(categoryIncome.name);
-            entity.setIcon(categoryIncome.icon);
-            entity.setType(CategoryEntity.TYPE_EXPENSE);
-
-            entityArray[i] = entity;
-        }
-
-        categoryDao().insert(entityArray);
-    }
-
-    private void initIncomeCategory() {
-        Context context = MineApp.getAppContext();
-        List<CategoryItem> incomeCategoryList = new ArrayList<>();
-
-        incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_OTHER_IN_COME, context.getString(R.string.tyOther), CategoryIconHelper.IC_NAME_OTHER));
-        incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_XIN_ZI, context.getString(R.string.tyIncomeSalary), CategoryIconHelper.IC_NAME_XIN_ZI));
-        incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_JIANG_JIN, context.getString(R.string.tyIncomeReward), CategoryIconHelper.IC_NAME_JIANG_JIN));
-        incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_JIE_RU, context.getString(R.string.tyIncomeLend), CategoryIconHelper.IC_NAME_JIE_RU));
-        incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_SHOU_ZHAI, context.getString(R.string.tyIncomeDun), CategoryIconHelper.IC_NAME_SHOU_ZHAI));
-        incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_LI_XIN_SHOU_RU, context.getString(R.string.tyIncomeInterest), CategoryIconHelper.IC_NAME_LI_XIN_SHOU_RU));
-        incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_TOU_ZI_HUI_SHOU, context.getString(R.string.tyIncomeInvestRecovery), CategoryIconHelper.IC_NAME_TOU_ZI_HUI_SHOU));
-        incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_TOU_ZI_SHOU_YI, context.getString(R.string.tyIncomeInvestProfit), CategoryIconHelper.IC_NAME_TOU_ZI_SHOU_YI));
-        incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_YI_WAI_SUO_DE, context.getString(R.string.tyIncomeUnexpected), CategoryIconHelper.IC_NAME_YI_WAI_SUO_DE));
-
-        CategoryEntity[] entityArray = new CategoryEntity[incomeCategoryList.size()];
-
-        for (int i = 0; i < incomeCategoryList.size(); i++) {
-            CategoryItem categoryIncome = incomeCategoryList.get(i);
-
-            CategoryEntity entity = new CategoryEntity();
-            entity.setUniqueName(categoryIncome.uniqueName);
-            entity.setName(categoryIncome.name);
-            entity.setIcon(categoryIncome.icon);
-            entity.setType(CategoryEntity.TYPE_INCOME);
-
-            entityArray[i] = entity;
-        }
-
-        categoryDao().insert(entityArray);
-    }
 
     private static final Migration MIGRATION_010_040 = new Migration(VERSION_0_1_0, VERSION_0_4_0) {
         @Override
@@ -313,35 +203,20 @@ public abstract class TallyDatabase extends RoomDatabase {
             database.execSQL("ALTER TABLE expense RENAME TO expense040");
             database.execSQL("ALTER TABLE category RENAME TO category040");
 
-            // 创建支出表
-            database.execSQL("CREATE TABLE expense ("
-                    + "expense_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                    + "expense_category_id INTEGER NOT NULL,"
+            // 创建记录表
+            database.execSQL("CREATE TABLE record ("
+                    + "record_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
                     // 分类-唯一名称
-                    + "expense_category_unique_name TEXT,"
-                    + "expense_amount REAL NOT NULL,"
-                    + "expense_desc TEXT NOT NULL DEFAULT '',"
-                    + "expense_time INTEGER NOT NULL,"
-                    + "expense_account_id INTEGER NOT NULL DEFAULT 0,"
-                    + "expense_sync_id TEXT NOT NULL,"
-                    + "expense_sync_status INTEGER NOT NULL DEFAULT 0,"
-                    + "expense_delete INTEGER NOT NULL DEFAULT 0,"
-                    + "UNIQUE (expense_sync_id) ON CONFLICT IGNORE)"
-            );
-
-            // 创建收入表
-            database.execSQL("CREATE TABLE income ("
-                    + "income_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                    + "income_category_id INTEGER NOT NULL,"
-                    + "income_category_unique_name TEXT,"
-                    + "income_amount REAL NOT NULL,"
-                    + "income_desc TEXT NOT NULL DEFAULT '',"
-                    + "income_time INTEGER NOT NULL,"
-                    + "income_account_id INTEGER NOT NULL DEFAULT 0,"
-                    + "income_sync_id TEXT NOT NULL,"
-                    + "income_sync_status INTEGER NOT NULL DEFAULT 0,"
-                    + "income_delete INTEGER NOT NULL DEFAULT 0,"
-                    + "UNIQUE (income_sync_id) ON CONFLICT IGNORE)"
+                    + "record_category_unique_name TEXT,"
+                    + "record_amount REAL NOT NULL,"
+                    + "record_desc TEXT NOT NULL DEFAULT '',"
+                    + "record_time INTEGER NOT NULL,"
+                    + "record_account_id INTEGER NOT NULL DEFAULT 0,"
+                    + "record_sync_id TEXT NOT NULL,"
+                    + "record_sync_status INTEGER NOT NULL DEFAULT 0,"
+                    + "record_delete INTEGER NOT NULL DEFAULT 0,"
+                    + "record_type INTEGER NOT NULL DEFAULT 0,"
+                    + "UNIQUE (record_sync_id) ON CONFLICT IGNORE)"
             );
 
             // 创建分类表
@@ -356,16 +231,16 @@ public abstract class TallyDatabase extends RoomDatabase {
                     + "category_sync_status INTEGER NOT NULL DEFAULT(0),"
                     + "UNIQUE (category_unique_name) ON CONFLICT IGNORE)");
 
-            database.execSQL("CREATE UNIQUE INDEX index_expense_expense_sync_id on expense(expense_sync_id)");
-            database.execSQL("CREATE UNIQUE INDEX index_income_income_sync_id on income(income_sync_id)");
+            database.execSQL("CREATE UNIQUE INDEX index_record_record_sync_id on record(record_sync_id)");
             database.execSQL("CREATE UNIQUE INDEX index_category_category_unique_name on category(category_unique_name)");
 
-            // 同步支出表数据
-            database.execSQL("INSERT INTO expense (" +
-                    "expense_id,expense_category_id,expense_amount,expense_desc,expense_time,expense_account_id,expense_sync_id,expense_sync_status) SELECT " +
-                    "expense_id,category_id,expense_amount,expense_desc,expense_time,expense_account_id,expense_sync_id,expense_synced FROM expense040");
+            // 同步记录表数据。新加的 record_category_unique_name 使用 category_icon 填充
+            database.execSQL("INSERT INTO record (" +
+                    "record_id,record_category_unique_name,record_amount,record_desc,record_time,record_account_id,record_sync_id,record_sync_status,record_delete,record_type) SELECT " +
+                    "expense_id,category_icon,expense_amount,expense_desc,expense_time,expense_account_id,expense_sync_id,expense_synced,0,0 " +
+                    "FROM expense040 LEFT OUTER JOIN category040 ON expense040.category_id=category040.category_id");
 
-            // 同步分类表数据
+            // 同步分类表数据。 0.6.0 版本之前没有 category_unique_name，使用 categoryIcon 字段填充
             database.execSQL("INSERT INTO category (" +
                     "category_id,category_name,category_unique_name,category_icon,category_order) SELECT " +
                     "category_id,category_name,category_icon,category_icon,category_order FROM category040");
@@ -373,15 +248,15 @@ public abstract class TallyDatabase extends RoomDatabase {
             // 插入默认的收入分类
             Context context = MineApp.getAppContext();
             List<CategoryItem> incomeCategoryList = new ArrayList<>();
-            incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_OTHER_IN_COME, context.getString(R.string.tyOther), CategoryIconHelper.IC_NAME_OTHER));
-            incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_XIN_ZI, context.getString(R.string.tyIncomeSalary), CategoryIconHelper.IC_NAME_XIN_ZI));
-            incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_JIANG_JIN, context.getString(R.string.tyIncomeReward), CategoryIconHelper.IC_NAME_JIANG_JIN));
-            incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_JIE_RU, context.getString(R.string.tyIncomeLend), CategoryIconHelper.IC_NAME_JIE_RU));
-            incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_SHOU_ZHAI, context.getString(R.string.tyIncomeDun), CategoryIconHelper.IC_NAME_SHOU_ZHAI));
-            incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_LI_XIN_SHOU_RU, context.getString(R.string.tyIncomeInterest), CategoryIconHelper.IC_NAME_LI_XIN_SHOU_RU));
-            incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_TOU_ZI_HUI_SHOU, context.getString(R.string.tyIncomeInvestRecovery), CategoryIconHelper.IC_NAME_TOU_ZI_HUI_SHOU));
-            incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_TOU_ZI_SHOU_YI, context.getString(R.string.tyIncomeInvestProfit), CategoryIconHelper.IC_NAME_TOU_ZI_SHOU_YI));
-            incomeCategoryList.add(new CategoryItem(CategoryContant.NAME_YI_WAI_SUO_DE, context.getString(R.string.tyIncomeUnexpected), CategoryIconHelper.IC_NAME_YI_WAI_SUO_DE));
+            incomeCategoryList.add(incomeCategory(CategoryContant.NAME_OTHER_IN_COME, context.getString(R.string.tyOther), CategoryIconHelper.IC_NAME_OTHER));
+            incomeCategoryList.add(incomeCategory(CategoryContant.NAME_XIN_ZI, context.getString(R.string.tyIncomeSalary), CategoryIconHelper.IC_NAME_XIN_ZI));
+            incomeCategoryList.add(incomeCategory(CategoryContant.NAME_JIANG_JIN, context.getString(R.string.tyIncomeReward), CategoryIconHelper.IC_NAME_JIANG_JIN));
+            incomeCategoryList.add(incomeCategory(CategoryContant.NAME_JIE_RU, context.getString(R.string.tyIncomeLend), CategoryIconHelper.IC_NAME_JIE_RU));
+            incomeCategoryList.add(incomeCategory(CategoryContant.NAME_SHOU_ZHAI, context.getString(R.string.tyIncomeDun), CategoryIconHelper.IC_NAME_SHOU_ZHAI));
+            incomeCategoryList.add(incomeCategory(CategoryContant.NAME_LI_XIN_SHOU_RU, context.getString(R.string.tyIncomeInterest), CategoryIconHelper.IC_NAME_LI_XIN_SHOU_RU));
+            incomeCategoryList.add(incomeCategory(CategoryContant.NAME_TOU_ZI_HUI_SHOU, context.getString(R.string.tyIncomeInvestRecovery), CategoryIconHelper.IC_NAME_TOU_ZI_HUI_SHOU));
+            incomeCategoryList.add(incomeCategory(CategoryContant.NAME_TOU_ZI_SHOU_YI, context.getString(R.string.tyIncomeInvestProfit), CategoryIconHelper.IC_NAME_TOU_ZI_SHOU_YI));
+            incomeCategoryList.add(incomeCategory(CategoryContant.NAME_YI_WAI_SUO_DE, context.getString(R.string.tyIncomeUnexpected), CategoryIconHelper.IC_NAME_YI_WAI_SUO_DE));
 
             database.beginTransaction();
             for (CategoryItem categoryIncome : incomeCategoryList) {
@@ -389,25 +264,9 @@ public abstract class TallyDatabase extends RoomDatabase {
                 values.put("category_unique_name", categoryIncome.uniqueName);
                 values.put("category_name", categoryIncome.name);
                 values.put("category_icon", categoryIncome.icon);
-                values.put("category_type", CategoryEntity.TYPE_INCOME);
+                values.put("category_type", categoryIncome.type);
                 database.insert("category", SQLiteDatabase.CONFLICT_IGNORE, values);
             }
-            database.setTransactionSuccessful();
-            database.endTransaction();
-
-            // 更新支出表新加字段 category_unique_name
-            database.beginTransaction();
-            Cursor cursor = database.query(SupportSQLiteQueryBuilder.builder("category")
-                    .columns(new String[]{"category_id", "category_unique_name"})
-                    .selection("category_type=0", null)
-                    .create());
-            while (cursor.moveToNext()) {
-                long categoryId = cursor.getLong(cursor.getColumnIndex("category_id"));
-                String uniqueName = cursor.getString(cursor.getColumnIndex("category_unique_name"));
-                database.execSQL("update expense set expense_category_unique_name = '" + uniqueName + "' where expense_category_id=" + categoryId);
-            }
-            cursor.close();
-
             database.setTransactionSuccessful();
             database.endTransaction();
         }
@@ -417,6 +276,7 @@ public abstract class TallyDatabase extends RoomDatabase {
         private String uniqueName;
         private String name = "";
         private String icon = "";
+        private int type;
 
         CategoryItem(String uniqueName, String name, String icon) {
             this.uniqueName = uniqueName;
@@ -425,4 +285,15 @@ public abstract class TallyDatabase extends RoomDatabase {
         }
     }
 
+    private static CategoryItem expenseCategory(String uniqueName, String name, String icon) {
+        CategoryItem categoryItem = new CategoryItem(uniqueName, name, icon);
+        categoryItem.type = CategoryEntity.TYPE_EXPENSE;
+        return categoryItem;
+    }
+
+    private static CategoryItem incomeCategory(String uniqueName, String name, String icon) {
+        CategoryItem categoryItem = new CategoryItem(uniqueName, name, icon);
+        categoryItem.type = CategoryEntity.TYPE_INCOME;
+        return categoryItem;
+    }
 }
