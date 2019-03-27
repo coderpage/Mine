@@ -224,7 +224,7 @@ public class MainActivity extends BaseActivity
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventRecordAdd(EventRecordAdd event) {
         Bundle args = new Bundle(1);
-        args.putLong(MainModel.EXTRA_EXPENSE_ID, event.getExpenseItem().getId());
+        args.putLong(MainModel.EXTRA_EXPENSE_ID, event.getRecord().getId());
         mUserActionListener.onUserAction(MainModel.MainUserActionEnum.REFRESH_TODAY_EXPENSE, null);
         mUserActionListener.onUserAction(MainModel.MainUserActionEnum.RELOAD_MONTH_TOTAL, null);
     }
@@ -232,7 +232,7 @@ public class MainActivity extends BaseActivity
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventRecordUpdate(EventRecordUpdate event) {
         Bundle args = new Bundle(1);
-        args.putLong(MainModel.EXTRA_EXPENSE_ID, event.getExpenseItem().getId());
+        args.putLong(MainModel.EXTRA_EXPENSE_ID, event.getRecord().getId());
         mUserActionListener.onUserAction(MainModel.MainUserActionEnum.REFRESH_TODAY_EXPENSE, null);
         mUserActionListener.onUserAction(MainModel.MainUserActionEnum.RELOAD_MONTH_TOTAL, null);
     }
@@ -240,7 +240,7 @@ public class MainActivity extends BaseActivity
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventRecordDelete(EventRecordDelete event) {
         Bundle args = new Bundle(1);
-        args.putLong(MainModel.EXTRA_EXPENSE_ID, event.getExpenseItem().getId());
+        args.putLong(MainModel.EXTRA_EXPENSE_ID, event.getRecord().getId());
         mUserActionListener.onUserAction(MainModel.MainUserActionEnum.REFRESH_TODAY_EXPENSE, null);
         mUserActionListener.onUserAction(MainModel.MainUserActionEnum.RELOAD_MONTH_TOTAL, null);
     }

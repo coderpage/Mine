@@ -34,7 +34,7 @@ class ExpenseRepository {
     /** 通过 ID 查询支出记录 */
     void queryExpenseById(long expenseId, SimpleCallback<Record> callback) {
         MineExecutors.ioExecutor().execute(() -> {
-            Record expense = mDataBase.expenseDao().queryById(expenseId);
+            Record expense = mDataBase.recordDao().queryById(expenseId);
             MineExecutors.executeOnUiThread(() -> callback.success(expense));
         });
     }
@@ -42,7 +42,7 @@ class ExpenseRepository {
     /** 保存记录 */
     void saveExpense(Record expense, SimpleCallback<Result<Long, IError>> callback) {
         MineExecutors.ioExecutor().execute(() -> {
-            long id = mDataBase.expenseDao().insert(expense.createEntity());
+            long id = mDataBase.recordDao().insert(expense.createEntity());
             MineExecutors.executeOnUiThread(() -> callback.success(new Result<>(id, null)));
         });
     }
@@ -50,7 +50,7 @@ class ExpenseRepository {
     /** 保存记录 */
     void updateExpense(Record expense, SimpleCallback<Result<Long, IError>> callback) {
         MineExecutors.ioExecutor().execute(() -> {
-            long id = mDataBase.expenseDao().update(expense.createEntity());
+            long id = mDataBase.recordDao().update(expense.createEntity());
             MineExecutors.executeOnUiThread(() -> callback.success(new Result<>(id, null)));
         });
     }

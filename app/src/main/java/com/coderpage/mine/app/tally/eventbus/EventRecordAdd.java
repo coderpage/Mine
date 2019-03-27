@@ -1,18 +1,18 @@
 package com.coderpage.mine.app.tally.eventbus;
 
-import com.coderpage.mine.app.tally.data.Expense;
+import com.coderpage.mine.app.tally.persistence.model.Record;
 
 /**
  * @author abner-l. 2017-03-19
  */
 public class EventRecordAdd {
-    private final Expense mExpense;
+    private final Record mRecord;
 
-    public EventRecordAdd(Expense expense) {
-        mExpense = expense;
+    public EventRecordAdd(Record record) {
+        mRecord = record;
     }
 
-    public Expense getExpenseItem() {
-        return mExpense;
+    public Record getRecord() {
+        return mRecord;
     }
 }

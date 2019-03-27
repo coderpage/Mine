@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data class=".tally.module.records.RecordDateTitleItemBinding">
+
+        <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
+
+        <variable
+            name="activity"
+            type="android.app.Activity" />
+
+        <variable
+            name="data"
+            type="com.coderpage.mine.app.tally.module.records.RecordsDateTitle" />
+
+        <variable
+            name="vm"
+            type="com.coderpage.mine.app.tally.module.records.RecordItemViewModel" />
+
+    </data>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?attr/selectableItemBackground"
+        android:onClick="@{() -> vm.onItemDateTitleClick(activity, data)}">
+
+        <TextView
+            android:id="@+id/tvMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="left"
+            android:gravity="center_vertical|left"
+            android:paddingLeft="@dimen/padding_normal"
+            android:text="@{data.year + `/` + data.month}" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="right"
+            android:gravity="center_vertical|right"
+            android:paddingRight="@dimen/padding_normal"
+            android:text="@string/tally_check_month_expense"
+            android:textColor="@color/colorAccent" />
+    </FrameLayout>
+
+</layout>

@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.coderpage.mine.R;
+import com.coderpage.mine.app.tally.module.records.RecordItemViewModel;
 import com.coderpage.mine.ui.BaseActivity;
 
 /**
@@ -40,7 +41,7 @@ public class HomeActivity extends BaseActivity {
         mRefreshLayout.setOnRefreshListener(() -> mViewModel.refresh());
 
         RecyclerView recyclerView = mBinding.recyclerView;
-        mAdapter = new HomeAdapter(this, mViewModel);
+        mAdapter = new HomeAdapter(this, mViewModel, ViewModelProviders.of(this).get(RecordItemViewModel.class));
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(mAdapter);
     }

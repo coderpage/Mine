@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class RecordsPresenter extends PresenterImpl {
     private AtomicBoolean mIsOnLoadMore = new AtomicBoolean(false);
 
-    public RecordsPresenter(RecordsModel model, RecordsActivity view,
+    public RecordsPresenter(RecordsModel model, RecordsActivityOld view,
                             RecordsModel.RecordsUserActionEnum[] validUserActions,
                             RecordsModel.RecordsQueryEnum[] initialQueries) {
         super(model, view, validUserActions, initialQueries);

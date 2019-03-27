@@ -2,13 +2,21 @@
 <resources>
 
     <declare-styleable name="BaseTheme">
-        <attr name="popupItemBackground" format="reference"/>
+        <attr name="popupItemBackground" format="reference" />
     </declare-styleable>
 
     <!-- DrawShadowFrameLayout 可以在指定的位置显示阴影效果 -->
     <declare-styleable name="DrawShadowFrameLayout">
-        <attr name="shadowVisible" format="boolean"/>
-        <attr name="shadowDrawable" format="reference"/>
+        <attr name="shadowVisible" format="boolean" />
+        <attr name="shadowDrawable" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="LoadingIndicatorView">
+        <attr name="minWidth" format="dimension" />
+        <attr name="maxWidth" format="dimension" />
+        <attr name="minHeight" format="dimension" />
+        <attr name="maxHeight" format="dimension" />
+        <attr name="indicatorColor" format="color" />
     </declare-styleable>
 
 </resources>

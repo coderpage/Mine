@@ -200,7 +200,7 @@ public class ExpenseDetailActivity extends BaseActivity
             case DELETE:
                 if (success) {
                     UIUtils.showToastShort(this, R.string.tally_toast_delete_success);
-                    EventBus.getDefault().post(new EventRecordDelete(model.getExpense()));
+                    EventBus.getDefault().post(new EventRecordDelete(null));
                     finish();
                 } else {
                     UIUtils.showToastShort(this, ErrorUtils.formatDisplayMsg(error));

@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.WeakHashMap;
 
 /**
  * @author abner-l. 2017-02-05
@@ -11,6 +12,45 @@ import java.util.Iterator;
  */
 
 public class CommonUtils {
+
+    /**
+     * 缓存控件点击时间，用于检测是否是连续点击，作防重复点击控制
+     *
+     * Key   - View
+     * Value - 上一次点击时间
+     */
+    private static final WeakHashMap<Object, Long> VIEW_CLICK_TIME = new WeakHashMap<>();
+
+    /**
+     * 判断是否是重复点击。
+     *
+     * @param view 发生点击事件的控件
+     * @return true-是重复点击 false-不是重复点击
+     */
+    public static boolean isViewFastDoubleClick(Object view) {
+        if (view == null) {
+            return false;
+        }
+
+        long currentTimeMillis = System.currentTimeMillis();
+
+        // 获取上一次点击时间
+        Long lastClickTime = VIEW_CLICK_TIME.get(view);
+        // 没有获取到上一次点击时间，不是重复点击
+        if (lastClickTime == null) {
+            VIEW_CLICK_TIME.put(view, currentTimeMillis);
+            return false;
+        }
+
+        long fastDoubleClickInterval = 1500;
+        // 与上一次点击间隔小于 1.5 秒，判定为重复点击
+        if (currentTimeMillis - lastClickTime < fastDoubleClickInterval) {
+            return true;
+        }
+
+        VIEW_CLICK_TIME.put(view, currentTimeMillis);
+        return false;
+    }
 
     public static void checkNotNull(Object object) {
         checkNotNull(object, null);

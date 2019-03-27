@@ -187,9 +187,9 @@ public class ExpenseEditActivity extends BaseActivity
             case SAVE_DATA:
                 if (success) {
                     if (mExpenseId > 0) {
-                        EventBus.getDefault().post(new EventRecordUpdate(model.getExpenseItem()));
+                        EventBus.getDefault().post(new EventRecordUpdate(null));
                     } else {
-                        EventBus.getDefault().post(new EventRecordAdd(model.getExpenseItem()));
+                        EventBus.getDefault().post(new EventRecordAdd(null));
                     }
                     finish();
                 }

@@ -19,7 +19,7 @@ class RecordDetailRepository {
 
     void queryExpense(long expenseId, Callback<Record, IError> callback) {
         MineExecutors.ioExecutor().execute(() -> {
-            Record expense = TallyDatabase.getInstance().expenseDao().queryById(expenseId);
+            Record expense = TallyDatabase.getInstance().recordDao().queryById(expenseId);
             if (expense == null) {
                 MineExecutors.executeOnUiThread(() -> callback.failure(new NonThrowError(ErrorCode.SQL_ERR, "EMPTY DATA")));
             } else {
@@ -30,7 +30,7 @@ class RecordDetailRepository {
 
     void queryIncome(long incomeId, Callback<Record, IError> callback) {
         MineExecutors.ioExecutor().execute(() -> {
-            Record income = TallyDatabase.getInstance().incomeDao().queryById(incomeId);
+            Record income = TallyDatabase.getInstance().recordDao().queryById(incomeId);
             if (income == null) {
                 MineExecutors.executeOnUiThread(() -> callback.failure(new NonThrowError(ErrorCode.SQL_ERR, "EMPTY DATA")));
             } else {
@@ -43,7 +43,7 @@ class RecordDetailRepository {
         MineExecutors.ioExecutor().execute(() -> {
             RecordEntity entity = new RecordEntity();
             entity.setId(expenseId);
-            TallyDatabase.getInstance().expenseDao().delete(entity);
+            TallyDatabase.getInstance().recordDao().delete(entity);
             MineExecutors.executeOnUiThread(() -> callback.success(true));
         });
     }
@@ -52,7 +52,7 @@ class RecordDetailRepository {
         MineExecutors.ioExecutor().execute(() -> {
             RecordEntity entity = new RecordEntity();
             entity.setId(incomeId);
-            TallyDatabase.getInstance().incomeDao().delete(entity);
+            TallyDatabase.getInstance().recordDao().delete(entity);
             MineExecutors.executeOnUiThread(() -> callback.success(true));
         });
     }

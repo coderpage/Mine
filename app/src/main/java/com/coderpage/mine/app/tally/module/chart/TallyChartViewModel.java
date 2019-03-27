@@ -2,8 +2,13 @@ package com.coderpage.mine.app.tally.module.chart;
 
 import android.app.Activity;
 import android.app.Application;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.OnLifecycleEvent;
+import android.content.Intent;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.util.Pair;
@@ -35,7 +40,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 展示 年账单折线图、日支出柱状图、日收入柱状图、支出分类饼图、收入分类饼图
  */
 
-public class TallyChartViewModel extends BaseViewModel {
+public class TallyChartViewModel extends BaseViewModel implements LifecycleObserver {
 
     private static final String TAG = LogUtils.makeLogTag(TallyChartViewModel.class);
 
@@ -82,20 +87,6 @@ public class TallyChartViewModel extends BaseViewModel {
     public TallyChartViewModel(Application application) {
         super(application);
         mRepository = new TallyChartRepository();
-
-        mStartDate = Calendar.getInstance();
-        mEndDate = Calendar.getInstance();
-
-        int currentYear = mStartDate.get(Calendar.YEAR);
-        int currentMonth = mStartDate.get(Calendar.MONTH) + 1;
-        Pair<Long, Long> currentMonthRange = DateUtils.monthDateRange(currentYear, currentMonth);
-
-        // 默认显示时间为当前月
-        mStartDate.setTimeInMillis(currentMonthRange.first);
-        mEndDate.setTimeInMillis(currentMonthRange.second);
-
-        init();
-        refreshData();
     }
 
     public ObservableField<String> getCurrentDateText() {
@@ -566,7 +557,7 @@ public class TallyChartViewModel extends BaseViewModel {
 
     /** 显示月账单支出总额 */
     private void displayMonthlyExpenseAmountTotal() {
-        if (mMonthlyExpenseList== null) {
+        if (mMonthlyExpenseList == null) {
             mExpenseTotalAmountText.set(TallyUtils.formatDisplayMoney(0));
             return;
         }
@@ -875,4 +866,31 @@ public class TallyChartViewModel extends BaseViewModel {
         });
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    public void onCreate(LifecycleOwner owner) {
+        Intent intent = ((Activity) owner).getIntent();
+        int year = intent.getIntExtra(TallyChartActivity.EXTRA_YEAR, -1);
+        int month = intent.getIntExtra(TallyChartActivity.EXTRA_MONTH, -1);
+
+        // 初始化起始时间
+        mStartDate = Calendar.getInstance();
+        mEndDate = Calendar.getInstance();
+        // 默认起始时间：当月
+        int currentYear = mStartDate.get(Calendar.YEAR);
+        int currentMonth = mStartDate.get(Calendar.MONTH) + 1;
+        // 如果指定月份，使用指定的月份为起始时间
+        if (year > 0 && month > 0) {
+            currentYear = year;
+            currentMonth = month;
+        }
+        Pair<Long, Long> currentMonthRange = DateUtils.monthDateRange(currentYear, currentMonth);
+
+        // 默认显示时间为当前月
+        mStartDate.setTimeInMillis(currentMonthRange.first);
+        mEndDate.setTimeInMillis(currentMonthRange.second);
+
+        // 初始化数据
+        init();
+        refreshData();
+    }
 }

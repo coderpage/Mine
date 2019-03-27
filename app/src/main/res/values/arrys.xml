@@ -4,6 +4,10 @@
         <item>删除</item>
         <item>修改</item>
     </string-array>
+    <string-array name="recordItemLongClickOption">
+        <item>修改</item>
+        <item>删除</item>
+    </string-array>
     <string-array name="DefaultTallyExpenseCategory">
         <item>其他</item>
         <item>餐饮</item>

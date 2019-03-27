@@ -66,6 +66,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Tally" />
         <activity
+            android:name=".app.tally.module.records.RecordsActivityOld"
+            android:label="@string/tally_toolbar_title_records"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Tally" />
+        <activity
             android:name=".app.tally.module.records.CategoryRecordsActivity"
             android:label="@string/tally_toolbar_title_category_records"
             android:screenOrientation="portrait"

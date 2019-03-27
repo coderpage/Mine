@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".app.tally.module.records.RecordsActivity">
+    tools:context=".app.tally.module.records.RecordsActivityOld">
 
     <com.coderpage.mine.app.tally.ui.widget.LoadMoreRecyclerView
         android:id="@+id/recyclerRecord"

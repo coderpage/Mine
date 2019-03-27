@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.3.2'
     }
 }
 
@@ -18,7 +18,7 @@ ext {
     appVersionName = '0.5.1'
     appVersionCode = 51
 
-    minSdkVersion = 14
+    minSdkVersion = 18
     targetSdkVersion = 25
     compileSdkVersion = 26
     buildToolsVersion = '27.0.3'
@@ -32,7 +32,7 @@ ext {
     percentLayout = "com.android.support:percent:${androidSupportVersion}"
     eventBus = 'org.greenrobot:eventbus:3.0.0'
     recyclerview = "com.android.support:recyclerview-v7:${androidSupportVersion}"
-    constraintLayout = "com.android.support.constraint:constraint-layout:1.0.2"
+    constraintLayout = "com.android.support.constraint:constraint-layout:1.1.3"
     archRoomRuntime = "android.arch.persistence.room:runtime:1.0.0"
     archLifecycleExtension = "android.arch.lifecycle:extensions:${archVersion}"
     archViewmodel = "android.arch.lifecycle:viewmodel:${archVersion}"

@@ -1,155 +1,136 @@
 package com.coderpage.mine.app.tally.module.records;
 
+import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
-import com.coderpage.base.common.IError;
-import com.coderpage.framework.UpdatableView;
+import com.coderpage.base.widget.LoadingLayout;
 import com.coderpage.mine.R;
-import com.coderpage.mine.app.tally.data.Expense;
-import com.coderpage.mine.app.tally.eventbus.EventRecordDelete;
-import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
-import com.coderpage.mine.app.tally.ui.widget.LoadMoreRecyclerView;
+import com.coderpage.mine.app.tally.ui.refresh.RefreshFootView;
+import com.coderpage.mine.app.tally.ui.refresh.RefreshHeadView;
+import com.coderpage.mine.module.records.RecordsActivityBinding;
 import com.coderpage.mine.ui.BaseActivity;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 
 /**
- * @author abner-l. 2017-05-12
+ * @author lc. 2019-01-05 10:24
+ * @since 0.6.0
+ *
+ * 记录页
  */
 
-public class RecordsActivity extends BaseActivity implements UpdatableView<RecordsModel,
-        RecordsModel.RecordsQueryEnum, RecordsModel.RecordsUserActionEnum, IError> {
+public class RecordsActivity extends BaseActivity {
 
-    private UserActionListener mUserActionListener;
-    private RecordsPresenter mPresenter;
+    static final String EXTRA_QUERY = "extra_query";
 
-    private LoadMoreRecyclerView mHistoryRecordsRecycler;
-    private HistoryRecordsAdapter mHistoryRecordsAdapter;
+    private RecordsActivityBinding mBinding;
+    private RecordsViewModel mViewModel;
+
+    private LoadingLayout mLoadingLayout;
+    private TwinklingRefreshLayout mRefreshLayout;
+    private RecyclerView mRecyclerView;
+    private RecordsAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tally_records);
+        mBinding = DataBindingUtil.setContentView(self(), R.layout.tally_module_records_activity);
+        mViewModel = ViewModelProviders.of(this).get(RecordsViewModel.class);
+        getLifecycle().addObserver(mViewModel);
         initView();
-        initPresenter();
-        EventBus.getDefault().register(this);
+        subscribeUi();
+    }
+
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        setToolbarAsClose(v -> finish());
+    }
+
+    /**
+     * 打开记录页
+     *
+     * @param context context
+     * @param query   记录的查询条件
+     */
+    public static void open(Context context, RecordQuery query) {
+        Intent intent = new Intent(context, RecordsActivity.class);
+        if (!(context instanceof Activity)) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        intent.putExtra(EXTRA_QUERY, query);
+        context.startActivity(intent);
     }
 
     private void initView() {
-        mHistoryRecordsRecycler = ((LoadMoreRecyclerView) findViewById(R.id.recyclerRecord));
-        mHistoryRecordsRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        mHistoryRecordsAdapter = new HistoryRecordsAdapter(this);
-        mHistoryRecordsRecycler.setAdapter(mHistoryRecordsAdapter);
-        mHistoryRecordsRecycler.setPullActionListener(new LoadMoreRecyclerView.PullActionListener() {
+        mLoadingLayout = mBinding.loadingLayout;
+        mRefreshLayout = mBinding.refreshLayout;
+        mRecyclerView = mBinding.recyclerView;
+
+        // 空数据页面点击事件处理
+        mLoadingLayout.setUserActionListener(new LoadingLayout.BaseUserActionListener() {
+            @Override
+            public void onPositiveButtonClick(LoadingLayout layout, View view) {
+                mViewModel.load();
+            }
 
             @Override
-            public void onPullUpLoadMore() {
-                Expense lastExpenseShow = mHistoryRecordsAdapter.getLastExpenseShow();
-                long loadMoreStartDate = System.currentTimeMillis();
-                if (lastExpenseShow != null) {
-                    loadMoreStartDate = lastExpenseShow.getTime();
-                }
-                Bundle args = new Bundle(1);
-                args.putLong(RecordsModel.EXTRA_LOAD_MORE_START_DATE, loadMoreStartDate);
-                mUserActionListener.onUserAction(RecordsModel.RecordsUserActionEnum.LOAD_MORE, args);
+            public void onIconClick(LoadingLayout layout, View view) {
+                mViewModel.load();
             }
         });
+
+        mRefreshLayout.setAutoLoadMore(true);
+        mRefreshLayout.setHeaderView(new RefreshHeadView(this));
+        mRefreshLayout.setHeaderHeight(120);
+        mRefreshLayout.setBottomView(new RefreshFootView(this));
+        mRefreshLayout.setBottomHeight(120);
+        mRefreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
+            @Override
+            public void onRefresh(TwinklingRefreshLayout refreshLayout) {
+                mViewModel.refresh();
+            }
+
+            @Override
+            public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
+                mViewModel.loadMore();
+            }
+        });
+
+        mAdapter = new RecordsAdapter(self());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(self(), LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(layoutManager);
     }
 
-    private void initPresenter() {
-        mPresenter = new RecordsPresenter(
-                new RecordsModel(this),
-                this,
-                RecordsModel.RecordsUserActionEnum.values(),
-                RecordsModel.RecordsQueryEnum.values());
-        mPresenter.loadInitialQueries();
-        mHistoryRecordsAdapter.setUserActionListener(mUserActionListener);
-    }
-
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        setToolbarAsBack(v -> finish());
-    }
-
-    @Override
-    protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventRecordUpdate(EventRecordUpdate event) {
-        Bundle args = new Bundle(1);
-        args.putLong(RecordsModel.EXTRA_EXPENSE_ID, event.getExpenseItem().getId());
-        mUserActionListener.onUserAction(RecordsModel.RecordsUserActionEnum.EXPENSE_EDITED, args);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventRecordDelete(EventRecordDelete event) {
-        mHistoryRecordsAdapter.removeItem(event.getExpenseItem().getId());
-    }
-
-    @Override
-    public void displayData(RecordsModel model, RecordsModel.RecordsQueryEnum query) {
-        switch (query) {
-            case INIT_DATA:
-                mHistoryRecordsAdapter.refreshData(model.getInitExpenseList());
-                break;
-        }
-    }
-
-    @Override
-    public void displayUserActionResult(RecordsModel model,
-                                        Bundle args,
-                                        RecordsModel.RecordsUserActionEnum userAction,
-                                        boolean success,
-                                        IError error) {
-        switch (userAction) {
-            case EXPENSE_EDITED:
-                if (success) {
-                    Expense editedExpense = model.getEditedExpenseItem();
-                    mHistoryRecordsAdapter.refreshItem(editedExpense);
-                }
-                break;
-            case EXPENSE_DELETE:
-                if (success) {
-                    long deletedId = args.getLong(RecordsModel.EXTRA_EXPENSE_ID);
-                    mHistoryRecordsAdapter.removeItem(deletedId);
-                }
-                break;
-            case LOAD_MORE:
-                if (success) {
-                    mHistoryRecordsAdapter.addHistoryItems(model.getLoadMoreExpenseList());
-                }
-                mPresenter.setOnLoadMore(false);
-                break;
-        }
-    }
-
-    @Override
-    public void displayErrorMessage(RecordsModel.RecordsQueryEnum query, IError error) {
-
-    }
-
-    @Override
-    public Uri getDataUri(RecordsModel.RecordsQueryEnum query) {
-        return null;
-    }
-
-    @Override
-    public Context getContext() {
-        return RecordsActivity.this;
-    }
-
-    @Override
-    public void addListener(UserActionListener listener) {
-        mUserActionListener = listener;
+    private void subscribeUi() {
+        mViewModel.getLoadingStatus().observe(this, loadingStatus -> {
+            if (loadingStatus != null) {
+                mLoadingLayout.setStatus(loadingStatus);
+            }
+        });
+        mViewModel.getRefreshing().observe(this, refreshing -> {
+            if (refreshing != null && !refreshing) {
+                mRefreshLayout.finishRefreshing();
+            }
+        });
+        mViewModel.getLoadingMore().observe(this, loadingMore -> {
+            if (loadingMore != null && !loadingMore) {
+                mRefreshLayout.finishLoadmore();
+            }
+        });
+        mViewModel.getRecordList().observe(this, recordList -> {
+            if (recordList != null) {
+                mAdapter.setDataList(recordList);
+            }
+        });
     }
 }

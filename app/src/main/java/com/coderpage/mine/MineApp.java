@@ -1,8 +1,10 @@
 package com.coderpage.mine;
 
 import android.app.Application;
-import android.content.Context;
+import android.util.SparseArray;
 
+import com.coderpage.base.utils.UIUtils;
+import com.coderpage.base.widget.LoadingLayout;
 import com.coderpage.framework.Framework;
 import com.coderpage.mine.app.tally.update.UpdateUtils;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -14,7 +16,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 
 public class MineApp extends Application {
 
-    private static Context mAppContext;
+    private static Application mAppContext;
 
     @Override
     public void onCreate() {
@@ -30,10 +32,37 @@ public class MineApp extends Application {
         }
         // 检查新版本
         UpdateUtils.startNewClientVersionCheckBackground(this);
+        // 初始化 LoadingLayout
+        initLoadingLayout();
     }
 
-    public static Context getAppContext() {
+    public static Application getAppContext() {
         return mAppContext;
+    }
+
+    private void initLoadingLayout() {
+        SparseArray<LoadingLayout.Config> globalConfig = LoadingLayout.getGlobalConfig();
+
+        LoadingLayout.Config emptyConfig = new LoadingLayout.Config();
+        emptyConfig.setIconRes(R.drawable.ic_loading_layout_empty);
+        emptyConfig.setMessage(UIUtils.getString(this, R.string.loading_layout_message_empty));
+        emptyConfig.setMessageTextStyle(R.style.TextAppearance_LoadingMessage);
+        emptyConfig.setButtonPositiveBackgroundRes(R.drawable.bg_accent_btn_round);
+        emptyConfig.setButtonPositiveText(UIUtils.getString(this, R.string.loading_layout_button_positive_text_empty));
+        emptyConfig.setButtonPositiveTextStyle(R.style.TextAppearance_LoadingPositiveButton);
+
+        LoadingLayout.Config errorConfig = new LoadingLayout.Config();
+        errorConfig.setIconRes(R.drawable.ic_loading_layout_empty);
+        errorConfig.setMessage(UIUtils.getString(this, R.string.loading_layout_message_error));
+        errorConfig.setMessageTextStyle(R.style.TextAppearance_LoadingMessage);
+        errorConfig.setButtonPositiveBackgroundRes(R.drawable.bg_accent_btn_round);
+        errorConfig.setButtonPositiveText(UIUtils.getString(this, R.string.loading_layout_button_positive_text_error));
+        errorConfig.setButtonPositiveTextStyle(R.style.TextAppearance_LoadingPositiveButton);
+
+        globalConfig.append(LoadingLayout.STATUS_SUCCESS, new LoadingLayout.Config());
+        globalConfig.append(LoadingLayout.STATUS_LOADING, new LoadingLayout.Config());
+        globalConfig.append(LoadingLayout.STATUS_EMPTY, emptyConfig);
+        globalConfig.append(LoadingLayout.STATUS_ERROR, errorConfig);
     }
 
 //    private void logPhoneInfo(){

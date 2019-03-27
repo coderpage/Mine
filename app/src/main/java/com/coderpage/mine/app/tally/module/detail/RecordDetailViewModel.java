@@ -16,10 +16,8 @@ import com.coderpage.base.common.IError;
 import com.coderpage.framework.BaseViewModel;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.common.utils.TallyUtils;
-import com.coderpage.mine.app.tally.eventbus.EventExpenseDelete;
-import com.coderpage.mine.app.tally.eventbus.EventExpenseUpdate;
-import com.coderpage.mine.app.tally.eventbus.EventIncomeDelete;
-import com.coderpage.mine.app.tally.eventbus.EventIncomeUpdate;
+import com.coderpage.mine.app.tally.eventbus.EventRecordDelete;
+import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
 import com.coderpage.mine.app.tally.module.edit.RecordEditActivity;
 import com.coderpage.mine.app.tally.persistence.model.Record;
 
@@ -75,12 +73,12 @@ public class RecordDetailViewModel extends BaseViewModel implements LifecycleObs
                     if (mType == TYPE_EXPENSE) {
                         mRepository.deleteExpense(mRecordId, result -> {
                             activity.finish();
-                            EventBus.getDefault().post(new EventExpenseDelete((Record) mRecord));
+                            EventBus.getDefault().post(new EventRecordDelete((Record) mRecord));
                         });
                     } else {
                         mRepository.deleteIncome(mRecordId, result -> {
                             activity.finish();
-                            EventBus.getDefault().post(new EventIncomeDelete((Record) mRecord));
+                            EventBus.getDefault().post(new EventRecordDelete((Record) mRecord));
                         });
                     }
                 }).show();
@@ -157,17 +155,9 @@ public class RecordDetailViewModel extends BaseViewModel implements LifecycleObs
     }
 
     @Subscribe(threadMode = ThreadMode.POSTING)
-    public void onEventExpenseUpdate(EventExpenseUpdate event) {
+    public void onEventRecordUpdate(EventRecordUpdate event) {
         mDataModified = true;
-        if (event.getExpense() != null && event.getExpense().getId() == mRecordId) {
-            refreshData();
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.POSTING)
-    public void onEventIncomeUpdate(EventIncomeUpdate event) {
-        mDataModified = true;
-        if (event.getIncome() != null && event.getIncome().getId() == mRecordId) {
+        if (event.getRecord() != null && event.getRecord().getId() == mRecordId) {
             refreshData();
         }
     }

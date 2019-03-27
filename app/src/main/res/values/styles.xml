@@ -1,10 +1,10 @@
 <resources>
 
-    <style name="FrameworkRoot.Theme" parent="Theme.AppCompat.Light.NoActionBar"/>
+    <style name="FrameworkRoot.Theme" parent="Theme.AppCompat.Light.NoActionBar" />
 
-    <style name="FrameworkRoot.Widget" parent="Theme.AppCompat.NoActionBar"/>
+    <style name="FrameworkRoot.Widget" parent="Theme.AppCompat.NoActionBar" />
 
-    <style name="Theme" parent="FrameworkRoot.Theme"/>
+    <style name="Theme" parent="FrameworkRoot.Theme" />
 
     <style name="Theme.Base" parent="Theme">
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -21,20 +21,20 @@
         <item name="android:windowBackground">@color/background</item>
     </style>
 
-    <style name="Theme.Tally" parent="Theme.Base"/>
+    <style name="Theme.Tally" parent="Theme.Base" />
 
     <style name="Theme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
-    <style name="TextAppearance" parent="TextAppearance.AppCompat"/>
+    <style name="TextAppearance" parent="TextAppearance.AppCompat" />
 
     <style name="TextAppearance.TallyNumInputItem" parent="TextAppearance">
         <item name="android:background">@drawable/bg_tally_num_input_item</item>
         <item name="android:clickable">true</item>
         <item name="android:layout_margin">1px</item>
-        <item name="android:stateListAnimator">@animator/selector_tally_num_intput_animator</item>
+        <item name="android:stateListAnimator">@animator/selector_tally_num_input_animator</item>
     </style>
 
     <style name="TextAppearance.Headline" parent="TextAppearance">
@@ -45,10 +45,27 @@
     <style name="TextAppearance.Toolbar" parent="TextAppearance">
         <item name="android:textColor">@color/appTextColorPrimary</item>
         <item name="android:textSize">@dimen/app_text_size_large</item>
-        <!--<item name="android:foreground">@drawable/header_shadow</item>-->
     </style>
 
-    <style name="Widget" parent="android:Widget"/>
+    <!-- loading layout message style -->
+    <style name="TextAppearance.LoadingMessage" parent="TextAppearance">
+        <item name="android:textColor">@color/appTextColorSecondary</item>
+        <item name="android:textSize">@dimen/app_text_size_medium</item>
+    </style>
+
+    <!-- loading layout negative button style -->
+    <style name="TextAppearance.LoadingNegativeButton" parent="TextAppearance">
+        <item name="android:textColor">@color/appTextColorSecondary</item>
+        <item name="android:textSize">@dimen/app_text_size_large</item>
+    </style>
+
+    <!-- loading layout negative button style -->
+    <style name="TextAppearance.LoadingPositiveButton" parent="TextAppearance">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/app_text_size_large</item>
+    </style>
+
+    <style name="Widget" parent="android:Widget" />
 
     <style name="Widget.Btn" parent="Widget">
         <item name="android:background">@drawable/bg_accent_btn</item>
@@ -130,5 +147,26 @@
 
     <style name="Widget.Btn.AccentRectOval">
         <item name="android:background">@drawable/bg_accent_btn_round</item>
+    </style>
+
+    <style name="Widget.LoadingIndicatorView">
+        <item name="minWidth">48dip</item>
+        <item name="maxWidth">48dip</item>
+        <item name="minHeight">48dip</item>
+        <item name="maxHeight">48dip</item>
+    </style>
+
+    <style name="Widget.LoadingIndicatorView.Large">
+        <item name="minWidth">76dip</item>
+        <item name="maxWidth">76dip</item>
+        <item name="minHeight">76dip</item>
+        <item name="maxHeight">76dip</item>
+    </style>
+
+    <style name="Widget.LoadingIndicatorView.Small">
+        <item name="minWidth">24dip</item>
+        <item name="maxWidth">24dip</item>
+        <item name="minHeight">24dip</item>
+        <item name="maxHeight">24dip</item>
     </style>
 </resources>

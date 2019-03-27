@@ -32,13 +32,9 @@ class TallyChartRepository {
     void queryFirstRecordTime(Callback<Long, IError> callback) {
         MineExecutors.ioExecutor().execute(() -> {
             long firstTime = System.currentTimeMillis();
-            Record expenseFirst = TallyDatabase.getInstance().expenseDao().queryFirst();
-            Record incomeFirst = TallyDatabase.getInstance().incomeDao().queryFirst();
-            if (expenseFirst != null) {
-                firstTime = Math.min(firstTime, expenseFirst.getTime());
-            }
-            if (incomeFirst != null) {
-                firstTime = Math.min(firstTime, incomeFirst.getTime());
+            Record recordFirst = TallyDatabase.getInstance().recordDao().queryFirst();
+            if (recordFirst != null) {
+                firstTime = recordFirst.getTime();
             }
             callback.success(firstTime);
         });
@@ -53,7 +49,7 @@ class TallyChartRepository {
      */
     void queryDailyExpense(long start, long end, Callback<List<DailyData>, IError> callback) {
         MineExecutors.ioExecutor().execute(() -> {
-            List<RecordGroup> expenseList = TallyDatabase.getInstance().expenseDao()
+            List<RecordGroup> expenseList = TallyDatabase.getInstance().recordDao()
                     .queryExpenseDailyGroup(start, end);
 
             Calendar calendar = Calendar.getInstance();
@@ -81,7 +77,7 @@ class TallyChartRepository {
      */
     void queryDailyInCome(long start, long end, Callback<List<DailyData>, IError> callback) {
         MineExecutors.ioExecutor().execute(() -> {
-            List<RecordGroup> incomeGroupList = TallyDatabase.getInstance().incomeDao()
+            List<RecordGroup> incomeGroupList = TallyDatabase.getInstance().recordDao()
                     .queryIncomeDailyGroup(start, end);
 
             Calendar calendar = Calendar.getInstance();
@@ -110,7 +106,7 @@ class TallyChartRepository {
         MineExecutors.ioExecutor().execute(() -> {
             List<MonthlyData> result = new ArrayList<>();
             List<RecordGroup> expenseMonthGroups = TallyDatabase.getInstance()
-                    .expenseDao().queryExpenseMonthGroup(start, end);
+                    .recordDao().queryExpenseMonthGroup(start, end);
 
             Calendar calendar = Calendar.getInstance();
             for (RecordGroup group : expenseMonthGroups) {
@@ -140,7 +136,7 @@ class TallyChartRepository {
         MineExecutors.ioExecutor().execute(() -> {
             List<MonthlyData> result = new ArrayList<>();
             List<RecordGroup> incomeMonthGroups = TallyDatabase.getInstance()
-                    .incomeDao().queryIncomeMonthGroup(start, end);
+                    .recordDao().queryIncomeMonthGroup(start, end);
 
             Calendar calendar = Calendar.getInstance();
             for (RecordGroup group : incomeMonthGroups) {
@@ -173,7 +169,7 @@ class TallyChartRepository {
             List<CategoryData> result = new ArrayList<>();
 
             List<RecordCategoryGroup> expenseCategoryGroups = TallyDatabase.getInstance()
-                    .expenseDao().queryExpenseCategoryGroup(start, end);
+                    .recordDao().queryExpenseCategoryGroup(start, end);
 
             double amountTotal = 0;
             for (RecordCategoryGroup group : expenseCategoryGroups) {
@@ -209,7 +205,7 @@ class TallyChartRepository {
             List<CategoryData> result = new ArrayList<>();
 
             List<RecordCategoryGroup> incomeCategoryGroups = TallyDatabase.getInstance()
-                    .incomeDao().queryIncomeCategoryGroup(start, end);
+                    .recordDao().queryIncomeCategoryGroup(start, end);
 
             double amountTotal = 0;
             for (RecordCategoryGroup group : incomeCategoryGroups) {

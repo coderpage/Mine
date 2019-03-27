@@ -8,6 +8,7 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
         versionCode rootProject.appVersionCode
         versionName rootProject.appVersionName
+        vectorDrawables.useSupportLibrary true
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -30,6 +31,7 @@ dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     api rootProject.appCompat
     api rootProject.design
+    api rootProject.constraintLayout
 
     testImplementation rootProject.junit
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

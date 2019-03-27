@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.module.home.model.HomeDisplayData;
+import com.coderpage.mine.app.tally.module.records.RecordItemViewModel;
 import com.coderpage.mine.app.tally.persistence.model.Record;
 
 import java.util.ArrayList;
@@ -23,12 +24,14 @@ class HomeAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private Activity mActivity;
     private HomeViewModel mViewModel;
+    private RecordItemViewModel mRecordItemViewModel;
     private LayoutInflater mInflater;
     private List<HomeDisplayData> mDataList = new ArrayList<>();
 
-    HomeAdapter(Activity activity, HomeViewModel viewModel) {
+    HomeAdapter(Activity activity, HomeViewModel viewModel, RecordItemViewModel recordItemViewModel) {
         mActivity = activity;
         mViewModel = viewModel;
+        mRecordItemViewModel = recordItemViewModel;
         mInflater = LayoutInflater.from(mActivity);
     }
 
@@ -112,15 +115,11 @@ class HomeAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 return new ViewHolderTodayExpense(mActivity, mViewModel,
                         DataBindingUtil.inflate(mInflater, R.layout.tally_module_home_item_today_expense, parent, false));
 
-            // 消费记录 ITEM
+            // 消费记录&支出记录 ITEM
             case HomeDisplayData.TYPE_EXPENSE_ITEM:
-                return new ViewHolderExpenseItem(mActivity, mViewModel,
-                        DataBindingUtil.inflate(mInflater, R.layout.tally_module_home_expense_item, parent, false));
-
-            // 支出记录 ITEM
             case HomeDisplayData.TYPE_IN_COME_ITEM:
-                return new ViewHolderIncomeItem(mActivity, mViewModel,
-                        DataBindingUtil.inflate(mInflater, R.layout.tally_module_home_income_item, parent, false));
+                return new ViewHolderRecordItem(mActivity, mRecordItemViewModel, DataBindingUtil.inflate(
+                        mInflater, R.layout.tally_item_record_common, parent, false));
 
             // 底部 View
             case HomeDisplayData.TYPE_BOTTOM:

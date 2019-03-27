@@ -102,13 +102,13 @@ public class CategoryRecordsActivity extends BaseActivity
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventRecordUpdate(EventRecordUpdate event) {
         Bundle args = new Bundle(1);
-        args.putLong(CategoryRecordsModel.EXTRA_EXPENSE_ID, event.getExpenseItem().getId());
+        args.putLong(CategoryRecordsModel.EXTRA_EXPENSE_ID, event.getRecord().getId());
         mUserActionListener.onUserAction(CategoryRecordsModel.RecordsUserActionEnum.EXPENSE_EDITED, args);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventRecordDelete(EventRecordDelete event) {
-        mHistoryRecordsAdapter.removeItem(event.getExpenseItem().getId());
+        mHistoryRecordsAdapter.removeItem(event.getRecord().getId());
     }
 
     @Override

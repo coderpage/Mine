@@ -280,7 +280,7 @@ public class Backup {
         }
 
         try {
-            database.expenseDao().insert(insertArray);
+            database.recordDao().insert(insertArray);
             return true;
         } catch (Exception e) {
             LOGE(TAG, "恢复数据失败-消费记录表", e);
@@ -297,7 +297,7 @@ public class Backup {
     private static BackupModel readData() {
 
         List<BackupModelCategory> categoryList = new ArrayList<>();
-        List<BackupModelRecord> expenseList = null;
+        List<BackupModelRecord> recordList = null;
         BackupModelMetadata metadata = new BackupModelMetadata();
 
         TallyDatabase database = TallyDatabase.getInstance();
@@ -315,9 +315,9 @@ public class Backup {
             categoryList.add(category);
         }
 
-        List<Record> expenseEntityList = database.expenseDao().queryAll();
-        expenseList = new ArrayList<>(expenseEntityList.size());
-        for (Record entity : expenseEntityList) {
+        List<Record> recordEntityList = database.recordDao().queryAll();
+        recordList = new ArrayList<>(recordEntityList.size());
+        for (Record entity : recordEntityList) {
             BackupModelRecord expense = new BackupModelRecord();
             expense.setAmount(entity.getAmount());
             expense.setDesc(entity.getDesc());
@@ -329,19 +329,19 @@ public class Backup {
             expense.setCategoryUniqueName(entity.getCategoryUniqueName());
             expense.setType(entity.getType());
 
-            expenseList.add(expense);
+            recordList.add(expense);
         }
 
         metadata.setBackupDate(System.currentTimeMillis());
         metadata.setClientVersion(BuildConfig.VERSION_NAME);
         metadata.setDeviceName(Build.MODEL);
-        metadata.setExpenseNumber(expenseList.size());
+        metadata.setExpenseNumber(recordList.size());
 
         BackupModel backupModel = new BackupModel();
 
         backupModel.setMetadata(metadata);
         backupModel.setCategoryList(categoryList);
-        backupModel.setExpenseList(expenseList);
+        backupModel.setExpenseList(recordList);
 
         return backupModel;
     }

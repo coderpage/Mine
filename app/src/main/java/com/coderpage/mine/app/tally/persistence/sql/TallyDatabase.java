@@ -16,8 +16,7 @@ import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.data.CategoryContant;
 import com.coderpage.mine.app.tally.data.CategoryIconHelper;
 import com.coderpage.mine.app.tally.persistence.sql.dao.CategoryDao;
-import com.coderpage.mine.app.tally.persistence.sql.dao.ExpenseDao;
-import com.coderpage.mine.app.tally.persistence.sql.dao.IncomeDao;
+import com.coderpage.mine.app.tally.persistence.sql.dao.RecordDao;
 import com.coderpage.mine.app.tally.persistence.sql.entity.CategoryEntity;
 import com.coderpage.mine.app.tally.persistence.sql.entity.RecordEntity;
 import com.coderpage.mine.app.tally.provider.TallyContract;
@@ -45,18 +44,11 @@ public abstract class TallyDatabase extends RoomDatabase {
     private static TallyDatabase sInstance = null;
 
     /**
-     * 支出表
+     * 记录操作
      *
-     * @return 支出表操作
+     * @return 记录操作
      */
-    public abstract ExpenseDao expenseDao();
-
-    /**
-     * 收入表
-     *
-     * @return 收入表操作
-     */
-    public abstract IncomeDao incomeDao();
+    public abstract RecordDao recordDao();
 
     /**
      * 分类表

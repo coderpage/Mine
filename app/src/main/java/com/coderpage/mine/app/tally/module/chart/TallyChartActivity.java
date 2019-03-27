@@ -1,9 +1,12 @@
 package com.coderpage.mine.app.tally.module.chart;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -44,6 +47,9 @@ import java.util.List;
 
 public class TallyChartActivity extends BaseActivity {
 
+    static final String EXTRA_YEAR = "extra_year";
+    static final String EXTRA_MONTH = "extra_month";
+
     private MineBarChart mBarChart;
     private MineLineChart mLineChart;
     private MinePieChart mPieChart;
@@ -56,9 +62,30 @@ public class TallyChartActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.tally_module_chart_tally_chart_activity);
         mViewModel = ViewModelProviders.of(this).get(TallyChartViewModel.class);
+        getLifecycle().addObserver(mViewModel);
 
         initView();
         subScribeUi();
+    }
+
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        setToolbarAsClose(v -> finish());
+    }
+
+    /**
+     * 打开图片页
+     *
+     * @param activity activity
+     * @param year     年
+     * @param month    月
+     */
+    public static void open(Activity activity, int year, int month) {
+        Intent intent = new Intent(activity, TallyChartActivity.class);
+        intent.putExtra(EXTRA_YEAR, year);
+        intent.putExtra(EXTRA_MONTH, month);
+        activity.startActivity(intent);
     }
 
     private void initView() {

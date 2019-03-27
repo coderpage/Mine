@@ -82,10 +82,10 @@ class HomRepository {
 
             // 本月消费记录列表
             List<Record> expenseList =
-                    TallyDatabase.getInstance().expenseDao().queryBetweenTimeTimeDesc(monthStartTime, monthEndTime);
+                    TallyDatabase.getInstance().recordDao().queryExpenseBetweenTimeTimeDesc(monthStartTime, monthEndTime);
             // 本月支出记录
             List<Record> incomeList =
-                    TallyDatabase.getInstance().incomeDao().queryBetweenTimeTimeDesc(monthStartTime, monthEndTime);
+                    TallyDatabase.getInstance().recordDao().queryIncomeBetweenTimeTimeDesc(monthStartTime, monthEndTime);
 
             if (expenseList != null) {
                 // 今日消费记录
@@ -171,7 +171,7 @@ class HomRepository {
             try {
                 RecordEntity entity = new RecordEntity();
                 entity.setId(expenseId);
-                TallyDatabase.getInstance().expenseDao().delete(entity);
+                TallyDatabase.getInstance().recordDao().delete(entity);
                 MineExecutors.executeOnUiThread(() -> callback.success(null));
             } catch (Exception e) {
                 MineExecutors.executeOnUiThread(() -> callback.failure(new NonThrowError(ErrorCode.SQL_ERR, "SQL ERR")));
@@ -185,7 +185,7 @@ class HomRepository {
             try {
                 RecordEntity entity = new RecordEntity();
                 entity.setId(incomeId);
-                TallyDatabase.getInstance().incomeDao().delete(entity);
+                TallyDatabase.getInstance().recordDao().delete(entity);
                 MineExecutors.executeOnUiThread(() -> callback.success(null));
             } catch (Exception e) {
                 MineExecutors.executeOnUiThread(() -> callback.failure(new NonThrowError(ErrorCode.SQL_ERR, "SQL ERR")));

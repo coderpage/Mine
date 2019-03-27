@@ -1,7 +1,5 @@
 package com.coderpage.mine.ui;
 
-import android.app.Activity;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.LayoutRes;
@@ -9,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.coderpage.base.utils.ResUtils;
 import com.coderpage.base.utils.StatusBarUtils;
 import com.coderpage.mine.R;
 
@@ -18,7 +17,7 @@ import com.coderpage.mine.R;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    private Toolbar mToolbar;
+    protected Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,23 +57,44 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     private void setStatusBarColor(@ColorRes int resId) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            StatusBarUtils.setStatusBarColor(this, R.color.white);
+        StatusBarUtils.setStatusBarColor(this, resId);
 
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            SystemBarTintManager tintManager = new SystemBarTintManager(this);
-            tintManager.setStatusBarTintEnabled(true);
-            tintManager.setStatusBarTintResource(resId);
+        // 自动根据状态栏颜色的深浅来设置状态栏颜色
+        int color = ResUtils.getColor(this, resId);
+        float a = color >>> 24;
+        float r = (color & 0xff0000) >> 16;
+        float g = (color & 0xff00) >> 8;
+        float b = color & 0xff;
+
+        // 状态栏颜色较浅，使用黑色的状态栏文字
+        boolean lightColor = r * 0.299 + g * 0.578 + b * 0.114 >= 192;
+        setStatusBarLightMode(lightColor);
+    }
+
+    /**
+     * 设置状态栏模式。
+     *
+     * @param lightMode true-亮色模式，状态栏文字显示为黑色 false-暗色模式，状态栏文字颜色为白色
+     */
+    protected void setStatusBarLightMode(boolean lightMode) {
+        if (lightMode) {
+            StatusBarUtils.setStatusBarLightMode(this, statusBarColor());
+        } else {
+            StatusBarUtils.setStatusBarDarkMode(this, statusBarColor());
         }
     }
 
+    /**
+     * 状态栏颜色
+     *
+     * @return 状态栏颜色
+     */
+    @ColorRes
     protected int statusBarColor() {
-        return R.color.colorPrimary;
+        return R.color.colorPrimaryDark;
     }
 
-    protected Activity self(){
+    protected BaseActivity self() {
         return this;
     }
-
 }

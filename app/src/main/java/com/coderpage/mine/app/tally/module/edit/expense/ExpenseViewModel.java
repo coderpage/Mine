@@ -19,8 +19,8 @@ import com.coderpage.base.utils.ArrayUtils;
 import com.coderpage.base.utils.CommonUtils;
 import com.coderpage.framework.ViewReliedTask;
 import com.coderpage.mine.R;
-import com.coderpage.mine.app.tally.eventbus.EventExpenseAdd;
-import com.coderpage.mine.app.tally.eventbus.EventExpenseUpdate;
+import com.coderpage.mine.app.tally.eventbus.EventRecordAdd;
+import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
 import com.coderpage.mine.app.tally.module.edit.model.Category;
 import com.coderpage.mine.app.tally.persistence.model.CategoryModel;
 import com.coderpage.mine.app.tally.persistence.model.Record;
@@ -198,7 +198,7 @@ public class ExpenseViewModel extends AndroidViewModel {
             mAmountText.set(mAmountFormat.format(mAmount));
 
             String categoryUniqueName = mExpense.getCategoryUniqueName();
-            Category category = ArrayUtils.query(mCategoryList.getValue(),
+            Category category = ArrayUtils.findFirst(mCategoryList.getValue(),
                     c -> CommonUtils.isEqual(c.getInternal().getUniqueName(), categoryUniqueName));
             if (category != null) {
                 mCurrentSelectCategory.setValue(category);
@@ -255,14 +255,14 @@ public class ExpenseViewModel extends AndroidViewModel {
             mRepository.saveExpense(expense, result -> {
                 if (result.isOk()) {
                     expense.setId(result.data());
-                    EventBus.getDefault().post(new EventExpenseAdd(expense));
+                    EventBus.getDefault().post(new EventRecordAdd(expense));
                     mActivityRelayTask.setValue(Activity::finish);
                 }
             });
         } else {
             mRepository.updateExpense(expense, result -> {
                 if (result.isOk()) {
-                    EventBus.getDefault().post(new EventExpenseUpdate(expense));
+                    EventBus.getDefault().post(new EventRecordUpdate(expense));
                     mActivityRelayTask.setValue(Activity::finish);
                 }
             });

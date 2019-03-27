@@ -12,7 +12,6 @@ import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Intent;
 import android.os.Build;
 import android.support.design.widget.BottomSheetDialog;
-import android.support.v7.app.AlertDialog;
 import android.util.Pair;
 import android.view.View;
 import android.view.Window;
@@ -22,12 +21,9 @@ import com.coderpage.base.common.Callback;
 import com.coderpage.base.common.IError;
 import com.coderpage.base.utils.UIUtils;
 import com.coderpage.mine.R;
-import com.coderpage.mine.app.tally.eventbus.EventExpenseAdd;
-import com.coderpage.mine.app.tally.eventbus.EventExpenseDelete;
-import com.coderpage.mine.app.tally.eventbus.EventExpenseUpdate;
-import com.coderpage.mine.app.tally.eventbus.EventIncomeAdd;
-import com.coderpage.mine.app.tally.eventbus.EventIncomeDelete;
-import com.coderpage.mine.app.tally.eventbus.EventIncomeUpdate;
+import com.coderpage.mine.app.tally.eventbus.EventRecordAdd;
+import com.coderpage.mine.app.tally.eventbus.EventRecordDelete;
+import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
 import com.coderpage.mine.app.tally.module.about.AboutActivity;
 import com.coderpage.mine.app.tally.module.chart.TallyChartActivity;
 import com.coderpage.mine.app.tally.module.detail.RecordDetailActivity;
@@ -35,6 +31,7 @@ import com.coderpage.mine.app.tally.module.edit.RecordEditActivity;
 import com.coderpage.mine.app.tally.module.home.model.HomeDisplayData;
 import com.coderpage.mine.app.tally.module.home.model.HomeMonthModel;
 import com.coderpage.mine.app.tally.module.home.model.HomeTodayExpenseModel;
+import com.coderpage.mine.app.tally.module.records.RecordQuery;
 import com.coderpage.mine.app.tally.module.records.RecordsActivity;
 import com.coderpage.mine.app.tally.module.setting.SettingActivity;
 import com.coderpage.mine.app.tally.persistence.model.Record;
@@ -98,7 +95,12 @@ public class HomeViewModel extends AndroidViewModel implements LifecycleObserver
                     bottomSheetDialog.dismiss();
                     break;
                 case R.id.lyBtnExpenseRecords:
-                    activity.startActivity(new Intent(activity, RecordsActivity.class));
+                    RecordsActivity.open(activity, new RecordQuery
+                            .Builder()
+                            .setType(RecordQuery.TYPE_ALL)
+                            .setStartTime(0)
+                            .setEndTime(System.currentTimeMillis())
+                            .build());
                     bottomSheetDialog.dismiss();
                     break;
                 case R.id.lyBtnChart:
@@ -144,40 +146,6 @@ public class HomeViewModel extends AndroidViewModel implements LifecycleObserver
     /** 收入记录 ITEM 点击 */
     public void onIncomeItemClick(Activity activity, Record income, View view) {
         RecordDetailActivity.openIncomeDetail(activity, income.getId());
-    }
-
-    /** 消费记录 ITEM 长按 */
-    public boolean onExpenseItemLongClick(Activity activity, Record expense) {
-        new AlertDialog.Builder(activity).setItems(R.array.expenseItemLongClickOption, (dialog, which) -> {
-            switch (which) {
-                case 0:
-                    deleteExpense(expense);
-                    break;
-                case 1:
-                    RecordEditActivity.openAsUpdateExpense(activity, expense.getId());
-                    break;
-                default:
-                    break;
-            }
-        }).show();
-        return true;
-    }
-
-    /** 消费记录 ITEM 长按 */
-    public boolean onIncomeItemLongClick(Activity activity, Record income) {
-        new AlertDialog.Builder(activity).setItems(R.array.expenseItemLongClickOption, (dialog, which) -> {
-            switch (which) {
-                case 0:
-                    deleteIncome(income);
-                    break;
-                case 1:
-                    RecordEditActivity.openAsUpdateIncome(activity, income.getId());
-                    break;
-                default:
-                    break;
-            }
-        }).show();
-        return true;
     }
 
     /** 刷新首页数据 */
@@ -273,32 +241,17 @@ public class HomeViewModel extends AndroidViewModel implements LifecycleObserver
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventExpenseAdd(EventExpenseAdd event) {
+    public void onEventRecordAdd(EventRecordAdd event) {
         refresh();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventExpenseUpdate(EventExpenseUpdate event) {
+    public void onEventRecordUpdate(EventRecordUpdate event) {
         refresh();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventExpenseDelete(EventExpenseDelete event) {
-        refresh();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventIncomeAdd(EventIncomeAdd event) {
-        refresh();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventIncomeUpdate(EventIncomeUpdate event) {
-        refresh();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventIncomeDelete(EventIncomeDelete event) {
+    public void onEventRecordDelete(EventRecordDelete event) {
         refresh();
     }
 }

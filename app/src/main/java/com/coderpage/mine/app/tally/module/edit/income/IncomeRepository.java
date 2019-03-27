@@ -34,7 +34,7 @@ class IncomeRepository {
     /** 通过 ID 查询收入记录 */
     void queryIncomeById(long expenseId, SimpleCallback<Record> callback) {
         MineExecutors.ioExecutor().execute(() -> {
-            Record income = mDataBase.incomeDao().queryById(expenseId);
+            Record income = mDataBase.recordDao().queryById(expenseId);
             MineExecutors.executeOnUiThread(() -> callback.success(income));
         });
     }
@@ -42,7 +42,7 @@ class IncomeRepository {
     /** 保存记录 */
     void saveIncome(Record income, SimpleCallback<Result<Long, IError>> callback) {
         MineExecutors.ioExecutor().execute(() -> {
-            long id = mDataBase.incomeDao().insert(income.createEntity());
+            long id = mDataBase.recordDao().insert(income.createEntity());
             MineExecutors.executeOnUiThread(() -> callback.success(new Result<>(id, null)));
         });
     }
@@ -50,7 +50,7 @@ class IncomeRepository {
     /** 保存记录 */
     void updateIncome(Record income, SimpleCallback<Result<Long, IError>> callback) {
         MineExecutors.ioExecutor().execute(() -> {
-            long id = mDataBase.incomeDao().update(income.createEntity());
+            long id = mDataBase.recordDao().update(income.createEntity());
             MineExecutors.executeOnUiThread(() -> callback.success(new Result<>(id, null)));
         });
     }

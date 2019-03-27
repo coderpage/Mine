@@ -19,8 +19,8 @@ import com.coderpage.base.utils.ArrayUtils;
 import com.coderpage.base.utils.CommonUtils;
 import com.coderpage.framework.ViewReliedTask;
 import com.coderpage.mine.R;
-import com.coderpage.mine.app.tally.eventbus.EventIncomeAdd;
-import com.coderpage.mine.app.tally.eventbus.EventIncomeUpdate;
+import com.coderpage.mine.app.tally.eventbus.EventRecordAdd;
+import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
 import com.coderpage.mine.app.tally.module.edit.model.Category;
 import com.coderpage.mine.app.tally.persistence.model.CategoryModel;
 import com.coderpage.mine.app.tally.persistence.model.Record;
@@ -196,7 +196,7 @@ public class IncomeViewModel extends AndroidViewModel {
             mAmountText.set(mAmountFormat.format(mAmount));
 
             String  categoryUniqueName = mIncome.getCategoryUniqueName();
-            Category category = ArrayUtils.query(mCategoryList.getValue(),
+            Category category = ArrayUtils.findFirst(mCategoryList.getValue(),
                     c -> CommonUtils.isEqual(c.getInternal().getUniqueName(), categoryUniqueName));
             if (category != null) {
                 mCurrentSelectCategory.setValue(category);
@@ -253,14 +253,14 @@ public class IncomeViewModel extends AndroidViewModel {
             mRepository.saveIncome(income, result -> {
                 if (result.isOk()) {
                     income.setId(result.data());
-                    EventBus.getDefault().post(new EventIncomeAdd(income));
+                    EventBus.getDefault().post(new EventRecordAdd(income));
                     mActivityRelayTask.setValue(Activity::finish);
                 }
             });
         } else {
             mRepository.updateIncome(income, result -> {
                 if (result.isOk()) {
-                    EventBus.getDefault().post(new EventIncomeUpdate(income));
+                    EventBus.getDefault().post(new EventRecordUpdate(income));
                     mActivityRelayTask.setValue(Activity::finish);
                 }
             });
