@@ -19,7 +19,7 @@
     <!-- toolBar -->
     <dimen name="toolbar_height">52dp</dimen>
     <dimen name="headerbar_elevation">4dp</dimen>
-    <dimen name="shadow_height">4dp</dimen>
+    <dimen name="shadow_height">8dp</dimen>
     <dimen name="shadow_height_micro">2dp</dimen>
 
     <dimen name="bottom_bar_height">48dp</dimen>

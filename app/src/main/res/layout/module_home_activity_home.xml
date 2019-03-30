@@ -31,18 +31,20 @@
             app:layout_constraintTop_toTopOf="parent"
             app:titleTextColor="@color/appTextColorPrimary" />
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
             android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="@dimen/bottom_bar_height"
-            android:paddingTop="?attr/actionBarSize">
+            android:layout_marginTop="?attr/actionBarSize"
+            android:layout_marginBottom="@dimen/bottom_bar_height"
+            app:tr_autoLoadMore="false"
+            app:tr_enable_loadmore="false">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
 
         <LinearLayout
             android:id="@+id/lyBottomBar"

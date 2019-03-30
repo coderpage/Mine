@@ -1,49 +1,49 @@
 package com.coderpage.mine.app.tally.module.search;
 
-import android.content.Context;
-import android.net.Uri;
+import android.arch.lifecycle.ViewModelProviders;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.text.Editable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.coderpage.base.common.IError;
-import com.coderpage.framework.Presenter;
-import com.coderpage.framework.PresenterImpl;
-import com.coderpage.framework.UpdatableView;
+import com.coderpage.base.widget.LoadingLayout;
 import com.coderpage.mine.R;
+import com.coderpage.mine.app.tally.module.records.RecordsAdapter;
+import com.coderpage.mine.app.tally.ui.refresh.RefreshFootView;
+import com.coderpage.mine.app.tally.ui.refresh.RefreshHeadView;
+import com.coderpage.mine.module.search.SearchActivityBinding;
 import com.coderpage.mine.ui.BaseActivity;
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.coderpage.mine.app.tally.module.search.SearchModel.Queries;
-import static com.coderpage.mine.app.tally.module.search.SearchModel.UserActions;
-
-public class SearchActivity extends BaseActivity
-        implements UpdatableView<SearchModel, Queries, UserActions, IError> {
+public class SearchActivity extends BaseActivity {
 
     private EditText mSearchEt;
-    private SearchHistoryView mSearchHistoryView;
-    private SearchResultView mSearchResultView;
+    private LoadingLayout mLoadingLayout;
+    private TwinklingRefreshLayout mRefreshLayout;
+    private RecyclerView mSearchResultRecycler;
+    private RecyclerView mSearchHistoryRecycler;
 
-    private Presenter<Queries, UserActions> mPresenter;
-    private UserActionListener<UserActions> mUserActionListener;
+    private SearchHistoryAdapter mSearchHistoryAdapter;
+    private RecordsAdapter mSearchResultAdapter;
+
+    private SearchActivityBinding mBinding;
+    private SearchViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_search);
+        mViewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
         overridePendingTransition(0, 0);
 
-        initToolbar();
         initView();
-        setupSearchView();
-        initPresenter();
+        subScribeUi();
     }
 
     @Override
@@ -52,21 +52,56 @@ public class SearchActivity extends BaseActivity
         super.onPause();
     }
 
-    private void initToolbar() {
-        setToolbarAsBack(v -> {
-            if (mSearchResultView.getVisibility() == View.VISIBLE) {
-                mSearchResultView.setVisibility(View.INVISIBLE);
-                mSearchHistoryView.setVisibility(View.VISIBLE);
-            } else {
-                onBackPressed();
+    private void initView() {
+        setToolbarAsBack(v -> finish());
+        // 搜索框
+        mSearchEt = mBinding.etSearch;
+        setupSearchView();
+
+        mLoadingLayout = mBinding.loadingLayout;
+        LoadingLayout.Config emptyConfig = mLoadingLayout.getConfig(LoadingLayout.STATUS_EMPTY);
+        emptyConfig.setButtonPositiveText("");
+        emptyConfig.setButtonNegativeText("");
+        mLoadingLayout.setUserActionListener(new LoadingLayout.BaseUserActionListener() {
+            @Override
+            public void onPositiveButtonClick(LoadingLayout layout, View view) {
+                if (layout.getStatus() == LoadingLayout.STATUS_ERROR) {
+                    mViewModel.load();
+                }
+            }
+
+            @Override
+            public void onIconClick(LoadingLayout layout, View view) {
+                if (layout.getStatus() == LoadingLayout.STATUS_EMPTY) {
+                    mViewModel.load();
+                }
             }
         });
-    }
 
-    private void initView() {
-        mSearchEt = (EditText) findViewById(R.id.etSearch);
-        mSearchHistoryView = (SearchHistoryView) findViewById(R.id.lySearchHistoryView);
-        mSearchResultView = (SearchResultView) findViewById(R.id.lySearchResultView);
+        mRefreshLayout = mBinding.refreshLayout;
+        mRefreshLayout.setHeaderView(new RefreshHeadView(this));
+        mRefreshLayout.setBottomView(new RefreshFootView(this));
+        mRefreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
+            @Override
+            public void onRefresh(TwinklingRefreshLayout refreshLayout) {
+                mViewModel.refresh();
+            }
+
+            @Override
+            public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
+                mViewModel.loadMore();
+            }
+        });
+
+        mSearchHistoryRecycler = mBinding.recyclerHistory;
+        mSearchHistoryAdapter = new SearchHistoryAdapter(this, mViewModel);
+        mSearchHistoryRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mSearchHistoryRecycler.setAdapter(mSearchHistoryAdapter);
+
+        mSearchResultRecycler = mBinding.recyclerResult;
+        mSearchResultAdapter = new RecordsAdapter(this);
+        mSearchResultRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mSearchResultRecycler.setAdapter(mSearchResultAdapter);
     }
 
     private void setupSearchView() {
@@ -75,37 +110,11 @@ public class SearchActivity extends BaseActivity
         mSearchEt.requestFocus();
         showSoftKeyBoard();
 
-        mSearchEt.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String keyword = s.toString();
-
-                // 搜索框内容删除，显示搜索历史记录
-                if (TextUtils.isEmpty(keyword) && mSearchHistoryView.getVisibility() != View.VISIBLE) {
-                    mSearchHistoryView.setVisibility(View.VISIBLE);
-                    mSearchResultView.setVisibility(View.INVISIBLE);
-                }
-
-            }
-        });
         mSearchEt.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
                 String keyword = mSearchEt.getText().toString();
                 if (!TextUtils.isEmpty(keyword)) {
-                    Bundle args = new Bundle(1);
-                    args.putString(SearchModel.EXTRA_KEYWORD, keyword);
-                    mUserActionListener.onUserAction(UserActions.SEARCH, args);
-                    mUserActionListener.onUserAction(UserActions.SEARCH_HISTORY_ADD, args);
+                    mViewModel.onSearchClick();
                 }
                 hideSoftKeyBoard();
             }
@@ -113,64 +122,53 @@ public class SearchActivity extends BaseActivity
         });
     }
 
+    private void subScribeUi() {
+        mBinding.setVm(mViewModel);
+        mViewModel.getLoadingStatus().observe(this, loadingStatus -> {
+            if (loadingStatus != null) {
+                mLoadingLayout.setStatus(loadingStatus);
+            }
+        });
+        mViewModel.getRefreshing().observe(this, refreshing -> {
+            if (refreshing != null && !refreshing) {
+                mRefreshLayout.finishRefreshing();
+            }
+        });
+        mViewModel.getLoadingMore().observe(this, loadMore -> {
+            if (loadMore != null && !loadMore) {
+                mRefreshLayout.finishLoadmore();
+            }
+        });
+        mViewModel.getSearchHistoryList().observe(this, historyList -> {
+            if (historyList != null) {
+                mSearchHistoryAdapter.refresh(historyList);
+            }
+        });
+        mViewModel.getSearchResultList().observe(this, resultList -> {
+            if (resultList != null) {
+                mSearchResultAdapter.setDataList(resultList);
+            }
+        });
+    }
+
     private void showSoftKeyBoard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        if (imm == null) {
+            return;
+        }
         imm.showSoftInputFromInputMethod(mSearchEt.getWindowToken(), 0);
     }
 
     private void hideSoftKeyBoard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        if (imm == null) {
+            return;
+        }
         imm.hideSoftInputFromWindow(mSearchEt.getWindowToken(), 0);
     }
 
-    private void initPresenter() {
-        SearchModel model = new SearchModel(this);
-        List<UpdatableView<SearchModel, Queries, UserActions, IError>> viewList = new ArrayList<>(3);
-        viewList.add(this);
-        viewList.add(mSearchHistoryView);
-        viewList.add(mSearchResultView);
-        mPresenter = new PresenterImpl<>(model, viewList, UserActions.values(), Queries.values());
-        mPresenter.loadInitialQueries();
-    }
-
-    @Override
-    public void displayData(SearchModel model, Queries query) {
-
-    }
-
-    @Override
-    public void displayErrorMessage(Queries query, IError error) {
-
-    }
-
-    @Override
-    public void displayUserActionResult(SearchModel model,
-                                        Bundle args,
-                                        UserActions userAction,
-                                        boolean success,
-                                        IError error) {
-        switch (userAction) {
-            case SEARCH:
-                String keyword = args.getString(SearchModel.EXTRA_KEYWORD, "");
-                mSearchEt.setText(keyword);
-                mSearchEt.setSelection(keyword.length());
-                hideSoftKeyBoard();
-                break;
-        }
-    }
-
-    @Override
-    public Context getContext() {
-        return this;
-    }
-
-    @Override
-    public Uri getDataUri(Queries query) {
-        return null;
-    }
-
-    @Override
-    public void addListener(UserActionListener<UserActions> listener) {
-        mUserActionListener = listener;
-    }
+//                String keyword = args.getString(SearchModel.EXTRA_KEYWORD, "");
+//                mSearchEt.setText(keyword);
+//                mSearchEt.setSelection(keyword.length());
+//                hideSoftKeyBoard();
 }

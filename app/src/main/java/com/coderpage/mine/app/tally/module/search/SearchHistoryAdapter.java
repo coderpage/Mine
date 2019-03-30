@@ -1,15 +1,15 @@
 package com.coderpage.mine.app.tally.module.search;
 
 import android.content.Context;
-import android.os.Bundle;
+import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.coderpage.framework.UpdatableView;
+import com.coderpage.base.utils.CommonUtils;
 import com.coderpage.mine.R;
+import com.coderpage.mine.module.search.ItemClearAllBinding;
+import com.coderpage.mine.module.search.ItemSearchHistoryBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,38 +17,37 @@ import java.util.List;
 /**
  * @author lc. 2017-09-22 23:41
  * @since 0.5.0
+ *
+ * 搜索历史记录适配器
  */
 
-class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdapter.HistoryVH> {
+class SearchHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int ITEM_TYPE_NORMAL = 1;
     private static final int ITEM_TYPE_BOTTOM = 2;
+    private static final String ITEM_CLEAR_ALL = "ITEM_CLEAR_ALL";
 
-    private Context mContext;
     private LayoutInflater mInflater;
+    private SearchViewModel mViewModel;
     private List<String> mItems = new ArrayList<>();
 
-    private UpdatableView.UserActionListener<SearchModel.UserActions> mUserActionListener;
-
-    SearchHistoryAdapter(Context context) {
-        mContext = context;
-        mInflater = LayoutInflater.from(mContext);
-    }
-
-    void setUserActionListener(
-            UpdatableView.UserActionListener<SearchModel.UserActions> mUserActionListener) {
-        this.mUserActionListener = mUserActionListener;
+    SearchHistoryAdapter(Context context, SearchViewModel viewModel) {
+        mInflater = LayoutInflater.from(context);
+        mViewModel = viewModel;
     }
 
     void refresh(List<String> items) {
         mItems.clear();
         mItems.addAll(items);
+        if (!mItems.isEmpty()) {
+            mItems.add(ITEM_CLEAR_ALL);
+        }
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return mItems.size() > 0 ? mItems.size() + 1 : 0;
+        return mItems.size();
     }
 
     @Override
@@ -58,82 +57,55 @@ class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdapter.His
 
     @Override
     public int getItemViewType(int position) {
-        return position == mItems.size() ? ITEM_TYPE_BOTTOM : ITEM_TYPE_NORMAL;
+        return CommonUtils.isEqual(mItems.get(position), ITEM_CLEAR_ALL) ? ITEM_TYPE_BOTTOM : ITEM_TYPE_NORMAL;
     }
 
     @Override
-    public HistoryVH onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == ITEM_TYPE_NORMAL) {
-            return new HistoryVH(
-                    mInflater.inflate(R.layout.tally_recycler_item_search_history, parent, false));
+            return new ItemHistoryVh(DataBindingUtil.inflate(mInflater,
+                    R.layout.tally_module_search_item_history, parent, false));
         } else {
-            return new HistoryVH(
-                    mInflater.inflate(R.layout.layout_tally_search_history_clear, parent, false));
+            return new ItemClearAllVh(DataBindingUtil.inflate(mInflater,
+                    R.layout.tally_module_search_item_clear_all, parent, false));
         }
     }
 
     @Override
-    public void onBindViewHolder(HistoryVH holder, int position) {
-        if (position == mItems.size()) {
-            holder.setType(ITEM_TYPE_BOTTOM);
-        } else {
-            holder.setType(ITEM_TYPE_NORMAL);
-            holder.setKeyword(mItems.get(position));
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof ItemHistoryVh) {
+            ((ItemHistoryVh) holder).bind(mItems.get(position));
+        } else if (holder instanceof ItemClearAllVh) {
+            ((ItemClearAllVh) holder).bind();
         }
     }
 
-    class HistoryVH extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ItemHistoryVh extends RecyclerView.ViewHolder {
+        private ItemSearchHistoryBinding mBinding;
 
-        private TextView mKeywordTv;
-
-
-        private int type; // NORMAL or BOTTOM
-        private String keyword;
-
-        HistoryVH(View view) {
-            super(view);
-            mKeywordTv = (TextView) view.findViewById(R.id.tvKeyword);
-            View removeIv = view.findViewById(R.id.ivRemove);
-
-            view.setOnClickListener(this);
-            if (mKeywordTv != null) {
-                mKeywordTv.setOnClickListener(this);
-            }
-            if (removeIv != null) {
-                removeIv.setOnClickListener(this);
-            }
+        ItemHistoryVh(ItemSearchHistoryBinding binding) {
+            super(binding.getRoot());
+            mBinding = binding;
         }
 
-        void setType(int type) {
-            this.type = type;
+        void bind(String history) {
+            mBinding.setText(history);
+            mBinding.setVm(mViewModel);
+            mBinding.executePendingBindings();
+        }
+    }
+
+    class ItemClearAllVh extends RecyclerView.ViewHolder {
+        private ItemClearAllBinding mBinding;
+
+        ItemClearAllVh(ItemClearAllBinding binding) {
+            super(binding.getRoot());
+            mBinding = binding;
         }
 
-        void setKeyword(String keyword) {
-            this.keyword = keyword;
-            if (mKeywordTv != null) {
-                mKeywordTv.setText(keyword);
-            }
+        void bind() {
+            mBinding.setVm(mViewModel);
+            mBinding.executePendingBindings();
         }
-
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.tvKeyword:
-                    Bundle bundle = new Bundle(1);
-                    bundle.putString(SearchModel.EXTRA_KEYWORD, keyword);
-                    mUserActionListener.onUserAction(SearchModel.UserActions.SEARCH, bundle);
-                    return;
-                case R.id.ivRemove:
-                    bundle = new Bundle(1);
-                    bundle.putString(SearchModel.EXTRA_KEYWORD, keyword);
-                    mUserActionListener.onUserAction(SearchModel.UserActions.SEARCH_HISTORY_REMOVE, bundle);
-                    return;
-            }
-
-            if (this.type == ITEM_TYPE_BOTTOM) {
-                mUserActionListener.onUserAction(SearchModel.UserActions.SEARCH_HISTORY_CLEAR, null);
-            }
-        }
-
     }
 }

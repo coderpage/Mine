@@ -37,6 +37,21 @@ public interface RecordDao {
     Record queryById(long id);
 
     /**
+     * 通过关键字查询
+     *
+     * @param keyWord 关键字
+     * @param limit   最大数量
+     * @param offset  分页偏移
+     * @return 查询结果
+     */
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("select * " +
+            "from record " +
+            "left outer join category on record.record_category_unique_name=category.category_unique_name " +
+            "where category_name like :keyWord or record_desc like :keyWord order by record_time desc limit :limit offset :offset")
+    List<Record> queryByKeyWord(String keyWord, long limit, long offset);
+
+    /**
      * 查询记录
      *
      * @param type      记录类型 {@link Record#TYPE_EXPENSE} {@link Record#TYPE_INCOME}

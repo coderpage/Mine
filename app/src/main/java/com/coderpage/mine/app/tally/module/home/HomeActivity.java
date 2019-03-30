@@ -1,15 +1,21 @@
 package com.coderpage.mine.app.tally.module.home;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.module.records.RecordItemViewModel;
+import com.coderpage.mine.app.tally.module.search.SearchActivity;
+import com.coderpage.mine.app.tally.ui.refresh.RefreshHeadView;
 import com.coderpage.mine.ui.BaseActivity;
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 
 /**
  * @author lc. 2018-07-07 11:04
@@ -23,7 +29,7 @@ public class HomeActivity extends BaseActivity {
     private HomeViewModel mViewModel;
     private HomeActivityBinding mBinding;
     private HomeAdapter mAdapter;
-    private SwipeRefreshLayout mRefreshLayout;
+    private TwinklingRefreshLayout mRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +44,13 @@ public class HomeActivity extends BaseActivity {
 
     private void initView() {
         mRefreshLayout = mBinding.refreshLayout;
-        mRefreshLayout.setOnRefreshListener(() -> mViewModel.refresh());
+        mRefreshLayout.setHeaderView(new RefreshHeadView(this));
+        mRefreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
+            @Override
+            public void onRefresh(TwinklingRefreshLayout refreshLayout) {
+                mViewModel.refresh();
+            }
+        });
 
         RecyclerView recyclerView = mBinding.recyclerView;
         mAdapter = new HomeAdapter(this, mViewModel, ViewModelProviders.of(this).get(RecordItemViewModel.class));
@@ -51,7 +63,30 @@ public class HomeActivity extends BaseActivity {
         mBinding.setVm(mViewModel);
         mViewModel.observableDataList().observe(this,
                 dataList -> mAdapter.setDataList(dataList));
-        mViewModel.observableRefreshing().observe(this,
-                refreshing -> mRefreshLayout.setRefreshing(refreshing != null && refreshing));
+        mViewModel.observableRefreshing().observe(this, refreshing -> {
+            if (refreshing == null || !refreshing) {
+                mRefreshLayout.finishRefreshing();
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_tally_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.menu_search:
+                startActivity(new Intent(this, SearchActivity.class));
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

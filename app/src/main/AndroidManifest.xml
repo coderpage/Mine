@@ -17,17 +17,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Tally">
-        <activity
-            android:name=".app.tally.module.main.MainActivity"
-            android:label="@string/tally_toolbar_title_main"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Tally">
-            <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN" />-->
-
-            <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        </activity>
 
         <activity
             android:name=".app.tally.module.home.HomeActivity"

@@ -1,65 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".app.tally.module.search.SearchActivity">
+<layout>
 
-    <com.coderpage.mine.app.tally.module.search.SearchHistoryView
-        android:id="@+id/lySearchHistoryView"
+    <data class=".module.search.SearchActivityBinding">
+
+        <import type="android.view.View" />
+
+        <variable
+            name="vm"
+            type="com.coderpage.mine.app.tally.module.search.SearchViewModel" />
+    </data>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:paddingTop="@dimen/toolbar_height"
-        android:visibility="gone"/>
+        android:layout_height="match_parent"
+        tools:context=".app.tally.module.search.SearchActivity">
 
-    <com.coderpage.mine.app.tally.module.search.SearchResultView
-        android:id="@+id/lySearchResultView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_micro"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:paddingTop="@dimen/toolbar_height"
-        android:visibility="gone"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:background="@color/transparent"
-        android:orientation="vertical">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            style="@style/Widget.Toolbar"
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <!-- 搜多历史 -->
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/lySearchHistoryView"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:titleTextColor="@color/appTextColorPrimary">
+            android:layout_height="match_parent"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingTop="@dimen/toolbar_height"
+            android:visibility="@{vm.showSearchResult ? View.GONE : View.VISIBLE}">
 
-            <EditText
-                android:id="@+id/etSearch"
-                style="@style/SearchEditText"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerHistory"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="@string/tally_search_et_hint"
-                android:imeActionLabel="@string/searchable_label"
-                android:imeOptions="actionSearch|flagNoExtractUi"/>
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        </android.support.v7.widget.Toolbar>
+        </android.support.constraint.ConstraintLayout>
 
-        <View
-            android:id="@+id/ivToolbarShadow"
+        <!-- 搜索结果 -->
+        <com.coderpage.base.widget.LoadingLayout
+            android:id="@+id/loadingLayout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/shadow_height"
-            android:background="@drawable/shadow_appbar"/>
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingTop="@dimen/toolbar_height"
+            android:visibility="@{vm.showSearchResult ? View.VISIBLE : View.GONE}">
 
-    </LinearLayout>
+            <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
+                android:id="@+id/refreshLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-</FrameLayout>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerResult"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
+
+        </com.coderpage.base.widget.LoadingLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:background="@color/transparent"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/toolbar"
+                style="@style/Widget.Toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:titleTextColor="@color/appTextColorPrimary">
+
+                <EditText
+                    android:id="@+id/etSearch"
+                    style="@style/SearchEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/tally_search_et_hint"
+                    android:imeActionLabel="@string/searchable_label"
+                    android:imeOptions="actionSearch|flagNoExtractUi"
+                    android:text="@={vm.searchKeyWord}" />
+
+            </android.support.v7.widget.Toolbar>
+
+            <View
+                android:id="@+id/ivToolbarShadow"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/shadow_height"
+                android:background="@drawable/shadow_appbar" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</layout>

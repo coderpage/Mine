@@ -104,7 +104,7 @@ public class CommonUtils {
         return false;
     }
 
-    public static void collectionRemoveElememt(Collection collection, Object element) {
+    public static void collectionRemoveElement(Collection collection, Object element) {
         Iterator iterator = collection.iterator();
         while (iterator.hasNext()) {
             if (isEqual(iterator.next(), element)) {

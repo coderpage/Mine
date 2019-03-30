@@ -153,7 +153,6 @@ public class HomeViewModel extends AndroidViewModel implements LifecycleObserver
         if (mRefreshing.getValue() != null && mRefreshing.getValue()) {
             return;
         }
-        mRefreshing.setValue(true);
         mRepository.loadCurrentMonthExpenseData(result -> {
             mRefreshing.setValue(false);
             if (result.isOk()) {

@@ -40,7 +40,7 @@ public class RecordsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mViewModel = new RecordItemViewModel(MineApp.getAppContext());
     }
 
-    public void setDataList(List<Object> list){
+    public void setDataList(List<? extends Object> list) {
         mDataList.clear();
         mDataList.addAll(list);
         notifyDataSetChanged();
