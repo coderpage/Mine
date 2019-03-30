@@ -28,7 +28,7 @@ public class MineApp extends Application {
             CrashReport.UserStrategy userStrategy = new CrashReport.UserStrategy(getApplicationContext());
             userStrategy.setAppChannel(BuildConfig.FLAVOR);
             CrashReport.initCrashReport(getApplicationContext(),
-                    Constants.BUGLY_APP_ID, BuildConfig.DEBUG, userStrategy);
+                    BuildConfig.BUGLY_APP_ID, BuildConfig.DEBUG, userStrategy);
         }
         // 检查新版本
         UpdateUtils.startNewClientVersionCheckBackground(this);
