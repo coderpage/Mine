@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -28,15 +27,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
         </activity>
 
         <activity
             android:name=".app.tally.module.edit.RecordEditActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Tally" />
-        <activity
-            android:name=".app.tally.edit.ExpenseEditActivity"
-            android:label="@string/tally_toolbar_title_add_record"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Tally" />
         <activity
@@ -45,33 +42,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Tally" />
         <activity
-            android:name=".app.tally.module.chart.ChartActivity"
-            android:label="@string/tally_toolbar_title_chart"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Tally" />
-        <activity
             android:name=".app.tally.module.records.RecordsActivity"
             android:label="@string/tally_toolbar_title_records"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Tally" />
         <activity
-            android:name=".app.tally.module.records.RecordsActivityOld"
-            android:label="@string/tally_toolbar_title_records"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Tally" />
-        <activity
-            android:name=".app.tally.module.records.CategoryRecordsActivity"
-            android:label="@string/tally_toolbar_title_category_records"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Tally" />
-        <activity
             android:name=".app.tally.module.setting.SettingActivity"
             android:label="@string/tally_toolbar_title_setting"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Tally" />
-        <activity
-            android:name=".app.tally.module.detail.ExpenseDetailActivity"
-            android:label="@string/tally_toolbar_title_detail"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Tally" />
         <activity
@@ -84,15 +61,6 @@
             android:label="@string/tally_toolbar_title_chart"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Tally" />
-
-        <!-- 账单数据库 provider -->
-        <provider
-            android:name=".app.tally.provider.TallyProvider"
-            android:authorities="com.coderpage.mine.apps.tally"
-            android:exported="false"
-            android:label="@string/app_name"
-            android:syncable="true" />
-
         <activity android:name=".app.tally.module.search.SearchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />

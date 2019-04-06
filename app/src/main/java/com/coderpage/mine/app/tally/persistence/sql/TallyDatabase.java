@@ -19,7 +19,6 @@ import com.coderpage.mine.app.tally.persistence.sql.dao.CategoryDao;
 import com.coderpage.mine.app.tally.persistence.sql.dao.RecordDao;
 import com.coderpage.mine.app.tally.persistence.sql.entity.CategoryEntity;
 import com.coderpage.mine.app.tally.persistence.sql.entity.RecordEntity;
-import com.coderpage.mine.app.tally.provider.TallyContract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -133,24 +132,24 @@ public abstract class TallyDatabase extends RoomDatabase {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("CREATE TABLE expense1" + " ("
-                    + TallyContract.Expense._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + TallyContract.Expense.CATEGORY_ID + " INTEGER NOT NULL,"
-                    + TallyContract.Expense.CATEGORY + " TEXT NOT NULL,"
-                    + TallyContract.Expense.AMOUNT + " DOUBLE NOT NULL,"
-                    + TallyContract.Expense.DESC + " TEXT NOT NULL DEFAULT '',"
-                    + TallyContract.Expense.TIME + " DOUBLE NOT NULL,"
-                    + TallyContract.Expense.ACCOUNT_ID + " INTEGER NOT NULL DEFAULT 0,"
-                    + TallyContract.Expense.SYNC_ID + " TEXT NOT NULL,"
-                    + TallyContract.Expense.SYNCED + " INTEGER NOT NULL DEFAULT 0,"
-                    + "UNIQUE (" + TallyContract.Expense.SYNC_ID + ") ON CONFLICT IGNORE)"
+                    + "expense_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    + "category_id INTEGER NOT NULL,"
+                    + "expense_category TEXT NOT NULL,"
+                    + "expense_amount DOUBLE NOT NULL,"
+                    + "expense_desc TEXT NOT NULL DEFAULT '',"
+                    + "expense_time DOUBLE NOT NULL,"
+                    + "expense_account_id INTEGER NOT NULL DEFAULT 0,"
+                    + "expense_sync_id TEXT NOT NULL,"
+                    + "expense_synced INTEGER NOT NULL DEFAULT 0,"
+                    + "UNIQUE (expense_sync_id) ON CONFLICT IGNORE)"
             );
 
             database.execSQL("CREATE TABLE category1" + " ("
-                    + TallyContract.Category._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + TallyContract.Category.NAME + " TEXT NOT NULL,"
-                    + TallyContract.Category.ICON + " TEXT,"
-                    + TallyContract.Category.ORDER + " INTEGER NOT NULL DEFAULT(0),"
-                    + "UNIQUE (" + TallyContract.Category.NAME + ") ON CONFLICT IGNORE)");
+                    + "category_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    + "category_name TEXT NOT NULL,"
+                    + "category_icon TEXT,"
+                    + "category_order INTEGER NOT NULL DEFAULT(0),"
+                    + "UNIQUE (category_name) ON CONFLICT IGNORE)");
 
 
             // 生成 UUID
@@ -162,19 +161,19 @@ public abstract class TallyDatabase extends RoomDatabase {
                     "hex(randomblob(6))";
 
             database.execSQL("INSERT INTO expense1 ("
-                    + TallyContract.Expense._ID + ","
-                    + TallyContract.Expense.CATEGORY_ID + ","
-                    + TallyContract.Expense.CATEGORY + ","
-                    + TallyContract.Expense.AMOUNT + ","
-                    + TallyContract.Expense.DESC + ","
-                    + TallyContract.Expense.TIME + ","
-                    + TallyContract.Expense.SYNC_ID + ") SELECT "
-                    + TallyContract.Expense._ID + ","
-                    + TallyContract.Expense.CATEGORY_ID + ","
-                    + TallyContract.Expense.CATEGORY + ","
-                    + TallyContract.Expense.AMOUNT + ","
-                    + TallyContract.Expense.DESC + ","
-                    + TallyContract.Expense.TIME + ","
+                    + "expense_id,"
+                    + "category_id,"
+                    + "expense_category,"
+                    + "expense_amount,"
+                    + "expense_desc,"
+                    + "expense_time,"
+                    + "expense_sync_id) SELECT "
+                    + "expense_id,"
+                    + "category_id,"
+                    + "expense_category,"
+                    + "expense_amount,"
+                    + "expense_desc,"
+                    + "expense_time,"
                     + uuid + " FROM expense"
             );
 
