@@ -7,6 +7,8 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -53,6 +55,8 @@ public class TallyChartActivity extends BaseActivity {
     private MineBarChart mBarChart;
     private MineLineChart mLineChart;
     private MinePieChart mPieChart;
+    private RecyclerView mCategoryDataRecycler;
+    private TallyChartCategoryDataAdapter mCategoryDataAdapter;
 
     private TallyChartActivityBinding mBinding;
     private TallyChartViewModel mViewModel;
@@ -92,6 +96,10 @@ public class TallyChartActivity extends BaseActivity {
         mBarChart = mBinding.barChart;
         mLineChart = mBinding.lineChart;
         mPieChart = mBinding.pieChart;
+        mCategoryDataRecycler = mBinding.recyclerCategory;
+        mCategoryDataRecycler.setLayoutManager(new LinearLayoutManager(self(), LinearLayoutManager.VERTICAL, false));
+        mCategoryDataAdapter = new TallyChartCategoryDataAdapter(mViewModel);
+        mCategoryDataRecycler.setAdapter(mCategoryDataAdapter);
     }
 
     private void subScribeUi() {
@@ -120,12 +128,19 @@ public class TallyChartActivity extends BaseActivity {
         mViewModel.getCategoryExpenseDataList().observe(this, categoryDataList -> {
             if (categoryDataList != null) {
                 showCategoryPieChart(categoryDataList);
+                mCategoryDataAdapter.setDataList(categoryDataList);
             }
         });
         // 收入分类饼图
         mViewModel.getCategoryIncomeDataList().observe(this, categoryDataList -> {
             if (categoryDataList != null) {
                 showCategoryPieChart(categoryDataList);
+                mCategoryDataAdapter.setDataList(categoryDataList);
+            }
+        });
+        mViewModel.getViewReliedTask().observe(this, task -> {
+            if (task != null) {
+                task.execute(this);
             }
         });
     }

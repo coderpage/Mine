@@ -14,7 +14,7 @@
             type="com.coderpage.mine.app.tally.module.chart.TallyChartViewModel" />
     </data>
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/main_content"
@@ -23,13 +23,39 @@
         android:fitsSystemWindows="true"
         tools:context=".app.tally.module.chart.TallyChartActivity">
 
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/Widget.Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:titleTextColor="@color/appTextColorPrimary">
+
+            <TextView
+                android:id="@+id/tvMonth"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:layout_gravity="left|center_vertical"
+                android:gravity="left|bottom"
+                android:text="@{vm.currentDateText}"
+                android:textColor="@color/appTextColorLabel"
+                android:textSize="@dimen/app_text_size_medium" />
+
+        </android.support.v7.widget.Toolbar>
+
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/lyContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:clipChildren="false"
             android:clipToPadding="false"
-            android:paddingTop="@dimen/toolbar_height">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -37,282 +63,225 @@
                 android:orientation="vertical">
 
                 <!-- 日支出柱状图、日收入状图 & 月支出、收入折线图 -->
-                <android.support.v7.widget.CardView
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/spacing_micro"
                     android:layout_marginTop="@dimen/padding_normal"
                     android:layout_marginRight="@dimen/spacing_micro"
-                    app:cardCornerRadius="@dimen/cardDefaultCornerRadius"
-                    app:cardElevation="@dimen/cardDefaultElevation">
+                    android:background="@drawable/bg_common_card_white">
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <LinearLayout
-                            android:id="@+id/lyChartSelect"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:baselineAligned="false"
-                            android:orientation="horizontal"
-                            android:padding="@dimen/padding_normal">
-
-                            <!-- 支出数据 -->
-                            <android.support.constraint.ConstraintLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:onClick="@{() -> vm.onSelectAsExpenseChartClick()}">
-
-                                <android.support.v7.widget.AppCompatImageView
-                                    android:id="@+id/ivExpenseCheckbox"
-                                    selected="@{vm.displayExpenseChart}"
-                                    android:layout_width="10dp"
-                                    android:layout_height="16dp"
-                                    app:layout_constraintBaseline_toBaselineOf="@id/tvExpenseAmountTip"
-                                    app:layout_constraintLeft_toLeftOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent"
-                                    app:srcCompat=" @drawable/ic_checkbox_expense_selector" />
-
-                                <TextView
-                                    android:id="@+id/tvExpenseAmountTip"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="6dp"
-                                    android:text="@string/tally_checkbox_expense"
-                                    android:textColor="@color/appTextColorPrimary"
-                                    android:textSize="@dimen/app_text_size_small"
-                                    android:textStyle="bold"
-                                    app:layout_constraintLeft_toRightOf="@id/ivExpenseCheckbox"
-                                    app:layout_constraintTop_toTopOf="@id/ivExpenseCheckbox" />
-
-                                <TextView
-                                    android:id="@+id/tvExpenseAmount"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="6dp"
-                                    android:layout_marginTop="2dp"
-                                    android:text="@{vm.expenseTotalAmountText}"
-                                    android:textColor="@color/expenseColor"
-                                    android:textSize="@dimen/app_text_size_medium"
-                                    app:layout_constraintLeft_toRightOf="@id/ivExpenseCheckbox"
-                                    app:layout_constraintTop_toBottomOf="@id/tvExpenseAmountTip" />
-
-                            </android.support.constraint.ConstraintLayout>
-
-                            <!-- 收入信息 -->
-                            <android.support.constraint.ConstraintLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:onClick="@{() -> vm.onSelectAsIncomeChartClick()}">
-
-                                <android.support.v7.widget.AppCompatImageView
-                                    android:id="@+id/ivIncomeCheckbox"
-                                    selected="@{!vm.displayExpenseChart}"
-                                    android:layout_width="10dp"
-                                    android:layout_height="16dp"
-                                    app:layout_constraintBaseline_toBaselineOf="@id/tvIncomeAmountTip"
-                                    app:layout_constraintLeft_toLeftOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent"
-                                    app:srcCompat=" @drawable/ic_checkbox_income_selector" />
-
-                                <TextView
-                                    android:id="@+id/tvIncomeAmountTip"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="6dp"
-                                    android:text="@string/tally_checkbox_income"
-                                    android:textColor="@color/appTextColorPrimary"
-                                    android:textSize="@dimen/app_text_size_small"
-                                    android:textStyle="bold"
-                                    app:layout_constraintLeft_toRightOf="@id/ivIncomeCheckbox"
-                                    app:layout_constraintTop_toTopOf="@id/ivIncomeCheckbox" />
-
-                                <TextView
-                                    android:id="@+id/tvIncomeAmount"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="6dp"
-                                    android:layout_marginTop="2dp"
-                                    android:text="@{vm.incomeTotalAmountText}"
-                                    android:textColor="@color/incomeColor"
-                                    android:textSize="@dimen/app_text_size_medium"
-                                    app:layout_constraintLeft_toRightOf="@id/ivIncomeCheckbox"
-                                    app:layout_constraintTop_toBottomOf="@id/ivIncomeCheckbox" />
-
-                            </android.support.constraint.ConstraintLayout>
-
-                            <!-- 切换日账单、年账单 -->
-                            <android.support.constraint.ConstraintLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0.5"
-                                android:onClick="@{() -> vm.onSwitchChartModelClick()}">
-
-                                <android.support.v7.widget.AppCompatImageView
-                                    android:id="@+id/ivSwitchDailyAndYearly"
-                                    android:layout_width="10dp"
-                                    android:layout_height="16dp"
-                                    app:layout_constraintLeft_toLeftOf="parent"
-                                    app:layout_constraintRight_toRightOf="parent"
-                                    app:srcCompat="@drawable/ic_switch_arrow" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="2dp"
-                                    android:text="@{vm.displayDailyChart ? @string/tally_switch_to_yearly_chart : @string/tally_switch_to_daily_chart}"
-                                    android:textColor="@color/appTextColorPrimary"
-                                    android:textSize="@dimen/app_text_size_small"
-                                    app:layout_constraintLeft_toLeftOf="parent"
-                                    app:layout_constraintRight_toRightOf="parent"
-                                    app:layout_constraintTop_toBottomOf="@id/ivSwitchDailyAndYearly" />
-
-                            </android.support.constraint.ConstraintLayout>
-
-                        </LinearLayout>
-
-                        <!-- 柱状图，展示日账单 -->
-                        <com.coderpage.mine.app.tally.module.chart.widget.MineBarChart
-                            android:id="@+id/barChart"
-                            android:layout_width="match_parent"
-                            android:layout_height="140dp"
-                            android:layout_below="@id/lyChartSelect"
-                            android:layout_marginBottom="@dimen/spacing_normal"
-                            android:visibility="@{vm.displayDailyChart ? View.VISIBLE : View.INVISIBLE}" />
-
-                        <!-- 折线图，展示年账单 -->
-                        <com.coderpage.mine.app.tally.module.chart.widget.MineLineChart
-                            android:id="@+id/lineChart"
-                            android:layout_width="match_parent"
-                            android:layout_height="140dp"
-                            android:layout_below="@id/lyChartSelect"
-                            android:layout_marginBottom="@dimen/spacing_normal"
-                            android:visibility="@{vm.displayDailyChart ? View.INVISIBLE : View.VISIBLE}" />
-
-                    </RelativeLayout>
-                </android.support.v7.widget.CardView>
-
-                <!-- 饼状图 -->
-                <android.support.v7.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/spacing_micro"
-                    android:layout_marginTop="@dimen/padding_normal"
-                    android:layout_marginRight="@dimen/spacing_micro"
-                    android:background="@color/white"
-                    app:cardCornerRadius="@dimen/cardDefaultCornerRadius"
-                    app:cardElevation="@dimen/cardDefaultElevation">
-
-                    <android.support.constraint.ConstraintLayout
+                    <LinearLayout
+                        android:id="@+id/lyChartSelect"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/padding_normal"
-                        android:paddingRight="@dimen/padding_normal">
+                        android:baselineAligned="false"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/padding_normal">
 
-                        <TextView
-                            android:id="@+id/tvPipChartTitle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="42dp"
-                            android:gravity="center"
-                            android:text="@{vm.displayExpenseChart ? @string/tally_checkbox_expense : @string/tally_checkbox_income}"
-                            android:textColor="@color/appTextColorPrimary"
-                            android:textSize="@dimen/app_text_size_medium"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                        <!-- 支出数据 -->
+                        <android.support.constraint.ConstraintLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:onClick="@{() -> vm.onSelectAsExpenseChartClick()}">
 
-                        <TextView
-                            android:id="@+id/tvMonthExpenseTotal"
-                            android:layout_width="wrap_content"
-                            android:layout_height="42dp"
-                            android:gravity="center"
-                            android:text="@{vm.displayExpenseChart ? vm.expenseTotalAmountText : vm.incomeTotalAmountText}"
-                            android:textColor="@{vm.displayExpenseChart ? @color/expenseColor : @color/incomeColor}"
-                            android:textSize="@dimen/app_text_size_medium"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            <android.support.v7.widget.AppCompatImageView
+                                android:id="@+id/ivExpenseCheckbox"
+                                selected="@{vm.displayExpenseChart}"
+                                android:layout_width="10dp"
+                                android:layout_height="16dp"
+                                app:layout_constraintBaseline_toBaselineOf="@id/tvExpenseAmountTip"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:srcCompat=" @drawable/ic_checkbox_expense_selector" />
 
-                        <View
-                            android:id="@+id/dividerPieChart"
-                            style="@style/Divider"
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/tvPipChartTitle" />
+                            <TextView
+                                android:id="@+id/tvExpenseAmountTip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="6dp"
+                                android:text="@string/tally_checkbox_expense"
+                                android:textColor="@color/appTextColorPrimary"
+                                android:textSize="@dimen/app_text_size_small"
+                                android:textStyle="bold"
+                                app:layout_constraintLeft_toRightOf="@id/ivExpenseCheckbox"
+                                app:layout_constraintTop_toTopOf="@id/ivExpenseCheckbox" />
 
-                        <com.coderpage.mine.app.tally.module.chart.widget.MinePieChart
-                            android:id="@+id/pieChart"
-                            android:layout_width="match_parent"
-                            android:layout_height="260dp"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="@dimen/padding_normal"
-                            android:layout_marginBottom="@dimen/padding_normal"
-                            app:layout_constraintTop_toBottomOf="@id/dividerPieChart" />
+                            <TextView
+                                android:id="@+id/tvExpenseAmount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="6dp"
+                                android:layout_marginTop="2dp"
+                                android:text="@{vm.expenseTotalAmountText}"
+                                android:textColor="@color/expenseColor"
+                                android:textSize="@dimen/app_text_size_medium"
+                                app:layout_constraintLeft_toRightOf="@id/ivExpenseCheckbox"
+                                app:layout_constraintTop_toBottomOf="@id/tvExpenseAmountTip" />
 
-                    </android.support.constraint.ConstraintLayout>
+                        </android.support.constraint.ConstraintLayout>
 
-                </android.support.v7.widget.CardView>
+                        <!-- 收入信息 -->
+                        <android.support.constraint.ConstraintLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:onClick="@{() -> vm.onSelectAsIncomeChartClick()}">
 
-                <android.support.v7.widget.CardView
+                            <android.support.v7.widget.AppCompatImageView
+                                android:id="@+id/ivIncomeCheckbox"
+                                selected="@{!vm.displayExpenseChart}"
+                                android:layout_width="10dp"
+                                android:layout_height="16dp"
+                                app:layout_constraintBaseline_toBaselineOf="@id/tvIncomeAmountTip"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:srcCompat=" @drawable/ic_checkbox_income_selector" />
+
+                            <TextView
+                                android:id="@+id/tvIncomeAmountTip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="6dp"
+                                android:text="@string/tally_checkbox_income"
+                                android:textColor="@color/appTextColorPrimary"
+                                android:textSize="@dimen/app_text_size_small"
+                                android:textStyle="bold"
+                                app:layout_constraintLeft_toRightOf="@id/ivIncomeCheckbox"
+                                app:layout_constraintTop_toTopOf="@id/ivIncomeCheckbox" />
+
+                            <TextView
+                                android:id="@+id/tvIncomeAmount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="6dp"
+                                android:layout_marginTop="2dp"
+                                android:text="@{vm.incomeTotalAmountText}"
+                                android:textColor="@color/incomeColor"
+                                android:textSize="@dimen/app_text_size_medium"
+                                app:layout_constraintLeft_toRightOf="@id/ivIncomeCheckbox"
+                                app:layout_constraintTop_toBottomOf="@id/ivIncomeCheckbox" />
+
+                        </android.support.constraint.ConstraintLayout>
+
+                        <!-- 切换日账单、年账单 -->
+                        <android.support.constraint.ConstraintLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:onClick="@{() -> vm.onSwitchChartModelClick()}">
+
+                            <android.support.v7.widget.AppCompatImageView
+                                android:id="@+id/ivSwitchDailyAndYearly"
+                                android:layout_width="10dp"
+                                android:layout_height="16dp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:srcCompat="@drawable/ic_switch_arrow" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@{vm.displayDailyChart ? @string/tally_switch_to_yearly_chart : @string/tally_switch_to_daily_chart}"
+                                android:textColor="@color/appTextColorPrimary"
+                                android:textSize="@dimen/app_text_size_small"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/ivSwitchDailyAndYearly" />
+
+                        </android.support.constraint.ConstraintLayout>
+
+                    </LinearLayout>
+
+                    <!-- 柱状图，展示日账单 -->
+                    <com.coderpage.mine.app.tally.module.chart.widget.MineBarChart
+                        android:id="@+id/barChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="140dp"
+                        android:layout_below="@id/lyChartSelect"
+                        android:layout_marginBottom="@dimen/spacing_normal"
+                        android:visibility="@{vm.displayDailyChart ? View.VISIBLE : View.INVISIBLE}" />
+
+                    <!-- 折线图，展示年账单 -->
+                    <com.coderpage.mine.app.tally.module.chart.widget.MineLineChart
+                        android:id="@+id/lineChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="140dp"
+                        android:layout_below="@id/lyChartSelect"
+                        android:layout_marginBottom="@dimen/spacing_normal"
+                        android:visibility="@{vm.displayDailyChart ? View.INVISIBLE : View.VISIBLE}" />
+
+                </RelativeLayout>
+
+                <!-- 饼状图 -->
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/spacing_micro"
+                    android:layout_marginTop="@dimen/padding_normal"
+                    android:layout_marginRight="@dimen/spacing_micro"
+                    android:background="@drawable/bg_common_card_white"
+                    android:paddingLeft="@dimen/padding_normal"
+                    android:paddingRight="@dimen/padding_normal">
+
+                    <TextView
+                        android:id="@+id/tvPipChartTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="42dp"
+                        android:gravity="center"
+                        android:text="@{vm.displayExpenseChart ? @string/tally_checkbox_expense : @string/tally_checkbox_income}"
+                        android:textColor="@color/appTextColorPrimary"
+                        android:textSize="@dimen/app_text_size_medium"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tvMonthExpenseTotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="42dp"
+                        android:gravity="center"
+                        android:text="@{vm.displayExpenseChart ? vm.expenseTotalAmountText : vm.incomeTotalAmountText}"
+                        android:textColor="@{vm.displayExpenseChart ? @color/expenseColor : @color/incomeColor}"
+                        android:textSize="@dimen/app_text_size_medium"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <View
+                        android:id="@+id/dividerPieChart"
+                        style="@style/Divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvPipChartTitle" />
+
+                    <com.coderpage.mine.app.tally.module.chart.widget.MinePieChart
+                        android:id="@+id/pieChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="260dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/padding_normal"
+                        android:layout_marginBottom="@dimen/padding_normal"
+                        app:layout_constraintTop_toBottomOf="@id/dividerPieChart" />
+
+                </android.support.constraint.ConstraintLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerCategory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/spacing_micro"
                     android:layout_marginTop="@dimen/padding_normal"
                     android:layout_marginRight="@dimen/spacing_micro"
                     android:layout_marginBottom="@dimen/padding_normal"
-                    android:background="@color/white"
-                    android:descendantFocusability="blocksDescendants"
-                    app:cardCornerRadius="@dimen/cardDefaultCornerRadius"
-                    app:cardElevation="@dimen/cardDefaultElevation">
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recyclerCategoryExpense"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                </android.support.v7.widget.CardView>
+                    android:background="@drawable/bg_common_card_white_normal"
+                    android:descendantFocusability="blocksDescendants" />
 
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:background="@color/transparent"
-            android:orientation="vertical">
-
-            <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/toolbar"
-                style="@style/Widget.Toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:titleTextColor="@color/appTextColorPrimary">
-
-                <TextView
-                    android:id="@+id/tvMonth"
-                    android:layout_width="wrap_content"
-                    android:layout_height="24dp"
-                    android:layout_gravity="left|center_vertical"
-                    android:gravity="left|bottom"
-                    android:text="@{vm.currentDateText}"
-                    android:textColor="@color/appTextColorLabel"
-                    android:textSize="@dimen/app_text_size_medium" />
-
-            </android.support.v7.widget.Toolbar>
-
-            <View
-                android:id="@+id/ivToolbarShadow"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/shadow_height"
-                android:background="@drawable/shadow_appbar" />
-
-        </LinearLayout>
-
-    </FrameLayout>
+    </android.support.constraint.ConstraintLayout>
 </layout>

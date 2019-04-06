@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.coderpage.base.cache.Cache;
+import com.coderpage.concurrency.MineExecutors;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.module.records.RecordItemViewModel;
 import com.coderpage.mine.app.tally.module.search.SearchActivity;
@@ -16,6 +18,11 @@ import com.coderpage.mine.app.tally.ui.refresh.RefreshHeadView;
 import com.coderpage.mine.ui.BaseActivity;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 
 /**
  * @author lc. 2018-07-07 11:04
@@ -88,5 +95,31 @@ public class HomeActivity extends BaseActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void copyDatabaseFileToSdcard() {
+        MineExecutors.ioExecutor().execute(() -> {
+            File oldfile = self().getDatabasePath("sql_tally");
+            try {
+                int bytesum = 0;
+                int byteread = 0;
+
+                String newPath = Cache.getCacheFolder(self()).getAbsolutePath() + "/sql_tally.db";
+                if (oldfile.exists()) {
+                    InputStream inStream = new FileInputStream(oldfile);
+                    FileOutputStream fs = new FileOutputStream(newPath);
+                    byte[] buffer = new byte[1444];
+                    int length;
+                    while ((byteread = inStream.read(buffer)) != -1) {
+                        bytesum += byteread;
+                        System.out.println(bytesum);
+                        fs.write(buffer, 0, byteread);
+                    }
+                    inStream.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

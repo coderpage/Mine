@@ -16,24 +16,24 @@
             type="com.coderpage.mine.app.tally.module.home.HomeViewModel" />
     </data>
 
-    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/padding_normal"
-        android:layout_marginRight="@dimen/padding_normal"
         android:layout_marginTop="@dimen/recycler_item_divider"
-        android:onClick="@{() -> vm.onMonthInfoClick(activity)}"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="@dimen/tally_card_item_corner_adius"
-        app:cardElevation="@dimen/tally_card_item_elevation"
-        app:contentPadding="@dimen/padding_micro">
+        android:layout_marginRight="@dimen/padding_normal"
+        android:background="@drawable/bg_common_card_white"
+        android:onClick="@{() -> vm.onMonthInfoClick(activity)}">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/spacing_normal">
+            android:padding="@dimen/spacing_normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <!-- 支出收入展示 -->
             <LinearLayout
@@ -61,8 +61,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:paddingBottom="@dimen/spacing_normal"
                         android:paddingTop="@dimen/spacing_normal"
+                        android:paddingBottom="@dimen/spacing_normal"
                         android:textColor="@color/appTextColorPrimary"
                         android:textSize="32dp" />
 
@@ -88,8 +88,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:paddingBottom="@dimen/spacing_normal"
                         android:paddingTop="@dimen/spacing_normal"
+                        android:paddingBottom="@dimen/spacing_normal"
                         android:textColor="@color/appTextColorPrimary"
                         android:textSize="32dp" />
 
@@ -105,5 +105,5 @@
 
         </LinearLayout>
 
-    </android.support.v7.widget.CardView>
+    </android.support.constraint.ConstraintLayout>
 </layout>

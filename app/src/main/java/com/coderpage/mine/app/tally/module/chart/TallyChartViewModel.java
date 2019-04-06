@@ -18,12 +18,15 @@ import com.coderpage.base.common.IError;
 import com.coderpage.base.common.SimpleCallback;
 import com.coderpage.base.utils.LogUtils;
 import com.coderpage.framework.BaseViewModel;
+import com.coderpage.framework.ViewReliedTask;
 import com.coderpage.mine.app.tally.common.utils.TallyUtils;
 import com.coderpage.mine.app.tally.module.chart.data.CategoryData;
 import com.coderpage.mine.app.tally.module.chart.data.DailyData;
 import com.coderpage.mine.app.tally.module.chart.data.Month;
 import com.coderpage.mine.app.tally.module.chart.data.MonthlyData;
 import com.coderpage.mine.app.tally.module.chart.data.MonthlyDataList;
+import com.coderpage.mine.app.tally.module.records.RecordQuery;
+import com.coderpage.mine.app.tally.module.records.RecordsActivity;
 import com.coderpage.mine.app.tally.ui.widget.MonthSelectDialog;
 import com.coderpage.mine.app.tally.utils.DateUtils;
 import com.coderpage.mine.app.tally.utils.TimeUtils;
@@ -82,6 +85,8 @@ public class TallyChartViewModel extends BaseViewModel implements LifecycleObser
     /** 收入分类金额列表 */
     private MutableLiveData<List<CategoryData>> mObservableCategoryIncomeDataList = new MutableLiveData<>();
 
+    private MutableLiveData<ViewReliedTask<Activity>> mViewReliedTask = new MutableLiveData<>();
+
     private TallyChartRepository mRepository;
 
     public TallyChartViewModel(Application application) {
@@ -129,6 +134,10 @@ public class TallyChartViewModel extends BaseViewModel implements LifecycleObser
         return mObservableCategoryIncomeDataList;
     }
 
+    LiveData<ViewReliedTask<Activity>> getViewReliedTask() {
+        return mViewReliedTask;
+    }
+
     /**
      * 选择日期点击
      *
@@ -174,6 +183,18 @@ public class TallyChartViewModel extends BaseViewModel implements LifecycleObser
             // 当前显示为 年账单，切换为日账单
             onSelectAsDailyChartClick();
         }
+    }
+
+    /** 分类数据 ITEM 点击 */
+    public void onCategoryDataItemClick(CategoryData categoryData) {
+        mViewReliedTask.setValue(activity -> {
+            RecordsActivity.open(activity, new RecordQuery.Builder()
+                    .setStartTime(categoryData.getStartDate())
+                    .setEndTime(categoryData.getEndDate())
+                    .setType(categoryData.getType())
+                    .setCategoryUniqueNameArray(new String[]{categoryData.getCategoryUniqueName()})
+                    .build());
+        });
     }
 
     /** 显示为 年账单 点击 */
@@ -687,183 +708,6 @@ public class TallyChartViewModel extends BaseViewModel implements LifecycleObser
         }
 
         return result;
-    }
-
-    /** 查询每日消费数据 */
-    private void queryDailyExpenseData() {
-        // 已经查询到数据，不再重复查询
-        List<DailyData> currentData = mObservableDailyExpenseList.getValue();
-        if (currentData != null) {
-            mObservableDailyExpenseList.postValue(currentData);
-
-            displayDailyExpenseAmountTotal();
-            return;
-        }
-
-        long startTime = mStartDate.getTimeInMillis();
-        long endTime = mEndDate.getTimeInMillis();
-        mRepository.queryDailyExpense(startTime, endTime, new Callback<List<DailyData>, IError>() {
-            @Override
-            public void success(List<DailyData> dailyDataList) {
-                dailyDataList = completeEmptyDailyData(startTime, endTime, dailyDataList);
-                mObservableDailyExpenseList.postValue(dailyDataList);
-
-                displayDailyExpenseAmountTotal();
-            }
-
-            @Override
-            public void failure(IError iError) {
-                showToastShort(iError.msg());
-            }
-        });
-    }
-
-    /** 查询每日收入数据 */
-    private void queryDailyIncomeData() {
-        // 已经查询到数据，不再重复查询
-        List<DailyData> currentData = mObservableDailyIncomeList.getValue();
-        if (currentData != null) {
-            mObservableDailyIncomeList.postValue(currentData);
-
-            displayDailyIncomeAmountTotal();
-            return;
-        }
-
-        long startTime = mStartDate.getTimeInMillis();
-        long endTime = mEndDate.getTimeInMillis();
-        mRepository.queryDailyInCome(startTime, endTime, new Callback<List<DailyData>, IError>() {
-            @Override
-            public void success(List<DailyData> dailyDataList) {
-                dailyDataList = completeEmptyDailyData(startTime, endTime, dailyDataList);
-                mObservableDailyIncomeList.postValue(dailyDataList);
-
-                displayDailyIncomeAmountTotal();
-            }
-
-            @Override
-            public void failure(IError iError) {
-                showToastShort(iError.msg());
-            }
-        });
-    }
-
-    /** 查询对应年-每月支出和收入数据 */
-    private void queryMonthlyData() {
-        // 已经查询到数据，不再重复查询
-        MonthlyDataList monthlyDataList = mObservableMonthlyDataList.getValue();
-        if (monthlyDataList != null && monthlyDataList.getExpenseList() != null && monthlyDataList.getIncomeList() != null) {
-            mObservableMonthlyDataList.setValue(monthlyDataList);
-            return;
-        }
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(mStartDate.getTimeInMillis() + (mEndDate.getTimeInMillis() - mStartDate.getTimeInMillis()) / 2);
-        Pair<Long, Long> yearDateRange = DateUtils.yearDateRange(calendar.get(Calendar.YEAR));
-        long startTime = yearDateRange.first;
-        long endTime = yearDateRange.second;
-
-        MonthlyDataList result = new MonthlyDataList();
-        // 异步读取 月支出、月收入 数据，用于判断是否两部分数据都已经查询返回，全部查询返回后更新数据
-        AtomicInteger counter = new AtomicInteger(0);
-        // 查询支出数据
-        mRepository.queryMonthlyExpense(startTime, endTime, new Callback<List<MonthlyData>, IError>() {
-            @Override
-            public void success(List<MonthlyData> list) {
-                // 补全空数据
-                list = completeEmptyMonthlyData(startTime, endTime, list);
-                result.setExpenseList(list);
-                if (counter.incrementAndGet() == 2) {
-                    mObservableMonthlyDataList.postValue(result);
-
-                    displayMonthlyExpenseAmountTotal();
-                    displayMonthlyIncomeAmountTotal();
-                }
-            }
-
-            @Override
-            public void failure(IError iError) {
-                showToastShort(iError.msg());
-                if (counter.incrementAndGet() == 2) {
-                    mObservableMonthlyDataList.postValue(result);
-
-                    displayMonthlyExpenseAmountTotal();
-                    displayMonthlyIncomeAmountTotal();
-                }
-            }
-        });
-
-        // 查询收入数据
-        mRepository.queryMonthlyIncome(startTime, endTime, new Callback<List<MonthlyData>, IError>() {
-            @Override
-            public void success(List<MonthlyData> list) {
-                // 补全空数据
-                list = completeEmptyMonthlyData(startTime, endTime, list);
-                result.setIncomeList(list);
-                if (counter.incrementAndGet() == 2) {
-                    mObservableMonthlyDataList.postValue(result);
-
-                    displayMonthlyExpenseAmountTotal();
-                    displayMonthlyIncomeAmountTotal();
-                }
-            }
-
-            @Override
-            public void failure(IError iError) {
-                showToastShort(iError.msg());
-                if (counter.incrementAndGet() == 2) {
-                    mObservableMonthlyDataList.postValue(result);
-
-                    displayMonthlyExpenseAmountTotal();
-                    displayMonthlyIncomeAmountTotal();
-                }
-            }
-        });
-    }
-
-    /** 查询分类支出数据 */
-    private void queryCategoryExpenseData() {
-        List<CategoryData> currentCategoryData = mObservableCategoryExpenseDataList.getValue();
-        if (currentCategoryData != null) {
-            mObservableCategoryExpenseDataList.setValue(currentCategoryData);
-            return;
-        }
-
-        long startTime = mStartDate.getTimeInMillis();
-        long endTime = mEndDate.getTimeInMillis();
-        mRepository.queryCategoryExpense(startTime, endTime, new Callback<List<CategoryData>, IError>() {
-            @Override
-            public void success(List<CategoryData> categoryData) {
-                mObservableCategoryExpenseDataList.postValue(categoryData);
-            }
-
-            @Override
-            public void failure(IError iError) {
-                showToastShort(iError.msg());
-            }
-        });
-    }
-
-    /** 查询分类收入数据 */
-    private void queryCategoryIncomeData() {
-        List<CategoryData> currentCategoryData = mObservableCategoryIncomeDataList.getValue();
-        if (currentCategoryData != null) {
-            mObservableCategoryIncomeDataList.setValue(currentCategoryData);
-            return;
-        }
-
-        long startTime = mStartDate.getTimeInMillis();
-        long endTime = mEndDate.getTimeInMillis();
-        mRepository.queryCategoryIncome(startTime, endTime, new Callback<List<CategoryData>, IError>() {
-            @Override
-            public void success(List<CategoryData> categoryData) {
-                mObservableCategoryIncomeDataList.postValue(categoryData);
-            }
-
-            @Override
-            public void failure(IError iError) {
-                showToastShort(iError.msg());
-            }
-        });
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)

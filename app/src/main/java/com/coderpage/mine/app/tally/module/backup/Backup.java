@@ -244,27 +244,62 @@ public class Backup {
 
     private static boolean restoreExpenseTable(BackupModelMetadata metadata,
                                                List<BackupModelRecord> expenseList) {
-        TallyDatabase database = TallyDatabase.getInstance();
-        List<CategoryModel> categoryList = database.categoryDao().allCategory();
-
-        // categoryName - categoryUniqueName Map
-        HashMap<String, String> getCategoryUniqueNameByName = new HashMap<>();
-
-        for (CategoryModel category : categoryList) {
-            getCategoryUniqueNameByName.put(category.getName(), category.getUniqueName());
+        // 0.6.0 版本之前备份的数据。单独处理
+        if (metadata.getClientVersionCode() < 60) {
+            return restoreExpenseTableBefore060(expenseList);
         }
 
+        TallyDatabase database = TallyDatabase.getInstance();
         RecordEntity[] insertArray = new RecordEntity[expenseList.size()];
         for (int i = 0; i < expenseList.size(); i++) {
             BackupModelRecord backupExpense = expenseList.get(i);
 
-            // 从 0.6.0 版本之后，使用 categoryUniqueName 来保证分类唯一
-            String categoryUniqueName = backupExpense.getCategoryUniqueName();
-            // 如果备份数据中记录了 categoryUniqueName，使用 categoryUniqueName
-            if (TextUtils.isEmpty(categoryUniqueName)) {
-                categoryUniqueName = getCategoryUniqueNameByName.get(backupExpense.getCategory());
-                categoryUniqueName = TextUtils.isEmpty(categoryUniqueName) ? "" : categoryUniqueName;
-            }
+            RecordEntity entity = new RecordEntity();
+            entity.setAccountId(backupExpense.getAccountId());
+            entity.setAmount(backupExpense.getAmount());
+            entity.setTime(backupExpense.getTime());
+            entity.setCategoryUniqueName(backupExpense.getCategoryUniqueName());
+            entity.setDesc(backupExpense.getDesc());
+            entity.setSyncId(backupExpense.getSyncId());
+            entity.setSyncStatus(backupExpense.getSyncStatus());
+            entity.setType(backupExpense.getType());
+
+            insertArray[i] = entity;
+        }
+
+        try {
+            database.recordDao().insert(insertArray);
+            return true;
+        } catch (Exception e) {
+            LOGE(TAG, "恢复数据失败-消费记录表", e);
+        }
+
+        return false;
+    }
+
+    /**
+     * 恢复 0.6.0 版本之前的备份数据
+     *
+     * @param recordList 记录列表
+     * @return 恢复结果
+     */
+    private static boolean restoreExpenseTableBefore060(List<BackupModelRecord> recordList) {
+        TallyDatabase database = TallyDatabase.getInstance();
+        List<CategoryModel> expenseCategoryList = database.categoryDao().allExpenseCategory();
+
+        // categoryName - categoryUniqueName Map
+        HashMap<String, String> getCategoryUniqueNameByName = new HashMap<>();
+        for (CategoryModel category : expenseCategoryList) {
+            getCategoryUniqueNameByName.put(category.getName(), category.getUniqueName());
+        }
+
+        RecordEntity[] insertArray = new RecordEntity[recordList.size()];
+        for (int i = 0; i < recordList.size(); i++) {
+            BackupModelRecord backupExpense = recordList.get(i);
+
+            // 0.6.0 版本之前，不支持收入类型的记录，不支持修改分类名称
+            // 可以通过"分类名称"来获取对应的 categoryUniqueName
+            String categoryUniqueName = getCategoryUniqueNameByName.get(backupExpense.getCategory());
 
             RecordEntity entity = new RecordEntity();
             entity.setAccountId(backupExpense.getAccountId());

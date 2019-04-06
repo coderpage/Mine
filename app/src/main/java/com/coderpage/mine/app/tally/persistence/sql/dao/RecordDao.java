@@ -248,7 +248,7 @@ public interface RecordDao {
      * @return 查询到的分类支出数据
      */
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("select category.category_id,count(*),sum(record_amount),record_time,category_name,category_icon " +
+    @Query("select category.category_type,category.category_id,count(*),sum(record_amount),record_time,category_unique_name,category_name,category_icon " +
             "from record " +
             "left outer join category on record.record_category_unique_name=category.category_unique_name " +
             "where record_time >= :start and record_time<= :end and record_type = 0 " +
@@ -264,7 +264,7 @@ public interface RecordDao {
      * @return 查询到的分类收入数据
      */
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("select category.category_id,count(*),sum(record_amount),record_time,category_name,category_icon " +
+    @Query("select category.category_type,category.category_id,count(*),sum(record_amount),record_time,category_unique_name,category_name,category_icon " +
             "from record " +
             "left outer join category on record.record_category_unique_name=category.category_unique_name " +
             "where record_time >= :start and record_time<= :end and record_type = 1 " +

@@ -3,7 +3,6 @@ package com.coderpage.mine.app.tally.module.chart;
 import com.coderpage.base.common.Callback;
 import com.coderpage.base.common.IError;
 import com.coderpage.concurrency.MineExecutors;
-import com.coderpage.mine.app.tally.data.CategoryIconHelper;
 import com.coderpage.mine.app.tally.module.chart.data.CategoryData;
 import com.coderpage.mine.app.tally.module.chart.data.DailyData;
 import com.coderpage.mine.app.tally.module.chart.data.Month;
@@ -15,6 +14,7 @@ import com.coderpage.mine.app.tally.persistence.sql.TallyDatabase;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -174,11 +174,13 @@ class TallyChartRepository {
             double amountTotal = 0;
             for (RecordCategoryGroup group : expenseCategoryGroups) {
                 CategoryData categoryData = new CategoryData();
+                categoryData.setType(group.getType());
                 categoryData.setStartDate(start);
                 categoryData.setEndDate(end);
                 categoryData.setCategoryId(group.getCategoryId());
-                categoryData.setCategoryIcon(CategoryIconHelper.resId(group.getIcon()));
+                categoryData.setCategoryIconName(group.getIcon());
                 categoryData.setCategoryName(group.getName());
+                categoryData.setCategoryUniqueName(group.getUniqueName());
                 categoryData.setAmount(group.getAmount());
                 result.add(categoryData);
 
@@ -188,6 +190,12 @@ class TallyChartRepository {
             for (CategoryData data : result) {
                 data.setAmountTotal(amountTotal);
             }
+            Collections.sort(result, (c1, c2) -> {
+                if (c1.getAmountTotal() == c2.getAmountTotal()) {
+                    return 0;
+                }
+                return c1.getAmountTotal() > c2.getAmountTotal() ? -1 : 1;
+            });
 
             callback.success(result);
         });
@@ -210,11 +218,13 @@ class TallyChartRepository {
             double amountTotal = 0;
             for (RecordCategoryGroup group : incomeCategoryGroups) {
                 CategoryData categoryData = new CategoryData();
+                categoryData.setType(group.getType());
                 categoryData.setStartDate(start);
                 categoryData.setEndDate(end);
                 categoryData.setCategoryId(group.getCategoryId());
-                categoryData.setCategoryIcon(CategoryIconHelper.resId(group.getIcon()));
+                categoryData.setCategoryIconName(group.getIcon());
                 categoryData.setCategoryName(group.getName());
+                categoryData.setCategoryUniqueName(group.getUniqueName());
                 categoryData.setAmount(group.getAmount());
                 result.add(categoryData);
 
@@ -224,6 +234,12 @@ class TallyChartRepository {
             for (CategoryData data : result) {
                 data.setAmountTotal(amountTotal);
             }
+            Collections.sort(result, (c1, c2) -> {
+                if (c1.getAmountTotal() == c2.getAmountTotal()) {
+                    return 0;
+                }
+                return c1.getAmountTotal() > c2.getAmountTotal() ? -1 : 1;
+            });
 
             callback.success(result);
         });

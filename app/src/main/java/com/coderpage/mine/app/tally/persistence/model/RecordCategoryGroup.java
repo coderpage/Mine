@@ -9,6 +9,15 @@ import android.arch.persistence.room.ColumnInfo;
 
 public class RecordCategoryGroup {
 
+    /**
+     * 该分类类型
+     *
+     * @see com.coderpage.mine.app.tally.persistence.sql.entity.CategoryEntity#TYPE_EXPENSE
+     * @see com.coderpage.mine.app.tally.persistence.sql.entity.CategoryEntity#TYPE_INCOME
+     */
+    @ColumnInfo(name = "category_type")
+    private int type;
+
     /** 该分类 ID */
     @ColumnInfo(name = "category_id")
     private long categoryId;
@@ -32,6 +41,14 @@ public class RecordCategoryGroup {
     /** 分类图标 */
     @ColumnInfo(name = "category_icon")
     private String icon;
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
 
     public long getCategoryId() {
         return categoryId;

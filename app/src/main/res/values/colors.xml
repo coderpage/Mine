@@ -21,8 +21,10 @@
     <color name="shadow_start_color">#11000000</color>
     <color name="shadow_start_color_medium">#11000000</color>
     <color name="refresh_head_indicator">#80000000</color>
+    <!-- 点击涟漪背景色 -->
+    <color name="color_ripple">#1f000000</color>
 
-    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimary">#FFECEFF1</color>
     <color name="colorPrimaryDark">#ffb2b2b2</color>
     <color name="colorAccent">#0F956F</color>
 

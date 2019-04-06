@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?><!-- 模仿 Toolbar 上按钮点击效果的背景 -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/color_ripple"
+    android:radius="20dp" />
