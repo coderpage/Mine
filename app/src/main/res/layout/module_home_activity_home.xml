@@ -6,7 +6,7 @@
 
         <variable
             name="activity"
-            type="android.app.Activity" />
+            type="android.support.v4.app.FragmentActivity" />
 
         <variable
             name="vm"
@@ -16,6 +16,7 @@
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
@@ -36,7 +37,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="?attr/actionBarSize"
-            android:layout_marginBottom="@dimen/bottom_bar_height"
             app:tr_autoLoadMore="false"
             app:tr_enable_loadmore="false">
 
@@ -46,55 +46,74 @@
                 android:layout_height="wrap_content" />
         </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
 
-        <LinearLayout
-            android:id="@+id/lyBottomBar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/bottom_bar_height"
-            android:layout_gravity="center_vertical"
-            android:background="@color/colorPrimary"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <TextView
-                android:id="@+id/btnAddRecord"
-                style="@style/Widget.Btn.Borderless"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:onClick="@{() -> vm.onAddNewRecordClick(activity)}"
-                android:text="@string/tally_add_record"
-                android:textColor="@color/colorAccent"
-                android:textSize="@dimen/app_text_size_normal"
-                android:textStyle="bold" />
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/btnAddRecord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/padding_normal"
+            android:layout_marginBottom="@dimen/padding_normal"
+            android:background="@drawable/bg_accent_btn_round"
+            android:elevation="16dp"
+            android:gravity="center"
+            android:minHeight="48dp"
+            android:onClick="@{() -> vm.onAddNewRecordClick(activity)}"
+            android:paddingStart="36dp"
+            android:paddingEnd="36dp"
+            android:text="@string/tally_add_record"
+            android:textColor="@color/white"
+            android:textSize="@dimen/app_text_size_large"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/ivBottomMenu">
 
             <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/ivBottomMenu"
-                style="@style/Widget.Btn.Borderless"
-                android:layout_width="@dimen/bottom_bar_height"
-                android:layout_height="@dimen/bottom_bar_height"
-                android:clickable="true"
-                android:onClick="@{() -> vm.onBottomMenuClick(activity)}"
+                android:id="@+id/ivAddNewRecord"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:tint="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_edit" />
+
+            <TextView
+                android:id="@+id/tvAddNewRecord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_micro"
+                android:gravity="center"
+                android:text="@string/tally_add_record"
+                android:textColor="@color/white"
+                android:textSize="@dimen/app_text_size_large"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/ivAddNewRecord"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+
+        <FrameLayout
+            android:id="@+id/ivBottomMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/padding_normal"
+            android:layout_marginBottom="@dimen/padding_normal"
+            android:background="@drawable/bg_accent_btn_round"
+            android:elevation="16dp"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:onClick="@{() -> vm.onBottomMenuClick(activity)}"
+            android:padding="18dp"
+            android:tint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                android:tint="@color/white"
                 app:srcCompat="@drawable/ic_menu" />
 
-        </LinearLayout>
-
-        <View
-            android:id="@+id/ivBottomShadow"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/shadow_height"
-            android:background="@drawable/shadow_top"
-            app:layout_constraintBottom_toTopOf="@id/lyBottomBar" />
-
-        <!-- Toolbar shadow -->
-        <View
-            android:id="@+id/ivToolbarShadow"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/shadow_height"
-            android:background="@drawable/shadow_appbar"
-            app:layout_constraintTop_toBottomOf="@id/toolbar" />
-
+        </FrameLayout>
     </android.support.constraint.ConstraintLayout>
 </layout>

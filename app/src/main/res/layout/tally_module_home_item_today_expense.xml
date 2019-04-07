@@ -16,23 +16,28 @@
 
         <variable
             name="data"
-            type="com.coderpage.mine.app.tally.module.home.model.HomeTodayExpenseModel" />
+            type="com.coderpage.mine.app.tally.module.home.model.HomeRecent3DayRecordsModel" />
 
     </data>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/recycler_item_divider">
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:gravity="center"
-            android:text="@{data.toadyExpenseAmount > 0 ? @string/tally_toady_expense_total(data.displayExpenseAmount) : @string/tally_today_no_expense_record_tip}"
-            android:textColor="@color/appTextColorSecondary"
-            android:textSize="@dimen/app_text_size_medium" />
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_normal"
+            android:gravity="start|center"
+            android:paddingTop="@dimen/padding_normal"
+            android:paddingBottom="@dimen/padding_micro"
+            android:text="@{@string/tally_module_home_recent3day_tip(data.recent3DayRecordsCount, data.displayExpenseAmount)}"
+            android:textColor="@color/appTextColorPrimary"
+            android:textSize="@dimen/app_text_size_medium"
+            android:textStyle="bold"
+            tools:text="@string/tally_module_home_recent3day_tip" />
 
     </FrameLayout>
 </layout>

@@ -3,6 +3,7 @@ package com.coderpage.mine;
 import android.app.Application;
 import android.util.SparseArray;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.coderpage.base.utils.UIUtils;
 import com.coderpage.base.widget.LoadingLayout;
 import com.coderpage.framework.Framework;
@@ -24,6 +25,10 @@ public class MineApp extends Application {
         mAppContext = this;
         Global.init(this);
         Framework.onAppOnCreate();
+        if (BuildConfig.DEBUG) {
+            ARouter.openDebug();
+            ARouter.openLog();
+        }
         if (!BuildConfig.DEBUG) {
             CrashReport.UserStrategy userStrategy = new CrashReport.UserStrategy(getApplicationContext());
             userStrategy.setAppChannel(BuildConfig.FLAVOR);
@@ -34,6 +39,8 @@ public class MineApp extends Application {
         UpdateUtils.startNewClientVersionCheckBackground(this);
         // 初始化 LoadingLayout
         initLoadingLayout();
+        // 初始化 ARouter
+        ARouter.init(this);
     }
 
     public static Application getAppContext() {

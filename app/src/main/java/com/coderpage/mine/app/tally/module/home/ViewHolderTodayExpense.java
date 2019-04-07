@@ -3,7 +3,7 @@ package com.coderpage.mine.app.tally.module.home;
 import android.app.Activity;
 
 import com.coderpage.mine.app.tally.module.home.model.HomeDisplayData;
-import com.coderpage.mine.app.tally.module.home.model.HomeTodayExpenseModel;
+import com.coderpage.mine.app.tally.module.home.model.HomeRecent3DayRecordsModel;
 import com.coderpage.mine.tally.module.home.TodayExpenseItemBinding;
 
 /**
@@ -25,8 +25,8 @@ class ViewHolderTodayExpense extends BaseViewHolder {
 
     @Override
     void bindData(HomeDisplayData data) {
-        if (data != null && data.getInternal() != null && data.getInternal() instanceof HomeTodayExpenseModel) {
-            HomeTodayExpenseModel todayModel = (HomeTodayExpenseModel) data.getInternal();
+        if (data != null && data.getInternal() != null && data.getInternal() instanceof HomeRecent3DayRecordsModel) {
+            HomeRecent3DayRecordsModel todayModel = (HomeRecent3DayRecordsModel) data.getInternal();
             mBinding.setActivity(mActivity);
             mBinding.setVm(mViewModel);
             mBinding.setData(todayModel);

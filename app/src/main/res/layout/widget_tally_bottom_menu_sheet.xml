@@ -106,7 +106,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_micro"
                     android:gravity="center"
-                    android:text="@string/menu_tally_expense_records"
+                    android:text="@string/menu_tally_records"
                     android:textColor="@color/appTextColorPrimary"
                     android:textSize="@dimen/app_text_size_small"/>
 

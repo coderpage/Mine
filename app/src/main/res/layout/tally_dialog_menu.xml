@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data class=".dialog.MenuDialogBinding">
+
+        <variable
+            name="vm"
+            type="com.coderpage.mine.app.tally.ui.dialog.MenuDialogViewModel" />
+    </data>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bg_dialog_menu"
+            android:paddingStart="@dimen/padding_normal"
+            android:paddingTop="@dimen/padding_normal"
+            android:paddingEnd="@dimen/padding_normal">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layoutAnimation="@anim/layout_anim_tally_menu_in"
+                android:padding="@dimen/padding_micro"
+                app:layout_constraintBottom_toTopOf="@id/ivClose"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/ivClose"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/bg_clickable_view_40dp"
+                android:onClick="@{() -> vm.onCloseClick()}"
+                android:padding="18dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:srcCompat="@drawable/ic_close"
+                app:tint="@color/black" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </FrameLayout>
+</layout>

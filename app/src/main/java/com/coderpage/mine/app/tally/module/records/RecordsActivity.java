@@ -11,8 +11,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.coderpage.base.widget.LoadingLayout;
 import com.coderpage.mine.R;
+import com.coderpage.mine.app.tally.common.router.TallyRouter;
 import com.coderpage.mine.app.tally.ui.refresh.RefreshFootView;
 import com.coderpage.mine.app.tally.ui.refresh.RefreshHeadView;
 import com.coderpage.mine.module.records.RecordsActivityBinding;
@@ -26,7 +28,7 @@ import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
  *
  * 记录页
  */
-
+@Route(path = TallyRouter.RECORDS)
 public class RecordsActivity extends BaseActivity {
 
     static final String EXTRA_QUERY = "extra_query";

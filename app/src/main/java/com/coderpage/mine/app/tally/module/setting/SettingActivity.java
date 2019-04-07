@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.coderpage.base.common.IError;
 import com.coderpage.base.utils.FileUtils;
 import com.coderpage.base.utils.ResUtils;
@@ -23,6 +24,7 @@ import com.coderpage.framework.Presenter;
 import com.coderpage.framework.PresenterImpl;
 import com.coderpage.framework.UpdatableView;
 import com.coderpage.mine.R;
+import com.coderpage.mine.app.tally.common.router.TallyRouter;
 import com.coderpage.mine.app.tally.module.backup.Backup;
 import com.coderpage.mine.app.tally.module.backup.BackupModelMetadata;
 import com.coderpage.mine.ui.BaseActivity;
@@ -47,6 +49,7 @@ import static com.coderpage.mine.app.tally.module.setting.SettingModel.SettingUs
  * @author abner-l. 2017-06-01
  */
 
+@Route(path = TallyRouter.SETTING)
 public class SettingActivity extends BaseActivity
         implements UpdatableView<SettingModel, SettingQueryEnum, SettingUserActionEnum, IError> {
 

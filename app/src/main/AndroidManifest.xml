@@ -77,7 +77,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.coderpage.lib.update.fileProvider"
+            android:authorities="${applicationId}.lib.update.fileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

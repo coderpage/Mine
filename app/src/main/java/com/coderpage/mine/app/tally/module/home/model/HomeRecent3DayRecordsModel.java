@@ -9,9 +9,20 @@ import com.coderpage.mine.app.tally.common.utils.TallyUtils;
  * 首页今日消费总览模块数据
  */
 
-public class HomeTodayExpenseModel {
+public class HomeRecent3DayRecordsModel {
 
+    /** 近3日新增账单数量 */
+    private int recent3DayRecordsCount;
+    /** 今日消费金额 */
     private double toadyExpenseAmount;
+
+    public int getRecent3DayRecordsCount() {
+        return recent3DayRecordsCount;
+    }
+
+    public void setRecent3DayRecordsCount(int recent3DayRecordsCount) {
+        this.recent3DayRecordsCount = recent3DayRecordsCount;
+    }
 
     public double getToadyExpenseAmount() {
         return toadyExpenseAmount;

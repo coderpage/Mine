@@ -19,10 +19,10 @@ public class StatusBarUtils {
     /**
      * 设置状态栏文字颜色为黑色
      *
-     * @param activity       activity
+     * @param window         window
      * @param statusBarColor 状态栏的颜色
      */
-    public static void setStatusBarLightMode(Activity activity, @ColorRes int statusBarColor) {
+    public static void setStatusBarLightMode(Window window, @ColorRes int statusBarColor) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return;
         }
@@ -32,28 +32,28 @@ public class StatusBarUtils {
         FitUtils.Brand brand = FitUtils.getBrand();
         if (brand == FitUtils.Brand.XIAO_MI) {
             // 小米 状态栏颜色
-            lightModeSetSuccess = setStatusBarLightModeMIUI(activity, true);
+            lightModeSetSuccess = setStatusBarLightModeMIUI(window, true);
         } else if (brand == FitUtils.Brand.MEI_ZU) {
             // 魅族 状态栏颜色
-            lightModeSetSuccess = setStatusBarLightModeFlyMe(activity.getWindow(), true);
+            lightModeSetSuccess = setStatusBarLightModeFlyMe(window, true);
         } else {
             // Android 6.0 之后的原生方式
-            setStatusBarLightModeOrigin(activity, true);
+            setStatusBarLightModeOrigin(window, true);
         }
 
         if (lightModeSetSuccess) {
             // 黑色字体设置成功
-            setStatusBarColor(activity, statusBarColor);
+            setStatusBarColor(window, statusBarColor);
         }
     }
 
     /**
      * 设置状态栏文字颜色为白色
      *
-     * @param activity       activity
+     * @param window         window
      * @param statusBarColor 状态栏的颜色
      */
-    public static void setStatusBarDarkMode(Activity activity, @ColorRes int statusBarColor) {
+    public static void setStatusBarDarkMode(Window window, @ColorRes int statusBarColor) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return;
         }
@@ -63,30 +63,44 @@ public class StatusBarUtils {
         FitUtils.Brand brand = FitUtils.getBrand();
         if (brand == FitUtils.Brand.XIAO_MI) {
             // 小米 状态栏颜色
-            darkModeSetSuccess = setStatusBarLightModeMIUI(activity, false);
+            darkModeSetSuccess = setStatusBarLightModeMIUI(window, false);
         } else if (brand == FitUtils.Brand.MEI_ZU) {
             // 魅族 状态栏颜色
-            darkModeSetSuccess = setStatusBarLightModeFlyMe(activity.getWindow(), false);
+            darkModeSetSuccess = setStatusBarLightModeFlyMe(window, false);
         } else {
             // Android 6.0 之后的原生方式
-            setStatusBarLightModeOrigin(activity, false);
+            setStatusBarLightModeOrigin(window, false);
         }
 
-        setStatusBarColor(activity, statusBarColor);
+        setStatusBarColor(window, statusBarColor);
     }
 
     /**
      * 修改状态栏颜色，支持4.4以上版本
      */
-    public static void setStatusBarColor(Activity activity, @ColorRes int colorId) {
+    public static void setStatusBarColor(Window window, @ColorRes int colorResId) {
+        if (window == null) {
+            return;
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = activity.getWindow();
-            window.setStatusBarColor(ResUtils.getColor(activity, colorId));
+            window.setStatusBarColor(ResUtils.getColor(window.getContext(), colorResId));
+        }
+    }
+
+    /**
+     * 修改状态栏颜色，支持4.4以上版本
+     */
+    public static void setStatusBarColor(Activity activity, @ColorRes int colorResId) {
+        if (activity == null) {
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            activity.getWindow().setStatusBarColor(ResUtils.getColor(activity, colorResId));
 
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             SystemBarTintManager tintManager = new SystemBarTintManager(activity);
             tintManager.setStatusBarTintEnabled(true);
-            tintManager.setStatusBarTintResource(colorId);
+            tintManager.setStatusBarTintResource(colorResId);
         }
     }
 
@@ -132,9 +146,8 @@ public class StatusBarUtils {
      * @param lightMode 是否把状态栏文字及图标颜色设置为深色
      * @return boolean 成功执行返回true
      */
-    private static boolean setStatusBarLightModeMIUI(Activity activity, boolean lightMode) {
+    private static boolean setStatusBarLightModeMIUI(Window window, boolean lightMode) {
         boolean result = false;
-        Window window = activity.getWindow();
         if (window != null) {
             Class clazz = window.getClass();
             try {
@@ -151,7 +164,7 @@ public class StatusBarUtils {
                 result = true;
 
                 //开发版 7.7.13 及以后版本采用了系统API，旧方法无效但不会报错，所以使用原生系统方法再设置一次
-                setStatusBarLightModeOrigin(activity, lightMode);
+                setStatusBarLightModeOrigin(window, lightMode);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -160,11 +173,11 @@ public class StatusBarUtils {
     }
 
     /** 使用原生系统 API 来设置状态栏文字颜色 */
-    private static void setStatusBarLightModeOrigin(Activity activity, boolean lightMode) {
+    private static void setStatusBarLightModeOrigin(Window window, boolean lightMode) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return;
         }
-        View decorView = activity.getWindow().getDecorView();
+        View decorView = window.getDecorView();
         int originVisibility = decorView.getSystemUiVisibility();
         // 亮色模式，使用黑色文字
         if (lightMode && (originVisibility & View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR) == 0) {

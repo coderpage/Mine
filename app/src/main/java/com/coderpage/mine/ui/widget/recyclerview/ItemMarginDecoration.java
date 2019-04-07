@@ -15,6 +15,7 @@
 package com.coderpage.mine.ui.widget.recyclerview;
 
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -23,27 +24,43 @@ import android.view.View;
  */
 public class ItemMarginDecoration extends RecyclerView.ItemDecoration {
 
-    private final int mMarginLeft;
-    private final int mMarginTop;
-    private final int mMarginRight;
-    private final int mMarginBottom;
+    private Rect mCommonOffset = new Rect();
+    private Rect mFirstItemOffset = null;
+    private Rect mLastItemOffset = null;
 
-    public ItemMarginDecoration(int marginLeft, int marginTop, int marginRight, int marginBottom) {
-        mMarginLeft = marginLeft;
-        mMarginTop = marginTop;
-        mMarginRight = marginRight;
-        mMarginBottom = marginBottom;
+    public ItemMarginDecoration(int leftPx, int topPx, int rightPx, int bottomPx) {
+        mCommonOffset.left = leftPx;
+        mCommonOffset.top = topPx;
+        mCommonOffset.right = rightPx;
+        mCommonOffset.bottom = bottomPx;
+    }
+
+    public void setFirstItemOffset(int leftPx, int topPx, int rightPx, int bottomPx) {
+        mFirstItemOffset = new Rect(leftPx, topPx, rightPx, bottomPx);
+    }
+
+    public void setLastItemOffset(int leftPx, int topPx, int rightPx, int bottomPx) {
+        mLastItemOffset = new Rect(leftPx, topPx, rightPx, bottomPx);
     }
 
     @Override
-    public void getItemOffsets(Rect outRect,
-                               View view,
-                               RecyclerView parent,
-                               RecyclerView.State state) {
-        outRect.left = mMarginLeft;
-        outRect.top = mMarginTop;
-        outRect.right = mMarginRight;
-        outRect.bottom = mMarginBottom;
+    public void getItemOffsets(@NonNull Rect outRect,
+                               @NonNull View view,
+                               @NonNull RecyclerView parent,
+                               @NonNull RecyclerView.State state) {
+        int position = ((RecyclerView.LayoutParams) view.getLayoutParams()).getViewLayoutPosition();
+
+        if (mFirstItemOffset != null && position == 0) {
+            outRect.set(mFirstItemOffset);
+            return;
+        }
+
+        if (mLastItemOffset != null && position == state.getItemCount() - 1) {
+            outRect.set(mLastItemOffset);
+            return;
+        }
+
+        outRect.set(mCommonOffset);
     }
 
 }

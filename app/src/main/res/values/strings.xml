@@ -28,7 +28,7 @@
 
     <!-- Menu item open About Activity -->
     <string name="menu_tall_about">关于</string>
-    <string name="menu_tally_expense_records">消费记录</string>
+    <string name="menu_tally_records">账单记录</string>
     <string name="menu_tally_setting">设置</string>
     <string name="menu_tally_chart">图表分析</string>
     <string name="menu_tally_search">搜索</string>
@@ -43,6 +43,15 @@
     <string name="tally_toolbar_title_setting">设置</string>
     <string name="tally_toolbar_title_detail">详情</string>
     <string name="tally_toolbar_title_search">搜索</string>
+
+    <!-- tally home activity -->
+    <string name="tally_module_home_non_expense_place_holder">暂无支出</string>
+    <string name="tally_module_home_non_income_place_holder">暂无收入</string>
+    <string name="tally_module_home_budget_label">预算剩余</string>
+    <string name="tally_module_home_non_budget_place_holder">未设置预算</string>
+    <string name="tally_module_home_recent3day_tip">近三日新增账单 %s笔，今日支出 %s元</string>
+    <string name="tally_today_no_expense_record_tip">今天没花钱？快去记一笔~</string>
+    <string name="tally_toady_expense_total">今日消费 %s 元</string>
 
     <!-- tally chart activity -->
     <string name="tally_switch_2_daily_expense">日消费折线图</string>
@@ -84,6 +93,9 @@
     <string name="dialog_btn_choose_local_file">选择本地文件</string>
     <string name="dialog_btn_delete">删除</string>
     <string name="dialog_title_delete_confirm">确定删除？</string>
+    <string name="dialog_budget_set_title">设置预算</string>
+    <string name="dialog_budget_edit_hint">输入本月预算</string>
+    <string name="dialog_budget_error_illegal_input">预算金额必须大于0</string>
 
     <!-- toolbar title of tall expense record add activity -->
     <string name="tally_toolbar_title_add_record">记一笔</string>
@@ -93,8 +105,6 @@
     <string name="tally_calendar_title_format" formatted="false">%d年%d月</string>
     <string name="tally_expense_note">备注</string>
     <string name="tally_add_record_note">添加备注</string>
-    <string name="tally_today_no_expense_record_tip">今天没花钱？快去记一笔~</string>
-    <string name="tally_toady_expense_total">今日消费 %s 元</string>
     <string name="tally_check_month_expense">查看月账单</string>
     <string name="tally_current_month_expense_amount">本月支出</string>
     <string name="tally_current_month_income_amount">本月收入</string>

@@ -10,12 +10,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.coderpage.base.cache.Cache;
+import com.coderpage.base.utils.UIUtils;
 import com.coderpage.concurrency.MineExecutors;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.module.records.RecordItemViewModel;
 import com.coderpage.mine.app.tally.module.search.SearchActivity;
 import com.coderpage.mine.app.tally.ui.refresh.RefreshHeadView;
 import com.coderpage.mine.ui.BaseActivity;
+import com.coderpage.mine.ui.widget.recyclerview.ItemMarginDecoration;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 
@@ -61,6 +63,11 @@ public class HomeActivity extends BaseActivity {
 
         RecyclerView recyclerView = mBinding.recyclerView;
         mAdapter = new HomeAdapter(this, mViewModel, ViewModelProviders.of(this).get(RecordItemViewModel.class));
+
+        ItemMarginDecoration itemMarginDecoration = new ItemMarginDecoration(0, 0, 0, 0);
+        // 最后一个 ITEM 距离底部距离大一些，防止被底部按钮遮挡
+        itemMarginDecoration.setLastItemOffset(0, 0, 0, UIUtils.dp2px(this, 80));
+        recyclerView.addItemDecoration(itemMarginDecoration);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(mAdapter);
     }

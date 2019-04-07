@@ -5,6 +5,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.coderpage.mine.common.Font" />
+
         <import type="android.text.TextUtils" />
 
         <variable
@@ -91,10 +93,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_micro"
+                android:layout_marginEnd="@dimen/padding_normal"
                 android:ellipsize="end"
                 android:gravity="start"
                 android:maxLines="1"
-                android:layout_marginEnd="@dimen/padding_normal"
                 android:text="@{data.desc}"
                 android:textColor="@color/appTextColorSecondary"
                 android:textSize="@dimen/app_text_size_small"
@@ -108,12 +110,13 @@
             <!-- 金额 -->
             <TextView
                 android:id="@+id/tvAmount"
-                textMoney="@{data.amount}"
+                textTypeFace="@{Font.QUICKSAND_BOLD}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:gravity="center"
                 android:paddingEnd="2dp"
+                android:text="@{vm.formatMoney(data)}"
                 android:textColor="@color/appTextColorPrimary"
                 android:textSize="@dimen/app_text_size_normal"
                 android:textStyle="bold"
@@ -138,7 +141,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvAmount"
                 tools:text="今天 10:30" />
-
 
         </android.support.constraint.ConstraintLayout>
 

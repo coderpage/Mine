@@ -1,6 +1,8 @@
 package com.coderpage.mine.app.tally.databinding;
 
 import android.databinding.BindingAdapter;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -8,6 +10,7 @@ import android.widget.TextView;
 
 import com.coderpage.mine.app.tally.common.utils.TallyUtils;
 import com.coderpage.mine.app.tally.data.CategoryIconHelper;
+import com.coderpage.mine.common.Font;
 
 import java.text.DecimalFormat;
 
@@ -34,6 +37,36 @@ public class CommonBindAdapter {
     public static void setViewSelect(View view, boolean selected) {
         if (view != null) {
             view.setSelected(selected);
+        }
+    }
+
+    /**
+     * 设置 {@link ImageView} src
+     *
+     * @param imageView {@link ImageView}
+     * @param src       drawable
+     */
+    @BindingAdapter(value = {"imageSrc"}, requireAll = true)
+    public static void setImageViewDrawable(ImageView imageView, Drawable src) {
+        try {
+            imageView.setImageDrawable(src);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 设置字体
+     *
+     * @param font 字体
+     */
+    @BindingAdapter(value = {"textTypeFace"}, requireAll = false)
+    public static void setTypeFace(TextView textView, Font font) {
+        try {
+            Typeface typeface = Typeface.createFromAsset(textView.getContext().getAssets(), "font/" + font.getName());
+            textView.setTypeface(typeface);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

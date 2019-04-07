@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data class=".dialog.BudgetMonthSetDialogBinding" />
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_dialog_bottom_sheet"
+        android:paddingBottom="@dimen/padding_normal">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_normal"
+            android:text="@string/dialog_budget_set_title"
+            android:textColor="@color/appTextColorPrimary"
+            android:textSize="@dimen/app_text_size_large"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvBudgetUnit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_normal"
+            android:paddingTop="@dimen/padding_normal"
+            android:paddingBottom="@dimen/padding_normal"
+            android:textColor="@color/appTextColorPrimary"
+            android:textSize="@dimen/app_text_size_large"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvTitle"
+            tools:text="￥" />
+
+        <EditText
+            android:id="@+id/etBudget"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_normal"
+            android:layout_marginEnd="@dimen/padding_normal"
+            android:background="@null"
+            android:hint="@string/dialog_budget_edit_hint"
+            android:inputType="numberSigned"
+            android:layout_marginStart="@dimen/spacing_micro"
+            android:paddingTop="@dimen/padding_normal"
+            android:paddingBottom="@dimen/padding_normal"
+            android:textColor="@color/appTextColorPrimary"
+            android:textCursorDrawable="@drawable/edit_cursor"
+            android:textSize="@dimen/app_text_size_xlarge"
+            app:layout_constraintBaseline_toBaselineOf="@id/tvBudgetUnit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tvBudgetUnit" />
+
+        <TextView
+            android:id="@+id/tvConfirm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_normal"
+            android:layout_marginTop="@dimen/padding_normal"
+            android:layout_marginEnd="@dimen/padding_normal"
+            android:background="@drawable/bg_accent_btn_round"
+            android:gravity="center"
+            android:paddingTop="@dimen/padding_micro"
+            android:paddingBottom="@dimen/padding_micro"
+            android:text="@string/confirm"
+            android:textColor="@color/white"
+            android:textSize="@dimen/app_text_size_large"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etBudget" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_clickable_view_40dp"
+            android:padding="@dimen/padding_normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_close" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

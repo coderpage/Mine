@@ -3,14 +3,21 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion rootProject.compileSdkVersion
     defaultConfig {
-        applicationId "com.coderpage.mine"
+        applicationId "com.coderpage.mine.dev"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode rootProject.appVersionCode
         versionName rootProject.appVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
     }
+
     signingConfigs {
         release {
             keyAlias rootProject.keyAlias
@@ -87,8 +94,10 @@ dependencies {
     api rootProject.archLifecycleRuntime
     api rootProject.refreshLayout
     api rootProject.constraintLayout
+    api rootProject.arounter
     annotationProcessor rootProject.archLifecycleCompiler
     annotationProcessor rootProject.archRoomCompiler
     annotationProcessor rootProject.permissions4mProcessor
+    annotationProcessor rootProject.arounterProcessor
     testImplementation rootProject.junit
 }

@@ -1,7 +1,9 @@
 package com.coderpage.mine.app.tally.module.home;
 
 import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,13 +26,15 @@ class HomeAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private Activity mActivity;
     private HomeViewModel mViewModel;
+    private HomeMonthInfoViewModel mMonthInfoViewModel;
     private RecordItemViewModel mRecordItemViewModel;
     private LayoutInflater mInflater;
     private List<HomeDisplayData> mDataList = new ArrayList<>();
 
-    HomeAdapter(Activity activity, HomeViewModel viewModel, RecordItemViewModel recordItemViewModel) {
+    HomeAdapter(FragmentActivity activity, HomeViewModel viewModel, RecordItemViewModel recordItemViewModel) {
         mActivity = activity;
         mViewModel = viewModel;
+        mMonthInfoViewModel = ViewModelProviders.of(activity).get(HomeMonthInfoViewModel.class);
         mRecordItemViewModel = recordItemViewModel;
         mInflater = LayoutInflater.from(mActivity);
     }
@@ -107,7 +111,7 @@ class HomeAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
             // 月消费、月收入信息模块
             case HomeDisplayData.TYPE_MONTH_INFO:
-                return new ViewHolderMonthInfo(mActivity, mViewModel,
+                return new ViewHolderMonthInfo(mActivity, mMonthInfoViewModel,
                         DataBindingUtil.inflate(mInflater, R.layout.tally_module_home_item_month_info, parent, false));
 
             // 今日消费数据

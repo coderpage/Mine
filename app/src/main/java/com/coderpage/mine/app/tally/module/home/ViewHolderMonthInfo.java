@@ -17,10 +17,10 @@ import com.coderpage.mine.tally.module.home.MonthInfoItemBinding;
 class ViewHolderMonthInfo extends BaseViewHolder {
 
     private Activity mActivity;
-    private HomeViewModel mViewModel;
+    private HomeMonthInfoViewModel mViewModel;
     private MonthInfoItemBinding mBinding;
 
-    ViewHolderMonthInfo(Activity activity, HomeViewModel viewModel, MonthInfoItemBinding binding) {
+    ViewHolderMonthInfo(Activity activity, HomeMonthInfoViewModel viewModel, MonthInfoItemBinding binding) {
         super(binding.getRoot());
         mActivity = activity;
         mViewModel = viewModel;
@@ -36,6 +36,7 @@ class ViewHolderMonthInfo extends BaseViewHolder {
             mBinding.setActivity(mActivity);
             mBinding.setVm(mViewModel);
             mBinding.setData(monthModel);
+            mViewModel.setData(monthModel);
 
             mBinding.topCategoryView.setData(monthModel.getMonthCategoryExpenseData());
             mBinding.topCategoryView.setDrawTopCount(3);

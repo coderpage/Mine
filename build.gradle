@@ -48,6 +48,8 @@ ext {
     permissions4m = "com.github.jokermonn:permissions4m:2.1.2-lib"
     permissions4mProcessor = "com.github.jokermonn:permissions4m:2.1.2-processor"
     refreshLayout = 'com.lcodecorex:tkrefreshlayout:1.0.7'
+    arounter = "com.alibaba:arouter-api:1.2.2"
+    arounterProcessor = "com.alibaba:arouter-compiler:1.2.2"
 
     retrofit = 'com.squareup.retrofit2:retrofit:2.0.0'
     retrofitConverterGson = 'com.squareup.retrofit2:converter-gson:2.0.0'

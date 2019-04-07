@@ -27,6 +27,8 @@ import java.util.Map;
 
 class HomRepository {
 
+    /** 近3日账单数量 */
+    private int mRecent3DayRecordCount;
     /** 今日消费总额 */
     private double mTodayExpenseTotalAmount;
     /** 今日收入总额 */
@@ -41,6 +43,10 @@ class HomRepository {
     private List<Record> mTodayExpenseList = new ArrayList<>();
     /** 今日支出记录 */
     private List<Record> mTodayInComeList = new ArrayList<>();
+
+    public int getRecent3DayRecordCount() {
+        return mRecent3DayRecordCount;
+    }
 
     double getTodayExpenseTotalAmount() {
         return mTodayExpenseTotalAmount;
@@ -73,9 +79,13 @@ class HomRepository {
     /** 读取本月消费数据 */
     void loadCurrentMonthExpenseData(SimpleCallback<Result<Boolean, IError>> callback) {
         MineExecutors.ioExecutor().execute(() -> {
+            // 近3日账单数量
+            int recent3DayRecordCount = 0;
             // 今日开始时间&结束时间
             long todayStartTime = DateUtils.todayStartUnixTime();
             long todayEndTime = DateUtils.todayEndUnixTime();
+            // 前天开始时间
+            long day3AgoStartTime = todayStartTime - (1000 * 60 * 60 * 24 * 2);
             // 本月开始时间&结束时间
             long monthStartTime = DateUtils.currentMonthStartUnixTime();
             long monthEndTime = System.currentTimeMillis();
@@ -104,6 +114,10 @@ class HomRepository {
                     if (expense.getTime() >= todayStartTime && expense.getTime() <= todayEndTime) {
                         todayExpenseList.add(expense);
                         todayTotalAmount += expense.getAmount();
+                    }
+                    // 统计近3日账单数量
+                    if (expense.getTime() >= day3AgoStartTime && expense.getTime() <= todayEndTime) {
+                        recent3DayRecordCount++;
                     }
                     // 统计分类消费记录
                     Double categoryAmountTotal = getAmountByCategoryName.get(expense.getCategoryName());
@@ -151,8 +165,13 @@ class HomRepository {
                         todayIncomeList.add(income);
                         todayTotalAmount += income.getAmount();
                     }
+                    // 统计近3日账单数量
+                    if (income.getTime() >= day3AgoStartTime && income.getTime() <= todayEndTime) {
+                        recent3DayRecordCount++;
+                    }
                 }
 
+                mRecent3DayRecordCount = recent3DayRecordCount;
                 mCurrentMonthInComeTotalAmount = monthTotalAmount;
                 mTodayInComeTotalAmount = todayTotalAmount;
                 mTodayInComeList.clear();

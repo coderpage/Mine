@@ -12,9 +12,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.coderpage.base.utils.ResUtils;
 import com.coderpage.base.utils.UIUtils;
 import com.coderpage.mine.R;
+import com.coderpage.mine.app.tally.common.router.TallyRouter;
 import com.coderpage.mine.app.tally.module.chart.data.CategoryData;
 import com.coderpage.mine.app.tally.module.chart.data.DailyData;
 import com.coderpage.mine.app.tally.module.chart.data.Month;
@@ -46,7 +48,7 @@ import java.util.List;
  * @author lc. 2018-09-24 14:37
  * @since 0.6.0
  */
-
+@Route(path = TallyRouter.CHART)
 public class TallyChartActivity extends BaseActivity {
 
     static final String EXTRA_YEAR = "extra_year";

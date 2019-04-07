@@ -19,6 +19,8 @@ import com.coderpage.mine.app.tally.persistence.model.Record;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.text.DecimalFormat;
+
 /**
  * @author lc. 2019-01-04 10:47
  * @since 0.6.0
@@ -26,11 +28,21 @@ import org.greenrobot.eventbus.EventBus;
 
 public class RecordItemViewModel extends BaseViewModel {
 
+    private DecimalFormat mMoneyFormat = new DecimalFormat("0.00");
+
     private RecordsRepository mRepository;
 
     public RecordItemViewModel(Application application) {
         super(application);
         mRepository = new RecordsRepository();
+    }
+
+    /** 格式化金额 */
+    public String formatMoney(Record record) {
+        if (record == null) {
+            return "--";
+        }
+        return "￥" + mMoneyFormat.format(record.getAmount());
     }
 
     /**
@@ -65,10 +77,10 @@ public class RecordItemViewModel extends BaseViewModel {
 
                 // 修改
                 case 0:
-                    if (record.getType() == Record.TYPE_EXPENSE){
+                    if (record.getType() == Record.TYPE_EXPENSE) {
                         RecordEditActivity.openAsUpdateExpense(activity, record.getId());
                     }
-                    if (record.getType() == Record.TYPE_INCOME){
+                    if (record.getType() == Record.TYPE_INCOME) {
                         RecordEditActivity.openAsUpdateIncome(activity, record.getId());
                     }
                     break;

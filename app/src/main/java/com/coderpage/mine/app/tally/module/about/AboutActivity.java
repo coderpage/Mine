@@ -5,10 +5,12 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.coderpage.lib.update.ApkModel;
 import com.coderpage.lib.update.Updater;
 import com.coderpage.mine.BuildConfig;
 import com.coderpage.mine.R;
+import com.coderpage.mine.app.tally.common.router.TallyRouter;
 import com.coderpage.mine.app.tally.update.UpdateUtils;
 import com.coderpage.mine.ui.BaseActivity;
 
@@ -17,7 +19,7 @@ import java.util.Locale;
 /**
  * @author abner-l. 2017-03-23
  */
-
+@Route(path = TallyRouter.ABOUT)
 public class AboutActivity extends BaseActivity {
 
     private TextView mNewVersionTv;

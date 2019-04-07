@@ -78,9 +78,9 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected void setStatusBarLightMode(boolean lightMode) {
         if (lightMode) {
-            StatusBarUtils.setStatusBarLightMode(this, statusBarColor());
+            StatusBarUtils.setStatusBarLightMode(getWindow(), statusBarColor());
         } else {
-            StatusBarUtils.setStatusBarDarkMode(this, statusBarColor());
+            StatusBarUtils.setStatusBarDarkMode(getWindow(), statusBarColor());
         }
     }
 

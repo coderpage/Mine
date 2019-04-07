@@ -27,6 +27,13 @@
 
     <style name="Theme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="Theme.Tally.Menu" parent="Theme.Tally">
+        <item name="colorPrimaryDark">@color/transparent</item>
+        <item name="android:windowIsTranslucent">false</item><!--半透明-->
+        <item name="android:windowBackground">@color/transparent</item><!--背景透明-->
+        <item name="android:backgroundDimEnabled">true</item><!--模糊-->
+        <item name="android:backgroundDimAmount">0.3</item>
+    </style>
 
     <style name="TextAppearance" parent="TextAppearance.AppCompat" />
 
