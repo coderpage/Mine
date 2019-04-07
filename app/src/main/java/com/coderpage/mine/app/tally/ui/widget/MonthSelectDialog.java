@@ -29,7 +29,7 @@ import static com.coderpage.base.utils.LogUtils.makeLogTag;
  * @author lc. 2017-10-12 21:22
  * @since 0.5.1
  *
- * 选择年份和月份；用于 {@link com.coderpage.mine.app.tally.module.chart.ChartActivity}
+ * 选择年份和月份
  */
 
 public class MonthSelectDialog extends Dialog {

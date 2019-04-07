@@ -41,8 +41,12 @@
     <color name="appBgIconBtnPressed">#ebebeb</color>
 
     <color name="appBgBtnMonthSelectorStateNormal">@color/black_alpha_03</color>
-    <color name="appBgBtnMonthSelectorStateSelected">#440F956F</color>
+    <color name="appBgBtnMonthSelectorStateSelected">#0F956F</color>
     <color name="appBgBtnMonthSelectorStateDisabled">@color/appBgBtnDisabled</color>
+
+    <color name="appBgTagStyle1StateNormal">#190F956F</color>
+    <color name="appBgTagStyle1StateSelected">@color/colorAccent</color>
+    <color name="appBgTagStyle1StateDisabled">@color/appBgBtnDisabled</color>
 
     <color name="divider">#dcdcdc</color>
     <color name="colorHint">#66000000</color>

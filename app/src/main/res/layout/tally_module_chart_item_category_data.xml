@@ -5,6 +5,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.coderpage.mine.common.Font" />
+
         <variable
             name="data"
             type="com.coderpage.mine.app.tally.module.chart.data.CategoryData" />
@@ -67,6 +69,7 @@
 
         <TextView
             android:id="@+id/tvCategoryPercent"
+            textTypeFace="@{Font.QUICKSAND_MEDIUM}"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -81,11 +84,12 @@
 
         <TextView
             android:id="@+id/tvCategoryExpenseTotal"
-            textMoney="@{data.amount}"
+            textTypeFace="@{Font.QUICKSAND_MEDIUM}"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/spacing_normal"
             android:gravity="right|center_vertical"
+            android:text="@{vm.formatCategroyDataAmount(data)}"
             android:textColor="@color/appTextColorPrimary"
             android:textSize="@dimen/app_text_size_medium"
             app:layout_constraintBottom_toBottomOf="parent"

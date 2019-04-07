@@ -10,10 +10,12 @@ public class DailyData {
     private long timeMillis;
     /** 年 */
     private int year;
-    /** 月 1~12*/
+    /** 月 1~12 */
     private int month;
     /** 当月的第几天 */
     private int dayOfMonth;
+    /** 记录数量 */
+    private long count;
     /** 日总金额 */
     private float amount;
 
@@ -50,6 +52,14 @@ public class DailyData {
 
     public void setDayOfMonth(int dayOfMonth) {
         this.dayOfMonth = dayOfMonth;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
     }
 
     public float getAmount() {

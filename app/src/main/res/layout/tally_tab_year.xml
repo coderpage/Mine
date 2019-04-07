@@ -19,7 +19,7 @@
         android:paddingLeft="@dimen/spacing_large"
         android:paddingRight="@dimen/spacing_large"
         android:paddingTop="@dimen/spacing_normal"
-        android:textColor="@color/appTextColorSecondary"
+        android:textColor="@color/text_month_select"
         android:textSize="@dimen/app_text_size_medium"/>
 
 </FrameLayout>

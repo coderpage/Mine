@@ -13,6 +13,8 @@ public class MonthlyData {
     private Month month;
     /** 月总金额 */
     private float amount;
+    /** 账单记录数量 */
+    private long count;
 
     public Month getMonth() {
         return month;
@@ -28,6 +30,14 @@ public class MonthlyData {
 
     public void setAmount(float amount) {
         this.amount = amount;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
     }
 
     @Override

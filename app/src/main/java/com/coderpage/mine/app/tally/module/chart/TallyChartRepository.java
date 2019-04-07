@@ -57,6 +57,7 @@ class TallyChartRepository {
             for (RecordGroup dailyGroup : expenseList) {
                 calendar.setTimeInMillis(dailyGroup.getTime());
                 DailyData dailyData = new DailyData();
+                dailyData.setCount(dailyGroup.getCount());
                 dailyData.setAmount(dailyGroup.getAmount());
                 dailyData.setYear(calendar.get(Calendar.YEAR));
                 dailyData.setMonth(calendar.get(Calendar.MONTH) + 1);
@@ -85,6 +86,7 @@ class TallyChartRepository {
             for (RecordGroup dailyGroup : incomeGroupList) {
                 calendar.setTimeInMillis(dailyGroup.getTime());
                 DailyData dailyData = new DailyData();
+                dailyData.setCount(dailyGroup.getCount());
                 dailyData.setAmount(dailyGroup.getAmount());
                 dailyData.setYear(calendar.get(Calendar.YEAR));
                 dailyData.setMonth(calendar.get(Calendar.MONTH) + 1);
@@ -120,6 +122,7 @@ class TallyChartRepository {
                 MonthlyData monthlyExpense = new MonthlyData();
                 monthlyExpense.setMonth(month);
                 monthlyExpense.setAmount(sum);
+                monthlyExpense.setCount(group.getCount());
 
                 result.add(monthlyExpense);
             }
@@ -150,6 +153,7 @@ class TallyChartRepository {
                 MonthlyData monthlyExpense = new MonthlyData();
                 monthlyExpense.setMonth(month);
                 monthlyExpense.setAmount(sum);
+                monthlyExpense.setCount(group.getCount());
 
                 result.add(monthlyExpense);
             }
@@ -190,13 +194,7 @@ class TallyChartRepository {
             for (CategoryData data : result) {
                 data.setAmountTotal(amountTotal);
             }
-            Collections.sort(result, (c1, c2) -> {
-                if (c1.getAmountTotal() == c2.getAmountTotal()) {
-                    return 0;
-                }
-                return c1.getAmountTotal() > c2.getAmountTotal() ? -1 : 1;
-            });
-
+            Collections.reverse(result);
             callback.success(result);
         });
     }
@@ -234,12 +232,7 @@ class TallyChartRepository {
             for (CategoryData data : result) {
                 data.setAmountTotal(amountTotal);
             }
-            Collections.sort(result, (c1, c2) -> {
-                if (c1.getAmountTotal() == c2.getAmountTotal()) {
-                    return 0;
-                }
-                return c1.getAmountTotal() > c2.getAmountTotal() ? -1 : 1;
-            });
+            Collections.reverse(result);
 
             callback.success(result);
         });

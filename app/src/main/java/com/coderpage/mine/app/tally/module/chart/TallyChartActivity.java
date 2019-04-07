@@ -17,17 +17,14 @@ import com.coderpage.base.utils.ResUtils;
 import com.coderpage.base.utils.UIUtils;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.common.router.TallyRouter;
-import com.coderpage.mine.app.tally.module.chart.data.CategoryData;
 import com.coderpage.mine.app.tally.module.chart.data.DailyData;
 import com.coderpage.mine.app.tally.module.chart.data.Month;
 import com.coderpage.mine.app.tally.module.chart.data.MonthlyData;
 import com.coderpage.mine.app.tally.module.chart.data.MonthlyDataList;
 import com.coderpage.mine.app.tally.module.chart.widget.MineBarChart;
 import com.coderpage.mine.app.tally.module.chart.widget.MineLineChart;
-import com.coderpage.mine.app.tally.module.chart.widget.MinePieChart;
 import com.coderpage.mine.tally.module.chart.TallyChartActivityBinding;
 import com.coderpage.mine.ui.BaseActivity;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -36,12 +33,8 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -56,7 +49,6 @@ public class TallyChartActivity extends BaseActivity {
 
     private MineBarChart mBarChart;
     private MineLineChart mLineChart;
-    private MinePieChart mPieChart;
     private RecyclerView mCategoryDataRecycler;
     private TallyChartCategoryDataAdapter mCategoryDataAdapter;
 
@@ -97,7 +89,6 @@ public class TallyChartActivity extends BaseActivity {
     private void initView() {
         mBarChart = mBinding.barChart;
         mLineChart = mBinding.lineChart;
-        mPieChart = mBinding.pieChart;
         mCategoryDataRecycler = mBinding.recyclerCategory;
         mCategoryDataRecycler.setLayoutManager(new LinearLayoutManager(self(), LinearLayoutManager.VERTICAL, false));
         mCategoryDataAdapter = new TallyChartCategoryDataAdapter(mViewModel);
@@ -129,14 +120,12 @@ public class TallyChartActivity extends BaseActivity {
         // 支出分类饼图
         mViewModel.getCategoryExpenseDataList().observe(this, categoryDataList -> {
             if (categoryDataList != null) {
-                showCategoryPieChart(categoryDataList);
                 mCategoryDataAdapter.setDataList(categoryDataList);
             }
         });
         // 收入分类饼图
         mViewModel.getCategoryIncomeDataList().observe(this, categoryDataList -> {
             if (categoryDataList != null) {
-                showCategoryPieChart(categoryDataList);
                 mCategoryDataAdapter.setDataList(categoryDataList);
             }
         });
@@ -231,6 +220,9 @@ public class TallyChartActivity extends BaseActivity {
         axisRight.setDrawGridLines(false);
         axisRight.setDrawAxisLine(false);
 
+        mBarChart.setNoDataText(ResUtils.getString(self(), R.string.tally_chart_empty_tip));
+        mBarChart.setNoDataTextColor(ResUtils.getColor(self(), R.color.appTextColorPrimary));
+        mBarChart.setScaleEnabled(false);
         mBarChart.setDrawBorders(false);
         mBarChart.setDrawBarShadow(true);
         mBarChart.setDrawGridBackground(false);
@@ -329,6 +321,9 @@ public class TallyChartActivity extends BaseActivity {
             lineData.addDataSet(expenseDataSet);
         }
 
+        mBarChart.setNoDataText(ResUtils.getString(self(), R.string.tally_chart_empty_tip));
+        mBarChart.setNoDataTextColor(ResUtils.getColor(self(), R.color.appTextColorPrimary));
+        mLineChart.setScaleEnabled(false);
         mLineChart.getXAxis().setAxisMaximum(lineData.getXMax());
         mLineChart.getXAxis().setAxisMinimum(lineData.getXMin());
         mLineChart.setVisibleXRange(0, 11);
@@ -338,55 +333,5 @@ public class TallyChartActivity extends BaseActivity {
         mLineChart.getLegend().setEnabled(false);
         mLineChart.setData(lineData);
         mLineChart.animateY(500);
-    }
-
-    private void showCategoryPieChart(List<CategoryData> categoryDataList) {
-        List<PieEntry> yValues = new ArrayList<>();
-        if (categoryDataList != null) {
-            for (int i = 0; i < categoryDataList.size(); i++) {
-                CategoryData categoryData = categoryDataList.get(i);
-                PieEntry entry = new PieEntry((float) categoryData.getAmount(), categoryData.getCategoryName());
-                entry.setData(categoryData);
-                yValues.add(entry);
-            }
-        }
-
-        PieDataSet dataSet = new PieDataSet(yValues, "");
-        dataSet.setColors(Arrays.asList(
-                getResources().getColor(R.color.categoryColor1),
-                getResources().getColor(R.color.categoryColor2),
-                getResources().getColor(R.color.categoryColor3),
-                getResources().getColor(R.color.categoryColor4),
-                getResources().getColor(R.color.categoryColor5),
-                getResources().getColor(R.color.categoryColor6),
-                getResources().getColor(R.color.categoryColor7),
-                getResources().getColor(R.color.categoryColor8),
-                getResources().getColor(R.color.categoryColor9),
-                getResources().getColor(R.color.categoryColor10),
-                getResources().getColor(R.color.categoryColor11),
-                getResources().getColor(R.color.categoryColor12)
-        ));
-        dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
-        dataSet.setValueLinePart1Length(0.4f);
-        dataSet.setValueLinePart2Length(0.8f);
-        dataSet.setValueLineColor(getResources().getColor(R.color.colorHint));
-        dataSet.setValueTextColor(getResources().getColor(R.color.appTextColorPrimary));
-        dataSet.setValueTextSize(9);
-
-        PieData pieData = new PieData(dataSet);
-
-        mPieChart.setDescription(null);
-        mPieChart.setCenterTextSize(20f);
-        mPieChart.setDrawEntryLabels(false);
-        mPieChart.setHighlightPerTapEnabled(true);
-        mPieChart.getLegend().setEnabled(true);
-        mPieChart.getLegend().setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        mPieChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
-        mPieChart.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-        mPieChart.getLegend().setWordWrapEnabled(true);
-
-        mPieChart.setData(pieData);
-        mPieChart.setCenterText("");
-        mPieChart.animateY(500);
     }
 }

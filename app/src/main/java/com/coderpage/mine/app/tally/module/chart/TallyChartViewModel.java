@@ -16,9 +16,14 @@ import android.util.Pair;
 import com.coderpage.base.common.Callback;
 import com.coderpage.base.common.IError;
 import com.coderpage.base.common.SimpleCallback;
+import com.coderpage.base.utils.ArrayUtils;
 import com.coderpage.base.utils.LogUtils;
+import com.coderpage.base.utils.ResUtils;
+import com.coderpage.base.utils.WrappedLong;
+import com.coderpage.base.utils.WrappedObject;
 import com.coderpage.framework.BaseViewModel;
 import com.coderpage.framework.ViewReliedTask;
+import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.common.utils.TallyUtils;
 import com.coderpage.mine.app.tally.module.chart.data.CategoryData;
 import com.coderpage.mine.app.tally.module.chart.data.DailyData;
@@ -160,6 +165,11 @@ public class TallyChartViewModel extends BaseViewModel implements LifecycleObser
                 refreshData();
             }
         }, currentMonth).show();
+    }
+
+    /** 格式化分类数据金额 */
+    public String formatCategroyDataAmount(CategoryData data) {
+        return "¥" + TallyUtils.formatDisplayMoney(data.getAmount());
     }
 
     /** 显示为 支出账单 点击 */
@@ -552,54 +562,64 @@ public class TallyChartViewModel extends BaseViewModel implements LifecycleObser
 
     /** 显示日账单支出总额 */
     private void displayDailyExpenseAmountTotal() {
-        if (mDailyExpenseList == null) {
-            mExpenseTotalAmountText.set(TallyUtils.formatDisplayMoney(0));
-            return;
-        }
-        double total = 0;
-        for (DailyData dailyData : mDailyExpenseList) {
-            total += dailyData.getAmount();
-        }
-        mExpenseTotalAmountText.set(TallyUtils.formatDisplayMoney(total));
+        final WrappedLong recordCount = new WrappedLong(0);
+        final WrappedObject<Double> total = new WrappedObject<>(0D);
+        ArrayUtils.forEach(mDailyExpenseList, (count, index, item) -> {
+            total.set(total.get() + item.getAmount());
+            recordCount.set(recordCount.get() + item.getCount());
+        });
+
+        int year = mStartDate.get(Calendar.YEAR);
+        int month = mStartDate.get(Calendar.MONTH) + 1;
+        String money = "¥" + TallyUtils.formatDisplayMoney(total.get());
+        mCurrentDateText.set(ResUtils.getString(getApplication(), R.string.tally_bill_of_month_format, year, month));
+        mExpenseTotalAmountText.set(ResUtils.getString(getApplication(), R.string.tally_expense_data_format, recordCount.get(), money));
     }
 
     /** 显示日账单收入总额 */
     private void displayDailyIncomeAmountTotal() {
-        if (mDailyIncomeList == null) {
-            mIncomeTotalAmountText.set(TallyUtils.formatDisplayMoney(0));
-            return;
-        }
-        double total = 0;
-        for (DailyData dailyData : mDailyIncomeList) {
-            total += dailyData.getAmount();
-        }
-        mIncomeTotalAmountText.set(TallyUtils.formatDisplayMoney(total));
+        final WrappedLong recordCount = new WrappedLong(0);
+        final WrappedObject<Double> total = new WrappedObject<>(0D);
+        ArrayUtils.forEach(mDailyIncomeList, (count, index, item) -> {
+            total.set(total.get() + item.getAmount());
+            recordCount.set(recordCount.get() + item.getCount());
+        });
+
+        int year = mStartDate.get(Calendar.YEAR);
+        int month = mStartDate.get(Calendar.MONTH) + 1;
+        String money = "¥" + TallyUtils.formatDisplayMoney(total.get());
+        mCurrentDateText.set(ResUtils.getString(getApplication(), R.string.tally_bill_of_month_format, year, month));
+        mIncomeTotalAmountText.set(ResUtils.getString(getApplication(), R.string.tally_income_data_format, recordCount.get(), money));
     }
 
     /** 显示月账单支出总额 */
     private void displayMonthlyExpenseAmountTotal() {
-        if (mMonthlyExpenseList == null) {
-            mExpenseTotalAmountText.set(TallyUtils.formatDisplayMoney(0));
-            return;
-        }
-        double total = 0;
-        for (MonthlyData data : mMonthlyExpenseList) {
-            total += data.getAmount();
-        }
-        mExpenseTotalAmountText.set(TallyUtils.formatDisplayMoney(total));
+        final WrappedLong recordCount = new WrappedLong(0);
+        final WrappedObject<Double> total = new WrappedObject<>(0D);
+        ArrayUtils.forEach(mMonthlyExpenseList, (count, index, item) -> {
+            total.set(total.get() + item.getAmount());
+            recordCount.set(recordCount.get() + item.getCount());
+        });
+
+        int year = mStartDate.get(Calendar.YEAR);
+        String money = "¥" + TallyUtils.formatDisplayMoney(total.get());
+        mCurrentDateText.set(ResUtils.getString(getApplication(), R.string.tally_bill_of_year_format, year));
+        mExpenseTotalAmountText.set(ResUtils.getString(getApplication(), R.string.tally_expense_data_format, recordCount.get(), money));
     }
 
     /** 显示月账单收入总额 */
     private void displayMonthlyIncomeAmountTotal() {
-        if (mMonthlyIncomeList == null) {
-            mIncomeTotalAmountText.set(TallyUtils.formatDisplayMoney(0));
-            return;
-        }
-        double total = 0;
-        for (MonthlyData data : mMonthlyIncomeList) {
-            total += data.getAmount();
-        }
-        mIncomeTotalAmountText.set(TallyUtils.formatDisplayMoney(total));
+        final WrappedLong recordCount = new WrappedLong(0);
+        final WrappedObject<Double> total = new WrappedObject<>(0D);
+        ArrayUtils.forEach(mMonthlyIncomeList, (count, index, item) -> {
+            total.set(total.get() + item.getAmount());
+            recordCount.set(recordCount.get() + item.getCount());
+        });
+
+        int year = mStartDate.get(Calendar.YEAR);
+        String money = "¥" + TallyUtils.formatDisplayMoney(total.get());
+        mCurrentDateText.set(ResUtils.getString(getApplication(), R.string.tally_bill_of_year_format, year));
+        mIncomeTotalAmountText.set(ResUtils.getString(getApplication(), R.string.tally_income_data_format, recordCount.get(), money));
     }
 
     /**

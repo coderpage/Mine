@@ -30,14 +30,14 @@
     <string name="menu_tall_about">关于</string>
     <string name="menu_tally_records">账单记录</string>
     <string name="menu_tally_setting">设置</string>
-    <string name="menu_tally_chart">图表分析</string>
+    <string name="menu_tally_chart">账单详情</string>
     <string name="menu_tally_search">搜索</string>
     <string name="menu_tally_date_range_select">选择日期</string>
 
     <!--  toolbar title of tally main activity -->
     <string name="tally_toolbar_title_main">@string/app_name</string>
     <string name="tally_toolbar_title_about">关于</string>
-    <string name="tally_toolbar_title_chart">图表分析</string>
+    <string name="tally_toolbar_title_chart">账单详情</string>
     <string name="tally_toolbar_title_records">记录</string>
     <string name="tally_toolbar_title_category_records">流水</string>
     <string name="tally_toolbar_title_setting">设置</string>
@@ -64,6 +64,11 @@
     <string name="tally_switch_to_daily_chart">切换日账单</string>
     <string name="tally_switch_to_yearly_chart">切换年账单</string>
     <string name="tally_month_format">%d月</string>
+    <string name="tally_chart_empty_tip">暂时数据&#8230;</string>
+    <string name="tally_bill_of_year_format" formatted="false">%s年账单</string>
+    <string name="tally_bill_of_month_format" formatted="false">%s年%s月账单</string>
+    <string name="tally_expense_data_format" formatted="false">共%s笔支出，%s</string>
+    <string name="tally_income_data_format" formatted="false">共%s笔收入，%s</string>
 
     <!-- setting activity -->
     <string name="tally_setting_btn_data_export">导出数据</string>

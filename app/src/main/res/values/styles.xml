@@ -72,6 +72,12 @@
         <item name="android:textSize">@dimen/app_text_size_large</item>
     </style>
 
+    <!-- loading layout negative button style -->
+    <style name="TextAppearance.ChartNoData" parent="TextAppearance">
+        <item name="android:textColor">@color/appTextColorPrimary</item>
+        <item name="android:textSize">@dimen/app_text_size_normal</item>
+    </style>
+
     <style name="Widget" parent="android:Widget" />
 
     <style name="Widget.Btn" parent="Widget">
