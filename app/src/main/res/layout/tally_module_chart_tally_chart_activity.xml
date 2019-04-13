@@ -208,9 +208,9 @@
                     <com.coderpage.mine.app.tally.module.chart.widget.MineBarChart
                         android:id="@+id/barChart"
                         android:layout_width="match_parent"
-                        android:layout_height="160dp"
+                        android:layout_height="200dp"
                         android:layout_marginBottom="@dimen/spacing_normal"
-                        android:visibility="@{vm.displayDailyChart ? View.VISIBLE : View.INVISIBLE}"
+                        android:visibility="@{vm.displayDailyChart ? View.VISIBLE : View.GONE}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -220,9 +220,9 @@
                     <com.coderpage.mine.app.tally.module.chart.widget.MineLineChart
                         android:id="@+id/lineChart"
                         android:layout_width="match_parent"
-                        android:layout_height="160dp"
+                        android:layout_height="200dp"
                         android:layout_marginBottom="@dimen/spacing_normal"
-                        android:visibility="@{vm.displayDailyChart ? View.INVISIBLE : View.VISIBLE}"
+                        android:visibility="@{vm.displayDailyChart ? View.GONE : View.VISIBLE}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

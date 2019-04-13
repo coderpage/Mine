@@ -42,7 +42,7 @@ public class RecordItemViewModel extends BaseViewModel {
         if (record == null) {
             return "--";
         }
-        return "￥" + mMoneyFormat.format(record.getAmount());
+        return "¥" + mMoneyFormat.format(record.getAmount());
     }
 
     /**

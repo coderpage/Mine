@@ -31,6 +31,7 @@ public class MineBarChartRenderer extends BarChartRenderer {
 
     private RectF mBarShadowRectBuffer = new RectF();
     private RectF mBarRectBuffer = new RectF();
+    private RectF mBarHighlightRectBuffer = new RectF();
     private float[] mBarRectRadii = new float[8];
 
     @Override
@@ -164,7 +165,7 @@ public class MineBarChartRenderer extends BarChartRenderer {
             mHighlightPaint.setColor(set.getHighLightColor());
             mHighlightPaint.setAlpha(set.getHighLightAlpha());
 
-            boolean isStack = (high.getStackIndex() >= 0 && e.isStacked()) ? true : false;
+            boolean isStack = high.getStackIndex() >= 0 && e.isStacked();
 
             final float y1;
             final float y2;
@@ -205,6 +206,17 @@ public class MineBarChartRenderer extends BarChartRenderer {
             mBarRectRadii[7] = 0;
 
             path.addRoundRect(mBarRect, mBarRectRadii, Path.Direction.CW);
+
+            float barWidth = barData.getBarWidth();
+            float barWidthHalf = barWidth / 2.0f;
+            float x = mBarRect.left + mBarRect.width() / 2;
+
+            mBarHighlightRectBuffer.top = mViewPortHandler.contentTop();
+            mBarHighlightRectBuffer.bottom = mViewPortHandler.contentBottom();
+            mBarHighlightRectBuffer.left = x - barWidthHalf;
+            mBarHighlightRectBuffer.right = x + barWidthHalf;
+            path.addRect(mBarHighlightRectBuffer, Path.Direction.CW);
+
             c.drawPath(path, mHighlightPaint);
         }
     }

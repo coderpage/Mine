@@ -56,7 +56,11 @@
     <!-- tally chart activity -->
     <string name="tally_switch_2_daily_expense">日消费折线图</string>
     <string name="tally_switch_2_monthly_expense">月消费折线图</string>
-    <string name="tally_month_info_format" formatted="false">%d年%s月</string>
+
+    <string name="tally_year_info_format" formatted="false">%d年</string>
+    <string name="tally_month_info_format" formatted="false">%s年%s月</string>
+    <string name="tally_day_info_format" formatted="false">%s年%s月%s日</string>
+    <string name="tally_income_and_expense_format" formatted="false">收入 %s, 支出 %s</string>
     <string name="tally_daily_expense_tip">日消费折线图</string>
     <string name="tally_monthly_expense_tip">月消费折线图</string>
     <string name="tally_checkbox_expense">支出</string>
@@ -64,7 +68,7 @@
     <string name="tally_switch_to_daily_chart">切换日账单</string>
     <string name="tally_switch_to_yearly_chart">切换年账单</string>
     <string name="tally_month_format">%d月</string>
-    <string name="tally_chart_empty_tip">暂时数据&#8230;</string>
+    <string name="tally_chart_empty_tip">暂无数据&#8230;</string>
     <string name="tally_bill_of_year_format" formatted="false">%s年账单</string>
     <string name="tally_bill_of_month_format" formatted="false">%s年%s月账单</string>
     <string name="tally_expense_data_format" formatted="false">共%s笔支出，%s</string>

@@ -22,7 +22,7 @@ import java.util.List;
 
 class MineLineChartRender extends LineChartRenderer {
 
-    private int mValueGridLineColor =Color.GRAY;
+    private int mValueGridLineColor = Color.GRAY;
     private float[] mValueGridLineBuffer = new float[2];
     private Paint mValueGridLinePaint = new Paint();
     private RectF mValueGridLineRect = new RectF();

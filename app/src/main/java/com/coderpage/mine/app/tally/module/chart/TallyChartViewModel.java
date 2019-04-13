@@ -281,6 +281,16 @@ public class TallyChartViewModel extends BaseViewModel implements LifecycleObser
             // 查询日账单数据
             queryDailyData(v -> {
                 // 显示日账单图标
+                boolean hasExpense = ArrayUtils.contains(mDailyExpenseList, item -> item.getAmount() > 0);
+                boolean hasIncome = ArrayUtils.contains(mDailyIncomeList, item -> item.getAmount() > 0);
+                // 没有消费记录，清除集合
+                if (!hasExpense) {
+                    mDailyExpenseList.clear();
+                }
+                // 没有收入记录，清除集合
+                if (!hasIncome) {
+                    mDailyIncomeList.clear();
+                }
                 if (isDisplayExpense) {
                     mObservableDailyExpenseList.postValue(mDailyExpenseList);
                     mObservableCategoryExpenseDataList.postValue(mCategoryDailyExpenseList);
@@ -296,6 +306,14 @@ public class TallyChartViewModel extends BaseViewModel implements LifecycleObser
         } else {
             queryYearlyData(v -> {
                 // 年账单 支出、收入 折线图
+                boolean hasExpense = ArrayUtils.contains(mMonthlyExpenseList, item -> item.getAmount() > 0);
+                boolean hasIncome = ArrayUtils.contains(mMonthlyIncomeList, item -> item.getAmount() > 0);
+                // 没有支出记录也没有收入记录，不显示图标
+                if (!hasExpense && !hasIncome) {
+                    mMonthlyExpenseList.clear();
+                    mMonthlyIncomeList.clear();
+                }
+
                 MonthlyDataList monthlyDataList = new MonthlyDataList();
                 monthlyDataList.setExpenseList(mMonthlyExpenseList);
                 monthlyDataList.setIncomeList(mMonthlyIncomeList);

@@ -9,10 +9,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.coderpage.base.utils.ArrayUtils;
 import com.coderpage.base.utils.ResUtils;
 import com.coderpage.base.utils.UIUtils;
 import com.coderpage.mine.R;
@@ -21,8 +23,11 @@ import com.coderpage.mine.app.tally.module.chart.data.DailyData;
 import com.coderpage.mine.app.tally.module.chart.data.Month;
 import com.coderpage.mine.app.tally.module.chart.data.MonthlyData;
 import com.coderpage.mine.app.tally.module.chart.data.MonthlyDataList;
+import com.coderpage.mine.app.tally.module.chart.data.MonthlyEntryData;
+import com.coderpage.mine.app.tally.module.chart.widget.MarkerViewDailyData;
 import com.coderpage.mine.app.tally.module.chart.widget.MineBarChart;
 import com.coderpage.mine.app.tally.module.chart.widget.MineLineChart;
+import com.coderpage.mine.app.tally.module.chart.widget.MarkerViewMonthData;
 import com.coderpage.mine.tally.module.chart.TallyChartActivityBinding;
 import com.coderpage.mine.ui.BaseActivity;
 import com.github.mikephil.charting.components.XAxis;
@@ -93,6 +98,8 @@ public class TallyChartActivity extends BaseActivity {
         mCategoryDataRecycler.setLayoutManager(new LinearLayoutManager(self(), LinearLayoutManager.VERTICAL, false));
         mCategoryDataAdapter = new TallyChartCategoryDataAdapter(mViewModel);
         mCategoryDataRecycler.setAdapter(mCategoryDataAdapter);
+        mCategoryDataRecycler.setHasFixedSize(true);
+        mCategoryDataRecycler.setNestedScrollingEnabled(false);
     }
 
     private void subScribeUi() {
@@ -176,15 +183,18 @@ public class TallyChartActivity extends BaseActivity {
             }
         }
 
-        BarDataSet barDataSet = new BarDataSet(yValues, "");
-        barDataSet.setColor(Color.GRAY);
-        barDataSet.setDrawValues(false);
-        barDataSet.setFormLineWidth(0);
-        barDataSet.setBarShadowColor(ResUtils.getColor(this, R.color.chartGridLine));
-        barDataSet.setColor(barColor);
+        BarData barData = null;
+        if (!yValues.isEmpty()) {
+            BarDataSet barDataSet = new BarDataSet(yValues, "");
+            barDataSet.setColor(Color.GRAY);
+            barDataSet.setDrawValues(false);
+            barDataSet.setFormLineWidth(0);
+            barDataSet.setBarShadowColor(ResUtils.getColor(this, R.color.chartGridLine));
+            barDataSet.setColor(barColor);
 
-        BarData barData = new BarData(barDataSet);
-        barData.setBarWidth(0.5f);
+            barData = new BarData(barDataSet);
+            barData.setBarWidth(0.5f);
+        }
 
         XAxis xAxis = mBarChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -220,16 +230,23 @@ public class TallyChartActivity extends BaseActivity {
         axisRight.setDrawGridLines(false);
         axisRight.setDrawAxisLine(false);
 
+        mBarChart.setViewPortOffsets(
+                UIUtils.dp2px(self(), 16F),
+                UIUtils.dp2px(self(), 40F),
+                UIUtils.dp2px(self(), 16F),
+                UIUtils.dp2px(self(), 16F));
+        mBarChart.setDrawMarkOnTop(true);
+        mBarChart.setMarker(new MarkerViewDailyData(self(), R.layout.tally_module_chart_marker_view));
         mBarChart.setNoDataText(ResUtils.getString(self(), R.string.tally_chart_empty_tip));
         mBarChart.setNoDataTextColor(ResUtils.getColor(self(), R.color.appTextColorPrimary));
         mBarChart.setScaleEnabled(false);
         mBarChart.setDrawBorders(false);
         mBarChart.setDrawBarShadow(true);
         mBarChart.setDrawGridBackground(false);
-        mBarChart.setData(barData);
         mBarChart.setDrawValueAboveBar(false);
         mBarChart.setDescription(null);
         mBarChart.getLegend().setEnabled(false);
+        mBarChart.setData(barData);
         mBarChart.animateY(500);
     }
 
@@ -240,44 +257,55 @@ public class TallyChartActivity extends BaseActivity {
      */
     private void showMonthlyLineChart(MonthlyDataList monthlyDataList) {
 
+        SparseArray<MonthlyEntryData> entryDataArray = new SparseArray<>();
+
         List<Entry> yValuesExpense = new ArrayList<>();
         if (monthlyDataList != null && monthlyDataList.getExpenseList() != null) {
             List<MonthlyData> expenseList = monthlyDataList.getExpenseList();
-            for (int i = 0; i < expenseList.size(); i++) {
-                MonthlyData monthlyData = expenseList.get(i);
-                Entry entry = new Entry(i, monthlyData.getAmount());
-                entry.setData(monthlyData);
+            ArrayUtils.forEach(expenseList, (count, index, item) -> {
+                Entry entry = new Entry(index, item.getAmount());
+                MonthlyEntryData monthlyEntryData = entryDataArray.get(index, new MonthlyEntryData());
+                entryDataArray.put(index, monthlyEntryData);
+                entry.setData(monthlyEntryData.setMonth(item.getMonth()).setExpenseAmount(item.getAmount()));
                 yValuesExpense.add(entry);
-            }
+            });
         }
+        List<Entry> yValuesIncome = new ArrayList<>();
+        if (monthlyDataList != null && monthlyDataList.getIncomeList() != null) {
+            List<MonthlyData> incomeList = monthlyDataList.getIncomeList();
+            ArrayUtils.forEach(incomeList, (count, index, item) -> {
+                Entry entry = new Entry(index, item.getAmount());
+                MonthlyEntryData monthlyEntryData = entryDataArray.get(index, new MonthlyEntryData());
+                entry.setData(monthlyEntryData.setMonth(item.getMonth()).setIncomeAmount(item.getAmount()));
+                yValuesIncome.add(entry);
+            });
+        }
+
         LineDataSet expenseDataSet = new LineDataSet(yValuesExpense, "");
         expenseDataSet.setColor(ResUtils.getColor(this, R.color.expenseColor));
         expenseDataSet.setDrawValues(false);
         expenseDataSet.setFormLineWidth(0);
         expenseDataSet.setCircleColor(ResUtils.getColor(this, R.color.expenseColor));
         expenseDataSet.setCircleRadius(Color.WHITE);
+        expenseDataSet.setDrawHorizontalHighlightIndicator(false);
+        expenseDataSet.setDrawVerticalHighlightIndicator(true);
+        expenseDataSet.setHighLightColor(ResUtils.getColor(self(), R.color.black));
+        expenseDataSet.setMode(LineDataSet.Mode.LINEAR);
 
-        List<Entry> yValuesIncome = new ArrayList<>();
-        if (monthlyDataList != null && monthlyDataList.getIncomeList() != null) {
-            List<MonthlyData> incomeList = monthlyDataList.getIncomeList();
-            for (int i = 0; i < incomeList.size(); i++) {
-                MonthlyData monthlyData = incomeList.get(i);
-                Entry entry = new Entry(i, monthlyData.getAmount());
-                entry.setData(monthlyData);
-                yValuesIncome.add(entry);
-            }
-        }
         LineDataSet incomeDataSet = new LineDataSet(yValuesIncome, "");
         incomeDataSet.setColor(ResUtils.getColor(this, R.color.incomeColor));
         incomeDataSet.setDrawValues(false);
         incomeDataSet.setFormLineWidth(0);
         incomeDataSet.setCircleColor(ResUtils.getColor(this, R.color.incomeColor));
-
+        incomeDataSet.setDrawHorizontalHighlightIndicator(false);
+        incomeDataSet.setDrawVerticalHighlightIndicator(true);
+        incomeDataSet.setHighLightColor(ResUtils.getColor(self(), R.color.black));
+        incomeDataSet.setMode(LineDataSet.Mode.LINEAR);
 
         List<String> xAxisLabels = new ArrayList<>();
         List<Entry> entryList = yValuesExpense.size() >= yValuesIncome.size() ? yValuesExpense : yValuesIncome;
         for (Entry entry : entryList) {
-            MonthlyData expense = (MonthlyData) entry.getData();
+            MonthlyEntryData expense = (MonthlyEntryData) entry.getData();
             Month month = expense.getMonth();
             String label = UIUtils.getString(this, R.string.tally_month_format, month.getMonth());
             xAxisLabels.add(label);
@@ -309,10 +337,6 @@ public class TallyChartActivity extends BaseActivity {
         axisRight.setDrawGridLines(false);
         axisRight.setDrawAxisLine(false);
 
-        if (yValuesIncome.isEmpty() && yValuesExpense.isEmpty()) {
-            return;
-        }
-
         LineData lineData = new LineData();
         if (!yValuesIncome.isEmpty()) {
             lineData.addDataSet(incomeDataSet);
@@ -321,16 +345,33 @@ public class TallyChartActivity extends BaseActivity {
             lineData.addDataSet(expenseDataSet);
         }
 
-        mBarChart.setNoDataText(ResUtils.getString(self(), R.string.tally_chart_empty_tip));
-        mBarChart.setNoDataTextColor(ResUtils.getColor(self(), R.color.appTextColorPrimary));
+        // 收入支出都没有数据。置空
+        if (yValuesExpense.isEmpty() && yValuesIncome.isEmpty()) {
+            lineData = null;
+        }
+        if (lineData != null) {
+            mLineChart.getXAxis().setAxisMaximum(lineData.getXMax());
+            mLineChart.getXAxis().setAxisMinimum(lineData.getXMin());
+        }
+
+        mLineChart.setViewPortOffsets(
+                UIUtils.dp2px(self(), 16F),
+                UIUtils.dp2px(self(), 40F),
+                UIUtils.dp2px(self(), 16F),
+                UIUtils.dp2px(self(), 16F));
+        mLineChart.setNoDataText(ResUtils.getString(self(), R.string.tally_chart_empty_tip));
+        mLineChart.setNoDataTextColor(ResUtils.getColor(self(), R.color.appTextColorPrimary));
+        mLineChart.setDragEnabled(true);
         mLineChart.setScaleEnabled(false);
-        mLineChart.getXAxis().setAxisMaximum(lineData.getXMax());
-        mLineChart.getXAxis().setAxisMinimum(lineData.getXMin());
         mLineChart.setVisibleXRange(0, 11);
         mLineChart.setDrawBorders(false);
         mLineChart.setDrawGridBackground(false);
         mLineChart.setDescription(null);
         mLineChart.getLegend().setEnabled(false);
+        mLineChart.setScaleMinima(1, 1);
+        mLineChart.setDrawMarkers(true);
+        mLineChart.setDrawMarkOnTop(true);
+        mLineChart.setMarker(new MarkerViewMonthData(self(), R.layout.tally_module_chart_marker_view));
         mLineChart.setData(lineData);
         mLineChart.animateY(500);
     }

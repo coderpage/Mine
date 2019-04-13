@@ -12,15 +12,10 @@ import android.arch.lifecycle.OnLifecycleEvent;
 import android.databinding.ObservableField;
 import android.support.v4.app.FragmentActivity;
 import android.util.Pair;
-import android.view.View;
 
-import com.coderpage.base.common.Callback;
-import com.coderpage.base.common.IError;
-import com.coderpage.base.utils.UIUtils;
 import com.coderpage.mine.app.tally.eventbus.EventRecordAdd;
 import com.coderpage.mine.app.tally.eventbus.EventRecordDelete;
 import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
-import com.coderpage.mine.app.tally.module.detail.RecordDetailActivity;
 import com.coderpage.mine.app.tally.module.edit.RecordEditActivity;
 import com.coderpage.mine.app.tally.module.home.model.HomeDisplayData;
 import com.coderpage.mine.app.tally.module.home.model.HomeMonthModel;
@@ -33,7 +28,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,8 +37,6 @@ import java.util.List;
  */
 
 public class HomeViewModel extends AndroidViewModel implements LifecycleObserver {
-
-    private DecimalFormat mMoneyTextFormat = new DecimalFormat("0.00");
 
     /** 是否隐藏金额 */
     private ObservableField<Boolean> mHideMoney = new ObservableField<>(false);
@@ -91,65 +83,6 @@ public class HomeViewModel extends AndroidViewModel implements LifecycleObserver
     /** 底部菜单按钮点击 */
     public void onBottomMenuClick(FragmentActivity activity) {
         MenuDialog.show(activity);
-//        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.Widget_Dialog_BottomSheet);
-//        View.OnClickListener menuClickListener = (v) -> {
-//            int id = v.getId();
-//            switch (id) {
-//                case R.id.lyBtnAbout:
-//                    activity.startActivity(new Intent(activity, AboutActivity.class));
-//                    bottomSheetDialog.dismiss();
-//                    break;
-//                case R.id.lyBtnSetting:
-//                    activity.startActivity(new Intent(activity, SettingActivity.class));
-//                    bottomSheetDialog.dismiss();
-//                    break;
-//                case R.id.lyBtnExpenseRecords:
-//                    RecordsActivity.open(activity, new RecordQuery
-//                            .Builder()
-//                            .setType(RecordQuery.TYPE_ALL)
-//                            .setStartTime(0)
-//                            .setEndTime(System.currentTimeMillis())
-//                            .build());
-//                    bottomSheetDialog.dismiss();
-//                    break;
-//                case R.id.lyBtnChart:
-//                    activity.startActivity(new Intent(activity, TallyChartActivity.class));
-//                    bottomSheetDialog.dismiss();
-//                    break;
-//                default:
-//                    break;
-//            }
-//        };
-//
-//        View view = activity.getLayoutInflater().inflate(R.layout.widget_tally_bottom_menu_sheet, null);
-//        view.findViewById(R.id.lyBtnAbout).setOnClickListener(menuClickListener);
-//        view.findViewById(R.id.lyBtnSetting).setOnClickListener(menuClickListener);
-//        view.findViewById(R.id.lyBtnExpenseRecords).setOnClickListener(menuClickListener);
-//        view.findViewById(R.id.lyBtnChart).setOnClickListener(menuClickListener);
-//
-//        bottomSheetDialog.setContentView(view);
-//        bottomSheetDialog.setCanceledOnTouchOutside(true);
-//        bottomSheetDialog.show();
-//
-//        Window window = bottomSheetDialog.getWindow();
-//        if (window == null) {
-//            return;
-//        }
-//        window.setWindowAnimations(R.style.BottomSheetAnimation);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-//            window.setStatusBarColor(activity.getResources().getColor(R.color.colorPrimaryDark));
-//        }
-    }
-
-    /** 消费记录 ITEM 点击 */
-    public void onExpenseItemClick(Activity activity, Record expense) {
-        RecordDetailActivity.openExpenseDetail(activity, expense.getId());
-    }
-
-    /** 收入记录 ITEM 点击 */
-    public void onIncomeItemClick(Activity activity, Record income, View view) {
-        RecordDetailActivity.openIncomeDetail(activity, income.getId());
     }
 
     /** 刷新首页数据 */
@@ -195,42 +128,6 @@ public class HomeViewModel extends AndroidViewModel implements LifecycleObserver
                 }
 
                 mDataList.setValue(dataList);
-            }
-        });
-    }
-
-    /** 删除消费记录 */
-    private void deleteExpense(Record expense) {
-        if (expense == null) {
-            return;
-        }
-        mRepository.deleteExpense(expense.getId(), new Callback<Void, IError>() {
-            @Override
-            public void success(Void aVoid) {
-                refresh();
-            }
-
-            @Override
-            public void failure(IError iError) {
-                UIUtils.showToastShort(getApplication(), iError.msg());
-            }
-        });
-    }
-
-    /** 删除消费记录 */
-    private void deleteIncome(Record income) {
-        if (income == null) {
-            return;
-        }
-        mRepository.deleteInCome(income.getId(), new Callback<Void, IError>() {
-            @Override
-            public void success(Void aVoid) {
-                refresh();
-            }
-
-            @Override
-            public void failure(IError iError) {
-                UIUtils.showToastShort(getApplication(), iError.msg());
             }
         });
     }
