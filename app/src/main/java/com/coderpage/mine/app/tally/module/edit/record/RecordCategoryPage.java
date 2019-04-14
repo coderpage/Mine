@@ -1,4 +1,4 @@
-package com.coderpage.mine.app.tally.module.edit.expense;
+package com.coderpage.mine.app.tally.module.edit.record;
 
 import android.content.Context;
 import android.support.annotation.AttrRes;
@@ -18,22 +18,22 @@ import java.util.List;
  * @since 0.6.0
  */
 
-public class ExpenseCategoryPage extends FrameLayout {
+public class RecordCategoryPage extends FrameLayout {
 
     private GridView mGridView;
 
-    private ExpenseCategoryAdapter mAdapter;
+    private RecordCategoryAdapter mAdapter;
 
-    public ExpenseCategoryPage(@NonNull Context context) {
+    public RecordCategoryPage(@NonNull Context context) {
         this(context, null);
     }
 
-    public ExpenseCategoryPage(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public RecordCategoryPage(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ExpenseCategoryPage(@NonNull Context context, @Nullable AttributeSet attrs,
-                               @AttrRes int defStyleAttr) {
+    public RecordCategoryPage(@NonNull Context context, @Nullable AttributeSet attrs,
+                              @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
@@ -43,9 +43,9 @@ public class ExpenseCategoryPage extends FrameLayout {
         mGridView = findViewById(R.id.gvCategoryIcon);
     }
 
-    void setCategoryList(List<Category> categoryList, ExpenseViewModel viewModel) {
+    void setCategoryList(List<Category> categoryList, RecordViewModel viewModel) {
         if (mAdapter == null) {
-            mAdapter = new ExpenseCategoryAdapter(getContext(), viewModel);
+            mAdapter = new RecordCategoryAdapter(getContext(), viewModel);
             mGridView.setAdapter(mAdapter);
         }
         mAdapter.refreshData(categoryList);

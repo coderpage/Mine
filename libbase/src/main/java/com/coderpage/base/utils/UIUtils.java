@@ -9,7 +9,10 @@ import android.os.Looper;
 import android.support.annotation.ColorRes;
 import android.support.annotation.StringRes;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.Toast;
+
+import java.lang.reflect.Method;
 
 /**
  * @author abner-l. 2017-03-06
@@ -87,6 +90,33 @@ public class UIUtils {
             return context.getResources().getString(stringRes, args);
         } catch (Resources.NotFoundException e) {
             return "";
+        }
+    }
+
+    /**
+     * 禁止输入框弹出软键盘
+     *
+     * https://blog.csdn.net/MacaoPark/article/details/78348505
+     *
+     * @param editText 需要禁止弹出软键盘的输入框
+     */
+    public static void disableShowSoftInput(EditText editText) {
+        Class<EditText> cls = EditText.class;
+        Method method;
+        try {
+            method = cls.getMethod("setShowSoftInputOnFocus", boolean.class);
+            method.setAccessible(true);
+            method.invoke(editText, false);
+        } catch (Exception e) {
+            // no-op
+        }
+
+        try {
+            method = cls.getMethod("setSoftInputShownOnFocus", boolean.class);
+            method.setAccessible(true);
+            method.invoke(editText, false);
+        } catch (Exception e) {
+            // no-op
         }
     }
 }

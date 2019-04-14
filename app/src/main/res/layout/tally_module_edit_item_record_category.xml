@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <data class=".tally.module.edit.expense.ExpenseCategoryItemBinding">
+    <data class=".tally.module.edit.record.RecordCategoryItemBinding">
 
         <variable
             name="category"
@@ -9,7 +9,7 @@
 
         <variable
             name="vm"
-            type="com.coderpage.mine.app.tally.module.edit.expense.ExpenseViewModel" />
+            type="com.coderpage.mine.app.tally.module.edit.record.RecordViewModel" />
 
     </data>
 
@@ -25,7 +25,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/bg_category_expense"
+            android:background="@{category.internal.type == category.internal.TYPE_EXPENSE ? @drawable/bg_category_expense : @drawable/bg_category_income}"
             android:padding="6dp">
 
             <android.support.v7.widget.AppCompatImageView

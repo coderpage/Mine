@@ -11,6 +11,7 @@ import android.database.DataSetObserver;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
@@ -178,6 +179,7 @@ public class MTabLayout extends HorizontalScrollView {
 
     ColorStateList mTabTextColors;
     float mTabTextSize;
+    float mTabTextSelectSize;
     float mTabTextMultiLineSize;
 
     final int mTabBackgroundResId;
@@ -205,6 +207,8 @@ public class MTabLayout extends HorizontalScrollView {
     private AdapterChangeListener mAdapterChangeListener;
     private boolean mSetupViewPagerImplicitly;
 
+    /** Tab Text 选中状态时是否设置为加粗 */
+    private boolean mTabTextBoldOnSelect = false;
     // Pool we use as a simple RecyclerBin
     private final Pools.Pool<TabView> mTabViewPool = new Pools.SimplePool<>(12);
 
@@ -251,6 +255,7 @@ public class MTabLayout extends HorizontalScrollView {
 
         mTabTextSize = a.getDimensionPixelSize(R.styleable.MTabLayout_mTabTextSize,
                 (int) dp2Px(14f));
+        mTabTextSelectSize = a.getDimensionPixelSize(R.styleable.MTabLayout_mTabSelectedTextSize, 0);
         mTabTextColors = a.getColorStateList(R.styleable.MTabLayout_mTabTextColor);
 
         if (a.hasValue(R.styleable.MTabLayout_mTabSelectedTextColor)) {
@@ -269,6 +274,7 @@ public class MTabLayout extends HorizontalScrollView {
         mContentInsetStart = a.getDimensionPixelSize(R.styleable.MTabLayout_mTabContentStart, 0);
         mMode = a.getInt(R.styleable.MTabLayout_mTabMode, MODE_FIXED);
         mTabGravity = a.getInt(R.styleable.MTabLayout_mTabGravity, GRAVITY_FILL);
+        mTabTextBoldOnSelect = a.getBoolean(R.styleable.MTabLayout_mTabTextBoldOnSelect, mTabTextBoldOnSelect);
         a.recycle();
 
         // TODO add attr for these
@@ -1462,6 +1468,16 @@ public class MTabLayout extends HorizontalScrollView {
             // changed
             if (mTextView != null) {
                 mTextView.setSelected(selected);
+                // 选中状态，粗体设置
+                if (mTabTextBoldOnSelect && selected) {
+                    mTextView.setTypeface(Typeface.DEFAULT_BOLD);
+                } else {
+                    mTextView.setTypeface(Typeface.DEFAULT);
+                }
+                // 选中状态，字体大小设置
+                if (mTabTextSize != mTabTextSelectSize && mTabTextSelectSize > 0) {
+                    mTextView.setTextSize(selected ? mTabTextSelectSize : mTabTextSize);
+                }
             }
             if (mIconView != null) {
                 mIconView.setSelected(selected);

@@ -13,42 +13,39 @@
         android:fitsSystemWindows="true"
         android:orientation="vertical">
 
-        <android.support.design.widget.AppBarLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="?attr/actionBarSize">
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize">
+            <include layout="@layout/toolbar" />
 
-                <include layout="@layout/toolbar" />
+            <com.coderpage.base.widget.MTabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:paddingTop="@dimen/spacing_micro"
+                android:paddingBottom="@dimen/spacing_micro"
+                app:mTabGravity="center"
+                app:mTabIndicatorColor="@color/black"
+                app:mTabIndicatorHeight="3dp"
+                app:mTabIndicatorWidth="32dp"
+                app:mTabMinWidth="60dp"
+                app:mTabMode="fixed"
+                app:mTabPadding="@dimen/spacing_micro"
+                app:mTabSelectedTextColor="@color/black"
+                app:mTabSelectedTextSize="@dimen/app_text_size_large"
+                app:mTabTextBoldOnSelect="true"
+                app:mTabTextColor="@color/appTextColorSecondary"
+                app:mTabTextSize="@dimen/app_text_size_normal" />
 
-                <com.coderpage.base.widget.MTabLayout
-                    android:id="@+id/tabLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:paddingBottom="@dimen/spacing_micro"
-                    android:paddingTop="@dimen/spacing_micro"
-                    app:mTabGravity="center"
-                    app:mTabIndicatorColor="@color/black"
-                    app:mTabIndicatorHeight="3dp"
-                    app:mTabIndicatorWidth="32dp"
-                    app:mTabMinWidth="60dp"
-                    app:mTabMode="fixed"
-                    app:mTabPadding="@dimen/spacing_micro"
-                    app:mTabSelectedTextColor="@color/black"
-                    app:mTabTextColor="@color/appTextColorSecondary"
-                    app:mTabTextSize="@dimen/app_text_size_normal" />
-
-            </FrameLayout>
-
-        </android.support.design.widget.AppBarLayout>
+        </FrameLayout>
 
         <android.support.v4.view.ViewPager
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp" />
 
     </LinearLayout>
 </layout>

@@ -1,30 +1,32 @@
-package com.coderpage.mine.app.tally.module.edit.income;
+package com.coderpage.mine.app.tally.module.edit.record;
 
 import android.app.Activity;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.DialogInterface;
 import android.databinding.ObservableField;
-import android.support.v7.app.AlertDialog;
+import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.coderpage.base.utils.ArrayUtils;
 import com.coderpage.base.utils.CommonUtils;
+import com.coderpage.base.utils.ResUtils;
 import com.coderpage.framework.ViewReliedTask;
 import com.coderpage.mine.R;
+import com.coderpage.mine.app.tally.common.RecordType;
 import com.coderpage.mine.app.tally.eventbus.EventRecordAdd;
 import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
 import com.coderpage.mine.app.tally.module.edit.model.Category;
 import com.coderpage.mine.app.tally.persistence.model.CategoryModel;
 import com.coderpage.mine.app.tally.persistence.model.Record;
-import com.coderpage.mine.app.tally.ui.widget.NumInputView;
+import com.coderpage.mine.app.tally.ui.dialog.TextEditDialog;
 import com.coderpage.mine.app.tally.utils.DatePickUtils;
 import com.coderpage.mine.utils.AndroidUtils;
 
@@ -39,21 +41,26 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * @author lc. 2018-09-18 23:12
+ * @author lc. 2018-08-29 19:33
  * @since 0.6.0
+ *
+ * 支出-VM
  */
 
-public class IncomeViewModel extends AndroidViewModel {
+public class RecordViewModel extends AndroidViewModel implements LifecycleObserver {
 
     private DecimalFormat mAmountFormat = new DecimalFormat("0.00");
     private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
 
-    private long mIncomeId;
+    private RecordType mType;
+    private long mRecordId;
     private long mDate;
     private double mAmount;
-    private Record mIncome;
-    private IncomeRepository mRepository;
+    private Record mRecord;
+    private RecordRepository mRepository;
 
+    /** 币种单位 */
+    private ObservableField<String> mAmountUnit = new ObservableField<>("¥");
     /** 金额 */
     private ObservableField<String> mAmountText = new ObservableField<>("");
     /** 说明信息 */
@@ -67,13 +74,16 @@ public class IncomeViewModel extends AndroidViewModel {
 
     private MutableLiveData<ViewReliedTask<Activity>> mActivityRelayTask = new MutableLiveData<>();
 
-    public IncomeViewModel(Application application) {
+    public RecordViewModel(Application application) {
         super(application);
-        mRepository = new IncomeRepository();
-        mAmountText.set("0.00");
+        mRepository = new RecordRepository();
+        mAmountText.set("0");
         mDate = System.currentTimeMillis();
         mDateText.set(mDateFormat.format(new Date(mDate)));
-        initData();
+    }
+
+    public ObservableField<String> getAmountUnit() {
+        return mAmountUnit;
     }
 
     public ObservableField<String> getAmountText() {
@@ -107,32 +117,24 @@ public class IncomeViewModel extends AndroidViewModel {
 
     /** 消费说明点击 */
     public void onDescClick(Activity activity) {
-        View view = activity.getLayoutInflater().inflate(R.layout.dialog_tally_record_desc_edit, null);
-        EditText editText = view.findViewById(R.id.etText);
         String desc = mDesc.get();
-        if (!TextUtils.isEmpty(desc)) {
-            editText.setText(desc);
-            editText.setSelection(desc.length());
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        AlertDialog dialog = builder.setTitle(R.string.tally_add_record_note)
-                .setView(view)
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.confirm, (dialogInterface, which) -> {
-                    mDesc.set(editText.getText().toString());
-                })
-                .create();
-        dialog.setCanceledOnTouchOutside(false);
-        editText.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
-                dialog.getWindow().setSoftInputMode(
-                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-            }
-        });
-        dialog.show();
+        new TextEditDialog(activity)
+                .setTitle(ResUtils.getString(activity, R.string.tally_add_record_note))
+                .setHint(ResUtils.getString(activity, R.string.tally_expense_note))
+                .setContent(desc)
+                .setListener(new TextEditDialog.Listener() {
+                    @Override
+                    public void onPositiveClick(DialogInterface dialog, String text) {
+                        mDesc.set(text);
+                        dialog.dismiss();
+                    }
 
-        editText.setFocusable(true);
-        editText.requestFocus();
+                    @Override
+                    public void onNegativeClick(DialogInterface dialog) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 
     /** 消费记录时间点击 */
@@ -161,41 +163,71 @@ public class IncomeViewModel extends AndroidViewModel {
                 });
     }
 
-    /** 记账键盘数据监听 */
-    NumInputView.InputListener getInputListener() {
-        return new NumInputView.InputListener() {
-            @Override
-            public void onKeyClick(int code) {
-                if (code == KeyEvent.KEYCODE_ENTER) {
-                    saveData();
-                }
-            }
-
-            @Override
-            public void onNumChange(float newNum) {
-                mAmount = newNum;
-                mAmountText.set(mAmountFormat.format(mAmount));
-            }
-        };
+    /** 键盘数字点击 */
+    public void onNumberClick(String number) {
+        String amount = mAmountText.get();
+        amount = TextUtils.isEmpty(amount) ? "" : amount;
+        if ("0".equals(amount)) {
+            amount = "";
+        }
+        amount += number;
+        mAmountText.set(amount);
+        mAmount = CommonUtils.string2float(amount, 0);
     }
 
-    void setIncomeId(long incomeId) {
-        if (incomeId <= 0) {
+    /** 键盘删除点击 */
+    public void onDeleteClick() {
+        String amount = mAmountText.get();
+        amount = TextUtils.isEmpty(amount) ? "" : amount;
+        if (!TextUtils.isEmpty(amount)) {
+            amount = amount.substring(0, amount.length() - 1);
+        }
+        if (TextUtils.isEmpty(amount)) {
+            amount = "0";
+        }
+        mAmountText.set(amount);
+        mAmount = CommonUtils.string2float(amount, 0);
+    }
+
+    /** 键盘清楚点击 */
+    public void onClearClick() {
+        mAmountText.set("0");
+        mAmount = 0;
+    }
+
+    /** 键盘 . 点击 */
+    public void onDotClick() {
+        String amount = mAmountText.get();
+        amount = TextUtils.isEmpty(amount) ? "" : amount;
+        if (!amount.contains(".")) {
+            amount = amount + ".";
+        }
+        mAmountText.set(amount);
+        mAmount = CommonUtils.string2float(amount, 0);
+    }
+
+    /** 确定点击 */
+    public void onEnterClick() {
+        saveData();
+    }
+
+    private void setRecordId(long recordId) {
+        if (recordId <= 0) {
             return;
         }
-        mIncomeId = incomeId;
-        mRepository.queryIncomeById(mIncomeId, record -> {
+        mRecordId = recordId;
+        mRepository.queryRecordById(mRecordId, record -> {
             if (record == null) {
                 return;
             }
-            mIncome = record;
-            mAmount = mIncome.getAmount();
-            mDate = mIncome.getTime();
-            mDesc.set(mIncome.getDesc());
+            mRecord = record;
+            mAmount = mRecord.getAmount();
+            mDate = mRecord.getTime();
+            mDesc.set(mRecord.getDesc());
             mDateText.set(mDateFormat.format(new Date(mDate)));
-            mAmountText.set(mAmountFormat.format(mAmount));
+            mAmountText.set(CommonUtils.removeOddDecimal(mAmountFormat.format(mAmount)));
 
-            String  categoryUniqueName = mIncome.getCategoryUniqueName();
+            String categoryUniqueName = mRecord.getCategoryUniqueName();
             Category category = ArrayUtils.findFirst(mCategoryList.getValue(),
                     c -> CommonUtils.isEqual(c.getInternal().getUniqueName(), categoryUniqueName));
             if (category != null) {
@@ -205,7 +237,8 @@ public class IncomeViewModel extends AndroidViewModel {
     }
 
     private void initData() {
-        mRepository.queryAllCategory(categoryList -> {
+        // 查询所有分类
+        mRepository.queryAllCategory(mType, categoryList -> {
 
             if (categoryList == null || categoryList.isEmpty()) {
                 return;
@@ -216,11 +249,11 @@ public class IncomeViewModel extends AndroidViewModel {
             }
             mCategoryList.setValue(displayList);
 
-            if (mIncome == null) {
+            if (mRecord == null) {
                 Category select = displayList.get(0);
                 makeCategorySelect(displayList, select.getInternal().getUniqueName());
             } else {
-                makeCategorySelect(displayList, mIncome.getCategoryUniqueName());
+                makeCategorySelect(displayList, mRecord.getCategoryUniqueName());
             }
         });
     }
@@ -233,34 +266,34 @@ public class IncomeViewModel extends AndroidViewModel {
             return;
         }
 
-        boolean isNewRecord = mIncome == null;
-        Record income;
-        if (mIncome != null) {
-            income = mIncome;
+        boolean isNewRecord = mRecord == null;
+        Record record;
+        if (mRecord != null) {
+            record = mRecord;
         } else {
-            income = new Record();
-            income.setType(Record.TYPE_INCOME);
-            income.setSyncId(AndroidUtils.generateUUID());
+            record = new Record();
+            record.setType(mType == RecordType.EXPENSE ? Record.TYPE_EXPENSE : Record.TYPE_INCOME);
+            record.setSyncId(AndroidUtils.generateUUID());
         }
-        income.setAmount(mAmount);
-        income.setTime(mDate);
-        income.setDesc(TextUtils.isEmpty(mDesc.get()) ? "" : mDesc.get());
-        income.setCategoryIcon(category.getInternal().getIcon());
-        income.setCategoryName(category.getInternal().getName());
-        income.setCategoryUniqueName(category.getInternal().getUniqueName());
+        record.setAmount(mAmount);
+        record.setTime(mDate);
+        record.setDesc(TextUtils.isEmpty(mDesc.get()) ? "" : mDesc.get());
+        record.setCategoryIcon(category.getInternal().getIcon());
+        record.setCategoryName(category.getInternal().getName());
+        record.setCategoryUniqueName(category.getInternal().getUniqueName());
 
         if (isNewRecord) {
-            mRepository.saveIncome(income, result -> {
+            mRepository.saveRecord(record, result -> {
                 if (result.isOk()) {
-                    income.setId(result.data());
-                    EventBus.getDefault().post(new EventRecordAdd(income));
+                    record.setId(result.data());
+                    EventBus.getDefault().post(new EventRecordAdd(record));
                     mActivityRelayTask.setValue(Activity::finish);
                 }
             });
         } else {
-            mRepository.updateIncome(income, result -> {
+            mRepository.updateExpense(record, result -> {
                 if (result.isOk()) {
-                    EventBus.getDefault().post(new EventRecordUpdate(income));
+                    EventBus.getDefault().post(new EventRecordUpdate(record));
                     mActivityRelayTask.setValue(Activity::finish);
                 }
             });
@@ -273,8 +306,9 @@ public class IncomeViewModel extends AndroidViewModel {
         }
         Category select = null;
         for (Category category : list) {
-            category.setSelect(CommonUtils.isEqual(category.getInternal().getUniqueName(), categoryUniqueName));
-            if (CommonUtils.isEqual(category.getInternal().getUniqueName(), categoryUniqueName)) {
+            boolean isSelect = CommonUtils.isEqual(category.getInternal().getUniqueName(), categoryUniqueName);
+            category.setSelect(isSelect);
+            if (isSelect) {
                 select = category;
             }
         }
@@ -282,6 +316,24 @@ public class IncomeViewModel extends AndroidViewModel {
             select.setSelect(true);
             mCurrentSelectCategory.setValue(select);
         }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // LifeCycle
+    ///////////////////////////////////////////////////////////////////////////
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    public void onCreate(LifecycleOwner owner) {
+        RecordEditFragment fragment = (RecordEditFragment) owner;
+        Bundle arguments = fragment.getArguments();
+        long recordId = arguments.getLong(RecordEditFragment.EXTRA_RECORD_ID, -1);
+        mType = (RecordType) arguments.getSerializable(RecordEditFragment.EXTRA_RECORD_TYPE);
+        setRecordId(recordId);
+        initData();
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    public void onDestroy(LifecycleOwner owner) {
     }
 
 }

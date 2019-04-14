@@ -26,10 +26,12 @@
         <attr name="mTabTextColor" format="color" />
         <attr name="mTabSelectedTextColor" format="color" />
         <attr name="mTabTextSize" format="dimension" />
+        <attr name="mTabSelectedTextSize" format="dimension" />
         <attr name="mTabMinWidth" format="dimension" />
         <attr name="mTabMaxWidth" format="dimension" />
         <attr name="mTabBackground" format="reference" />
         <attr name="mTabContentStart" format="dimension" />
+        <attr name="mTabTextBoldOnSelect" format="boolean" />
 
         <attr name="mTabMode">
             <enum name="scrollable" value="0" />

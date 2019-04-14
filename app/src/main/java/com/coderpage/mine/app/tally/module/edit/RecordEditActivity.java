@@ -11,8 +11,8 @@ import android.support.v4.view.ViewPager;
 import com.coderpage.base.utils.ResUtils;
 import com.coderpage.base.widget.MTabLayout;
 import com.coderpage.mine.R;
-import com.coderpage.mine.app.tally.module.edit.expense.ExpenseFragment;
-import com.coderpage.mine.app.tally.module.edit.income.IncomeFragment;
+import com.coderpage.mine.app.tally.common.RecordType;
+import com.coderpage.mine.app.tally.module.edit.record.RecordEditFragment;
 import com.coderpage.mine.tally.module.edit.RecordEditActivityBinding;
 import com.coderpage.mine.ui.BaseActivity;
 
@@ -91,8 +91,8 @@ public class RecordEditActivity extends BaseActivity {
         long expenseId = getIntent().getLongExtra(EXTRA_EXPENSE_ID, -1);
         long incomeId = getIntent().getLongExtra(EXTRA_INCOME_ID, -1);
 
-        ExpenseFragment expenseFragment = ExpenseFragment.instance(expenseId);
-        IncomeFragment incomeFragment = IncomeFragment.instance(incomeId);
+        RecordEditFragment expenseFragment = RecordEditFragment.instance(expenseId, RecordType.EXPENSE);
+        RecordEditFragment incomeFragment = RecordEditFragment.instance(incomeId,RecordType.INCOME);
 
         mViewPager = mBinding.viewPager;
         mPageAdapter = new RecordViewPageAdapter(getSupportFragmentManager());

@@ -187,6 +187,6 @@
     <string name="symbol_plus">+</string>
     <string name="symbol_reduce">-</string>
     <string name="symbol_dot">.</string>
-    <string name="ok">OK</string>
+    <string name="ok">确定</string>
 
 </resources>

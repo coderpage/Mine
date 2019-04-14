@@ -3,7 +3,6 @@ package com.coderpage.base.utils;
 import android.text.TextUtils;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.WeakHashMap;
 
 /**
@@ -66,7 +65,6 @@ public class CommonUtils {
      *
      * @param collection 集合
      * @param split      分隔符
-     *
      * @return 拼接好的字符串
      */
     public static String collectionJoinElements(Collection collection, String split) {
@@ -82,35 +80,6 @@ public class CommonUtils {
         }
 
         return builder.toString();
-    }
-
-    /**
-     * 检查集合是否包含元素
-     *
-     * @param collection 集合
-     * @param object     元素
-     *
-     * @return 如果包含该元素，返回 true，反之 false
-     */
-    public static boolean collectionContains(Collection collection, Object object) {
-        if (collection == null || collection.isEmpty()) {
-            return false;
-        }
-        for (Object obj : collection) {
-            if (isEqual(obj, object)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static void collectionRemoveElement(Collection collection, Object element) {
-        Iterator iterator = collection.iterator();
-        while (iterator.hasNext()) {
-            if (isEqual(iterator.next(), element)) {
-                iterator.remove();
-            }
-        }
     }
 
     /**
@@ -148,5 +117,21 @@ public class CommonUtils {
             e.printStackTrace();
         }
         return defaultVal;
+    }
+
+    /**
+     * 去掉数字后无用的小数部分
+     */
+    public static String removeOddDecimal(String number) {
+        if (TextUtils.isEmpty(number)) {
+            return number;
+        }
+        if (number.indexOf(".") > 0) {
+            //去掉后面无用的零
+            number = number.replaceAll("0+?$", "");
+            //如小数点后面全是零则去掉小数点
+            number = number.replaceAll("[.]$", "");
+        }
+        return number;
     }
 }

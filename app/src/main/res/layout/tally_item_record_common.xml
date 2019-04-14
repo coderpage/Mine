@@ -109,7 +109,7 @@
 
             <!-- 金额 -->
             <TextView
-                android:id="@+id/tvAmount"
+                android:id="@+id/etAmount"
                 textTypeFace="@{Font.QUICKSAND_BOLD}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -139,7 +139,7 @@
                 android:textSize="@dimen/app_text_size_small"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvAmount"
+                app:layout_constraintTop_toBottomOf="@id/etAmount"
                 tools:text="今天 10:30" />
 
         </android.support.constraint.ConstraintLayout>

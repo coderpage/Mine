@@ -1,4 +1,4 @@
-package com.coderpage.mine.app.tally.module.edit.expense;
+package com.coderpage.mine.app.tally.module.edit.record;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
@@ -9,9 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.coderpage.base.utils.UIUtils;
 import com.coderpage.mine.R;
-import com.coderpage.mine.app.tally.ui.widget.NumInputView;
-import com.coderpage.mine.tall.module.edit.ExpenseFragmentBinding;
+import com.coderpage.mine.app.tally.common.RecordType;
+import com.coderpage.mine.tall.module.edit.EditFragmentBinding;
 
 /**
  * @author lc. 2018-08-29 19:30
@@ -20,19 +21,22 @@ import com.coderpage.mine.tall.module.edit.ExpenseFragmentBinding;
  * 支出页面
  */
 
-public class ExpenseFragment extends Fragment {
+public class RecordEditFragment extends Fragment {
 
-    private static final String EXTRA_EXPENSE_ID = "extra_expense_id";
+    static final String EXTRA_RECORD_ID = "extra_record_id";
+    static final String EXTRA_RECORD_TYPE = "extra_record_type";
 
-    private ExpenseViewModel mViewModel;
-    private ExpenseFragmentBinding mBinding;
-    private ExpenseCategoryPageAdapter mCategoryPageAdapter;
+    private RecordType mRecordType;
+    private RecordViewModel mViewModel;
+    private EditFragmentBinding mBinding;
+    private RecordCategoryPageAdapter mCategoryPageAdapter;
 
-    public static ExpenseFragment instance(long expenseId) {
+    public static RecordEditFragment instance(long recordId, RecordType type) {
         Bundle args = new Bundle(1);
-        args.putLong(EXTRA_EXPENSE_ID, expenseId);
+        args.putLong(EXTRA_RECORD_ID, recordId);
+        args.putSerializable(EXTRA_RECORD_TYPE, type);
 
-        ExpenseFragment fragment = new ExpenseFragment();
+        RecordEditFragment fragment = new RecordEditFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -40,29 +44,25 @@ public class ExpenseFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mViewModel = ViewModelProviders.of(this).get(RecordViewModel.class);
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.tally_module_edit_fragment, container, false);
+        getLifecycle().addObserver(mViewModel);
 
-        Bundle arguments = getArguments();
-        long expenseId = arguments.getLong(EXTRA_EXPENSE_ID, -1);
-
-        mViewModel = ViewModelProviders.of(this).get(ExpenseViewModel.class);
-        mViewModel.setExpenseId(expenseId);
-        mBinding = DataBindingUtil.inflate(inflater, R.layout.tally_module_edit_fragment_expense, container, false);
-
+        mRecordType = (RecordType) getArguments().getSerializable(EXTRA_RECORD_TYPE);
         initView();
         subscribeUi();
         return mBinding.getRoot();
     }
 
     private void initView() {
-        NumInputView inputView = mBinding.numInputView;
-        inputView.setInputListener(mViewModel.getInputListener());
-
-        mCategoryPageAdapter = new ExpenseCategoryPageAdapter(getActivity(), mViewModel);
+        mCategoryPageAdapter = new RecordCategoryPageAdapter(getActivity(), mViewModel);
         mBinding.categoryViewpager.setAdapter(mCategoryPageAdapter);
         mBinding.focusView.setupWithViewPager(mBinding.categoryViewpager);
+        UIUtils.disableShowSoftInput(mBinding.etAmount);
     }
 
     private void subscribeUi() {
+        mBinding.setType(mRecordType);
         mBinding.setActivity(getActivity());
         mBinding.setVm(mViewModel);
         mViewModel.getCategoryList().observe(this, categoryList -> {
