@@ -39,10 +39,8 @@ class HomRepository {
     private double mCurrentMonthInComeTotalAmount;
     /** 本月各个分类消费数据 */
     private List<Pair<String, Double>> mCategoryExpenseTotal = new ArrayList<>();
-    /** 今日消费记录 */
-    private List<Record> mTodayExpenseList = new ArrayList<>();
-    /** 今日支出记录 */
-    private List<Record> mTodayInComeList = new ArrayList<>();
+    /** 近3日账单记录 */
+    private List<Record> mRecent3DayRecordList = new ArrayList<>();
 
     public int getRecent3DayRecordCount() {
         return mRecent3DayRecordCount;
@@ -68,12 +66,8 @@ class HomRepository {
         return mCategoryExpenseTotal;
     }
 
-    List<Record> getTodayExpenseList() {
-        return mTodayExpenseList;
-    }
-
-    List<Record> getTodayInComeList() {
-        return mTodayInComeList;
+    public List<Record> getRecent3DayRecordList() {
+        return mRecent3DayRecordList;
     }
 
     /** 读取本月消费数据 */
@@ -89,94 +83,82 @@ class HomRepository {
             // 本月开始时间&结束时间
             long monthStartTime = DateUtils.currentMonthStartUnixTime();
             long monthEndTime = System.currentTimeMillis();
+            // 月消费总额
+            double monthExpenseTotalAmount = 0;
+            // 月收入总额
+            double monthIncomeTotalAmount = 0;
+            // 今日消费金额
+            double todayExpenseTotalAmount = 0;
+            // 今日收入金额
+            double todayIncomeTotalAmount = 0;
 
+            // 近3日账单记录
+            List<Record> recent3DayList = new ArrayList<>();
+            Map<String, Double> getAmountByCategoryName = new HashMap<>();
             // 本月消费记录列表
-            List<Record> expenseList =
-                    TallyDatabase.getInstance().recordDao().queryExpenseBetweenTimeTimeDesc(monthStartTime, monthEndTime);
-            // 本月支出记录
-            List<Record> incomeList =
-                    TallyDatabase.getInstance().recordDao().queryIncomeBetweenTimeTimeDesc(monthStartTime, monthEndTime);
+            List<Record> currentMonthList =
+                    TallyDatabase.getInstance().recordDao().queryAll(monthStartTime, monthEndTime, Integer.MAX_VALUE, 0);
+            for (Record record : currentMonthList) {
+                boolean isTodayRecord = record.getTime() >= todayStartTime && record.getTime() < todayEndTime;
+                boolean isRecent3DayRecord = record.getTime() >= day3AgoStartTime && record.getTime() < todayEndTime;
 
-            if (expenseList != null) {
-                // 今日消费记录
-                List<Record> todayExpenseList = new ArrayList<>();
-                // 分类消费总额缓存
-                Map<String, Double> getAmountByCategoryName = new HashMap<>();
-                // 月消费总额
-                double monthTotalAmount = 0;
-                // 今日消费金额
-                double todayTotalAmount = 0;
+                // 今日消费
+                if (isTodayRecord) {
+                    if (record.getType() == Record.TYPE_EXPENSE) {
+                        todayExpenseTotalAmount += record.getAmount();
+                    }
+                    if (record.getType() == Record.TYPE_INCOME) {
+                        todayIncomeTotalAmount += record.getAmount();
+                    }
+                }
 
-                for (Record expense : expenseList) {
-                    // 统计月消费总额
-                    monthTotalAmount += expense.getAmount();
-                    // 统计今日消费记录及总额
-                    if (expense.getTime() >= todayStartTime && expense.getTime() <= todayEndTime) {
-                        todayExpenseList.add(expense);
-                        todayTotalAmount += expense.getAmount();
-                    }
-                    // 统计近3日账单数量
-                    if (expense.getTime() >= day3AgoStartTime && expense.getTime() <= todayEndTime) {
-                        recent3DayRecordCount++;
-                    }
-                    // 统计分类消费记录
-                    Double categoryAmountTotal = getAmountByCategoryName.get(expense.getCategoryName());
+                // 近3日账单数据
+                if (isRecent3DayRecord) {
+                    recent3DayRecordCount++;
+                    recent3DayList.add(record);
+                }
+
+                // 本月账单总额
+                if (record.getType() == Record.TYPE_EXPENSE) {
+                    monthExpenseTotalAmount += record.getAmount();
+                }
+                if (record.getType() == Record.TYPE_INCOME) {
+                    monthIncomeTotalAmount += record.getAmount();
+                }
+
+                // 统计分类消费记录
+                if (record.getType() == Record.TYPE_EXPENSE) {
+                    Double categoryAmountTotal = getAmountByCategoryName.get(record.getCategoryName());
                     if (categoryAmountTotal == null) {
                         categoryAmountTotal = 0.0D;
                     }
-                    categoryAmountTotal += expense.getAmount();
-                    getAmountByCategoryName.put(expense.getCategoryName(), categoryAmountTotal);
+                    categoryAmountTotal += record.getAmount();
+                    getAmountByCategoryName.put(record.getCategoryName(), categoryAmountTotal);
                 }
-
-                mCurrentMonthExpenseTotalAmount = monthTotalAmount;
-                mTodayExpenseTotalAmount = todayTotalAmount;
-                mTodayExpenseList.clear();
-                mTodayExpenseList.addAll(todayExpenseList);
-
-                List<Pair<String, Double>> categoryExpenseTotal = new ArrayList<>(getAmountByCategoryName.size());
-                for (Map.Entry<String, Double> entry : getAmountByCategoryName.entrySet()) {
-                    categoryExpenseTotal.add(new Pair<>(entry.getKey(), entry.getValue()));
-                }
-                Collections.sort(categoryExpenseTotal, (entry1, entry2) -> {
-                    double v1 = entry1.second == null ? 0 : entry1.second;
-                    double v2 = entry2.second == null ? 0 : entry2.second;
-                    if (v1 == v2) {
-                        return 0;
-                    }
-                    return v1 > v2 ? -1 : 1;
-                });
-                mCategoryExpenseTotal.clear();
-                mCategoryExpenseTotal.addAll(categoryExpenseTotal);
             }
 
-            if (incomeList != null) {
-                // 今日支出记录
-                List<Record> todayIncomeList = new ArrayList<>();
-                // 月消费总额
-                double monthTotalAmount = 0;
-                // 今日消费金额
-                double todayTotalAmount = 0;
+            mRecent3DayRecordCount = recent3DayRecordCount;
+            mTodayExpenseTotalAmount = todayExpenseTotalAmount;
+            mTodayInComeTotalAmount = todayIncomeTotalAmount;
+            mCurrentMonthExpenseTotalAmount = monthExpenseTotalAmount;
+            mCurrentMonthInComeTotalAmount = monthIncomeTotalAmount;
+            mRecent3DayRecordList.clear();
+            mRecent3DayRecordList.addAll(recent3DayList);
 
-                for (Record income : incomeList) {
-                    // 统计月消费总额
-                    monthTotalAmount += income.getAmount();
-                    // 统计今日消费记录及总额
-                    if (income.getTime() >= todayStartTime && income.getTime() <= todayEndTime) {
-                        todayIncomeList.add(income);
-                        todayTotalAmount += income.getAmount();
-                    }
-                    // 统计近3日账单数量
-                    if (income.getTime() >= day3AgoStartTime && income.getTime() <= todayEndTime) {
-                        recent3DayRecordCount++;
-                    }
-                }
-
-                mRecent3DayRecordCount = recent3DayRecordCount;
-                mCurrentMonthInComeTotalAmount = monthTotalAmount;
-                mTodayInComeTotalAmount = todayTotalAmount;
-                mTodayInComeList.clear();
-                mTodayInComeList.addAll(todayIncomeList);
+            List<Pair<String, Double>> categoryExpenseTotal = new ArrayList<>(getAmountByCategoryName.size());
+            for (Map.Entry<String, Double> entry : getAmountByCategoryName.entrySet()) {
+                categoryExpenseTotal.add(new Pair<>(entry.getKey(), entry.getValue()));
             }
+            Collections.sort(categoryExpenseTotal, (entry1, entry2) -> {
+                double v1 = entry1.second == null ? 0 : entry1.second;
+                double v2 = entry2.second == null ? 0 : entry2.second;
+                if (v1 == v2) {
+                    return 0;
+                }
+                return v1 > v2 ? -1 : 1;
+            });
+            mCategoryExpenseTotal.clear();
+            mCategoryExpenseTotal.addAll(categoryExpenseTotal);
 
             Result<Boolean, IError> result = new Result<>();
             result.setData(true);

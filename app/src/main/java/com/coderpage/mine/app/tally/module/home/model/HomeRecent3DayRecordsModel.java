@@ -33,6 +33,6 @@ public class HomeRecent3DayRecordsModel {
     }
 
     public String getDisplayExpenseAmount() {
-        return TallyUtils.formatDisplayMoney(toadyExpenseAmount);
+        return "¥" + TallyUtils.formatDisplayMoney(toadyExpenseAmount);
     }
 }

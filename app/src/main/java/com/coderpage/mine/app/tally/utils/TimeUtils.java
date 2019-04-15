@@ -1,5 +1,9 @@
 package com.coderpage.mine.app.tally.utils;
 
+import com.coderpage.base.utils.ResUtils;
+import com.coderpage.mine.MineApp;
+import com.coderpage.mine.R;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -12,11 +16,20 @@ public class TimeUtils {
     /** 一日毫秒数 */
     public static final int DAY_MILLSECONDS = 24 * 60 * 60 * 1000;
 
-    private static SimpleDateFormat mHourMinFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-    private static SimpleDateFormat mYearMonthDayFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-    private static SimpleDateFormat mMonthDayFormat = new SimpleDateFormat("MM-dd", Locale.getDefault());
+    private static SimpleDateFormat mHourMinFormat = null;
+    private static SimpleDateFormat mYearMonthDayFormat = null;
+    private static SimpleDateFormat mMonthDayFormat = null;
 
     public synchronized static String getRecordDisplayDate(long timeMillis) {
+        if (mHourMinFormat == null) {
+            String yearFormat = ResUtils.getString(MineApp.getAppContext(), R.string.tally_date_year_format);
+            String monthFormat = ResUtils.getString(MineApp.getAppContext(), R.string.tally_date_month_format);
+            String todayFormat = ResUtils.getString(MineApp.getAppContext(), R.string.tally_date_today_format);
+            mYearMonthDayFormat = new SimpleDateFormat(yearFormat, Locale.getDefault());
+            mMonthDayFormat = new SimpleDateFormat(monthFormat, Locale.getDefault());
+            mHourMinFormat = new SimpleDateFormat(todayFormat, Locale.getDefault());
+        }
+
         Calendar calendar = Calendar.getInstance();
         int currentYear = calendar.get(Calendar.YEAR);
         int currentMonth = calendar.get(Calendar.MONTH);

@@ -65,18 +65,13 @@ class HomeAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
                 switch (newData.getType()) {
                     case HomeDisplayData.TYPE_MONTH_INFO:
-                    case HomeDisplayData.TYPE_TODAY_EXPENSE:
+                    case HomeDisplayData.TYPE_RECENT_DAY_INFO:
                         return true;
 
-                    case HomeDisplayData.TYPE_EXPENSE_ITEM:
-                        Record oldExpense = (Record) oldData.getInternal();
-                        Record newExpense = (Record) newData.getInternal();
-                        return oldExpense.getId() == newExpense.getId();
-
-                    case HomeDisplayData.TYPE_IN_COME_ITEM:
-                        Record oldIncome = (Record) oldData.getInternal();
-                        Record newIncome = (Record) newData.getInternal();
-                        return oldIncome.getId() == newIncome.getId();
+                    case HomeDisplayData.TYPE_RECORD_ITEM:
+                        Record oldRecord = (Record) oldData.getInternal();
+                        Record newRecord = (Record) newData.getInternal();
+                        return oldRecord.getId() == newRecord.getId();
 
                     default:
                         break;
@@ -114,14 +109,13 @@ class HomeAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 return new ViewHolderMonthInfo(mActivity, mMonthInfoViewModel,
                         DataBindingUtil.inflate(mInflater, R.layout.tally_module_home_item_month_info, parent, false));
 
-            // 今日消费数据
-            case HomeDisplayData.TYPE_TODAY_EXPENSE:
+            // 近3日账单数据
+            case HomeDisplayData.TYPE_RECENT_DAY_INFO:
                 return new ViewHolderTodayExpense(mActivity, mViewModel,
                         DataBindingUtil.inflate(mInflater, R.layout.tally_module_home_item_today_expense, parent, false));
 
             // 消费记录&支出记录 ITEM
-            case HomeDisplayData.TYPE_EXPENSE_ITEM:
-            case HomeDisplayData.TYPE_IN_COME_ITEM:
+            case HomeDisplayData.TYPE_RECORD_ITEM:
                 return new ViewHolderRecordItem(mActivity, mRecordItemViewModel, DataBindingUtil.inflate(
                         mInflater, R.layout.tally_item_record_common, parent, false));
 

@@ -99,8 +99,7 @@ public class HomeViewModel extends AndroidViewModel implements LifecycleObserver
                 double todayExpenseTotalAmount = mRepository.getTodayExpenseTotalAmount();
 
                 List<Pair<String, Double>> categoryExpenseTotal = mRepository.getCategoryExpenseTotal();
-                List<Record> todayExpenseList = mRepository.getTodayExpenseList();
-                List<Record> todayInComeList = mRepository.getTodayInComeList();
+                List<Record> recent3DayRecordList = mRepository.getRecent3DayRecordList();
 
                 HomeMonthModel monthModel = new HomeMonthModel();
                 monthModel.setMonthExpenseAmount(monthExpenseTotalAmount);
@@ -113,20 +112,11 @@ public class HomeViewModel extends AndroidViewModel implements LifecycleObserver
 
                 List<HomeDisplayData> dataList = new ArrayList<>();
                 dataList.add(new HomeDisplayData(HomeDisplayData.TYPE_MONTH_INFO, monthModel));
-                dataList.add(new HomeDisplayData(HomeDisplayData.TYPE_TODAY_EXPENSE, recent3DayRecordsModel));
+                dataList.add(new HomeDisplayData(HomeDisplayData.TYPE_RECENT_DAY_INFO, recent3DayRecordsModel));
 
-                if (todayInComeList != null) {
-                    for (Record income : todayInComeList) {
-                        dataList.add(new HomeDisplayData(HomeDisplayData.TYPE_IN_COME_ITEM, income));
-                    }
+                for (Record record : recent3DayRecordList) {
+                    dataList.add(new HomeDisplayData(HomeDisplayData.TYPE_RECORD_ITEM, record));
                 }
-
-                if (todayExpenseList != null) {
-                    for (Record expense : todayExpenseList) {
-                        dataList.add(new HomeDisplayData(HomeDisplayData.TYPE_EXPENSE_ITEM, expense));
-                    }
-                }
-
                 mDataList.setValue(dataList);
             }
         });

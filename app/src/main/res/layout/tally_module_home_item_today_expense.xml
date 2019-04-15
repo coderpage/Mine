@@ -6,6 +6,8 @@
 
         <import type="com.coderpage.mine.app.tally.common.utils.TallyUtils" />
 
+        <import type="com.coderpage.mine.common.Font" />
+
         <variable
             name="activity"
             type="android.app.Activity" />
@@ -27,6 +29,7 @@
         android:layout_marginTop="@dimen/recycler_item_divider">
 
         <TextView
+            textTypeFace="@{Font.QUICKSAND_BOLD}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/padding_normal"
@@ -36,7 +39,6 @@
             android:text="@{@string/tally_module_home_recent3day_tip(data.recent3DayRecordsCount, data.displayExpenseAmount)}"
             android:textColor="@color/appTextColorPrimary"
             android:textSize="@dimen/app_text_size_medium"
-            android:textStyle="bold"
             tools:text="@string/tally_module_home_recent3day_tip" />
 
     </FrameLayout>

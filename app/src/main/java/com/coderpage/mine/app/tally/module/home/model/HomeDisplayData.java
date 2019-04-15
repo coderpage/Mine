@@ -15,14 +15,11 @@ public class HomeDisplayData {
     /** 模块类型：本月消费、本月收入数据模块 */
     public static final int TYPE_MONTH_INFO = 1;
 
-    /** 模块类型：今日消费数据 */
-    public static final int TYPE_TODAY_EXPENSE = 2;
+    /** 模块类型：近3日账单数据 */
+    public static final int TYPE_RECENT_DAY_INFO = 2;
 
-    /** 模块类型：消费记录 ITEM */
-    public static final int TYPE_EXPENSE_ITEM = 3;
-
-    /** 模块类型：支出记录 ITEM */
-    public static final int TYPE_IN_COME_ITEM = 4;
+    /** 模块类型：账单记录 ITEM */
+    public static final int TYPE_RECORD_ITEM = 3;
 
     public HomeDisplayData(int type, Object internal) {
         this.type = type;

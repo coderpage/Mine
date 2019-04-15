@@ -26,6 +26,15 @@
     <string name="loading_layout_button_positive_text_empty">再试一次</string>
     <string name="loading_layout_button_positive_text_error">再试一次</string>
 
+    <!--
+        private static SimpleDateFormat mHourMinFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+    private static SimpleDateFormat mYearMonthDayFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    private static SimpleDateFormat mMonthDayFormat = new SimpleDateFormat("MM-dd", Locale.getDefault());
+    -->
+    <string name="tally_date_year_format">yyyy年MM月dd日</string>
+    <string name="tally_date_month_format">MM月dd日</string>
+    <string name="tally_date_today_format">今天 HH:mm</string>
+
     <!-- Menu item open About Activity -->
     <string name="menu_tall_about">关于</string>
     <string name="menu_tally_records">账单记录</string>
@@ -49,7 +58,7 @@
     <string name="tally_module_home_non_income_place_holder">暂无收入</string>
     <string name="tally_module_home_budget_label">预算剩余</string>
     <string name="tally_module_home_non_budget_place_holder">未设置预算</string>
-    <string name="tally_module_home_recent3day_tip">近三日新增账单 %s笔，今日支出 %s元</string>
+    <string name="tally_module_home_recent3day_tip">近三日新增账单 %s笔，今日支出 %s</string>
     <string name="tally_today_no_expense_record_tip">今天没花钱？快去记一笔~</string>
     <string name="tally_toady_expense_total">今日消费 %s 元</string>
 
