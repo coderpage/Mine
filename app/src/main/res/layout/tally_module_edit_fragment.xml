@@ -191,180 +191,203 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:text="2019年4月14日 15:08" />
 
-            <View
-                android:id="@+id/viewDividerBottom"
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/divider"
-                app:layout_constraintTop_toBottomOf="@id/tvDesc" />
+            <!-- 键盘 -->
+            <TextView
+                android:id="@+id/tvNum1"
+                style="@style/TextAppearance.TallyNumInputItem"
+                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/tally_input_item_height"
+                android:gravity="center"
+                android:onClick="@{() -> vm.onNumberClick(`1`)}"
+                android:text="@string/num_1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvDesc"
+                app:layout_constraintWidth_percent="0.25" />
 
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:orientation="vertical"
-                android:stretchColumns="*"
-                app:layout_constraintTop_toBottomOf="@id/viewDividerBottom">
+            <TextView
+                android:id="@+id/tvNum2"
+                style="@style/TextAppearance.TallyNumInputItem"
+                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/tally_input_item_height"
+                android:layout_marginStart="1px"
+                android:gravity="center"
+                android:onClick="@{() -> vm.onNumberClick(`2`)}"
+                android:text="@string/num_2"
+                app:layout_constraintStart_toEndOf="@id/tvNum1"
+                app:layout_constraintTop_toTopOf="@id/tvNum1"
+                app:layout_constraintWidth_percent="0.25" />
 
-                <TableRow>
+            <TextView
+                android:id="@+id/tvNum3"
+                style="@style/TextAppearance.TallyNumInputItem"
+                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/tally_input_item_height"
+                android:layout_marginStart="1px"
+                android:gravity="center"
+                android:onClick="@{() -> vm.onNumberClick(`3`)}"
+                android:text="@string/num_3"
+                app:layout_constraintStart_toEndOf="@id/tvNum2"
+                app:layout_constraintTop_toTopOf="@id/tvNum1"
+                app:layout_constraintWidth_percent="0.25" />
 
-                    <TextView
-                        android:id="@+id/tvNum1"
-                        style="@style/TextAppearance.TallyNumInputItem"
-                        textTypeFace="@{Font.QUICKSAND_MEDIUM}"
-                        android:layout_height="@dimen/tally_input_item_height"
-                        android:gravity="center"
-                        android:onClick="@{() -> vm.onNumberClick(`1`)}"
-                        android:text="@string/num_1" />
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/ivDelete"
+                style="@style/TextAppearance.TallyNumInputItem"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/tally_input_item_height"
+                android:layout_marginStart="1px"
+                android:gravity="center"
+                android:onClick="@{() -> vm.onDeleteClick()}"
+                android:scaleType="center"
+                android:tint="@color/black"
+                app:layout_constraintStart_toEndOf="@id/tvNum3"
+                app:layout_constraintTop_toTopOf="@id/tvNum1"
+                app:layout_constraintWidth_percent="0.25"
+                app:srcCompat="@drawable/ic_delete" />
 
-                    <TextView
-                        android:id="@+id/tvNum2"
-                        style="@style/TextAppearance.TallyNumInputItem"
-                        textTypeFace="@{Font.QUICKSAND_MEDIUM}"
-                        android:layout_height="@dimen/tally_input_item_height"
-                        android:gravity="center"
-                        android:onClick="@{() -> vm.onNumberClick(`2`)}"
-                        android:text="@string/num_2" />
+            <TextView
+                android:id="@+id/tvNum4"
+                style="@style/TextAppearance.TallyNumInputItem"
+                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/tally_input_item_height"
+                android:layout_marginTop="1px"
+                android:gravity="center"
+                android:onClick="@{() -> vm.onNumberClick(`4`)}"
+                android:text="@string/num_4"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvNum1"
+                app:layout_constraintWidth_percent="0.25" />
 
-                    <TextView
-                        android:id="@+id/tvNum3"
-                        style="@style/TextAppearance.TallyNumInputItem"
-                        textTypeFace="@{Font.QUICKSAND_MEDIUM}"
-                        android:layout_height="@dimen/tally_input_item_height"
-                        android:gravity="center"
-                        android:onClick="@{() -> vm.onNumberClick(`3`)}"
-                        android:text="@string/num_3" />
+            <TextView
+                android:id="@+id/tvNum5"
+                style="@style/TextAppearance.TallyNumInputItem"
+                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/tally_input_item_height"
+                android:layout_marginStart="1px"
+                android:gravity="center"
+                android:onClick="@{() -> vm.onNumberClick(`5`)}"
+                android:text="@string/num_5"
+                app:layout_constraintStart_toEndOf="@id/tvNum4"
+                app:layout_constraintTop_toTopOf="@id/tvNum4"
+                app:layout_constraintWidth_percent="0.25" />
 
-                    <android.support.v7.widget.AppCompatImageView
-                        android:id="@+id/ivDelete"
-                        style="@style/TextAppearance.TallyNumInputItem"
-                        android:layout_height="@dimen/tally_input_item_height"
-                        android:gravity="center"
-                        android:onClick="@{() -> vm.onDeleteClick()}"
-                        android:scaleType="center"
-                        android:tint="@color/black"
-                        app:srcCompat="@drawable/ic_delete" />
-                </TableRow>
+            <TextView
+                android:id="@+id/tvNum6"
+                style="@style/TextAppearance.TallyNumInputItem"
+                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/tally_input_item_height"
+                android:layout_marginStart="1px"
+                android:gravity="center"
+                android:onClick="@{() -> vm.onNumberClick(`6`)}"
+                android:text="@string/num_6"
+                app:layout_constraintStart_toEndOf="@id/tvNum5"
+                app:layout_constraintTop_toTopOf="@id/tvNum4"
+                app:layout_constraintWidth_percent="0.25" />
 
+            <TextView
+                android:id="@+id/tvNum7"
+                style="@style/TextAppearance.TallyNumInputItem"
+                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/tally_input_item_height"
+                android:gravity="center"
+                android:onClick="@{() -> vm.onNumberClick(`7`)}"
+                android:text="@string/num_7"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvNum4"
+                app:layout_constraintWidth_percent="0.25" />
 
-                <TableRow>
+            <TextView
+                android:id="@+id/tvNum8"
+                style="@style/TextAppearance.TallyNumInputItem"
+                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/tally_input_item_height"
+                android:gravity="center"
+                android:onClick="@{() -> vm.onNumberClick(`8`)}"
+                android:text="@string/num_8"
+                app:layout_constraintStart_toEndOf="@id/tvNum7"
+                app:layout_constraintTop_toTopOf="@id/tvNum7"
+                app:layout_constraintWidth_percent="0.25" />
 
-                    <TableLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_span="3"
-                        android:stretchColumns="*">
+            <TextView
+                android:id="@+id/tvNum9"
+                style="@style/TextAppearance.TallyNumInputItem"
+                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/tally_input_item_height"
+                android:layout_marginStart="1px"
+                android:gravity="center"
+                android:onClick="@{() -> vm.onNumberClick(`9`)}"
+                android:text="@string/num_9"
+                app:layout_constraintStart_toEndOf="@id/tvNum8"
+                app:layout_constraintTop_toTopOf="@id/tvNum7"
+                app:layout_constraintWidth_percent="0.25" />
 
-                        <TableRow>
+            <TextView
+                android:id="@+id/tvClear"
+                style="@style/TextAppearance.TallyNumInputItem"
+                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/tally_input_item_height"
+                android:layout_marginTop="1px"
+                android:gravity="center"
+                android:onClick="@{() -> vm.onClearClick()}"
+                android:text="@string/num_clean_to_0"
+                android:textSize="@dimen/app_text_size_medium"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvNum7"
+                app:layout_constraintWidth_percent="0.25" />
 
-                            <TextView
-                                android:id="@+id/tvNum4"
-                                style="@style/TextAppearance.TallyNumInputItem"
-                                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
-                                android:layout_height="@dimen/tally_input_item_height"
-                                android:gravity="center"
-                                android:onClick="@{() -> vm.onNumberClick(`4`)}"
-                                android:text="@string/num_4" />
+            <TextView
+                android:id="@+id/tvNum0"
+                style="@style/TextAppearance.TallyNumInputItem"
+                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/tally_input_item_height"
+                android:layout_marginStart="1px"
+                android:gravity="center"
+                android:onClick="@{() -> vm.onNumberClick(`0`)}"
+                android:text="@string/num_0"
+                app:layout_constraintStart_toEndOf="@id/tvClear"
+                app:layout_constraintTop_toTopOf="@id/tvClear"
+                app:layout_constraintWidth_percent="0.25" />
 
-                            <TextView
-                                android:id="@+id/tvNum5"
-                                style="@style/TextAppearance.TallyNumInputItem"
-                                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
-                                android:layout_height="@dimen/tally_input_item_height"
-                                android:gravity="center"
-                                android:onClick="@{() -> vm.onNumberClick(`5`)}"
-                                android:text="@string/num_5" />
+            <TextView
+                android:id="@+id/tvDot"
+                style="@style/TextAppearance.TallyNumInputItem"
+                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/tally_input_item_height"
+                android:layout_marginStart="1px"
+                android:gravity="center"
+                android:onClick="@{() -> vm.onDotClick()}"
+                android:text="@string/symbol_dot"
+                app:layout_constraintStart_toEndOf="@id/tvNum0"
+                app:layout_constraintTop_toTopOf="@id/tvClear"
+                app:layout_constraintWidth_percent="0.25" />
 
-                            <TextView
-                                android:id="@+id/tvNum6"
-                                style="@style/TextAppearance.TallyNumInputItem"
-                                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
-                                android:layout_height="@dimen/tally_input_item_height"
-                                android:gravity="center"
-                                android:onClick="@{() -> vm.onNumberClick(`6`)}"
-                                android:text="@string/num_6" />
-
-                        </TableRow>
-
-                        <TableRow>
-
-                            <TextView
-                                android:id="@+id/tvNum7"
-                                style="@style/TextAppearance.TallyNumInputItem"
-                                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
-                                android:layout_width="1dp"
-                                android:layout_height="@dimen/tally_input_item_height"
-                                android:gravity="center"
-                                android:onClick="@{() -> vm.onNumberClick(`7`)}"
-                                android:text="@string/num_7" />
-
-                            <TextView
-                                android:id="@+id/tvNum8"
-                                style="@style/TextAppearance.TallyNumInputItem"
-                                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
-                                android:layout_width="1dp"
-                                android:layout_height="@dimen/tally_input_item_height"
-                                android:gravity="center"
-                                android:onClick="@{() -> vm.onNumberClick(`8`)}"
-                                android:text="@string/num_8" />
-
-                            <TextView
-                                android:id="@+id/tvNum9"
-                                style="@style/TextAppearance.TallyNumInputItem"
-                                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
-                                android:layout_width="1dp"
-                                android:layout_height="@dimen/tally_input_item_height"
-                                android:gravity="center"
-                                android:onClick="@{() -> vm.onNumberClick(`9`)}"
-                                android:text="@string/num_9" />
-                        </TableRow>
-
-                        <TableRow>
-
-                            <TextView
-                                android:id="@+id/tvClear"
-                                style="@style/TextAppearance.TallyNumInputItem"
-                                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
-                                android:layout_width="1dp"
-                                android:layout_height="@dimen/tally_input_item_height"
-                                android:gravity="center"
-                                android:onClick="@{() -> vm.onClearClick()}"
-                                android:text="@string/num_clean_to_0"
-                                android:textSize="@dimen/app_text_size_medium" />
-
-                            <TextView
-                                android:id="@+id/tvNum0"
-                                style="@style/TextAppearance.TallyNumInputItem"
-                                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
-                                android:layout_width="1dp"
-                                android:layout_height="@dimen/tally_input_item_height"
-                                android:gravity="center"
-                                android:onClick="@{() -> vm.onNumberClick(`0`)}"
-                                android:text="@string/num_0" />
-
-                            <TextView
-                                android:id="@+id/tvDot"
-                                style="@style/TextAppearance.TallyNumInputItem"
-                                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
-                                android:layout_width="1dp"
-                                android:layout_height="@dimen/tally_input_item_height"
-                                android:gravity="center"
-                                android:onClick="@{() -> vm.onDotClick()}"
-                                android:text="@string/symbol_dot" />
-                        </TableRow>
-                    </TableLayout>
-
-                    <TextView
-                        android:id="@+id/tvOk"
-                        style="@style/TextAppearance.TallyNumInputItem"
-                        textTypeFace="@{Font.QUICKSAND_MEDIUM}"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:onClick="@{() -> vm.onEnterClick()}"
-                        android:text="@string/ok"
-                        android:textSize="@dimen/app_text_size_medium" />
-                </TableRow>
-            </TableLayout>
+            <TextView
+                android:id="@+id/tvOk"
+                style="@style/TextAppearance.TallyNumInputItem"
+                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:height="0dp"
+                android:gravity="center"
+                android:onClick="@{() -> vm.onEnterClick()}"
+                android:text="@string/ok"
+                android:textSize="@dimen/app_text_size_medium"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tvNum6"
+                app:layout_constraintTop_toBottomOf="@id/ivDelete" />
 
         </android.support.constraint.ConstraintLayout>
 
