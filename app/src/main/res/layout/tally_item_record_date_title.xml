@@ -22,28 +22,36 @@
     </data>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="?attr/selectableItemBackground"
-        android:onClick="@{() -> vm.onItemDateTitleClick(activity, data)}">
+        android:onClick="@{() -> vm.onItemDateTitleClick(activity, data)}"
+        android:paddingStart="@dimen/padding_normal"
+        android:paddingEnd="@dimen/padding_normal">
 
         <TextView
             android:id="@+id/tvMonth"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_gravity="left"
-            android:gravity="center_vertical|left"
-            android:paddingLeft="@dimen/padding_normal"
-            android:text="@{data.year + `/` + data.month}" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:paddingTop="24dp"
+            android:paddingBottom="@dimen/spacing_micro"
+            android:text="@{@string/string_format_date_y_m(data.year, data.month)}"
+            android:textSize="@dimen/app_text_size_small"
+            android:textStyle="bold"
+            tools:text="@string/string_format_date_y_m" />
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_gravity="right"
-            android:gravity="center_vertical|right"
-            android:paddingRight="@dimen/padding_normal"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:paddingTop="24dp"
+            android:paddingBottom="@dimen/spacing_micro"
             android:text="@string/tally_check_month_expense"
-            android:textColor="@color/colorAccent" />
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/app_text_size_small"
+            android:textStyle="bold" />
     </FrameLayout>
 
 </layout>

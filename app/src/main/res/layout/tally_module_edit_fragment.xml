@@ -196,6 +196,7 @@
                 android:paddingStart="@dimen/padding_normal"
                 android:paddingEnd="@dimen/padding_normal"
                 android:text="@{vm.dateText}"
+                android:textSize="@dimen/app_text_size_small"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:text="2019年4月14日 15:08" />
 

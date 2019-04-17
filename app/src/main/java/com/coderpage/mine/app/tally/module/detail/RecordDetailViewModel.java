@@ -101,7 +101,7 @@ public class RecordDetailViewModel extends BaseViewModel implements LifecycleObs
                     RecordData recordData = new RecordData();
                     recordData.setType(TYPE_EXPENSE);
                     recordData.setRecordId(expense.getId());
-                    recordData.setAmount(TallyUtils.formatDisplayMoney(expense.getAmount()));
+                    recordData.setAmount("¥" + TallyUtils.formatDisplayMoney(expense.getAmount()));
                     recordData.setCategoryIcon(expense.getCategoryIcon());
                     recordData.setCategoryName(expense.getCategoryName());
                     recordData.setDesc(expense.getDesc());
@@ -126,7 +126,7 @@ public class RecordDetailViewModel extends BaseViewModel implements LifecycleObs
                     recordData.setCategoryIcon(income.getCategoryIcon());
                     recordData.setCategoryName(income.getCategoryName());
                     recordData.setDesc(income.getDesc());
-                    recordData.setTime(TallyUtils.formatDisplayTime(income.getTime()));
+                    recordData.setTime("¥" + TallyUtils.formatDisplayTime(income.getTime()));
                     mRecordData.setValue(recordData);
                 }
 

@@ -52,7 +52,7 @@ import java.util.Locale;
 public class RecordViewModel extends AndroidViewModel implements LifecycleObserver {
 
     private DecimalFormat mAmountFormat = new DecimalFormat("0.00");
-    private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
+    private SimpleDateFormat mDateFormat;
 
     private RecordType mType;
     private long mRecordId;
@@ -78,6 +78,8 @@ public class RecordViewModel extends AndroidViewModel implements LifecycleObserv
 
     public RecordViewModel(Application application) {
         super(application);
+        mDateFormat = new SimpleDateFormat(ResUtils.getString(
+                application, R.string.tally_date_year_format) + " HH:mm", Locale.getDefault());
         mRepository = new RecordRepository();
         mAmountText.set("0");
         mDate = System.currentTimeMillis();

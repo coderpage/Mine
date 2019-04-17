@@ -3,6 +3,10 @@
 
     <data class=".tally.module.detail.RecordDetailActivityBinding">
 
+        <import type="com.coderpage.mine.common.Font" />
+
+        <import type="android.text.TextUtils" />
+
         <variable
             name="activity"
             type="android.app.Activity" />
@@ -39,10 +43,10 @@
             xmlns:card_view="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/padding_normal"
             android:layout_marginLeft="@dimen/spacing_micro"
-            android:layout_marginRight="@dimen/spacing_micro"
             android:layout_marginTop="@dimen/padding_normal"
+            android:layout_marginRight="@dimen/spacing_micro"
+            android:layout_marginBottom="@dimen/padding_normal"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
             app:cardCornerRadius="@dimen/cardDefaultCornerRadius"
@@ -89,25 +93,28 @@
                         android:gravity="center_vertical"
                         android:text="@{data.categoryName}"
                         android:textColor="?android:textColorPrimary"
-                        android:textSize="@dimen/app_text_size_medium"/>
+                        android:textSize="@dimen/app_text_size_medium" />
 
                     <!-- 金额 -->
                     <TextView
                         android:id="@+id/tvRecordAmount"
+                        textTypeFace="@{Font.QUICKSAND_MEDIUM}"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_alignParentRight="true"
                         android:gravity="center_vertical"
                         android:text="@{data.amount}"
                         android:textColor="?android:textColorPrimary"
-                        android:textSize="@dimen/app_text_size_medium"/>
+                        android:textSize="@dimen/app_text_size_medium" />
 
                 </RelativeLayout>
 
                 <View
                     style="@style/Divider"
                     android:layout_width="match_parent"
-                    android:layout_height="1px" />
+                    android:layout_height="1px"
+                    android:layout_marginStart="@dimen/padding_normal"
+                    android:layout_marginEnd="@dimen/padding_normal" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -139,11 +146,11 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical|right"
                             android:gravity="center_vertical|left"
-                            android:paddingBottom="@dimen/spacing_normal"
                             android:paddingLeft="@dimen/padding_normal"
-                            android:paddingRight="@dimen/padding_normal"
                             android:paddingTop="@dimen/spacing_normal"
-                            android:text="@{data.desc}"
+                            android:paddingRight="@dimen/padding_normal"
+                            android:paddingBottom="@dimen/spacing_normal"
+                            android:text="@{TextUtils.isEmpty(data.desc) ? `--` : data.desc}"
                             android:textColor="?android:textColorSecondary"
                             android:textSize="@dimen/app_text_size_small" />
                     </FrameLayout>
@@ -189,14 +196,6 @@
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
-
-        <!-- Toolbar shadow -->
-        <View
-            android:id="@+id/ivToolbarShadow"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/shadow_height"
-            android:background="@drawable/shadow_appbar"
-            app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
         <!-- 底部导航 -->
         <View

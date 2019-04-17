@@ -26,11 +26,6 @@
     <string name="loading_layout_button_positive_text_empty">再试一次</string>
     <string name="loading_layout_button_positive_text_error">再试一次</string>
 
-    <!--
-        private static SimpleDateFormat mHourMinFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-    private static SimpleDateFormat mYearMonthDayFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-    private static SimpleDateFormat mMonthDayFormat = new SimpleDateFormat("MM-dd", Locale.getDefault());
-    -->
     <string name="tally_date_year_format">yyyy年MM月dd日</string>
     <string name="tally_date_month_format">MM月dd日</string>
     <string name="tally_date_today_format">今天 HH:mm</string>

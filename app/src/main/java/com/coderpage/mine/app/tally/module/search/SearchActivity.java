@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.coderpage.base.utils.UIUtils;
 import com.coderpage.base.widget.LoadingLayout;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.module.records.RecordsAdapter;
@@ -18,6 +19,7 @@ import com.coderpage.mine.app.tally.ui.refresh.RefreshFootView;
 import com.coderpage.mine.app.tally.ui.refresh.RefreshHeadView;
 import com.coderpage.mine.module.search.SearchActivityBinding;
 import com.coderpage.mine.ui.BaseActivity;
+import com.coderpage.mine.ui.widget.recyclerview.ItemMarginDecoration;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 
@@ -98,7 +100,11 @@ public class SearchActivity extends BaseActivity {
         mSearchHistoryRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mSearchHistoryRecycler.setAdapter(mSearchHistoryAdapter);
 
+        ItemMarginDecoration itemMarginDecoration = new ItemMarginDecoration(0, 0, 0, 0);
+        itemMarginDecoration.setFirstItemOffset(0, UIUtils.dp2px(self(), 4), 0, 0);
+        itemMarginDecoration.setLastItemOffset(0, 0, 0, UIUtils.dp2px(self(), 8));
         mSearchResultRecycler = mBinding.recyclerResult;
+        mSearchResultRecycler.addItemDecoration(itemMarginDecoration);
         mSearchResultAdapter = new RecordsAdapter(this);
         mSearchResultRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mSearchResultRecycler.setAdapter(mSearchResultAdapter);
