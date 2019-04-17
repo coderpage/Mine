@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 
 import com.coderpage.mine.R;
 import com.coderpage.mine.dialog.TextEditDialogBinding;
@@ -44,14 +45,14 @@ public class TextEditDialog extends Dialog {
         // 取消
         mBinding.tvCancel.setOnClickListener(v -> {
             if (mListener != null) {
-                mListener.onNegativeClick(this);
+                mListener.onNegativeClick(mBinding.etContent, this);
             }
         });
         mBinding.tvConfirm.setOnClickListener(v -> {
             String content = mBinding.etContent.getText().toString();
             // 回调
             if (mListener != null) {
-                mListener.onPositiveClick(this, content);
+                mListener.onPositiveClick(mBinding.etContent, this, content);
             }
         });
 
@@ -107,16 +108,18 @@ public class TextEditDialog extends Dialog {
         /**
          * 确定按钮回调
          *
-         * @param dialog dialog
-         * @param text   输入内容
+         * @param editText EditText
+         * @param dialog   dialog
+         * @param text     输入内容
          */
-        void onPositiveClick(DialogInterface dialog, String text);
+        void onPositiveClick(EditText editText, DialogInterface dialog, String text);
 
         /**
          * 取消按钮回调
          *
-         * @param dialog dialog
+         * @param editText EditText
+         * @param dialog   dialog
          */
-        void onNegativeClick(DialogInterface dialog);
+        void onNegativeClick(EditText editText, DialogInterface dialog);
     }
 }

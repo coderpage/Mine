@@ -13,11 +13,13 @@ import android.content.DialogInterface;
 import android.databinding.ObservableField;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.coderpage.base.utils.ArrayUtils;
 import com.coderpage.base.utils.CommonUtils;
 import com.coderpage.base.utils.ResUtils;
+import com.coderpage.base.utils.UIUtils;
 import com.coderpage.framework.ViewReliedTask;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.common.RecordType;
@@ -118,23 +120,26 @@ public class RecordViewModel extends AndroidViewModel implements LifecycleObserv
     /** 消费说明点击 */
     public void onDescClick(Activity activity) {
         String desc = mDesc.get();
-        new TextEditDialog(activity)
+        TextEditDialog dialog = new TextEditDialog(activity)
                 .setTitle(ResUtils.getString(activity, R.string.tally_add_record_note))
                 .setHint(ResUtils.getString(activity, R.string.tally_expense_note))
                 .setContent(desc)
                 .setListener(new TextEditDialog.Listener() {
                     @Override
-                    public void onPositiveClick(DialogInterface dialog, String text) {
+                    public void onPositiveClick(EditText editText, DialogInterface dialog, String text) {
                         mDesc.set(text);
+                        UIUtils.hideSoftKeyboard(activity, editText);
                         dialog.dismiss();
                     }
 
                     @Override
-                    public void onNegativeClick(DialogInterface dialog) {
+                    public void onNegativeClick(EditText editText, DialogInterface dialog) {
+                        UIUtils.hideSoftKeyboard(activity, editText);
                         dialog.dismiss();
                     }
-                })
-                .show();
+                });
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 
     /** 消费记录时间点击 */

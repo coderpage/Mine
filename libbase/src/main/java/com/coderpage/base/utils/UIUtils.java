@@ -1,14 +1,18 @@
 package com.coderpage.base.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.ColorRes;
 import android.support.annotation.StringRes;
+import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -101,6 +105,11 @@ public class UIUtils {
      * @param editText 需要禁止弹出软键盘的输入框
      */
     public static void disableShowSoftInput(EditText editText) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            editText.setShowSoftInputOnFocus(false);
+            return;
+        }
+
         Class<EditText> cls = EditText.class;
         Method method;
         try {
@@ -119,4 +128,56 @@ public class UIUtils {
             // no-op
         }
     }
+
+    /**
+     * 隐藏软键盘
+     */
+    public static void hideSoftKeyboard(Activity activity) {
+        try {
+            View view = activity.getCurrentFocus();
+            if (view == null) {
+                return;
+            }
+            InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            if (inputMethodManager == null) {
+                return;
+            }
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 隐藏软键盘
+     */
+    public static void hideSoftKeyboard(Context context, View view) {
+        try {
+            InputMethodManager inputMethodManager = (InputMethodManager) context
+                    .getSystemService(Activity.INPUT_METHOD_SERVICE);
+            if (inputMethodManager == null) {
+                return;
+            }
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 显示软键盘
+     */
+    public static void showSoftKeyboard(Context context, View view) {
+        try {
+            InputMethodManager inputMethodManager = (InputMethodManager) context
+                    .getSystemService(Activity.INPUT_METHOD_SERVICE);
+            if (inputMethodManager == null) {
+                return;
+            }
+            inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_FORCED);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

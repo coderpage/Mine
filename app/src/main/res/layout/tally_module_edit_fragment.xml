@@ -32,116 +32,124 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/lyHeadInfo"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <!-- 选择的分类图片 -->
-            <FrameLayout
-                android:id="@+id/lySelectCategoryIcon"
-                selected="@{true}"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/padding_normal"
-                android:layout_marginTop="12dp"
-                android:background="@{type == RecordType.EXPENSE ? @drawable/bg_category_expense : @drawable/bg_category_income}"
-                android:padding="6dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:background="@drawable/bg_category_expense_selected">
-
-                <android.support.v7.widget.AppCompatImageView
-                    categoryIcon="@{category.internal.icon}"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    tools:src="@drawable/ic_category_expense_other_selected" />
-            </FrameLayout>
-
-            <!-- 分类名称 -->
-            <TextView
-                android:id="@+id/tvCategoryName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/spacing_normal"
-                android:gravity="center"
-                android:text="@{category.internal.name}"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="@dimen/app_text_size_normal"
-                app:layout_constraintBottom_toBottomOf="@id/lySelectCategoryIcon"
-                app:layout_constraintStart_toEndOf="@id/lySelectCategoryIcon"
-                app:layout_constraintTop_toTopOf="@id/lySelectCategoryIcon"
-                tools:text="其他" />
-
-            <TextView
-                android:id="@+id/tv_money_unit"
-                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{vm.amountUnit}"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="@dimen/app_text_size_medium"
-                app:layout_constraintBaseline_toBaselineOf="@id/etAmount"
-                app:layout_constraintEnd_toStartOf="@id/etAmount"
-                tools:text="￥" />
-
-            <com.coderpage.mine.app.tally.ui.widget.LastInputEditText
-                android:id="@+id/etAmount"
-                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/padding_normal"
-                android:background="@null"
-                android:gravity="center"
-                android:text="@{vm.amountText}"
-                android:textColor="?android:textColorPrimary"
-                android:textCursorDrawable="@drawable/edit_cursor"
-                android:textSize="@dimen/app_text_size_large"
-                app:layout_constraintBaseline_toBaselineOf="@id/tvCategoryName"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:text="100.00" />
-
-            <View
-                android:id="@+id/viewDividerHead"
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/lyHeadInfo"
                 android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginTop="12dp"
-                android:background="@color/divider"
-                app:layout_constraintTop_toBottomOf="@id/lySelectCategoryIcon" />
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <!-- 选择的分类图片 -->
+                <FrameLayout
+                    android:id="@+id/lySelectCategoryIcon"
+                    selected="@{true}"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/padding_normal"
+                    android:layout_marginTop="12dp"
+                    android:background="@{type == RecordType.EXPENSE ? @drawable/bg_category_expense : @drawable/bg_category_income}"
+                    android:padding="6dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:background="@drawable/bg_category_expense_selected">
+
+                    <android.support.v7.widget.AppCompatImageView
+                        categoryIcon="@{category.internal.icon}"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:src="@drawable/ic_category_expense_other_selected" />
+                </FrameLayout>
+
+                <!-- 分类名称 -->
+                <TextView
+                    android:id="@+id/tvCategoryName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/spacing_normal"
+                    android:gravity="center"
+                    android:text="@{category.internal.name}"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="@dimen/app_text_size_normal"
+                    app:layout_constraintBottom_toBottomOf="@id/lySelectCategoryIcon"
+                    app:layout_constraintStart_toEndOf="@id/lySelectCategoryIcon"
+                    app:layout_constraintTop_toTopOf="@id/lySelectCategoryIcon"
+                    tools:text="其他" />
+
+                <TextView
+                    android:id="@+id/tv_money_unit"
+                    textTypeFace="@{Font.QUICKSAND_MEDIUM}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{vm.amountUnit}"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="@dimen/app_text_size_medium"
+                    app:layout_constraintBaseline_toBaselineOf="@id/etAmount"
+                    app:layout_constraintEnd_toStartOf="@id/etAmount"
+                    tools:text="￥" />
+
+                <TextView
+                    android:id="@+id/etAmount"
+                    textTypeFace="@{Font.QUICKSAND_MEDIUM}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/padding_normal"
+                    android:background="@null"
+                    android:gravity="center"
+                    android:inputType="numberDecimal"
+                    android:text="@{vm.amountText}"
+                    android:textColor="?android:textColorPrimary"
+                    android:textCursorDrawable="@drawable/edit_cursor"
+                    android:textSize="@dimen/app_text_size_large"
+                    app:layout_constraintBaseline_toBaselineOf="@id/tvCategoryName"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:text="100.00" />
+
+                <View
+                    android:id="@+id/viewDividerHead"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/divider"
+                    app:layout_constraintTop_toBottomOf="@id/lySelectCategoryIcon" />
+
+            </android.support.constraint.ConstraintLayout>
 
             <com.coderpage.mine.app.tally.module.edit.widget.CategoryViewPager
                 android:id="@+id/category_viewpager"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/viewDividerHead" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:background="@color/white"
-                app:layout_constraintTop_toBottomOf="@id/category_viewpager">
+                app:layout_constraintTop_toBottomOf="@id/lyHeadInfo" />
 
-                <com.coderpage.mine.app.tally.ui.widget.ViewPagerFocusView
-                    android:id="@+id/focusView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:padding="@dimen/spacing_normal"
-                    app:vpfIndicatorColorNormal="@color/icCategoryIncomeNormal"
-                    app:vpfIndicatorColorSelect="@color/black"
-                    app:vpfIndicatorHeight="4dp"
-                    app:vpfIndicatorInterval="@dimen/spacing_normal"
-                    app:vpfIndicatorWidth="4dp" />
-            </FrameLayout>
+            <com.coderpage.mine.app.tally.ui.widget.ViewPagerFocusView
+                android:id="@+id/focusView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:padding="@dimen/spacing_normal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/category_viewpager"
+                app:vpfIndicatorColorNormal="@color/icCategoryIncomeNormal"
+                app:vpfIndicatorColorSelect="@color/black"
+                app:vpfIndicatorHeight="4dp"
+                app:vpfIndicatorInterval="@dimen/spacing_normal"
+                app:vpfIndicatorWidth="4dp" />
 
-        </android.support.constraint.ConstraintLayout>
+        </LinearLayout>
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"

@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.coderpage.base.utils.UIUtils;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.common.RecordType;
 import com.coderpage.mine.tall.module.edit.EditFragmentBinding;
@@ -58,7 +57,7 @@ public class RecordEditFragment extends Fragment {
         mCategoryPageAdapter = new RecordCategoryPageAdapter(getActivity(), mViewModel);
         mBinding.categoryViewpager.setAdapter(mCategoryPageAdapter);
         mBinding.focusView.setupWithViewPager(mBinding.categoryViewpager);
-        UIUtils.disableShowSoftInput(mBinding.etAmount);
+        // UIUtils.disableShowSoftInput(mBinding.etAmount);
     }
 
     private void subscribeUi() {
