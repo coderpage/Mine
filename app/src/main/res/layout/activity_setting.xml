@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".app.tally.module.setting.SettingActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".app.tally.module.setting.SettingActivity">
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -16,6 +17,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="vertical">
 
             <FrameLayout
@@ -31,7 +33,7 @@
                     android:gravity="left|center_vertical"
                     android:text="@string/tally_setting_btn_data_export"
                     android:textColor="@color/appTextColorPrimary"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
                 <View
                     style="@style/Divider"
@@ -39,7 +41,7 @@
                     android:layout_height="1px"
                     android:layout_gravity="bottom"
                     android:layout_marginLeft="@dimen/padding_normal"
-                    android:layout_marginRight="@dimen/padding_normal"/>
+                    android:layout_marginRight="@dimen/padding_normal" />
             </FrameLayout>
 
             <FrameLayout
@@ -55,7 +57,7 @@
                     android:gravity="left|center_vertical"
                     android:text="@string/tally_setting_btn_data_import"
                     android:textColor="@color/appTextColorPrimary"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
                 <View
                     style="@style/Divider"
@@ -63,7 +65,7 @@
                     android:layout_height="1px"
                     android:layout_gravity="bottom"
                     android:layout_marginLeft="@dimen/padding_normal"
-                    android:layout_marginRight="@dimen/padding_normal"/>
+                    android:layout_marginRight="@dimen/padding_normal" />
             </FrameLayout>
 
         </LinearLayout>
@@ -72,9 +74,9 @@
     </android.support.v4.widget.NestedScrollView>
 
     <include
-        layout="@layout/toolbar_with_elevation"
+        layout="@layout/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top"/>
+        android:layout_gravity="top" />
 
 </FrameLayout>

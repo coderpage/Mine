@@ -87,17 +87,24 @@ public class RecordItemViewModel extends BaseViewModel {
 
                 // 删除
                 case 1:
-                    mRepository.deleteRecord(record.getId(), new Callback<Void, IError>() {
-                        @Override
-                        public void success(Void aVoid) {
-                            EventBus.getDefault().post(new EventRecordDelete(record));
-                        }
+                    new AlertDialog.Builder(activity)
+                            .setTitle(R.string.dialog_title_delete_confirm)
+                            .setNegativeButton(R.string.dialog_btn_cancel, null)
+                            .setPositiveButton(R.string.dialog_btn_delete, (dialogInterface, w) -> {
+                                // 删除
+                                mRepository.deleteRecord(record.getId(), new Callback<Void, IError>() {
+                                    @Override
+                                    public void success(Void aVoid) {
+                                        EventBus.getDefault().post(new EventRecordDelete(record));
+                                    }
 
-                        @Override
-                        public void failure(IError iError) {
-                            UIUtils.showToastShort(getApplication(), iError.msg());
-                        }
-                    });
+                                    @Override
+                                    public void failure(IError iError) {
+                                        UIUtils.showToastShort(getApplication(), iError.msg());
+                                    }
+                                });
+                            }).show();
+
                     break;
                 default:
                     break;
