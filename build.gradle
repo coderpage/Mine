@@ -15,8 +15,8 @@ props.each { key, val ->
 }
 
 ext {
-    appVersionName = '0.5.1'
-    appVersionCode = 51
+    appVersionName = '0.6.0'
+    appVersionCode = 60
 
     minSdkVersion = 18
     targetSdkVersion = 25

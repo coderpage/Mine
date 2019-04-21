@@ -36,6 +36,11 @@ public class ResUtils {
     }
 
     public static Drawable getDrawable(Context context, @DrawableRes int resId) {
-        return AppCompatResources.getDrawable(context, resId);
+        try {
+            return AppCompatResources.getDrawable(context, resId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

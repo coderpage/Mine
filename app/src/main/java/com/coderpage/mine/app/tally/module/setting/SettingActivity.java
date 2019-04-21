@@ -357,10 +357,12 @@ public class SettingActivity extends BaseActivity
         String backupDate = new Date(metadata.getBackupDate()).toLocaleString();
         String backupDeviceName = metadata.getDeviceName();
         String backupExpenseCount = String.valueOf(metadata.getExpenseNumber());
+        String backupVersion = metadata.getClientVersion() + "(" + metadata.getClientVersionCode() + ")";
 
         View view = getLayoutInflater().inflate(R.layout.dialog_tally_restore_data_confirm, null);
         ((TextView) view.findViewById(R.id.tvBackupDate)).setText(backupDate);
         ((TextView) view.findViewById(R.id.tvBackupDeviceName)).setText(backupDeviceName);
+        ((TextView) view.findViewById(R.id.tvBackupVersion)).setText(backupVersion);
         ((TextView) view.findViewById(R.id.tvBackupExpenseCount)).setText(backupExpenseCount);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

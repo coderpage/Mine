@@ -35,8 +35,19 @@
         <activity
             android:name=".app.tally.module.edit.RecordEditActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan"
-            android:theme="@style/Theme.Tally" />
+            android:theme="@style/Theme.Tally"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name=".app.tally.module.edit.category.CategoryManagerActivity"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Tally"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name=".app.tally.module.edit.category.CategoryEditActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Tally"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".app.tally.module.about.AboutActivity"
             android:label="@string/tally_toolbar_title_about"

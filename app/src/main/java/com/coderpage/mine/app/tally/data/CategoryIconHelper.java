@@ -2,11 +2,16 @@ package com.coderpage.mine.app.tally.data;
 
 import com.coderpage.mine.R;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author abner-l. 2017-03-23
  */
 
 public class CategoryIconHelper {
+
+    public static final String IC_NAME_SETTING = "com.coderpage.mine.ic.category_setting";
 
     /** 其他 */
     public static final String IC_NAME_OTHER = "Other";
@@ -58,11 +63,41 @@ public class CategoryIconHelper {
     /** 投资收益 */
     public static final String IC_NAME_TOU_ZI_SHOU_YI = "TouZiShouYi";
 
+    /** 所有分类图标 */
+    public static final List<String> ALL_ICON = Arrays.asList(
+            IC_NAME_OTHER,
+            IC_NAME_CAN_YIN,
+            IC_NAME_JIAO_TONG,
+            IC_NAME_GOU_WU,
+            IC_NAME_FU_SHI,
+            IC_NAME_RI_YONG_PIN,
+            IC_NAME_YU_LE,
+            IC_NAME_SHI_CAI,
+            IC_NAME_LING_SHI,
+            IC_NAME_YAN_JIU_CHA,
+            IC_NAME_XUE_XI,
+            IC_NAME_YI_LIAO,
+            IC_NAME_ZHU_FANG,
+            IC_NAME_SHUI_DIAN_MEI,
+            IC_NAME_TONG_XUN,
+            IC_NAME_REN_QING,
+            IC_NAME_XIN_ZI,
+            IC_NAME_JIANG_JIN,
+            IC_NAME_JIE_RU,
+            IC_NAME_SHOU_ZHAI,
+            IC_NAME_LI_XIN_SHOU_RU,
+            IC_NAME_TOU_ZI_HUI_SHOU,
+            IC_NAME_YI_WAI_SUO_DE,
+            IC_NAME_TOU_ZI_SHOU_YI);
+
     public static int resId(String iconName) {
         if (iconName == null) {
             return R.drawable.ic_category_expense_other;
         }
         switch (iconName) {
+            case IC_NAME_SETTING:
+                return R.drawable.ic_setting_category;
+
             // 支出
             case IC_NAME_OTHER:
                 return R.drawable.ic_category_expense_other;

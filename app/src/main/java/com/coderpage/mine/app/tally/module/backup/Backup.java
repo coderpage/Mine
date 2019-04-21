@@ -8,6 +8,8 @@ import com.alibaba.fastjson.JSON;
 import com.coderpage.base.common.Callback;
 import com.coderpage.base.common.IError;
 import com.coderpage.base.common.NonThrowError;
+import com.coderpage.base.utils.ArrayUtils;
+import com.coderpage.base.utils.CommonUtils;
 import com.coderpage.concurrency.AsyncTaskExecutor;
 import com.coderpage.mine.BuildConfig;
 import com.coderpage.mine.app.tally.common.error.ErrorCode;
@@ -213,8 +215,9 @@ public class Backup {
     private static boolean restoreCategoryTable(BackupModelMetadata metadata,
                                                 List<BackupModelCategory> categoryList) {
         CategoryDao categoryDao = TallyDatabase.getInstance().categoryDao();
+        List<CategoryModel> currentExistCategoryList = categoryDao.allCategory();
 
-        CategoryEntity[] insertArray = new CategoryEntity[categoryList.size()];
+        List<CategoryEntity> entityList = new ArrayList<>();
         for (int i = 0; i < categoryList.size(); i++) {
             BackupModelCategory backupCategory = categoryList.get(i);
             CategoryEntity entity = new CategoryEntity();
@@ -229,9 +232,24 @@ public class Backup {
             entity.setUniqueName(TextUtils.isEmpty(backupCategory.getUniqueName()) ?
                     backupCategory.getIcon() : backupCategory.getUniqueName());
 
-            insertArray[i] = entity;
+            boolean alreadyContains = ArrayUtils.contains(currentExistCategoryList, item -> {
+                return CommonUtils.isEqual(entity.getUniqueName(), item.getUniqueName())
+                        && entity.getAccountId() == item.getAccountId();
+            });
+            if (alreadyContains) {
+                continue;
+            }
+            entityList.add(entity);
         }
 
+        if (entityList.isEmpty()) {
+            return true;
+        }
+
+        CategoryEntity[] insertArray = new CategoryEntity[entityList.size()];
+        ArrayUtils.forEach(entityList, (count, index, item) -> {
+            insertArray[index] = item;
+        });
         try {
             categoryDao.insert(insertArray);
             return true;
@@ -370,6 +388,8 @@ public class Backup {
         metadata.setBackupDate(System.currentTimeMillis());
         metadata.setClientVersion(BuildConfig.VERSION_NAME);
         metadata.setDeviceName(Build.MODEL);
+        metadata.setClientVersion(BuildConfig.VERSION_NAME);
+        metadata.setClientVersionCode(BuildConfig.VERSION_CODE);
         metadata.setExpenseNumber(recordList.size());
 
         BackupModel backupModel = new BackupModel();

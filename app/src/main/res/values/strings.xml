@@ -26,6 +26,8 @@
     <string name="loading_layout_button_positive_text_empty">再试一次</string>
     <string name="loading_layout_button_positive_text_error">再试一次</string>
 
+    <string name="err_category_already_exist">该分类已存在</string>
+
     <string name="tally_date_year_format">yyyy年MM月dd日</string>
     <string name="tally_date_month_format">MM月dd日</string>
     <string name="tally_date_today_format">今天 HH:mm</string>
@@ -79,6 +81,10 @@
     <string name="tally_income_data_format" formatted="false">共%s笔收入，%s</string>
 
     <!-- setting activity -->
+    <string name="backup_time">备份时间</string>
+    <string name="backup_device">备份设备</string>
+    <string name="backup_count">备份条数</string>
+    <string name="backup_version">备份版本</string>
     <string name="tally_setting_btn_data_export">导出数据</string>
     <string name="tally_setting_btn_data_import">导入数据</string>
     <string name="tally_alert_backup">备份数据</string>
@@ -97,6 +103,13 @@
 
     <!--消费记录详情-->
     <string name="tally_time">时间</string>
+
+    <string name="edit_category">编辑分类</string>
+    <string name="add_category">添加分类</string>
+    <string name="expense_category">消费</string>
+    <string name="income_category">支出</string>
+    <string name="save">保存</string>
+    <string name="setting">设置</string>
 
     <!-- toast msg -->
     <string name="tally_toast_delete_success">删除成功</string>
@@ -125,6 +138,7 @@
     <!-- record edit activity -->
     <string name="tally_edit_title_expense">支出</string>
     <string name="tally_edit_title_income">收入</string>
+    <string name="tally_edit_category_name_hint">请输入分类名称</string>
 
     <!-- search activity -->
     <string name="tally_clear_search_history">清除所有</string>

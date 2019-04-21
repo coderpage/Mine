@@ -23,8 +23,12 @@ import com.coderpage.base.utils.UIUtils;
 import com.coderpage.framework.ViewReliedTask;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.common.RecordType;
+import com.coderpage.mine.app.tally.data.CategoryIconHelper;
+import com.coderpage.mine.app.tally.eventbus.EventCategoryAdd;
+import com.coderpage.mine.app.tally.eventbus.EventCategoryUpdate;
 import com.coderpage.mine.app.tally.eventbus.EventRecordAdd;
 import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
+import com.coderpage.mine.app.tally.module.edit.category.CategoryManagerActivity;
 import com.coderpage.mine.app.tally.module.edit.model.Category;
 import com.coderpage.mine.app.tally.persistence.model.CategoryModel;
 import com.coderpage.mine.app.tally.persistence.model.Record;
@@ -33,6 +37,8 @@ import com.coderpage.mine.app.tally.utils.DatePickUtils;
 import com.coderpage.mine.utils.AndroidUtils;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -59,6 +65,7 @@ public class RecordViewModel extends AndroidViewModel implements LifecycleObserv
     private long mDate;
     private double mAmount;
     private Record mRecord;
+    private Category mCategorySettingItem;
     private RecordRepository mRepository;
 
     /** 币种单位 */
@@ -78,6 +85,11 @@ public class RecordViewModel extends AndroidViewModel implements LifecycleObserv
 
     public RecordViewModel(Application application) {
         super(application);
+        CategoryModel setting = new CategoryModel();
+        setting.setIcon(CategoryIconHelper.IC_NAME_SETTING);
+        setting.setName(ResUtils.getString(application, R.string.setting));
+        mCategorySettingItem = new Category(setting);
+
         mDateFormat = new SimpleDateFormat(ResUtils.getString(
                 application, R.string.tally_date_year_format) + " HH:mm", Locale.getDefault());
         mRepository = new RecordRepository();
@@ -116,6 +128,17 @@ public class RecordViewModel extends AndroidViewModel implements LifecycleObserv
 
     /** 消费分类点击 */
     public void onCategoryClick(Category category) {
+        if (category == mCategorySettingItem) {
+            mActivityRelayTask.setValue(activity -> {
+                if (mType == RecordType.EXPENSE) {
+                    CategoryManagerActivity.open(activity, CategoryModel.TYPE_EXPENSE);
+                }
+                if (mType == RecordType.INCOME) {
+                    CategoryManagerActivity.open(activity, CategoryModel.TYPE_INCOME);
+                }
+            });
+            return;
+        }
         makeCategorySelect(mCategoryList.getValue(), category.getInternal().getUniqueName());
     }
 
@@ -254,6 +277,8 @@ public class RecordViewModel extends AndroidViewModel implements LifecycleObserv
             for (CategoryModel category : categoryList) {
                 displayList.add(new Category(category));
             }
+            // 分类设置ITEM
+            displayList.add(mCategorySettingItem);
             mCategoryList.setValue(displayList);
 
             if (mRecord == null) {
@@ -262,6 +287,31 @@ public class RecordViewModel extends AndroidViewModel implements LifecycleObserv
             } else {
                 makeCategorySelect(displayList, mRecord.getCategoryUniqueName());
             }
+        });
+    }
+
+    private void refreshCategoryList() {
+        // 查询所有分类
+        mRepository.queryAllCategory(mType, categoryList -> {
+
+            if (categoryList == null || categoryList.isEmpty()) {
+                return;
+            }
+            List<Category> displayList = new ArrayList<>(categoryList.size());
+            for (CategoryModel category : categoryList) {
+                displayList.add(new Category(category));
+            }
+
+            // 当前选择的分类
+            List<Category> currentCategoryList = mCategoryList.getValue();
+            Category selectCategory = ArrayUtils.findFirst(currentCategoryList, Category::isSelect);
+            String selectCategoryUniqueName = selectCategory == null || selectCategory.getInternal() == null
+                    ? "" : selectCategory.getInternal().getUniqueName();
+
+            // 分类设置ITEM
+            displayList.add(mCategorySettingItem);
+            mCategoryList.setValue(displayList);
+            makeCategorySelect(displayList, selectCategoryUniqueName);
         });
     }
 
@@ -335,12 +385,26 @@ public class RecordViewModel extends AndroidViewModel implements LifecycleObserv
         Bundle arguments = fragment.getArguments();
         long recordId = arguments.getLong(RecordEditFragment.EXTRA_RECORD_ID, -1);
         mType = (RecordType) arguments.getSerializable(RecordEditFragment.EXTRA_RECORD_TYPE);
+        mCategorySettingItem.getInternal().setType(mType == RecordType.EXPENSE
+                ? CategoryModel.TYPE_EXPENSE : CategoryModel.TYPE_INCOME);
         setRecordId(recordId);
         initData();
+
+        EventBus.getDefault().register(this);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void onDestroy(LifecycleOwner owner) {
+        EventBus.getDefault().unregister(this);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventAddCategory(EventCategoryAdd event) {
+        refreshCategoryList();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventUpdateCategory(EventCategoryUpdate event) {
+        refreshCategoryList();
+    }
 }

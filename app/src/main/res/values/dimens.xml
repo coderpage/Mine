@@ -3,9 +3,10 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <!-- 普通卡片圆角 -->
-    <dimen name="card_radius_common">4dp</dimen>
+    <dimen name="radius_common">4dp</dimen>
     <!-- 大尺寸卡片圆角 -->
-    <dimen name="card_radius_large">8dp</dimen>
+    <dimen name="radius_large">8dp</dimen>
+    <dimen name="elevation_common">8dp</dimen>
 
     <!-- standard metrics -->
     <dimen name="spacing_micro">4dp</dimen>

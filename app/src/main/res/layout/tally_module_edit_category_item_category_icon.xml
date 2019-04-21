@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data class=".module.edit.category.ItemCategoryIconBinding">
+
+        <import type="android.text.TextUtils" />
+
+        <import type="com.coderpage.mine.app.tally.persistence.model.CategoryModel" />
+
+        <variable
+            name="categoryIcon"
+            type="String" />
+
+        <variable
+            name="vm"
+            type="com.coderpage.mine.app.tally.module.edit.category.CategoryEditViewModel" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_common_card_white"
+        android:onClick="@{() -> vm.onIconSelect(categoryIcon)}"
+        android:paddingTop="@dimen/padding_normal"
+        android:paddingBottom="@dimen/padding_normal">
+
+        <FrameLayout
+            selected="@{TextUtils.equals(vm.categoryIcon, categoryIcon)}"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@{vm.type == CategoryModel.TYPE_EXPENSE ? @drawable/bg_category_expense : @drawable/bg_category_income}"
+            android:padding="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@color/bgCategoryExpenseNormal">
+
+            <android.support.v7.widget.AppCompatImageView
+                categoryIcon="@{categoryIcon}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:src="@drawable/ic_category_expense_shopping" />
+        </FrameLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

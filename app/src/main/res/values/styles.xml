@@ -53,6 +53,7 @@
     <style name="TextAppearance.Toolbar" parent="TextAppearance">
         <item name="android:textColor">@color/appTextColorPrimary</item>
         <item name="android:textSize">@dimen/app_text_size_large</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <!-- loading layout message style -->
@@ -82,7 +83,7 @@
     <style name="Widget" parent="android:Widget" />
 
     <style name="Widget.Btn" parent="Widget">
-        <item name="android:background">@drawable/bg_accent_btn</item>
+        <item name="android:background">@drawable/bg_accent_btn_rect_round</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/app_text_size_medium</item>
     </style>

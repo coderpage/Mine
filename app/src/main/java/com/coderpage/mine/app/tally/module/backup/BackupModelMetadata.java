@@ -40,6 +40,8 @@ public class BackupModelMetadata {
     @JSONField(name = "expense_number")
     private long expenseNumber;
 
+    public BackupModelMetadata(){}
+
     public int getClientVersionCode() {
         return clientVersionCode;
     }

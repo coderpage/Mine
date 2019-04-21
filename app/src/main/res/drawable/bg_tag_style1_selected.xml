@@ -2,5 +2,5 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <solid android:color="@color/appBgTagStyle1StateSelected" />
-    <corners android:radius="@dimen/card_radius_common" />
+    <corners android:radius="@dimen/radius_common" />
 </shape>

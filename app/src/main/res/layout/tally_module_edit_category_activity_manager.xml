@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data class=".module.edit.category.CategoryManagerActivityBinding">
+
+        <variable
+            name="vm"
+            type="com.coderpage.mine.app.tally.module.edit.category.CategoryManagerViewModel" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background">
+
+        <FrameLayout
+            android:id="@+id/lyToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <include layout="@layout/toolbar" />
+
+            <com.coderpage.base.widget.MTabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:paddingTop="@dimen/spacing_micro"
+                android:paddingBottom="@dimen/spacing_micro"
+                app:mTabGravity="center"
+                app:mTabIndicatorColor="@color/black"
+                app:mTabIndicatorHeight="0dp"
+                app:mTabIndicatorWidth="0dp"
+                app:mTabMinWidth="60dp"
+                app:mTabMode="fixed"
+                app:mTabPadding="@dimen/spacing_micro"
+                app:mTabSelectedTextColor="@color/black"
+                app:mTabSelectedTextSize="24sp"
+                app:mTabTextBoldOnSelect="true"
+                app:mTabTextColor="@color/appTextColorSecondary"
+                app:mTabTextSize="@dimen/app_text_size_normal" />
+
+        </FrameLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lyToolbar" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_normal"
+            android:background="@drawable/bg_accent_btn_round"
+            android:elevation="@dimen/elevation_common"
+            android:gravity="center"
+            android:onClick="@{() -> vm.onAddCategoryClick()}"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/add_category"
+            android:textColor="@color/white"
+            android:textSize="@dimen/app_text_size_normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_percent="0.5" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

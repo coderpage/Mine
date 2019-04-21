@@ -5,6 +5,6 @@
     <corners
         android:bottomLeftRadius="0dp"
         android:bottomRightRadius="0dp"
-        android:topLeftRadius="@dimen/card_radius_large"
-        android:topRightRadius="@dimen/card_radius_large" />
+        android:topLeftRadius="@dimen/radius_large"
+        android:topRightRadius="@dimen/radius_large" />
 </shape>

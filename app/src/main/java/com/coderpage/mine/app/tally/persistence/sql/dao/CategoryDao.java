@@ -23,6 +23,15 @@ public interface CategoryDao {
     int categorySize();
 
     /**
+     * 查询分类
+     *
+     * @return 分类
+     */
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("select * from category where category_id = :id")
+    CategoryModel queryById(long id);
+
+    /**
      * 查询所有消费分类
      *
      * @return 所有消费分类
@@ -56,4 +65,14 @@ public interface CategoryDao {
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(CategoryEntity... entity);
+
+    /**
+     * 更新分类
+     *
+     * @param categoryId 分类 ID
+     * @param icon       分类图标
+     * @param name       分类名称
+     */
+    @Query("update category set category_icon=:icon, category_name=:name where category_id = :categoryId")
+    void update(long categoryId, String icon, String name);
 }
