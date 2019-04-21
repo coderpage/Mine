@@ -43,7 +43,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -170,24 +169,19 @@ public class RecordViewModel extends AndroidViewModel implements LifecycleObserv
     /** 消费记录时间点击 */
     public void onDateClick(Activity activity) {
         DatePickUtils.showDatePickDialog(activity,
+                mDate,
                 new DatePickUtils.OnDatePickListener() {
-                    Calendar mCalendar;
 
                     @Override
                     public void onDatePick(DialogInterface dialog,
                                            int year,
                                            int month,
                                            int dayOfMonth) {
-                        mCalendar = Calendar.getInstance();
-                        mCalendar.set(year, month, dayOfMonth);
                     }
 
                     @Override
-                    public void onConfirmClick(DialogInterface dialog) {
-                        if (mCalendar == null) {
-                            return;
-                        }
-                        mDate = mCalendar.getTimeInMillis();
+                    public void onConfirmClick(DialogInterface dialog, long timeInMills) {
+                        mDate = timeInMills;
                         mDateText.set(mDateFormat.format(new Date(mDate)));
                     }
                 });

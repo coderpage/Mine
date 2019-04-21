@@ -1,9 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.prolificinteractive.materialcalendarview.MaterialCalendarView
-    android:id="@+id/calendarView"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:mcv_selectionColor="@color/colorAccent"
-    app:mcv_showOtherDates="out_of_range"/>
+    android:layout_height="wrap_content">
+
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:mcv_selectionColor="@color/colorAccent"
+        app:mcv_showOtherDates="out_of_range" />
+
+    <TextView
+        android:id="@+id/tvTimeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_normal"
+        android:text="@string/dialog_data_pick_time_input_label"
+        android:textColor="@color/appTextColorSecondary"
+        android:textSize="@dimen/app_text_size_small"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/calendarView" />
+
+    <EditText
+        android:id="@+id/etHour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_normal"
+        android:layout_marginTop="@dimen/spacing_micro"
+        android:hint="@string/hour"
+        android:inputType="numberSigned"
+        android:maxLength="2"
+        android:maxLines="1"
+        android:minWidth="50dp"
+        android:textColor="@color/appTextColorPrimary"
+        android:textSize="@dimen/app_text_size_large"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTimeLabel"
+        tools:text="8" />
+
+    <TextView
+        android:id="@+id/tvSplit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=":"
+        android:textColor="@color/appTextColorPrimary"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@id/etHour"
+        app:layout_constraintStart_toEndOf="@id/etHour" />
+
+    <EditText
+        android:id="@+id/etMinute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/minute"
+        android:inputType="numberSigned"
+        android:maxLength="2"
+        android:maxLines="1"
+        android:minWidth="50dp"
+        android:textColor="@color/appTextColorPrimary"
+        android:textSize="@dimen/app_text_size_large"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@id/etHour"
+        app:layout_constraintStart_toEndOf="@id/tvSplit"
+        tools:text="24" />
+
+</android.support.constraint.ConstraintLayout>

@@ -110,6 +110,9 @@
     <string name="income_category">支出</string>
     <string name="save">保存</string>
     <string name="setting">设置</string>
+    <string name="hour">时</string>
+    <string name="minute">分</string>
+    <string name="dialog_data_pick_time_input_label">请输入时间（24小时制）</string>
 
     <!-- toast msg -->
     <string name="tally_toast_delete_success">删除成功</string>
