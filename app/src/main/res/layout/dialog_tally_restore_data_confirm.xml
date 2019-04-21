@@ -24,7 +24,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/padding_normal"
-        android:paddingStart="@dimen/padding_normal"
         android:paddingTop="@dimen/spacing_normal"
         android:text="@string/place_holder"
         android:textColor="?android:attr/textColorSecondary"

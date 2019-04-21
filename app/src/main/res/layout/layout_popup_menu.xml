@@ -3,6 +3,5 @@
     android:id="@+id/ly_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
-    android:background="@color/white"
+    android:background="@drawable/bg_rect_white_shadow"
     android:orientation="vertical" />

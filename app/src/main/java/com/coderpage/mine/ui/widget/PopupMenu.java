@@ -95,10 +95,10 @@ public class PopupMenu {
         containerLy.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         int anchorWidth = anchor.getWidth();
         int anchorHeight = anchor.getHeight();
-        int popWidth = containerLy.getMeasuredWidth();
+        int popWidth = containerLy.getMeasuredWidth() + 20;
         int popHeight = containerLy.getMeasuredHeight();
 
-        popWidth = Math.max(popWidth, UIUtils.dp2px(mActivity, 100));
+        popWidth = Math.max(popWidth, UIUtils.dp2px(mActivity, 100) + 20);
 
         int xOff = mOffsetInterceptor.offsetX(popWidth, popHeight, anchorWidth, anchorHeight);
         int yOff = mOffsetInterceptor.offsetY(popWidth, popHeight, anchorWidth, anchorHeight);
@@ -127,7 +127,8 @@ public class PopupMenu {
          * @return x方向偏移
          */
         public int offsetX(int popWidth, int popHeight, int anchorWidth, int anchorHeight) {
-            return 0;
+            // 10 阴影宽度
+            return -popWidth + anchorWidth - 10;
         }
 
         /**
