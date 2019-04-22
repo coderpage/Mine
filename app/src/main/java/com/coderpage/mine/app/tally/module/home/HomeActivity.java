@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -16,6 +17,7 @@ import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.module.records.RecordItemViewModel;
 import com.coderpage.mine.app.tally.module.search.SearchActivity;
 import com.coderpage.mine.app.tally.ui.refresh.RefreshHeadView;
+import com.coderpage.mine.app.tally.update.UpdateUtils;
 import com.coderpage.mine.ui.BaseActivity;
 import com.coderpage.mine.ui.widget.recyclerview.ItemMarginDecoration;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
@@ -50,6 +52,12 @@ public class HomeActivity extends BaseActivity {
         initView();
         subscribeUi();
         copyDatabaseFileToSdcard();
+    }
+
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        UpdateUtils.checkPersistedNewVersionAndShowUpdateConfirmDialog(this);
     }
 
     private void initView() {

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
     <external-path
-        name="update_files_root"
-        path="Android/data/com.coderpage.lib.update/"/>
+        name="files_root"
+        path="Android/data/com.coderpage.mine"/>
     <external-path
         name="update_external_storage_root"
         path="."/>

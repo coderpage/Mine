@@ -13,8 +13,6 @@ import com.coderpage.mine.MineApp;
 import com.coderpage.mine.app.tally.common.error.ErrorCode;
 import com.coderpage.mine.app.tally.common.server.BaseResponse;
 
-import java.io.IOException;
-
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -36,8 +34,8 @@ import static com.coderpage.base.utils.LogUtils.makeLogTag;
 class LatestVersionFetcher implements SourceFetcher {
     private static final String TAG = makeLogTag(LatestVersionFetcher.class);
 
-    //    private static final String VERSION_BASE_URL = "http://192.168.1.29:8001";
-    private static final String VERSION_BASE_URL = "http://app.coderpage.com";
+    private static final String VERSION_BASE_URL = "http://192.168.1.31:8001";
+    // private static final String VERSION_BASE_URL = "http://app.coderpage.com";
 
     @Override
     public Result<ApkModel, Error> fetchApkModel() {
@@ -64,8 +62,9 @@ class LatestVersionFetcher implements SourceFetcher {
 
         // 获取最新版本信息
         try {
-            Response<LatestVersionResponse> response =
-                    api.fetchLatestVersion(MineApp.getAppContext().getPackageName()).execute();
+            Response<LatestVersionResponse> response = api
+                    .fetchLatestVersion(MineApp.getAppContext().getPackageName(), BuildConfig.FLAVOR)
+                    .execute();
             if (!response.isSuccessful()) {
                 result.setErr(new Error(response.code(), response.message()));
                 return result;
@@ -86,7 +85,8 @@ class LatestVersionFetcher implements SourceFetcher {
 
     interface UpdateApi {
         @GET("/api/v1/version/latest")
-        Call<LatestVersionResponse> fetchLatestVersion(@Query("packageName") String packageName);
+        Call<LatestVersionResponse> fetchLatestVersion(@Query("packageName") String packageName,
+                                                       @Query("channel") String channel);
     }
 
     @Keep

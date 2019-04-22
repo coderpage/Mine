@@ -97,10 +97,11 @@ public class DownloadService extends IntentService {
         if (result.isOk()) {
             Intent install = new Intent(Intent.ACTION_VIEW);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                install.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 Uri contentUri = FileProvider.getUriForFile(
                         getApplicationContext(),
-                        BuildConfig.APPLICATION_ID + ".fileProvider",
+                        // TODO 自定义 authority
+                        "com.coderpage.mine.dev.fileProvider",
                         result.data());
                 install.setDataAndType(contentUri, "application/vnd.android.package-archive");
             } else {

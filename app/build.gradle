@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion rootProject.compileSdkVersion
     defaultConfig {
-        applicationId "com.coderpage.mine.dev"
+        applicationId rootProject.applicationId
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode rootProject.appVersionCode
@@ -51,23 +51,35 @@ android {
         checkReleaseBuilds true
         abortOnError false
     }
-//    productFlavors {
-//        yingyongbao {}
-//        xiaomi {}
-//        huawei {}
-//        offical {}
-//    }
+
+    flavorDimensions 'channel'
+
+    productFlavors {
+
+        yingyongbao {
+            dimension 'channel'
+        }
+        xiaomi {
+            dimension 'channel'
+        }
+        huawei {
+            dimension 'channel'
+        }
+        offical {
+            dimension 'channel'
+        }
+    }
 }
 
-//apply plugin: 'com.coderpage.app'
-//
-//uploader {
-////    apiServer = 'http://127.0.0.1:8001'
-//    token = rootProject.releaseToken
-//    appName = '我的记账本'
-//    changeLog = file("${rootDir}/source/changelog/${rootProject.appVersionName}").text;
-//    isRelease = true
-//}
+apply plugin: 'com.coderpage.app'
+
+uploader {
+    apiServer = 'http://127.0.0.1:8001'
+    token = rootProject.releaseToken
+    appName = '我的记账本'
+    changeLog = file("${rootDir}/source/changelog/${rootProject.appVersionName}").text;
+    isRelease = true
+}
 
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
