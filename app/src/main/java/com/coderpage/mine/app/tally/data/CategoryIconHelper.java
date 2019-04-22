@@ -63,6 +63,19 @@ public class CategoryIconHelper {
     /** 投资收益 */
     public static final String IC_NAME_TOU_ZI_SHOU_YI = "TouZiShouYi";
 
+    /** 卡片 */
+    public static final String IC_NAME_CARD = "Card";
+    /** 停车 */
+    public static final String IC_NAME_PARK = "Park";
+    /** 火车 */
+    public static final String IC_NAME_TRAIN = "Train";
+    /** 旅行 */
+    public static final String IC_NAME_TRAVEL = "Travel";
+    /** 趋势 */
+    public static final String IC_NAME_TREND = "Trend";
+    /** 红酒 */
+    public static final String IC_NAME_WINE = "Wine";
+
     /** 所有分类图标 */
     public static final List<String> ALL_ICON = Arrays.asList(
             IC_NAME_OTHER,
@@ -88,7 +101,13 @@ public class CategoryIconHelper {
             IC_NAME_LI_XIN_SHOU_RU,
             IC_NAME_TOU_ZI_HUI_SHOU,
             IC_NAME_YI_WAI_SUO_DE,
-            IC_NAME_TOU_ZI_SHOU_YI);
+            IC_NAME_TOU_ZI_SHOU_YI,
+            IC_NAME_CARD,
+            IC_NAME_PARK,
+            IC_NAME_TRAIN,
+            IC_NAME_TRAVEL,
+            IC_NAME_TREND,
+            IC_NAME_WINE);
 
     public static int resId(String iconName) {
         if (iconName == null) {
@@ -149,6 +168,20 @@ public class CategoryIconHelper {
                 return R.drawable.ic_category_income_unexpected;
             case IC_NAME_TOU_ZI_SHOU_YI:
                 return R.drawable.ic_category_income_invest_profit;
+
+            case IC_NAME_CARD:
+                return R.drawable.ic_category_card;
+            case IC_NAME_PARK:
+                return R.drawable.ic_category_park;
+            case IC_NAME_TRAIN:
+                return R.drawable.ic_category_train;
+            case IC_NAME_TRAVEL:
+                return R.drawable.ic_category_travel;
+            case IC_NAME_TREND:
+                return R.drawable.ic_category_trend;
+            case IC_NAME_WINE:
+                return R.drawable.ic_category_wine;
+
             default:
                 return R.drawable.ic_category_expense_other;
         }
