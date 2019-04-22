@@ -1,6 +1,7 @@
 package com.coderpage.mine;
 
 import android.app.Application;
+import android.support.v7.app.AppCompatDelegate;
 import android.util.SparseArray;
 
 import com.alibaba.android.arouter.launcher.ARouter;
@@ -35,6 +36,7 @@ public class MineApp extends Application {
             CrashReport.initCrashReport(getApplicationContext(),
                     BuildConfig.BUGLY_APP_ID, BuildConfig.DEBUG, userStrategy);
         }
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         // 检查新版本
         UpdateUtils.startNewClientVersionCheckBackground(this);
         // 初始化 LoadingLayout

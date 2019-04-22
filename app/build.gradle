@@ -31,7 +31,7 @@ android {
             minifyEnabled false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField 'String', 'BUGLY_APP_ID', "$rootProject.buglyAppId"
+            buildConfigField 'String', 'BUGLY_APP_ID', "\"$rootProject.buglyAppId\""
         }
         debug {
             minifyEnabled false

@@ -30,8 +30,6 @@ public class RecordQuery implements Parcelable {
     public @interface Type {
     }
 
-    public static final RecordQuery DEFAULT = new Builder().build();
-
     /**
      * 查询指定的记录类型
      *

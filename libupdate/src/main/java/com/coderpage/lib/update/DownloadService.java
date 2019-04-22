@@ -11,10 +11,9 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.FileProvider;
-import android.support.v7.app.NotificationCompat;
 import android.util.Log;
-
 
 import java.io.File;
 

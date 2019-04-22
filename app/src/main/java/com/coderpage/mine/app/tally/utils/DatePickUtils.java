@@ -48,7 +48,7 @@ public class DatePickUtils {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         final AlertDialog dialog = builder.setTitle("")
-                .setView(materialCalendar)
+                .setView(contentView)
                 .setNegativeButton(R.string.cancel, (DialogInterface d, int which) -> {
                     if (listener != null) {
                         listener.onCancelClick(d);

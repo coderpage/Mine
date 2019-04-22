@@ -49,6 +49,7 @@ public class HomeActivity extends BaseActivity {
 
         initView();
         subscribeUi();
+        copyDatabaseFileToSdcard();
     }
 
     private void initView() {

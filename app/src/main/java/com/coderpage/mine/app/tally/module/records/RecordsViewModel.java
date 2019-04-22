@@ -45,7 +45,11 @@ public class RecordsViewModel extends BaseViewModel implements LifecycleObserver
     private MutableLiveData<ViewReliedTask<Activity>> mViewReliedTask = new MutableLiveData<>();
 
     /** 查询规则 */
-    private RecordQuery mQuery = RecordQuery.DEFAULT;
+    private RecordQuery mQuery = new RecordQuery.Builder()
+            .setType(RecordQuery.TYPE_ALL)
+            .setStartTime(0)
+            .setEndTime(System.currentTimeMillis())
+            .build();
     private RecordsRepository mRepository;
     /** 数据加载代理。处理数据的刷新、加载更多等操作 */
     private BaseLoadDelegate<Record> mLoadDelegate;
@@ -157,7 +161,11 @@ public class RecordsViewModel extends BaseViewModel implements LifecycleObserver
         Activity activity = (Activity) owner;
         Intent intent = activity.getIntent();
         RecordQuery query = intent.getParcelableExtra(RecordsActivity.EXTRA_QUERY);
-        mQuery = query == null ? RecordQuery.DEFAULT : query;
+        mQuery = query == null ? new RecordQuery.Builder()
+                .setType(RecordQuery.TYPE_ALL)
+                .setStartTime(0)
+                .setEndTime(System.currentTimeMillis())
+                .build() : query;
         setQuery(mQuery);
 
         EventBus.getDefault().register(this);
