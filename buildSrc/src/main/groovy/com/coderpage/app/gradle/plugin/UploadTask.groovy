@@ -30,15 +30,20 @@ class UploadTask extends DefaultTask {
         }
 
         String apkPath = apkOutput.outputFile.getAbsolutePath()
+        // APK 文件路径
         version.apkPath = apkPath
+        // APK 所属渠道名称
+        version.channelName = variant.flavorName
         println "apkPath ===> " + apkPath
+        println "apkChannelName ===> " + version.channelName
 
-        UploadClient uploadClient;
+        UploadClient uploadClient
         if (extension.apiServer != null && !"".equals(extension.apiServer)) {
             uploadClient = new UploadClient(extension.apiServer);
         } else {
             uploadClient = new UploadClient();
         }
+        // 上传
         uploadClient.uploadApk(version)
     }
 }

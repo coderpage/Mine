@@ -23,7 +23,7 @@ class UploadClient {
         API_SERVER = apiServer;
     }
 
-    public void uploadApk(Version version) {
+    void uploadApk(Version version) {
 
         File apkFile = new File(version.apkPath)
         RequestBody bodyFile = RequestBody.create(
@@ -35,6 +35,7 @@ class UploadClient {
                 .addFormDataPart("token", version.token)
                 .addFormDataPart("appName", version.appName)
                 .addFormDataPart("changeLog", version.changeLog)
+                .addFormDataPart("channelName", version.channelName)
                 .addFormDataPart("isRelease", String.valueOf(version.isRelease))
                 .build()
 

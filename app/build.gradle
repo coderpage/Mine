@@ -69,6 +69,29 @@ android {
             dimension 'channel'
         }
     }
+
+    // APK 文件名称格式 mine-version-channel.apk
+    applicationVariants.all { variant ->
+
+        // 渠道名称
+        def productFlavorNames = variant.productFlavors.collect { it.name }
+        if (productFlavorNames.isEmpty()) {
+            productFlavorNames = [""]
+        }
+        def productFlavorName = productFlavorNames.join('')
+        // 版本号
+        def versionName = variant.mergedFlavor.versionName
+
+        def fileName
+        variant.outputs.all {
+            if (variant.buildType.name.equals('release')) {
+                fileName = "mine-${productFlavorName}-${versionName}.apk"
+            } else if (variant.buildType.name.equals('debug')) {
+                fileName = "mine-${productFlavorNames}-${versionName}-debug.apk"
+            }
+            outputFileName = fileName
+        }
+    }
 }
 
 apply plugin: 'com.coderpage.app'

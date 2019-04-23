@@ -5,5 +5,6 @@ class Version {
     String appName
     String apkPath
     String changeLog
+    String channelName
     boolean  isRelease
 }
