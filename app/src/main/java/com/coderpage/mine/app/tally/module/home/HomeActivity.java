@@ -38,7 +38,7 @@ import java.io.InputStream;
 public class HomeActivity extends BaseActivity {
 
     private HomeViewModel mViewModel;
-    private HomeActivityBinding mBinding;
+    private com.coderpage.mine.app.tally.module.home.HomeActivityBinding mBinding;
     private HomeAdapter mAdapter;
     private TwinklingRefreshLayout mRefreshLayout;
 
@@ -51,7 +51,7 @@ public class HomeActivity extends BaseActivity {
 
         initView();
         subscribeUi();
-        copyDatabaseFileToSdcard();
+        // copyDatabaseFileToSdcard();
     }
 
     @Override
