@@ -34,8 +34,8 @@ import static com.coderpage.base.utils.LogUtils.makeLogTag;
 class LatestVersionFetcher implements SourceFetcher {
     private static final String TAG = makeLogTag(LatestVersionFetcher.class);
 
-    private static final String VERSION_BASE_URL = "http://192.168.1.31:8001";
-    // private static final String VERSION_BASE_URL = "http://app.coderpage.com";
+    // private static final String VERSION_BASE_URL = "http://192.168.1.31:8001";
+    private static final String VERSION_BASE_URL = "http://app.coderpage.com";
 
     @Override
     public Result<ApkModel, Error> fetchApkModel() {

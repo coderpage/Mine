@@ -34,7 +34,6 @@
                 app:mTabMode="fixed"
                 app:mTabPadding="@dimen/spacing_micro"
                 app:mTabSelectedTextColor="@color/black"
-                app:mTabSelectedTextSize="@dimen/app_text_size_large"
                 app:mTabTextBoldOnSelect="true"
                 app:mTabTextColor="@color/appTextColorSecondary"
                 app:mTabTextSize="@dimen/app_text_size_normal" />

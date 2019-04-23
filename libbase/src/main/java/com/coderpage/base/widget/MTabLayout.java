@@ -67,8 +67,8 @@ import static android.support.v4.view.ViewPager.SCROLL_STATE_SETTLING;
 
 /**
  * @author : liuchao
- *         created on 2018/8/7 上午10:05
- *         description : TAB LAYOUT
+ * created on 2018/8/7 上午10:05
+ * description : TAB LAYOUT
  */
 public class MTabLayout extends HorizontalScrollView {
 
@@ -1476,7 +1476,7 @@ public class MTabLayout extends HorizontalScrollView {
                 }
                 // 选中状态，字体大小设置
                 if (mTabTextSize != mTabTextSelectSize && mTabTextSelectSize > 0) {
-                    mTextView.setTextSize(selected ? mTabTextSelectSize : mTabTextSize);
+                    mTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, selected ? mTabTextSelectSize : mTabTextSize);
                 }
             }
             if (mIconView != null) {
