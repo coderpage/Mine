@@ -37,7 +37,7 @@ public interface CategoryDao {
      * @return 所有消费分类
      */
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("select * from category where category_type = 0 order by category_order DESC")
+    @Query("select * from category where category_type = 0 order by category_order ASC")
     List<CategoryModel> allExpenseCategory();
 
     /**
@@ -46,7 +46,7 @@ public interface CategoryDao {
      * @return 所有消费分类
      */
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("select * from category where category_type = 1 order by category_order DESC")
+    @Query("select * from category where category_type = 1 order by category_order ASC")
     List<CategoryModel> allIncomeCategory();
 
     /**
@@ -55,7 +55,7 @@ public interface CategoryDao {
      * @return 所有分类
      */
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("select * from category order by category_order DESC")
+    @Query("select * from category order by category_order ASC")
     List<CategoryModel> allCategory();
 
     /**
@@ -75,4 +75,13 @@ public interface CategoryDao {
      */
     @Query("update category set category_icon=:icon, category_name=:name where category_id = :categoryId")
     void update(long categoryId, String icon, String name);
+
+    /**
+     * 更新分类的排序
+     *
+     * @param categoryId 分类 ID
+     * @param order      排序
+     */
+    @Query("update category set category_order=:order where category_id = :categoryId")
+    void updateOrder(long categoryId, int order);
 }

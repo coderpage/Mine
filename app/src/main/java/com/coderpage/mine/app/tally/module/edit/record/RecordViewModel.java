@@ -25,6 +25,7 @@ import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.common.RecordType;
 import com.coderpage.mine.app.tally.data.CategoryIconHelper;
 import com.coderpage.mine.app.tally.eventbus.EventCategoryAdd;
+import com.coderpage.mine.app.tally.eventbus.EventCategoryOrderChange;
 import com.coderpage.mine.app.tally.eventbus.EventCategoryUpdate;
 import com.coderpage.mine.app.tally.eventbus.EventRecordAdd;
 import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
@@ -400,5 +401,15 @@ public class RecordViewModel extends AndroidViewModel implements LifecycleObserv
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventUpdateCategory(EventCategoryUpdate event) {
         refreshCategoryList();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventCategoryOrderChange(EventCategoryOrderChange event) {
+        if (event.getCategoryType() == CategoryModel.TYPE_EXPENSE && mType == RecordType.EXPENSE) {
+            refreshCategoryList();
+        }
+        if (event.getCategoryType() == CategoryModel.TYPE_INCOME && mType == RecordType.INCOME) {
+            refreshCategoryList();
+        }
     }
 }

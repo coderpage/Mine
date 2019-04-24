@@ -15,6 +15,7 @@ import com.coderpage.framework.BaseViewModel;
 import com.coderpage.framework.ViewReliedTask;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.eventbus.EventCategoryAdd;
+import com.coderpage.mine.app.tally.eventbus.EventCategoryOrderChange;
 import com.coderpage.mine.app.tally.eventbus.EventCategoryUpdate;
 import com.coderpage.mine.app.tally.persistence.model.CategoryModel;
 import com.coderpage.mine.ui.widget.PopupMenu;
@@ -58,12 +59,17 @@ public class CategoryManagerViewModel extends BaseViewModel implements Lifecycle
      *
      * @param type {@link CategoryModel#TYPE_EXPENSE} {@link CategoryModel#TYPE_INCOME}
      */
-    public void onTypeChange(int type) {
+    void onTypeChange(int type) {
         if (type == mType) {
             return;
         }
         mType = type;
         refreshData();
+    }
+
+    /** toolbar menu sort click */
+    void onMenuSortClick(Activity activity, View shareRoot) {
+        CategorySortActivity.open(activity, mType, shareRoot);
     }
 
     /** 分类 ITEM 菜单点击 */
@@ -119,6 +125,11 @@ public class CategoryManagerViewModel extends BaseViewModel implements Lifecycle
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventUpdateCategory(EventCategoryUpdate event) {
+        refreshData();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventSortCategory(EventCategoryOrderChange event) {
         refreshData();
     }
 }

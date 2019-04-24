@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.coderpage.base.utils.UIUtils;
@@ -131,6 +133,27 @@ public class CategoryManagerActivity extends BaseActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_tally_category_manager, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.menu_sort:
+                mViewModel.onMenuSortClick(self(), mBinding.recyclerView);
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /** 分类列表适配器 */
     private class CategoryListAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
 
         private List<CategoryModel> mDataList = new ArrayList<>();
@@ -161,6 +184,7 @@ public class CategoryManagerActivity extends BaseActivity {
         }
     }
 
+    /** 分类 ITEM ViewHolder */
     private class CategoryViewHolder extends RecyclerView.ViewHolder {
 
         private ItemManagerCategoryBinding mBinding;

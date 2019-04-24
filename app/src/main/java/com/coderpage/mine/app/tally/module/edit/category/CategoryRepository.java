@@ -80,6 +80,22 @@ class CategoryRepository {
     }
 
     /**
+     * 更新分类排序
+     *
+     * @param categoryList 分类列表
+     * @param callback     回调
+     */
+    void updateCategoryOrder(List<CategoryModel> categoryList, SimpleCallback<Void> callback) {
+        MineExecutors.ioExecutor().execute(() -> {
+            CategoryDao categoryDao = TallyDatabase.getInstance().categoryDao();
+            ArrayUtils.forEach(categoryList, (count, index, item) -> {
+                categoryDao.updateOrder(item.getId(), item.getOrder());
+            });
+            callback.success(null);
+        });
+    }
+
+    /**
      * 添加分类
      *
      * @param type       分类类型 {@link CategoryModel#TYPE_EXPENSE} {@link CategoryModel#TYPE_INCOME}

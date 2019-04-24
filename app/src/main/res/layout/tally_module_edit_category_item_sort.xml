@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data class=".module.edit.category.ItemCategorySortBinding">
+
+        <variable
+            name="data"
+            type="com.coderpage.mine.app.tally.persistence.model.CategoryModel" />
+
+        <variable
+            name="vm"
+            type="com.coderpage.mine.app.tally.module.edit.category.CategorySortViewModel" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_common_card_white"
+        android:paddingTop="@dimen/padding_normal"
+        android:paddingBottom="@dimen/padding_normal">
+
+        <!-- 分类图标 -->
+        <FrameLayout
+            android:id="@+id/lyCategoryIcon"
+            selected="@{true}"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="@dimen/padding_normal"
+            android:background="@{data.type == data.TYPE_EXPENSE ? @drawable/bg_category_expense : @drawable/bg_category_income}"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@drawable/bg_category_expense_selected">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/ivCategoryIcon"
+                categoryIcon="@{data.icon}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                tools:src="@drawable/ic_category_expense_shopping_selected" />
+
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_micro"
+            android:text="@{data.name}"
+            android:textColor="@color/appTextColorPrimary"
+            android:textSize="@dimen/app_text_size_normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/lyCategoryIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="购物" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="46dp"
+            android:layout_height="0dp"
+            android:paddingStart="@dimen/padding_normal"
+            android:paddingEnd="@dimen/padding_normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_sort" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

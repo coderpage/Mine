@@ -44,6 +44,11 @@
             android:theme="@style/Theme.Tally"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
+            android:name=".app.tally.module.edit.category.CategorySortActivity"
+            android:label="@string/menu_tally_sort_category"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Tally" />
+        <activity
             android:name=".app.tally.module.edit.category.CategoryEditActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Tally"
