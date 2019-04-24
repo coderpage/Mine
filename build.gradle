@@ -15,8 +15,8 @@ props.each { key, val ->
 }
 
 ext {
-    appVersionName = '0.6.0'
-    appVersionCode = 60
+    appVersionName = '0.6.1'
+    appVersionCode = 61
     applicationId = 'com.coderpage.mine'
 
     minSdkVersion = 18
