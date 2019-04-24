@@ -9,12 +9,14 @@ import com.coderpage.mine.app.tally.common.utils.TallyUtils;
  * 首页今日消费总览模块数据
  */
 
-public class HomeRecent3DayRecordsModel {
+public class HomeTodayDayRecordsModel {
 
     /** 近3日新增账单数量 */
     private int recent3DayRecordsCount;
     /** 今日消费金额 */
     private double toadyExpenseAmount;
+    /** 今日收入金额 */
+    private double todayIncomeAmount;
 
     public int getRecent3DayRecordsCount() {
         return recent3DayRecordsCount;
@@ -32,7 +34,19 @@ public class HomeRecent3DayRecordsModel {
         this.toadyExpenseAmount = toadyExpenseAmount;
     }
 
+    public double getTodayIncomeAmount() {
+        return todayIncomeAmount;
+    }
+
+    public void setTodayIncomeAmount(double todayIncomeAmount) {
+        this.todayIncomeAmount = todayIncomeAmount;
+    }
+
     public String getDisplayExpenseAmount() {
         return "¥" + TallyUtils.formatDisplayMoney(toadyExpenseAmount);
+    }
+
+    public String getDisplayIncomeAmount() {
+        return "¥" + TallyUtils.formatDisplayMoney(todayIncomeAmount);
     }
 }

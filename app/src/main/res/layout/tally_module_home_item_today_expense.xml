@@ -18,7 +18,7 @@
 
         <variable
             name="data"
-            type="com.coderpage.mine.app.tally.module.home.model.HomeRecent3DayRecordsModel" />
+            type="com.coderpage.mine.app.tally.module.home.model.HomeTodayDayRecordsModel" />
 
     </data>
 
@@ -36,7 +36,7 @@
             android:gravity="start|center"
             android:paddingTop="@dimen/padding_normal"
             android:paddingBottom="@dimen/padding_micro"
-            android:text="@{@string/tally_module_home_recent3day_tip(data.recent3DayRecordsCount, data.displayExpenseAmount)}"
+            android:text="@{@string/tally_module_home_recent3day_tip(data.displayExpenseAmount, data.displayIncomeAmount)}"
             android:textColor="@color/appTextColorPrimary"
             android:textSize="@dimen/app_text_size_medium"
             tools:text="@string/tally_module_home_recent3day_tip" />

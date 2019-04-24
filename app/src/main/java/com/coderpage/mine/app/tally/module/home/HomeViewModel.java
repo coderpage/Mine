@@ -19,7 +19,7 @@ import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
 import com.coderpage.mine.app.tally.module.edit.RecordEditActivity;
 import com.coderpage.mine.app.tally.module.home.model.HomeDisplayData;
 import com.coderpage.mine.app.tally.module.home.model.HomeMonthModel;
-import com.coderpage.mine.app.tally.module.home.model.HomeRecent3DayRecordsModel;
+import com.coderpage.mine.app.tally.module.home.model.HomeTodayDayRecordsModel;
 import com.coderpage.mine.app.tally.persistence.model.Record;
 import com.coderpage.mine.app.tally.persistence.preference.SettingPreference;
 import com.coderpage.mine.app.tally.ui.dialog.MenuDialog;
@@ -97,6 +97,7 @@ public class HomeViewModel extends AndroidViewModel implements LifecycleObserver
                 double monthExpenseTotalAmount = mRepository.getCurrentMonthExpenseTotalAmount();
                 double monthInComeTotalAmount = mRepository.getCurrentMonthInComeTotalAmount();
                 double todayExpenseTotalAmount = mRepository.getTodayExpenseTotalAmount();
+                double todayIncomeTotalAmount = mRepository.getTodayInComeTotalAmount();
 
                 List<Pair<String, Double>> categoryExpenseTotal = mRepository.getCategoryExpenseTotal();
                 List<Record> recent3DayRecordList = mRepository.getRecent3DayRecordList();
@@ -106,13 +107,14 @@ public class HomeViewModel extends AndroidViewModel implements LifecycleObserver
                 monthModel.setMonthInComeAmount(monthInComeTotalAmount);
                 monthModel.setMonthCategoryExpenseData(categoryExpenseTotal);
 
-                HomeRecent3DayRecordsModel recent3DayRecordsModel = new HomeRecent3DayRecordsModel();
-                recent3DayRecordsModel.setToadyExpenseAmount(todayExpenseTotalAmount);
-                recent3DayRecordsModel.setRecent3DayRecordsCount(recent3DayRecordCount);
+                HomeTodayDayRecordsModel todayRecordsModel = new HomeTodayDayRecordsModel();
+                todayRecordsModel.setToadyExpenseAmount(todayExpenseTotalAmount);
+                todayRecordsModel.setTodayIncomeAmount(todayIncomeTotalAmount);
+                todayRecordsModel.setRecent3DayRecordsCount(recent3DayRecordCount);
 
                 List<HomeDisplayData> dataList = new ArrayList<>();
                 dataList.add(new HomeDisplayData(HomeDisplayData.TYPE_MONTH_INFO, monthModel));
-                dataList.add(new HomeDisplayData(HomeDisplayData.TYPE_RECENT_DAY_INFO, recent3DayRecordsModel));
+                dataList.add(new HomeDisplayData(HomeDisplayData.TYPE_RECENT_DAY_INFO, todayRecordsModel));
 
                 for (Record record : recent3DayRecordList) {
                     dataList.add(new HomeDisplayData(HomeDisplayData.TYPE_RECORD_ITEM, record));

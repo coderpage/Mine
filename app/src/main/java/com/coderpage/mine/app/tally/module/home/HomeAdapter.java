@@ -109,7 +109,7 @@ class HomeAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 return new ViewHolderMonthInfo(mActivity, mMonthInfoViewModel,
                         DataBindingUtil.inflate(mInflater, R.layout.tally_module_home_item_month_info, parent, false));
 
-            // 近3日账单数据
+            // 今日账单数据
             case HomeDisplayData.TYPE_RECENT_DAY_INFO:
                 return new ViewHolderTodayExpense(mActivity, mViewModel,
                         DataBindingUtil.inflate(mInflater, R.layout.tally_module_home_item_today_expense, parent, false));

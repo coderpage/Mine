@@ -55,7 +55,7 @@
     <string name="tally_module_home_non_income_place_holder">暂无收入</string>
     <string name="tally_module_home_budget_label">预算剩余</string>
     <string name="tally_module_home_non_budget_place_holder">未设置预算</string>
-    <string name="tally_module_home_recent3day_tip">近三日新增账单 %s笔，今日支出 %s</string>
+    <string name="tally_module_home_recent3day_tip">今日支出 %s&#160;&#160;&#160;收入 %s</string>
     <string name="tally_today_no_expense_record_tip">今天没花钱？快去记一笔~</string>
     <string name="tally_toady_expense_total">今日消费 %s 元</string>
 

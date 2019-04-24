@@ -2,16 +2,12 @@ package com.coderpage.mine.app.tally.module.home;
 
 import android.util.Pair;
 
-import com.coderpage.base.common.Callback;
 import com.coderpage.base.common.IError;
-import com.coderpage.base.common.NonThrowError;
 import com.coderpage.base.common.Result;
 import com.coderpage.base.common.SimpleCallback;
-import com.coderpage.base.error.ErrorCode;
 import com.coderpage.concurrency.MineExecutors;
 import com.coderpage.mine.app.tally.persistence.model.Record;
 import com.coderpage.mine.app.tally.persistence.sql.TallyDatabase;
-import com.coderpage.mine.app.tally.persistence.sql.entity.RecordEntity;
 import com.coderpage.mine.app.tally.utils.DateUtils;
 
 import java.util.ArrayList;
@@ -41,6 +37,8 @@ class HomRepository {
     private List<Pair<String, Double>> mCategoryExpenseTotal = new ArrayList<>();
     /** 近3日账单记录 */
     private List<Record> mRecent3DayRecordList = new ArrayList<>();
+    /** 今日账单记录 */
+    private List<Record> mTodayRecordList = new ArrayList<>();
 
     public int getRecent3DayRecordCount() {
         return mRecent3DayRecordCount;
@@ -66,8 +64,12 @@ class HomRepository {
         return mCategoryExpenseTotal;
     }
 
-    public List<Record> getRecent3DayRecordList() {
+    List<Record> getRecent3DayRecordList() {
         return mRecent3DayRecordList;
+    }
+
+    List<Record> getTodayRecordList() {
+        return mTodayRecordList;
     }
 
     /** 读取本月消费数据 */
@@ -94,6 +96,8 @@ class HomRepository {
 
             // 近3日账单记录
             List<Record> recent3DayList = new ArrayList<>();
+            // 今日账单记录
+            List<Record> todayRecordList = new ArrayList<>();
             Map<String, Double> getAmountByCategoryName = new HashMap<>();
             // 本月消费记录列表
             List<Record> currentMonthList =
@@ -110,6 +114,7 @@ class HomRepository {
                     if (record.getType() == Record.TYPE_INCOME) {
                         todayIncomeTotalAmount += record.getAmount();
                     }
+                    todayRecordList.add(record);
                 }
 
                 // 近3日账单数据
@@ -144,6 +149,8 @@ class HomRepository {
             mCurrentMonthInComeTotalAmount = monthIncomeTotalAmount;
             mRecent3DayRecordList.clear();
             mRecent3DayRecordList.addAll(recent3DayList);
+            mTodayRecordList.clear();
+            mTodayRecordList.addAll(todayRecordList);
 
             List<Pair<String, Double>> categoryExpenseTotal = new ArrayList<>(getAmountByCategoryName.size());
             for (Map.Entry<String, Double> entry : getAmountByCategoryName.entrySet()) {
@@ -163,34 +170,6 @@ class HomRepository {
             Result<Boolean, IError> result = new Result<>();
             result.setData(true);
             MineExecutors.executeOnUiThread(() -> callback.success(result));
-        });
-    }
-
-    /** 删除消费记录 */
-    void deleteExpense(long expenseId, Callback<Void, IError> callback) {
-        MineExecutors.ioExecutor().execute(() -> {
-            try {
-                RecordEntity entity = new RecordEntity();
-                entity.setId(expenseId);
-                TallyDatabase.getInstance().recordDao().delete(entity);
-                MineExecutors.executeOnUiThread(() -> callback.success(null));
-            } catch (Exception e) {
-                MineExecutors.executeOnUiThread(() -> callback.failure(new NonThrowError(ErrorCode.SQL_ERR, "SQL ERR")));
-            }
-        });
-    }
-
-    /** 删除收入记录 */
-    void deleteInCome(long incomeId, Callback<Void, IError> callback) {
-        MineExecutors.ioExecutor().execute(() -> {
-            try {
-                RecordEntity entity = new RecordEntity();
-                entity.setId(incomeId);
-                TallyDatabase.getInstance().recordDao().delete(entity);
-                MineExecutors.executeOnUiThread(() -> callback.success(null));
-            } catch (Exception e) {
-                MineExecutors.executeOnUiThread(() -> callback.failure(new NonThrowError(ErrorCode.SQL_ERR, "SQL ERR")));
-            }
         });
     }
 }
