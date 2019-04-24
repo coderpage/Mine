@@ -102,6 +102,10 @@ public class DatePickUtils {
         etMinute.setText(String.valueOf(calendarInit.get(Calendar.MINUTE)));
         calendarView.setDate(selectedDate);
 
+        // 最终选择的时间
+        final Calendar selectedCalendar = Calendar.getInstance();
+        selectedCalendar.setTimeInMillis(selectedDate);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         final AlertDialog dialog = builder.setTitle("")
                 .setView(contentView)
@@ -118,13 +122,11 @@ public class DatePickUtils {
                     hour = Math.min(hour, 23);
                     minute = Math.min(minute, 59);
 
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeInMillis(calendarView.getDate());
-                    calendar.set(Calendar.HOUR_OF_DAY, hour);
-                    calendar.set(Calendar.MINUTE, minute);
+                    selectedCalendar.set(Calendar.HOUR_OF_DAY, hour);
+                    selectedCalendar.set(Calendar.MINUTE, minute);
 
                     if (listener != null) {
-                        listener.onConfirmClick(dialogInterface, calendar.getTimeInMillis());
+                        listener.onConfirmClick(dialogInterface, selectedCalendar.getTimeInMillis());
                     }
                 })
                 .create();
@@ -132,6 +134,9 @@ public class DatePickUtils {
         calendarView.setMaxDate(System.currentTimeMillis());
         calendarView.setOnDateChangeListener(
                 (@NonNull CalendarView view, int year, int month, int dayOfMonth) -> {
+                    selectedCalendar.set(Calendar.YEAR, year);
+                    selectedCalendar.set(Calendar.MONTH, month);
+                    selectedCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                     if (listener != null) {
                         listener.onDatePick(dialog, year, month, dayOfMonth);
                     }
