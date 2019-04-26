@@ -1,44 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="expenseItemLongClickOption">
-        <item>删除</item>
-        <item>修改</item>
-    </string-array>
     <string-array name="recordItemLongClickOption">
         <item>修改</item>
         <item>删除</item>
     </string-array>
-    <string-array name="DefaultTallyExpenseCategory">
-        <item>其他</item>
-        <item>餐饮</item>
-        <item>交通</item>
-        <item>购物</item>
-        <item>服饰</item>
-        <item>日用品</item>
-        <item>娱乐</item>
-        <item>食材</item>
-        <item>零食</item>
-        <item>烟酒茶</item>
-        <item>学习</item>
-        <item>医疗</item>
-        <item>住房</item>
-        <item>水电煤</item>
-        <item>通讯</item>
-        <item>人情往来</item>
-    </string-array>
 
-    <string-array name="monthArray">
-        <item>一月</item>
-        <item>二月</item>
-        <item>三月</item>
-        <item>四月</item>
-        <item>五月</item>
-        <item>六月</item>
-        <item>七月</item>
-        <item>八月</item>
-        <item>九月</item>
-        <item>十月</item>
-        <item>十一月</item>
-        <item>十二月</item>
-    </string-array>
 </resources>

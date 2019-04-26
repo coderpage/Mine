@@ -2,8 +2,6 @@
 
     <style name="FrameworkRoot.Theme" parent="Theme.AppCompat.Light.NoActionBar" />
 
-    <style name="FrameworkRoot.Widget" parent="Theme.AppCompat.NoActionBar" />
-
     <style name="Theme" parent="FrameworkRoot.Theme" />
 
     <style name="Theme.Base" parent="Theme">
@@ -23,10 +21,6 @@
 
     <style name="Theme.Tally" parent="Theme.Base" />
 
-    <style name="Theme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="Theme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
     <style name="Theme.Tally.Menu" parent="Theme.Tally">
         <item name="colorPrimaryDark">@color/transparent</item>
         <item name="android:windowIsTranslucent">false</item><!--半透明-->
@@ -45,11 +39,6 @@
         <item name="android:layout_margin">1px</item>
     </style>
 
-    <style name="TextAppearance.Headline" parent="TextAppearance">
-        <item name="android:textColor">@color/appTextColorPrimary</item>
-        <item name="android:textSize">@dimen/app_text_size_large</item>
-    </style>
-
     <style name="TextAppearance.Toolbar" parent="TextAppearance">
         <item name="android:textColor">@color/appTextColorPrimary</item>
         <item name="android:textSize">@dimen/app_text_size_large</item>
@@ -63,10 +52,6 @@
     </style>
 
     <!-- loading layout negative button style -->
-    <style name="TextAppearance.LoadingNegativeButton" parent="TextAppearance">
-        <item name="android:textColor">@color/appTextColorSecondary</item>
-        <item name="android:textSize">@dimen/app_text_size_large</item>
-    </style>
 
     <!-- loading layout negative button style -->
     <style name="TextAppearance.LoadingPositiveButton" parent="TextAppearance">
@@ -75,10 +60,6 @@
     </style>
 
     <!-- loading layout negative button style -->
-    <style name="TextAppearance.ChartNoData" parent="TextAppearance">
-        <item name="android:textColor">@color/appTextColorPrimary</item>
-        <item name="android:textSize">@dimen/app_text_size_normal</item>
-    </style>
 
     <style name="Widget" parent="android:Widget" />
 
@@ -103,15 +84,6 @@
         <item name="android:textColorHint">@color/colorHint</item>
     </style>
 
-    <style name="Widget.Card" parent="Widget">
-        <item name="android:background">@drawable/bg_touchable_white</item>
-        <item name="android:clickable">true</item>
-    </style>
-
-    <style name="Widget.Tally.PopupMenu" parent="Widget.AppCompat.Light.PopupMenu">
-        <item name="android:dropDownSelector">?popupItemBackground</item>
-    </style>
-
     <style name="Widget.Toolbar" parent="Widget">
         <item name="android:background">?attr/colorPrimary</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
@@ -133,11 +105,6 @@
         <item name="android:backgroundDimAmount">0.3</item>
     </style>
 
-    <style name="BottomSheetAnimation" parent="@android:style/Animation">
-        <item name="android:windowEnterAnimation">@anim/dialog_in</item>
-        <item name="android:windowExitAnimation">@anim/dialog_out</item>
-    </style>
-
     <style name="Widget.Dialog.MonthSelect" parent="Widget.Dialog">
         <item name="android:windowFrame">@null</item><!--边框-->
         <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
@@ -152,36 +119,8 @@
         <item name="android:layout_height">1px</item>
     </style>
 
-    <style name="Widget.PopupWindow" parent="Base.Widget.AppCompat.Light.PopupMenu">
-
-    </style>
-
     <style name="Widget.Btn.Borderless">
         <item name="android:background">@drawable/btn_bottom_borderless_withpadding</item>
     </style>
 
-    <style name="Widget.Btn.AccentRectOval">
-        <item name="android:background">@drawable/bg_accent_btn_round</item>
-    </style>
-
-    <style name="Widget.LoadingIndicatorView">
-        <item name="minWidth">48dip</item>
-        <item name="maxWidth">48dip</item>
-        <item name="minHeight">48dip</item>
-        <item name="maxHeight">48dip</item>
-    </style>
-
-    <style name="Widget.LoadingIndicatorView.Large">
-        <item name="minWidth">76dip</item>
-        <item name="maxWidth">76dip</item>
-        <item name="minHeight">76dip</item>
-        <item name="maxHeight">76dip</item>
-    </style>
-
-    <style name="Widget.LoadingIndicatorView.Small">
-        <item name="minWidth">24dip</item>
-        <item name="maxWidth">24dip</item>
-        <item name="minHeight">24dip</item>
-        <item name="maxHeight">24dip</item>
-    </style>
 </resources>

@@ -52,7 +52,6 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/tvTitleAppVersion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/tally_about_title_version"
@@ -81,7 +80,6 @@
             </FrameLayout>
 
             <LinearLayout
-                android:id="@+id/lyAppAbout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
@@ -93,7 +91,6 @@
                 android:paddingTop="@dimen/padding_micro">
 
                 <TextView
-                    android:id="@+id/tvTitleAppAbout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/tally_about_title_about_app"
@@ -101,7 +98,6 @@
                     android:textSize="@dimen/app_text_size_normal"/>
 
                 <TextView
-                    android:id="@+id/tvAppAbout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/spacing_normal"
@@ -123,7 +119,6 @@
                 android:textSize="@dimen/app_text_size_medium"/>
 
             <LinearLayout
-                android:id="@+id/lyAboutDeveloper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
@@ -135,7 +130,6 @@
                 android:paddingTop="@dimen/padding_micro">
 
                 <TextView
-                    android:id="@+id/tvTitleAboutDeveloper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/tally_about_title_about_me"
@@ -143,7 +137,6 @@
                     android:textSize="@dimen/app_text_size_normal"/>
 
                 <TextView
-                    android:id="@+id/tvAboutDevloper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/spacing_normal"
@@ -154,7 +147,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/lyEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
@@ -166,7 +158,6 @@
                 android:paddingTop="@dimen/padding_micro">
 
                 <TextView
-                    android:id="@+id/tvTitleEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/tally_about_title_send_email"
@@ -174,7 +165,6 @@
                     android:textSize="@dimen/app_text_size_normal"/>
 
                 <TextView
-                    android:id="@+id/tvEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autoLink="email"
@@ -186,7 +176,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/lyWeChart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
@@ -198,7 +187,6 @@
                 android:paddingTop="@dimen/padding_micro">
 
                 <TextView
-                    android:id="@+id/tvTitleWeChart"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/tally_about_title_wechat"
@@ -206,7 +194,6 @@
                     android:textSize="@dimen/app_text_size_normal"/>
 
                 <TextView
-                    android:id="@+id/tvWeChart"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/spacing_normal"
@@ -217,7 +204,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/lySourceCode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
@@ -229,7 +215,6 @@
                 android:paddingTop="@dimen/padding_micro">
 
                 <TextView
-                    android:id="@+id/tvTitleSourceCode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/tally_about_title_source_code"
@@ -237,7 +222,6 @@
                     android:textSize="@dimen/app_text_size_normal"/>
 
                 <TextView
-                    android:id="@+id/tvSourceCode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autoLink="web"

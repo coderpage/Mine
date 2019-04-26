@@ -17,7 +17,6 @@
         app:titleTextColor="@color/appTextColorPrimary"/>
 
     <View
-        android:id="@+id/ivToolbarShadow"
         android:layout_width="match_parent"
         android:layout_height="@dimen/shadow_height"
         android:background="@drawable/shadow_appbar"/>
