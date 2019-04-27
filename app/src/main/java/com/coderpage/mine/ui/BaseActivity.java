@@ -10,6 +10,7 @@ import android.view.View;
 import com.coderpage.base.utils.ResUtils;
 import com.coderpage.base.utils.StatusBarUtils;
 import com.coderpage.mine.R;
+import com.coderpage.mine.ui.widget.MineProcessDialog;
 
 /**
  * @author abner-l. 2017-01-22
@@ -18,11 +19,19 @@ import com.coderpage.mine.R;
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected Toolbar mToolbar;
+    /** 加载提示框 */
+    protected MineProcessDialog mProcessDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStatusBarColor(statusBarColor());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dismissProcessDialog();
     }
 
     @Override
@@ -33,7 +42,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public Toolbar getToolbar() {
         if (mToolbar == null) {
-            mToolbar = (Toolbar) findViewById(R.id.toolbar);
+            mToolbar = findViewById(R.id.toolbar);
             if (mToolbar != null) {
                 setSupportActionBar(mToolbar);
             }
@@ -96,5 +105,49 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected BaseActivity self() {
         return this;
+    }
+
+
+    /**
+     * 显示加载框
+     *
+     * @param message 提示信息
+     */
+    protected void showProcessDialog(String message) {
+        showProcessDialog(message, true, true);
+    }
+
+    /**
+     * 显示加载框
+     *
+     * @param message       提示信息
+     * @param cancelable    是否可取消
+     * @param cancelOutside 点击 dialog 外部自动消失
+     */
+    public void showProcessDialog(String message, boolean cancelable, boolean cancelOutside) {
+        if (isFinishing() || isDestroyed()) {
+            return;
+        }
+        if (mProcessDialog != null && mProcessDialog.isShowing()) {
+            mProcessDialog.setMessage(message);
+            mProcessDialog.setCancelable(cancelable);
+            mProcessDialog.setCanceledOnTouchOutside(cancelOutside);
+            return;
+        }
+        mProcessDialog = new MineProcessDialog.Builder(this)
+                .setMessage(message)
+                .setCancelable(cancelable)
+                .setCancelOutside(cancelOutside)
+                .create();
+        mProcessDialog.show();
+    }
+
+    /**
+     * 隐藏加载框
+     */
+    public void dismissProcessDialog() {
+        if (mProcessDialog != null && mProcessDialog.isShowing()) {
+            mProcessDialog.dismiss();
+        }
     }
 }

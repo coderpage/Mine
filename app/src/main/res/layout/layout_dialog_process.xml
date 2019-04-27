@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_common_dialog"
+    android:paddingStart="@dimen/padding_normal"
+    android:paddingTop="@dimen/padding_normal"
+    android:paddingEnd="@dimen/padding_normal"
+    android:paddingBottom="@dimen/padding_normal">
+
+    <com.coderpage.base.widget.ProgressWheel
+        android:id="@+id/progressBar"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center_vertical"
+        app:layout_constraintBottom_toTopOf="@id/tvText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:matProg_barColor="?android:textColorPrimary"
+        app:matProg_barWidth="3dp"
+        app:matProg_progressIndeterminate="true" />
+
+    <TextView
+        android:id="@+id/tvText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="@dimen/padding_normal"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="@dimen/app_text_size_medium"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/progressBar"
+        tools:text="正在请求..." />
+
+</android.support.constraint.ConstraintLayout>

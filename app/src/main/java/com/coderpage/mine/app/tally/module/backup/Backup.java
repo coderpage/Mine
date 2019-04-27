@@ -10,6 +10,7 @@ import com.coderpage.base.common.IError;
 import com.coderpage.base.common.NonThrowError;
 import com.coderpage.base.utils.ArrayUtils;
 import com.coderpage.base.utils.CommonUtils;
+import com.coderpage.base.utils.LogUtils;
 import com.coderpage.concurrency.AsyncTaskExecutor;
 import com.coderpage.mine.BuildConfig;
 import com.coderpage.mine.app.tally.common.error.ErrorCode;
@@ -112,6 +113,9 @@ public class Backup {
                 listener.failure(new NonThrowError(ErrorCode.INTERNAL_ERR, "File is null"));
                 return;
             }
+
+            LogUtils.LOGD(TAG,"Read backup json file: " + file.getAbsolutePath());
+
             if (!file.exists()) {
                 listener.failure(new NonThrowError(ErrorCode.ILLEGAL_ARGS, "File not exist"));
                 return;

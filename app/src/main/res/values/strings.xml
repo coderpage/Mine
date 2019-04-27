@@ -78,7 +78,9 @@
     <string name="backup_count">备份条数</string>
     <string name="backup_version">备份版本</string>
     <string name="tally_setting_btn_data_export">导出数据</string>
+    <string name="tally_setting_btn_data_export_tip">将账单数据备份到手机SD卡中，用于数据迁移</string>
     <string name="tally_setting_btn_data_import">导入数据</string>
+    <string name="tally_setting_btn_data_import_tip">从手机SD卡中读取备份的账单数据</string>
     <string name="tally_alert_backup">备份数据</string>
     <string name="tally_alert_restore_data">恢复数据</string>
     <string name="tally_alert_check_data_format">校验数据</string>
