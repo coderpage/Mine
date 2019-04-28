@@ -12,6 +12,7 @@ import android.view.MenuItem;
 
 import com.coderpage.base.utils.UIUtils;
 import com.coderpage.mine.R;
+import com.coderpage.mine.app.tally.module.debug.DebugActivity;
 import com.coderpage.mine.app.tally.module.records.RecordItemViewModel;
 import com.coderpage.mine.app.tally.module.search.SearchActivity;
 import com.coderpage.mine.app.tally.ui.refresh.RefreshHeadView;
@@ -44,7 +45,6 @@ public class HomeActivity extends BaseActivity {
 
         initView();
         subscribeUi();
-        // copyDatabaseFileToSdcard();
     }
 
     @Override
@@ -97,6 +97,9 @@ public class HomeActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
+            case R.id.menu_debug:
+                startActivity(new Intent(this, DebugActivity.class));
+                break;
             case R.id.menu_search:
                 startActivity(new Intent(this, SearchActivity.class));
                 break;
@@ -105,30 +108,4 @@ public class HomeActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    // private void copyDatabaseFileToSdcard() {
-    //     MineExecutors.ioExecutor().execute(() -> {
-    //         File oldfile = self().getDatabasePath("sql_tally");
-    //         try {
-    //             int bytesum = 0;
-    //             int byteread = 0;
-//
-    //             String newPath = Cache.getCacheFolder(self()).getAbsolutePath() + "/sql_tally.db";
-    //             if (oldfile.exists()) {
-    //                 InputStream inStream = new FileInputStream(oldfile);
-    //                 FileOutputStream fs = new FileOutputStream(newPath);
-    //                 byte[] buffer = new byte[1444];
-    //                 int length;
-    //                 while ((byteread = inStream.read(buffer)) != -1) {
-    //                     bytesum += byteread;
-    //                     System.out.println(bytesum);
-    //                     fs.write(buffer, 0, byteread);
-    //                 }
-    //                 inStream.close();
-    //             }
-    //         } catch (Exception e) {
-    //             e.printStackTrace();
-    //         }
-    //     });
-    // }
 }

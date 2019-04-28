@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data class=".module.debug.DebugActivityBinding">
+
+        <variable
+            name="activity"
+            type="android.app.Activity" />
+
+        <variable
+            name="vm"
+            type="com.coderpage.mine.app.tally.module.debug.DebugViewModel" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        android:orientation="vertical">
+
+        <include layout="@layout/toolbar" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_normal"
+            android:background="@drawable/bg_btn_rect_white"
+            android:onClick="@{() -> vm.onExportDataBaseClick(activity)}"
+            android:padding="@dimen/padding_normal"
+            android:text="导出数据库文件"
+            android:textColor="@color/appTextColorPrimary"
+            android:textSize="@dimen/app_text_size_normal" />
+
+    </LinearLayout>
+</layout>

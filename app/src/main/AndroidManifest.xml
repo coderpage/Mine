@@ -78,6 +78,11 @@
             android:label="@string/tally_toolbar_title_chart"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Tally" />
+        <activity
+            android:name=".app.tally.module.debug.DebugActivity"
+            android:label="@string/tally_toolbar_title_debug"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Tally" />
         <activity android:name=".app.tally.module.search.SearchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />

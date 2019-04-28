@@ -2,6 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/menu_debug"
+        android:title="@string/menu_tally_debug"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/menu_search"
         android:icon="@drawable/ic_search"
         android:title="@string/menu_tally_search"
