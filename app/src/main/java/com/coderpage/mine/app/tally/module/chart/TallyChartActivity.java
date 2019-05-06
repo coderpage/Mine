@@ -3,8 +3,10 @@ package com.coderpage.mine.app.tally.module.chart;
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,17 +21,22 @@ import com.coderpage.base.utils.ResUtils;
 import com.coderpage.base.utils.UIUtils;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.common.router.TallyRouter;
+import com.coderpage.mine.app.tally.module.chart.data.CategoryData;
 import com.coderpage.mine.app.tally.module.chart.data.DailyData;
 import com.coderpage.mine.app.tally.module.chart.data.Month;
 import com.coderpage.mine.app.tally.module.chart.data.MonthlyData;
 import com.coderpage.mine.app.tally.module.chart.data.MonthlyDataList;
 import com.coderpage.mine.app.tally.module.chart.data.MonthlyEntryData;
 import com.coderpage.mine.app.tally.module.chart.widget.MarkerViewDailyData;
+import com.coderpage.mine.app.tally.module.chart.widget.MarkerViewMonthData;
 import com.coderpage.mine.app.tally.module.chart.widget.MineBarChart;
 import com.coderpage.mine.app.tally.module.chart.widget.MineLineChart;
-import com.coderpage.mine.app.tally.module.chart.widget.MarkerViewMonthData;
+import com.coderpage.mine.app.tally.module.chart.widget.MinePieChart;
+import com.coderpage.mine.common.Font;
 import com.coderpage.mine.tally.module.chart.TallyChartActivityBinding;
 import com.coderpage.mine.ui.BaseActivity;
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -38,7 +45,11 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +65,7 @@ public class TallyChartActivity extends BaseActivity {
 
     private MineBarChart mBarChart;
     private MineLineChart mLineChart;
+    private MinePieChart mPieChart;
     private RecyclerView mCategoryDataRecycler;
     private TallyChartCategoryDataAdapter mCategoryDataAdapter;
 
@@ -94,6 +106,7 @@ public class TallyChartActivity extends BaseActivity {
     private void initView() {
         mBarChart = mBinding.barChart;
         mLineChart = mBinding.lineChart;
+        mPieChart = mBinding.pieChart;
         mCategoryDataRecycler = mBinding.recyclerCategory;
         mCategoryDataRecycler.setLayoutManager(new LinearLayoutManager(self(), LinearLayoutManager.VERTICAL, false));
         mCategoryDataAdapter = new TallyChartCategoryDataAdapter(mViewModel);
@@ -128,12 +141,14 @@ public class TallyChartActivity extends BaseActivity {
         mViewModel.getCategoryExpenseDataList().observe(this, categoryDataList -> {
             if (categoryDataList != null) {
                 mCategoryDataAdapter.setDataList(categoryDataList);
+                showPieChart(categoryDataList);
             }
         });
         // 收入分类饼图
         mViewModel.getCategoryIncomeDataList().observe(this, categoryDataList -> {
             if (categoryDataList != null) {
                 mCategoryDataAdapter.setDataList(categoryDataList);
+                showPieChart(categoryDataList);
             }
         });
         mViewModel.getViewReliedTask().observe(this, task -> {
@@ -374,5 +389,63 @@ public class TallyChartActivity extends BaseActivity {
         mLineChart.setMarker(new MarkerViewMonthData(self(), R.layout.tally_module_chart_marker_view));
         mLineChart.setData(lineData);
         mLineChart.animateY(500);
+    }
+
+    private void showPieChart(List<CategoryData> categoryDataList) {
+        final DecimalFormat percentFormat = new DecimalFormat("0.00");
+        Typeface valueTypeface = Typeface.createFromAsset(getAssets(), "font/" + Font.QUICKSAND_REGULAR.getName());
+
+        List<PieEntry> pieEntryList = new ArrayList<>();
+        ArrayUtils.forEach(categoryDataList, (count, index, item) -> {
+            pieEntryList.add(new PieEntry((float) item.getAmount(), item.getCategoryName()));
+        });
+
+        PieDataSet pieDataSet = new PieDataSet(pieEntryList, "");
+        Resources resources = getResources();
+        int[] colors = new int[]{resources.getColor(R.color.categoryColor1),
+                resources.getColor(R.color.categoryColor2),
+                resources.getColor(R.color.categoryColor3),
+                resources.getColor(R.color.categoryColor4)};
+        pieDataSet.setColors(colors);
+
+        pieDataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+        pieDataSet.setValueLinePart1Length(0.4f);
+        pieDataSet.setValueLinePart2Length(0.8f);
+        pieDataSet.setValueLineColor(getResources().getColor(R.color.colorHint));
+        pieDataSet.setValueTextColor(getResources().getColor(R.color.appTextColorPrimary));
+        pieDataSet.setValueTextSize(9);
+        pieDataSet.setValueTypeface(valueTypeface);
+
+        ArrayList<Integer> colorList = new ArrayList<>(colors.length);
+        for (int color : colors) {
+            colorList.add(color);
+        }
+        pieDataSet.setValueTextColors(colorList);
+        pieDataSet.setValueLineVariableLength(true);
+        pieDataSet.setValueFormatter((value, entry, dataSetIndex, viewPortHandler) -> {
+            return percentFormat.format(value) + "%";
+        });
+
+        PieData pieData = null;
+        if (!pieEntryList.isEmpty()) {
+            pieData = new PieData(pieDataSet);
+        }
+
+        mPieChart.setNoDataText(ResUtils.getString(self(), R.string.tally_chart_empty_tip));
+        mPieChart.setNoDataTextColor(ResUtils.getColor(self(), R.color.appTextColorPrimary));
+        mPieChart.setExtraTopOffset(12);
+        mPieChart.setExtraBottomOffset(12);
+        mPieChart.setUsePercentValues(true);
+        mPieChart.setDescription(null);
+        mPieChart.setCenterTextSize(20f);
+        mPieChart.setDrawEntryLabels(false);
+        mPieChart.setHighlightPerTapEnabled(true);
+        mPieChart.getLegend().setEnabled(false);
+        mPieChart.getLegend().setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        mPieChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        mPieChart.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        mPieChart.getLegend().setWordWrapEnabled(true);
+        mPieChart.setData(pieData);
+        mPieChart.animateY(1400, Easing.EasingOption.EaseInOutQuart);
     }
 }

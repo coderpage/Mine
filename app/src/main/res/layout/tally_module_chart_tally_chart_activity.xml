@@ -230,6 +230,15 @@
 
                 </android.support.constraint.ConstraintLayout>
 
+                <com.coderpage.mine.app.tally.module.chart.widget.MinePieChart
+                    android:id="@+id/pieChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginLeft="@dimen/spacing_micro"
+                    android:layout_marginTop="@dimen/padding_normal"
+                    android:layout_marginRight="@dimen/spacing_micro"
+                    android:background="@drawable/bg_common_card_white" />
+
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerCategory"
                     android:layout_width="match_parent"
