@@ -9,19 +9,31 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
 
 import com.coderpage.base.common.Callback;
 import com.coderpage.base.common.IError;
 import com.coderpage.base.utils.ArrayUtils;
+import com.coderpage.base.utils.ResUtils;
+import com.coderpage.base.utils.UIUtils;
 import com.coderpage.base.utils.WrappedInt;
 import com.coderpage.framework.BaseViewModel;
 import com.coderpage.framework.ViewReliedTask;
+import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.common.utils.BaseLoadDelegate;
 import com.coderpage.mine.app.tally.eventbus.EventRecordAdd;
 import com.coderpage.mine.app.tally.eventbus.EventRecordDelete;
 import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
 import com.coderpage.mine.app.tally.persistence.model.Record;
+import com.coderpage.mine.app.tally.utils.DateUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -39,6 +51,10 @@ import java.util.Locale;
 
 public class RecordsViewModel extends BaseViewModel implements LifecycleObserver {
 
+    private String mToolbarTitleBase = "";
+
+    /** 导航栏副标题 */
+    private MutableLiveData<CharSequence> mToolbarTitle = new MutableLiveData<>();
     /** 记录列表 */
     private MutableLiveData<List<Object>> mRecordList = new MutableLiveData<>();
     /** 需要依赖 activity 的任务 */
@@ -56,6 +72,7 @@ public class RecordsViewModel extends BaseViewModel implements LifecycleObserver
 
     public RecordsViewModel(Application application) {
         super(application);
+        mToolbarTitleBase = ResUtils.getString(application, R.string.tally_toolbar_title_records);
         mRepository = new RecordsRepository();
         mLoadDelegate = new BaseLoadDelegate<Record>(15) {
             @Override
@@ -88,6 +105,10 @@ public class RecordsViewModel extends BaseViewModel implements LifecycleObserver
         return mLoadDelegate.getLoadingStatus();
     }
 
+    LiveData<CharSequence> getToolbarTitle() {
+        return mToolbarTitle;
+    }
+
     LiveData<List<Object>> getRecordList() {
         return mRecordList;
     }
@@ -104,6 +125,19 @@ public class RecordsViewModel extends BaseViewModel implements LifecycleObserver
         } else {
             mLoadDelegate.refresh();
         }
+
+        // 格式化 Toolbar Title
+        // 全部记录不显示区间信息
+        String dateRange = mQuery.getStartTime() <= 0 ?
+                "" : DateUtils.formatDisplayDateRange(getApplication(), mQuery.getStartTime(), mQuery.getEndTime());
+
+        SpannableStringBuilder titleBuilder = new SpannableStringBuilder();
+        titleBuilder.append(mToolbarTitleBase).append(" ");
+        if (!TextUtils.isEmpty(dateRange)) {
+            titleBuilder.append(createAbsoluteSizeSpan(dateRange, null, 14,
+                    ResUtils.getColor(getApplication(), R.color.appTextColorSecondary)));
+        }
+        mToolbarTitle.setValue(titleBuilder);
     }
 
     void load() {
@@ -119,8 +153,35 @@ public class RecordsViewModel extends BaseViewModel implements LifecycleObserver
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    // CLICK
+    // Private method
     ///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * 创建指定大小的 span
+     *
+     * @param text     文字
+     * @param typeface 字体
+     * @param sizeDip  大小 dp
+     * @param color    颜色
+     */
+    private SpannableString createAbsoluteSizeSpan(String text, Typeface typeface, int sizeDip, int color) {
+        SpannableString tipSpan = new SpannableString(text);
+        AbsoluteSizeSpan sizeSpan = new AbsoluteSizeSpan(UIUtils.dp2px(getApplication(), sizeDip)) {
+            @Override
+            public void updateDrawState(@NonNull TextPaint textPaint) {
+                super.updateDrawState(textPaint);
+                textPaint.setFakeBoldText(false);
+                if (color != 0) {
+                    textPaint.setColor(color);
+                }
+                if (typeface != null) {
+                    textPaint.setTypeface(typeface);
+                }
+            }
+        };
+        tipSpan.setSpan(sizeSpan, 0, tipSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return tipSpan;
+    }
 
     /**
      * 格式化列表数据。插入日期标题
@@ -155,6 +216,10 @@ public class RecordsViewModel extends BaseViewModel implements LifecycleObserver
 
         return currentDisplayList;
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // LifeCycle
+    ///////////////////////////////////////////////////////////////////////////
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     public void onCreate(LifecycleOwner owner) {

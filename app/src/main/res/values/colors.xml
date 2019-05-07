@@ -43,6 +43,26 @@
     <color name="categoryColor3">#ffff8d</color>
     <color name="categoryColor4">#ccff90</color>
 
+    <color name="categoryExpenseColor1">#E65100</color>
+    <color name="categoryExpenseColor2">#EF6C00</color>
+    <color name="categoryExpenseColor3">#F57C00</color>
+    <color name="categoryExpenseColor4">#FB8C00</color>
+    <color name="categoryExpenseColor5">#FF9800</color>
+    <color name="categoryExpenseColor6">#FFA726</color>
+    <color name="categoryExpenseColor7">#FFB74D</color>
+    <color name="categoryExpenseColor8">#FFCC80</color>
+    <color name="categoryExpenseColor9">#FFE0B2</color>
+
+    <color name="categoryIncomeColor1">#1B5E20</color>
+    <color name="categoryIncomeColor2">#2E7D32</color>
+    <color name="categoryIncomeColor3">#388E3C</color>
+    <color name="categoryIncomeColor4">#43A047</color>
+    <color name="categoryIncomeColor5">#4CAF50</color>
+    <color name="categoryIncomeColor6">#66BB6A</color>
+    <color name="categoryIncomeColor7">#81C784</color>
+    <color name="categoryIncomeColor8">#A5D6A7</color>
+    <color name="categoryIncomeColor9">#C8E6C9</color>
+
     <color name="chartGridLine">#efefef</color>
 
     <color name="expenseColor">#f2615e</color>

@@ -60,7 +60,6 @@
             android:theme="@style/Theme.Tally" />
         <activity
             android:name=".app.tally.module.records.RecordsActivity"
-            android:label="@string/tally_toolbar_title_records"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Tally" />
         <activity

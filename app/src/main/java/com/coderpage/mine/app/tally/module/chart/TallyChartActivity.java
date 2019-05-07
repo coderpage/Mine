@@ -3,7 +3,6 @@ package com.coderpage.mine.app.tally.module.chart;
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -19,6 +18,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.coderpage.base.utils.ArrayUtils;
 import com.coderpage.base.utils.ResUtils;
 import com.coderpage.base.utils.UIUtils;
+import com.coderpage.mine.MineApp;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.common.router.TallyRouter;
 import com.coderpage.mine.app.tally.module.chart.data.CategoryData;
@@ -32,6 +32,7 @@ import com.coderpage.mine.app.tally.module.chart.widget.MarkerViewMonthData;
 import com.coderpage.mine.app.tally.module.chart.widget.MineBarChart;
 import com.coderpage.mine.app.tally.module.chart.widget.MineLineChart;
 import com.coderpage.mine.app.tally.module.chart.widget.MinePieChart;
+import com.coderpage.mine.app.tally.persistence.model.CategoryModel;
 import com.coderpage.mine.common.Font;
 import com.coderpage.mine.tally.module.chart.TallyChartActivityBinding;
 import com.coderpage.mine.ui.BaseActivity;
@@ -62,6 +63,27 @@ public class TallyChartActivity extends BaseActivity {
 
     static final String EXTRA_YEAR = "extra_year";
     static final String EXTRA_MONTH = "extra_month";
+
+    private final int[] categoryExpenseColorArray = new int[]{
+            ResUtils.getColor(MineApp.getAppContext(), R.color.categoryExpenseColor1),
+            ResUtils.getColor(MineApp.getAppContext(), R.color.categoryExpenseColor2),
+            ResUtils.getColor(MineApp.getAppContext(), R.color.categoryExpenseColor3),
+            ResUtils.getColor(MineApp.getAppContext(), R.color.categoryExpenseColor4),
+            ResUtils.getColor(MineApp.getAppContext(), R.color.categoryExpenseColor5),
+            ResUtils.getColor(MineApp.getAppContext(), R.color.categoryExpenseColor6),
+            ResUtils.getColor(MineApp.getAppContext(), R.color.categoryExpenseColor7),
+            ResUtils.getColor(MineApp.getAppContext(), R.color.categoryExpenseColor9)
+    };
+    private final int[] categoryIncomeColorArray = new int[]{
+            ResUtils.getColor(MineApp.getAppContext(), R.color.categoryIncomeColor1),
+            ResUtils.getColor(MineApp.getAppContext(), R.color.categoryIncomeColor2),
+            ResUtils.getColor(MineApp.getAppContext(), R.color.categoryIncomeColor3),
+            ResUtils.getColor(MineApp.getAppContext(), R.color.categoryIncomeColor4),
+            ResUtils.getColor(MineApp.getAppContext(), R.color.categoryIncomeColor5),
+            ResUtils.getColor(MineApp.getAppContext(), R.color.categoryIncomeColor6),
+            ResUtils.getColor(MineApp.getAppContext(), R.color.categoryIncomeColor7),
+            ResUtils.getColor(MineApp.getAppContext(), R.color.categoryIncomeColor9)
+    };
 
     private MineBarChart mBarChart;
     private MineLineChart mLineChart;
@@ -141,14 +163,14 @@ public class TallyChartActivity extends BaseActivity {
         mViewModel.getCategoryExpenseDataList().observe(this, categoryDataList -> {
             if (categoryDataList != null) {
                 mCategoryDataAdapter.setDataList(categoryDataList);
-                showPieChart(categoryDataList);
+                showPieChart(categoryDataList, CategoryModel.TYPE_EXPENSE);
             }
         });
         // 收入分类饼图
         mViewModel.getCategoryIncomeDataList().observe(this, categoryDataList -> {
             if (categoryDataList != null) {
                 mCategoryDataAdapter.setDataList(categoryDataList);
-                showPieChart(categoryDataList);
+                showPieChart(categoryDataList, CategoryModel.TYPE_INCOME);
             }
         });
         mViewModel.getViewReliedTask().observe(this, task -> {
@@ -391,9 +413,9 @@ public class TallyChartActivity extends BaseActivity {
         mLineChart.animateY(500);
     }
 
-    private void showPieChart(List<CategoryData> categoryDataList) {
+    private void showPieChart(List<CategoryData> categoryDataList, int type) {
         final DecimalFormat percentFormat = new DecimalFormat("0.00");
-        Typeface valueTypeface = Typeface.createFromAsset(getAssets(), "font/" + Font.QUICKSAND_REGULAR.getName());
+        Typeface valueTypeface = Typeface.createFromAsset(getAssets(), "font/" + Font.QUICKSAND_MEDIUM.getName());
 
         List<PieEntry> pieEntryList = new ArrayList<>();
         ArrayUtils.forEach(categoryDataList, (count, index, item) -> {
@@ -401,11 +423,7 @@ public class TallyChartActivity extends BaseActivity {
         });
 
         PieDataSet pieDataSet = new PieDataSet(pieEntryList, "");
-        Resources resources = getResources();
-        int[] colors = new int[]{resources.getColor(R.color.categoryColor1),
-                resources.getColor(R.color.categoryColor2),
-                resources.getColor(R.color.categoryColor3),
-                resources.getColor(R.color.categoryColor4)};
+        int[] colors = type == CategoryModel.TYPE_INCOME ? categoryIncomeColorArray : categoryExpenseColorArray;
         pieDataSet.setColors(colors);
 
         pieDataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
@@ -415,12 +433,6 @@ public class TallyChartActivity extends BaseActivity {
         pieDataSet.setValueTextColor(getResources().getColor(R.color.appTextColorPrimary));
         pieDataSet.setValueTextSize(9);
         pieDataSet.setValueTypeface(valueTypeface);
-
-        ArrayList<Integer> colorList = new ArrayList<>(colors.length);
-        for (int color : colors) {
-            colorList.add(color);
-        }
-        pieDataSet.setValueTextColors(colorList);
         pieDataSet.setValueLineVariableLength(true);
         pieDataSet.setValueFormatter((value, entry, dataSetIndex, viewPortHandler) -> {
             return percentFormat.format(value) + "%";

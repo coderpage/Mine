@@ -3,10 +3,12 @@ package com.coderpage.mine.ui;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.coderpage.base.utils.FunctionUtils;
 import com.coderpage.base.utils.ResUtils;
 import com.coderpage.base.utils.StatusBarUtils;
 import com.coderpage.mine.R;
@@ -64,6 +66,25 @@ public abstract class BaseActivity extends AppCompatActivity {
         mToolbar.setNavigationOnClickListener(clickListener);
     }
 
+    protected void setToolbarTitle(@StringRes int titleResId) {
+        getToolbar();
+        FunctionUtils.invokeSafe(getSupportActionBar(), actionBar -> actionBar.setTitle(titleResId));
+    }
+
+    protected void setToolbarTitle(CharSequence title) {
+        getToolbar();
+        FunctionUtils.invokeSafe(getSupportActionBar(), actionBar -> actionBar.setTitle(title));
+    }
+
+    protected void setToolbarSubTitle(@StringRes int subTitleResId) {
+        getToolbar();
+        FunctionUtils.invokeSafe(getSupportActionBar(), actionBar -> actionBar.setSubtitle(subTitleResId));
+    }
+
+    protected void setToolbarSubTitle(CharSequence subTitle) {
+        getToolbar();
+        FunctionUtils.invokeSafe(getSupportActionBar(), actionBar -> actionBar.setSubtitle(subTitle));
+    }
 
     private void setStatusBarColor(@ColorRes int resId) {
         StatusBarUtils.setStatusBarColor(this, resId);

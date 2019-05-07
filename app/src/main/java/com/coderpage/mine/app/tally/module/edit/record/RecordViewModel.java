@@ -91,7 +91,7 @@ public class RecordViewModel extends AndroidViewModel implements LifecycleObserv
         mCategorySettingItem = new Category(setting);
 
         mDateFormat = new SimpleDateFormat(ResUtils.getString(
-                application, R.string.tally_date_year_format) + " HH:mm", Locale.getDefault());
+                application, R.string.date_format_y_m_d) + " HH:mm", Locale.getDefault());
         mRepository = new RecordRepository();
         mAmountText.set("0");
         mDate = System.currentTimeMillis();

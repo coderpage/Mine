@@ -39,10 +39,15 @@
         <item name="android:layout_margin">1px</item>
     </style>
 
-    <style name="TextAppearance.Toolbar" parent="TextAppearance">
+    <style name="TextAppearance.ToolbarTitle" parent="TextAppearance">
         <item name="android:textColor">@color/appTextColorPrimary</item>
         <item name="android:textSize">@dimen/app_text_size_large</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.ToolbarSubTitle" parent="TextAppearance">
+        <item name="android:textColor">@color/appTextColorThird</item>
+        <item name="android:textSize">@dimen/app_text_size_small</item>
     </style>
 
     <!-- loading layout message style -->
@@ -87,7 +92,8 @@
     <style name="Widget.Toolbar" parent="Widget">
         <item name="android:background">?attr/colorPrimary</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
-        <item name="titleTextAppearance">@style/TextAppearance.Toolbar</item>
+        <item name="titleTextAppearance">@style/TextAppearance.ToolbarTitle</item>
+        <item name="subtitleTextAppearance">@style/TextAppearance.ToolbarSubTitle</item>
     </style>
 
     <style name="Widget.Dialog" parent="Base.Theme.AppCompat.Light.Dialog.FixedSize">

@@ -28,9 +28,14 @@
 
     <string name="err_category_already_exist">该分类已存在</string>
 
-    <string name="tally_date_year_format">yyyy年MM月dd日</string>
-    <string name="tally_date_month_format">MM月dd日</string>
-    <string name="tally_date_today_format">今天 HH:mm</string>
+    <string name="date_format_y_m_d">yyyy年MM月dd日</string>
+    <string name="date_format_m_d">MM月dd日</string>
+    <string name="date_format_y_m">yyyy年MM月</string>
+    <string name="date_format_y">yyyy年</string>
+    <string name="date_format_today">今天</string>
+    <string name="date_format_today_time">今天 HH:mm</string>
+    <string name="date_format_yesterday">昨天</string>
+    <string name="date_format_date_format_yesterday_time">昨天 HH:mm</string>
 
     <!-- Menu item open About Activity -->
     <string name="menu_tall_about">关于</string>
@@ -46,7 +51,7 @@
     <string name="tally_toolbar_title_main">@string/app_name</string>
     <string name="tally_toolbar_title_about">关于</string>
     <string name="tally_toolbar_title_chart">账单详情</string>
-    <string name="tally_toolbar_title_records">记录</string>
+    <string name="tally_toolbar_title_records">账单记录</string>
     <string name="tally_toolbar_title_setting">设置</string>
     <string name="tally_toolbar_title_detail">详情</string>
     <string name="tally_toolbar_title_debug">DEBUG</string>
