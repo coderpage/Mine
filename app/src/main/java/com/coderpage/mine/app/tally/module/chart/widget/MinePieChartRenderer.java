@@ -11,7 +11,6 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IPieDataSet;
 import com.github.mikephil.charting.renderer.PieChartRenderer;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
@@ -28,16 +27,15 @@ public class MinePieChartRenderer extends PieChartRenderer {
     /**
      * paint object used for drwing the slice-text
      */
-    private Paint mEntryLabelsPaint;
+    private Paint mLineStartPointPaint;
+
 
     public MinePieChartRenderer(PieChart chart, ChartAnimator animator,
                                 ViewPortHandler viewPortHandler) {
         super(chart, animator, viewPortHandler);
-
-        mEntryLabelsPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mEntryLabelsPaint.setColor(Color.WHITE);
-        mEntryLabelsPaint.setTextAlign(Paint.Align.CENTER);
-        mEntryLabelsPaint.setTextSize(Utils.convertDpToPixel(13f));
+        mLineStartPointPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mLineStartPointPaint.setColor(Color.WHITE);
+        mLineStartPointPaint.setStyle(Paint.Style.FILL);
     }
 
     @Override
@@ -74,7 +72,11 @@ public class MinePieChartRenderer extends PieChartRenderer {
 
         c.save();
 
-        float offset = Utils.convertDpToPixel(5.f);
+        float offsetHorizontal = Utils.convertDpToPixel(24.f);
+        float offsetLineStartPoint = Utils.convertDpToPixel(8.f);
+        float line1Length = Utils.convertDpToPixel(12);
+        float lineStartPointRadius = Utils.convertDpToPixel(2);
+        float lineStartPointShadowRadius = Utils.convertDpToPixel(4);
 
         for (int i = 0; i < dataSets.size(); i++) {
 
@@ -132,53 +134,35 @@ public class MinePieChartRenderer extends PieChartRenderer {
                 final float sliceXBase = (float) Math.cos(transformedAngle * Utils.FDEG2RAD);
                 final float sliceYBase = (float) Math.sin(transformedAngle * Utils.FDEG2RAD);
 
-                final float valueLineLength1 = dataSet.getValueLinePart1Length();
-                final float valueLineLength2 = dataSet.getValueLinePart2Length();
-                final float valueLinePart1OffsetPercentage = dataSet.getValueLinePart1OffsetPercentage() / 100.f;
-
                 float pt2x, pt2y;
                 float labelPtx, labelPty;
 
-                float line1Radius;
-
-                if (mChart.isDrawHoleEnabled())
-                    line1Radius = (radius - (radius * holeRadiusPercent))
-                            * valueLinePart1OffsetPercentage
-                            + (radius * holeRadiusPercent);
-                else
-                    line1Radius = radius * valueLinePart1OffsetPercentage;
-
-                final float polyline2Width = dataSet.isValueLineVariableLength()
-                        ? labelRadius * valueLineLength2 * (float) Math.abs(Math.sin(
-                        transformedAngle * Utils.FDEG2RAD))
-                        : labelRadius * valueLineLength2;
+                float line1Radius = radius + offsetLineStartPoint;
 
                 final float pt0x = line1Radius * sliceXBase + center.x;
                 final float pt0y = line1Radius * sliceYBase + center.y;
 
-                final float pt1x = labelRadius * (1 + valueLineLength1) * sliceXBase + center.x;
-                final float pt1y = labelRadius * (1 + valueLineLength1) * sliceYBase + center.y;
+                final float pt1x = (line1Radius + line1Length) * sliceXBase + center.x;
+                final float pt1y = (line1Radius + line1Length) * sliceYBase + center.y;
 
-                final float valueTextTop = pt1y - (lineHeight / 2);
-                final float valueTextBottom = pt1y + (lineHeight / 2);
+                final float valueTextTop = pt1y - lineHeight;
+                final float valueTextBottom = pt1y;
 
                 // label 绘制在饼状图的左面
                 boolean labelOnLeftSide = transformedAngle % 360.0 >= 90.0 && transformedAngle % 360.0 <= 270.0;
                 if (labelOnLeftSide) {
-                    pt2x = pt1x - polyline2Width;
+                    pt2x = offsetHorizontal;
                     pt2y = pt1y;
 
-                    mValuePaint.setTextAlign(Paint.Align.RIGHT);
-                    mEntryLabelsPaint.setTextAlign(Paint.Align.RIGHT);
-
-                    labelPtx = pt2x - offset;
-                } else {
-                    pt2x = pt1x + polyline2Width;
-                    pt2y = pt1y;
                     mValuePaint.setTextAlign(Paint.Align.LEFT);
-                    mEntryLabelsPaint.setTextAlign(Paint.Align.LEFT);
 
-                    labelPtx = pt2x + offset;
+                    labelPtx = pt2x;
+                } else {
+                    pt2x = mViewPortHandler.getChartWidth() - offsetHorizontal;
+                    pt2y = pt1y;
+                    mValuePaint.setTextAlign(Paint.Align.RIGHT);
+
+                    labelPtx = pt2x;
                 }
                 // label 文字以标线未中心线绘制
                 labelPty = (valueTextTop + valueTextBottom - valueFontMetrics.bottom - valueFontMetrics.top) / 2;
@@ -197,13 +181,19 @@ public class MinePieChartRenderer extends PieChartRenderer {
                 if (!willOverlayPreLabel) {
 
                     int valueTextColor = dataSet.getValueTextColor(j);
-                    mValueLinePaint.setColor(valueTextColor);
+
+                    // 绘制起点圆点
+                    // 阴影透明度 0.2
+                    int shadowColor = valueTextColor & 0x00FFFFFF | (50 << 24);
+                    mLineStartPointPaint.setColor(shadowColor);
+                    c.drawCircle(pt0x, pt0y, lineStartPointShadowRadius, mLineStartPointPaint);
+                    mLineStartPointPaint.setColor(valueTextColor);
+                    c.drawCircle(pt0x, pt0y, lineStartPointRadius, mLineStartPointPaint);
 
                     // 绘制标线
-                    if (dataSet.getValueLineColor() != ColorTemplate.COLOR_NONE) {
-                        c.drawLine(pt0x, pt0y, pt1x, pt1y, mValueLinePaint);
-                        c.drawLine(pt1x, pt1y, pt2x, pt2y, mValueLinePaint);
-                    }
+                    mValueLinePaint.setColor(valueTextColor);
+                    c.drawLine(pt0x, pt0y, pt1x, pt1y, mValueLinePaint);
+                    c.drawLine(pt1x, pt1y, pt2x, pt2y, mValueLinePaint);
 
                     // 绘制 label
                     String label = j < data.getEntryCount() && entry.getLabel() != null ? entry.getLabel() : "";

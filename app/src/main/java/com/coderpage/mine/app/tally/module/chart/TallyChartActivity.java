@@ -425,12 +425,14 @@ public class TallyChartActivity extends BaseActivity {
         PieDataSet pieDataSet = new PieDataSet(pieEntryList, "");
         int[] colors = type == CategoryModel.TYPE_INCOME ? categoryIncomeColorArray : categoryExpenseColorArray;
         pieDataSet.setColors(colors);
+        ArrayList<Integer> colorList = new ArrayList<>(colors.length);
+        for (int color : colors) {
+            colorList.add(color);
+        }
 
         pieDataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
-        pieDataSet.setValueLinePart1Length(0.4f);
-        pieDataSet.setValueLinePart2Length(0.8f);
         pieDataSet.setValueLineColor(getResources().getColor(R.color.colorHint));
-        pieDataSet.setValueTextColor(getResources().getColor(R.color.appTextColorPrimary));
+        pieDataSet.setValueTextColors(colorList);
         pieDataSet.setValueTextSize(9);
         pieDataSet.setValueTypeface(valueTypeface);
         pieDataSet.setValueLineVariableLength(true);
@@ -445,8 +447,8 @@ public class TallyChartActivity extends BaseActivity {
 
         mPieChart.setNoDataText(ResUtils.getString(self(), R.string.tally_chart_empty_tip));
         mPieChart.setNoDataTextColor(ResUtils.getColor(self(), R.color.appTextColorPrimary));
-        mPieChart.setExtraTopOffset(12);
-        mPieChart.setExtraBottomOffset(12);
+        mPieChart.setExtraTopOffset(20);
+        mPieChart.setExtraBottomOffset(20);
         mPieChart.setUsePercentValues(true);
         mPieChart.setDescription(null);
         mPieChart.setCenterTextSize(20f);

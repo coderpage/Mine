@@ -233,7 +233,7 @@
                 <com.coderpage.mine.app.tally.module.chart.widget.MinePieChart
                     android:id="@+id/pieChart"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="260dp"
                     android:layout_marginLeft="@dimen/spacing_micro"
                     android:layout_marginTop="@dimen/padding_normal"
                     android:layout_marginRight="@dimen/spacing_micro"
