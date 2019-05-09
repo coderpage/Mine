@@ -204,4 +204,13 @@
     <string name="symbol_dot">.</string>
     <string name="ok">确定</string>
 
+    <string name="permission_req_title_format">%s需要以下权限才能正常使用</string>
+    <string name="permission_req_go_open">去开启</string>
+    <string name="permission_req_open">开启</string>
+
+    <string name="permission_storage">存储权限</string>
+    <string name="permission_storage_desc">导出数据到磁盘或从磁盘中导入数据</string>
+    <string name="permission_phone">手机/电话权限</string>
+    <string name="permission_phone_desc">通过IME&amp;IMSI码，统计崩溃信息</string>
+
 </resources>

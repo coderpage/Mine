@@ -120,7 +120,6 @@ dependencies {
     api rootProject.retrofit
     api rootProject.retrofitConverterFastjson
     api rootProject.okhttp3InterceptorLogging
-    api rootProject.permissions4m
     api rootProject.eventBus
     api rootProject.archRoomRuntime
     api rootProject.archLifecycleExtension
@@ -132,7 +131,6 @@ dependencies {
     api rootProject.arounter
     annotationProcessor rootProject.archLifecycleCompiler
     annotationProcessor rootProject.archRoomCompiler
-    annotationProcessor rootProject.permissions4mProcessor
     annotationProcessor rootProject.arounterProcessor
     testImplementation rootProject.junit
 }

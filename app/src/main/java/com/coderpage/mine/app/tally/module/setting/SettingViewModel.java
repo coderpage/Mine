@@ -20,11 +20,10 @@ import com.coderpage.base.utils.LogUtils;
 import com.coderpage.base.utils.ResUtils;
 import com.coderpage.framework.BaseViewModel;
 import com.coderpage.mine.R;
+import com.coderpage.mine.app.tally.common.permission.PermissionReqHandler;
 import com.coderpage.mine.app.tally.module.backup.Backup;
 import com.coderpage.mine.app.tally.module.backup.BackupModel;
 import com.coderpage.mine.app.tally.module.backup.BackupModelMetadata;
-import com.joker.api.Permissions4M;
-import com.joker.api.wrapper.ListenerWrapper;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
@@ -48,6 +47,8 @@ public class SettingViewModel extends BaseViewModel {
     /** 处理加载信息 */
     private MutableLiveData<String> mProcessMessage = new MutableLiveData<>();
 
+    private PermissionReqHandler mPermissionReqHandler;
+
     public SettingViewModel(Application application) {
         super(application);
     }
@@ -58,104 +59,44 @@ public class SettingViewModel extends BaseViewModel {
 
     /** 导出数据点击 */
     public void onExportDataClick(Activity activity) {
-        Permissions4M.get(activity)
-                .requestForce(true)
-                .requestUnderM(false)
-                .requestPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .requestCodes(REQUEST_CODE_READ_EXTERNAL_STORAGE, REQUEST_CODE_WRITE_EXTERNAL_STORAGE)
-                .requestListener(new ListenerWrapper.PermissionRequestListener() {
+        String[] permissionArray = new String[]{
+                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
+        };
+        if (mPermissionReqHandler == null) {
+            mPermissionReqHandler = new PermissionReqHandler(activity);
+        }
+        mPermissionReqHandler.requestPermission(false, permissionArray, new PermissionReqHandler.Listener() {
+            @Override
+            public void onGranted(boolean grantedAll, String[] permissionArray) {
+                backup2JsonFile();
+            }
 
-                    private boolean readGranted = false;
-                    private boolean writeGranted = false;
-
-                    @Override
-                    public void permissionGranted(int code) {
-                        switch (code) {
-                            case REQUEST_CODE_READ_EXTERNAL_STORAGE:
-                                readGranted = true;
-                                break;
-                            case REQUEST_CODE_WRITE_EXTERNAL_STORAGE:
-                                writeGranted = true;
-                            default:
-                                break;
-                        }
-                        // 同时获取了 读写权限，备份到文件中
-                        if (readGranted && writeGranted) {
-                            backup2JsonFile();
-                        }
-                    }
-
-                    @Override
-                    public void permissionDenied(int code) {
-                        switch (code) {
-                            case REQUEST_CODE_READ_EXTERNAL_STORAGE:
-                                showToastShort(R.string.permission_request_failed_read_external_storage);
-                                break;
-                            case REQUEST_CODE_WRITE_EXTERNAL_STORAGE:
-                                showToastShort(R.string.permission_request_failed_write_external_storage);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-
-                    @Override
-                    public void permissionRationale(int code) {
-
-                    }
-                })
-                .request();
+            @Override
+            public void onDenied(String[] permissionArray) {
+                showToastShort(R.string.permission_request_failed_write_external_storage);
+            }
+        });
     }
 
     /** 导入数据点击 */
     public void onImportDataClick(Activity activity) {
-        Permissions4M.get(activity)
-                .requestForce(true)
-                .requestUnderM(false)
-                .requestPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .requestCodes(REQUEST_CODE_READ_EXTERNAL_STORAGE, REQUEST_CODE_WRITE_EXTERNAL_STORAGE)
-                .requestListener(new ListenerWrapper.PermissionRequestListener() {
+        String[] permissionArray = new String[]{
+                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
+        };
+        if (mPermissionReqHandler == null) {
+            mPermissionReqHandler = new PermissionReqHandler(activity);
+        }
+        mPermissionReqHandler.requestPermission(false, permissionArray, new PermissionReqHandler.Listener() {
+            @Override
+            public void onGranted(boolean grantedAll, String[] permissionArray) {
+                showBackupFileSelectDialog(activity);
+            }
 
-                    private boolean readGranted = false;
-                    private boolean writeGranted = false;
-
-                    @Override
-                    public void permissionGranted(int code) {
-                        switch (code) {
-                            case REQUEST_CODE_READ_EXTERNAL_STORAGE:
-                                readGranted = true;
-                                break;
-                            case REQUEST_CODE_WRITE_EXTERNAL_STORAGE:
-                                writeGranted = true;
-                            default:
-                                break;
-                        }
-                        // 同时获取了 读写权限，读取文件列表
-                        if (readGranted && writeGranted) {
-                            showBackupFileSelectDialog(activity);
-                        }
-                    }
-
-                    @Override
-                    public void permissionDenied(int code) {
-                        switch (code) {
-                            case REQUEST_CODE_READ_EXTERNAL_STORAGE:
-                                showToastShort(R.string.permission_request_failed_read_external_storage);
-                                break;
-                            case REQUEST_CODE_WRITE_EXTERNAL_STORAGE:
-                                showToastShort(R.string.permission_request_failed_write_external_storage);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-
-                    @Override
-                    public void permissionRationale(int code) {
-
-                    }
-                })
-                .request();
+            @Override
+            public void onDenied(String[] permissionArray) {
+                showToastShort(R.string.permission_request_failed_read_external_storage);
+            }
+        });
     }
 
     /**
@@ -383,7 +324,9 @@ public class SettingViewModel extends BaseViewModel {
                                            int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        Permissions4M.onRequestPermissionsResult(activity, requestCode, grantResults);
+        if (mPermissionReqHandler != null) {
+            mPermissionReqHandler.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
 }

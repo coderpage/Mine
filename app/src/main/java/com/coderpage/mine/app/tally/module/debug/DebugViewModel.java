@@ -10,8 +10,7 @@ import com.coderpage.base.utils.LogUtils;
 import com.coderpage.concurrency.MineExecutors;
 import com.coderpage.framework.BaseViewModel;
 import com.coderpage.mine.R;
-import com.joker.api.Permissions4M;
-import com.joker.api.wrapper.ListenerWrapper;
+import com.coderpage.mine.app.tally.common.permission.PermissionReqHandler;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,58 +30,30 @@ public class DebugViewModel extends BaseViewModel {
     /** 申请读文件权限 CODE */
     private static final int REQUEST_CODE_READ_EXTERNAL_STORAGE = 2;
 
+    private PermissionReqHandler mPermissionReqHandler;
+
     public DebugViewModel(Application application) {
         super(application);
     }
 
     public void onExportDataBaseClick(Activity activity) {
-        Permissions4M.get(activity)
-                .requestForce(true)
-                .requestUnderM(false)
-                .requestPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .requestCodes(REQUEST_CODE_READ_EXTERNAL_STORAGE, REQUEST_CODE_WRITE_EXTERNAL_STORAGE)
-                .requestListener(new ListenerWrapper.PermissionRequestListener() {
+        String[] permissionArray = new String[]{
+                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
+        };
+        if (mPermissionReqHandler == null) {
+            mPermissionReqHandler = new PermissionReqHandler(activity);
+        }
+        mPermissionReqHandler.requestPermission(false, permissionArray, new PermissionReqHandler.Listener() {
+            @Override
+            public void onGranted(boolean grantedAll, String[] permissionArray) {
+                copyDatabaseFileToSdcard();
+            }
 
-                    private boolean readGranted = false;
-                    private boolean writeGranted = false;
-
-                    @Override
-                    public void permissionGranted(int code) {
-                        switch (code) {
-                            case REQUEST_CODE_READ_EXTERNAL_STORAGE:
-                                readGranted = true;
-                                break;
-                            case REQUEST_CODE_WRITE_EXTERNAL_STORAGE:
-                                writeGranted = true;
-                            default:
-                                break;
-                        }
-                        // 同时获取了 读写权限，备份到文件中
-                        if (readGranted && writeGranted) {
-                            copyDatabaseFileToSdcard();
-                        }
-                    }
-
-                    @Override
-                    public void permissionDenied(int code) {
-                        switch (code) {
-                            case REQUEST_CODE_READ_EXTERNAL_STORAGE:
-                                showToastShort(R.string.permission_request_failed_read_external_storage);
-                                break;
-                            case REQUEST_CODE_WRITE_EXTERNAL_STORAGE:
-                                showToastShort(R.string.permission_request_failed_write_external_storage);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-
-                    @Override
-                    public void permissionRationale(int code) {
-
-                    }
-                })
-                .request();
+            @Override
+            public void onDenied(String[] permissionArray) {
+                showToastShort(R.string.permission_request_failed_write_external_storage);
+            }
+        });
     }
 
     private void copyDatabaseFileToSdcard() {
@@ -121,6 +92,8 @@ public class DebugViewModel extends BaseViewModel {
                                            int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        Permissions4M.onRequestPermissionsResult(activity, requestCode, grantResults);
+        if (mPermissionReqHandler != null) {
+            mPermissionReqHandler.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 }

@@ -123,6 +123,24 @@ public class ArrayUtils {
         }
     }
 
+    /**
+     * 遍历集合
+     *
+     * @param array    数组
+     * @param consumer 遍历回调
+     * @param <E>      泛型。元素类型
+     */
+    public static <E> void forEach(E[] array, Consumer<E> consumer) {
+        if (array == null || array.length == 0) {
+            return;
+        }
+        int size = array.length;
+        for (int i = 0; i < size; i++) {
+            consumer.accept(size, i, array[i]);
+        }
+    }
+
+
     /***
      * 查询集合中指定的元素
      *

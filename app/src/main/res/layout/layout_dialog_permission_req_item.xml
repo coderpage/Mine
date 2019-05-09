@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="8dp"
+    android:paddingBottom="4dp">
+
+    <TextView
+        android:id="@+id/tvPermissionName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/appTextColorPrimary"
+        android:textSize="@dimen/app_text_size_normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/permission_storage" />
+
+    <TextView
+        android:id="@+id/tvPermissionDesc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/appTextColorThird"
+        android:textSize="@dimen/app_text_size_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvPermissionName"
+        tools:text="@string/permission_storage_desc" />
+
+</android.support.constraint.ConstraintLayout>
