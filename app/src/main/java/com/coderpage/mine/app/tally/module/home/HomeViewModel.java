@@ -100,7 +100,7 @@ public class HomeViewModel extends AndroidViewModel implements LifecycleObserver
                 double todayIncomeTotalAmount = mRepository.getTodayInComeTotalAmount();
 
                 List<Pair<String, Double>> categoryExpenseTotal = mRepository.getCategoryExpenseTotal();
-                List<Record> recent3DayRecordList = mRepository.getRecent3DayRecordList();
+                List<Record> todayRecordList = mRepository.getTodayRecordList();
 
                 HomeMonthModel monthModel = new HomeMonthModel();
                 monthModel.setMonthExpenseAmount(monthExpenseTotalAmount);
@@ -116,7 +116,7 @@ public class HomeViewModel extends AndroidViewModel implements LifecycleObserver
                 dataList.add(new HomeDisplayData(HomeDisplayData.TYPE_MONTH_INFO, monthModel));
                 dataList.add(new HomeDisplayData(HomeDisplayData.TYPE_RECENT_DAY_INFO, todayRecordsModel));
 
-                for (Record record : recent3DayRecordList) {
+                for (Record record : todayRecordList) {
                     dataList.add(new HomeDisplayData(HomeDisplayData.TYPE_RECORD_ITEM, record));
                 }
                 mDataList.setValue(dataList);

@@ -97,7 +97,7 @@ android {
 apply plugin: 'com.coderpage.app'
 
 uploader {
-    apiServer = 'http://127.0.0.1:8001'
+    apiServer = 'http://app.coderpage.com'
     token = rootProject.releaseToken
     appName = '我的记账本'
     changeLog = file("${rootDir}/source/changelog/${rootProject.appVersionName}").text;
