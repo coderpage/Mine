@@ -1,4 +1,4 @@
-package com.coderpage.mine.app.tally.module.setting;
+package com.coderpage.mine.app.tally.module.backup;
 
 import android.Manifest;
 import android.app.Activity;
@@ -16,14 +16,10 @@ import android.widget.TextView;
 import com.coderpage.base.common.IError;
 import com.coderpage.base.common.SimpleCallback;
 import com.coderpage.base.utils.FileUtils;
-import com.coderpage.base.utils.LogUtils;
 import com.coderpage.base.utils.ResUtils;
 import com.coderpage.framework.BaseViewModel;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.common.permission.PermissionReqHandler;
-import com.coderpage.mine.app.tally.module.backup.Backup;
-import com.coderpage.mine.app.tally.module.backup.BackupModel;
-import com.coderpage.mine.app.tally.module.backup.BackupModelMetadata;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
@@ -31,25 +27,29 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author lc. 2019-04-27 09:59
+ * @author lc. 2019-05-19 23:51
  * @since 0.6.2
  */
 
-public class SettingViewModel extends BaseViewModel {
 
-    private static final String TAG = LogUtils.makeLogTag(SettingViewModel.class);
+public class BackupFileViewModel extends BaseViewModel {
 
     /** 处理加载信息 */
     private MutableLiveData<String> mProcessMessage = new MutableLiveData<>();
 
     private PermissionReqHandler mPermissionReqHandler;
 
-    public SettingViewModel(Application application) {
+
+    public BackupFileViewModel(Application application) {
         super(application);
     }
 
     LiveData<String> getProcessMessage() {
         return mProcessMessage;
+    }
+
+    void onMenuManagerClick(Activity activity) {
+        BackupFileManagerActivity.open(activity);
     }
 
     /** 导出数据点击 */

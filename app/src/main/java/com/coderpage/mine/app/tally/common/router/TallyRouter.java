@@ -17,4 +17,8 @@ public class TallyRouter {
     public static final String RECORDS = "/app/tally/records";
     /** 图表页 */
     public static final String CHART = "/app/tally/chart";
+    /** 备份数据页 */
+    public static final String BACKUP_FILE = "/app/tally/backUpFile";
+    /** 备份数据管理页 */
+    public static final String BACKUP_FILE_MANAGER = "/app/tally/backUpFileManager";
 }

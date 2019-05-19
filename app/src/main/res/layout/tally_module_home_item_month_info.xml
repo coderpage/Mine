@@ -126,29 +126,29 @@
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/ivChart"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_marginTop="@dimen/spacing_large"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            app:srcCompat="@drawable/ic_chart"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintEnd_toStartOf="@id/tvChartTip"
             android:tint="@color/colorAccent"
-            android:layout_marginTop="@dimen/spacing_large"
+            app:layout_constraintEnd_toStartOf="@id/tvChartTip"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvMonthIncome"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp" />
+            app:srcCompat="@drawable/ic_chart" />
 
         <TextView
-            android:textColor="@color/appTextColorThird"
-            android:text="@string/tally_module_home_check_chart"
-            app:layout_constraintTop_toTopOf="@id/ivChart"
             android:id="@+id/tvChartTip"
-            app:layout_constraintBottom_toBottomOf="@id/ivChart"
-            app:layout_constraintStart_toEndOf="@id/ivChart"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tally_module_home_check_chart"
+            android:textColor="@color/colorAccent"
             android:textSize="@dimen/app_text_size_small"
-            android:layout_height="wrap_content" />
+            app:layout_constraintBottom_toBottomOf="@id/ivChart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ivChart"
+            app:layout_constraintTop_toTopOf="@id/ivChart" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

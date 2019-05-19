@@ -28,6 +28,7 @@
 
     <string name="err_category_already_exist">该分类已存在</string>
 
+    <string name="date_format_y_m_d_hh_mm">yyyy年MM月dd日 HH:mm</string>
     <string name="date_format_y_m_d">yyyy年MM月dd日</string>
     <string name="date_format_m_d">MM月dd日</string>
     <string name="date_format_y_m">yyyy年MM月</string>
@@ -46,6 +47,7 @@
     <string name="menu_tally_date_range_select">选择日期</string>
     <string name="menu_tally_sort_category">排序</string>
     <string name="menu_tally_debug">DEBUG</string>
+    <string name="menu_tally_manager">管理</string>
 
     <!--  toolbar title of tally main activity -->
     <string name="tally_toolbar_title_main">@string/app_name</string>
@@ -55,6 +57,8 @@
     <string name="tally_toolbar_title_setting">设置</string>
     <string name="tally_toolbar_title_detail">详情</string>
     <string name="tally_toolbar_title_debug">DEBUG</string>
+    <string name="tally_toolbar_title_backup_file">备份文件</string>
+    <string name="tally_toolbar_title_backup_file_manager">备份文件管理</string>
 
     <!-- tally home activity -->
     <string name="tally_module_home_non_expense_place_holder">暂无支出</string>
@@ -85,6 +89,7 @@
     <string name="backup_device">备份设备</string>
     <string name="backup_count">备份条数</string>
     <string name="backup_version">备份版本</string>
+    <string name="backup_file_size">文件大小</string>
     <string name="tally_setting_btn_data_export">导出数据</string>
     <string name="tally_setting_btn_data_export_tip">将账单数据备份到手机SD卡中，用于数据迁移</string>
     <string name="tally_setting_btn_data_import">导入数据</string>

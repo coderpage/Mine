@@ -78,6 +78,16 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Tally" />
         <activity
+            android:name=".app.tally.module.backup.BackupFileActivity"
+            android:label="@string/tally_toolbar_title_backup_file"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Tally" />
+        <activity
+            android:name=".app.tally.module.backup.BackupFileManagerActivity"
+            android:label="@string/tally_toolbar_title_backup_file_manager"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Tally" />
+        <activity
             android:name=".app.tally.module.debug.DebugActivity"
             android:label="@string/tally_toolbar_title_debug"
             android:screenOrientation="portrait"

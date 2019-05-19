@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data class=".module.backup.ItemBackupFileManagerBinding">
+
+        <variable
+            name="item"
+            type="com.coderpage.mine.app.tally.module.backup.BackupFileManagerItem" />
+
+        <variable
+            name="vm"
+            type="com.coderpage.mine.app.tally.module.backup.BackupFileManagerViewModel" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_btn_rect_white"
+        android:paddingStart="@dimen/padding_normal"
+        android:paddingTop="@dimen/padding_normal">
+
+        <TextView
+            android:id="@+id/tvFileName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingEnd="@dimen/padding_normal"
+            android:text="@{item.name}"
+            android:textColor="@color/appTextColorPrimary"
+            android:textSize="@dimen/app_text_size_normal"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="BACKUP-201905192252.JSON" />
+
+        <TextView
+            android:id="@+id/tvTimeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:text="@string/backup_time"
+            android:textColor="@color/appTextColorThird"
+            android:textSize="@dimen/app_text_size_medium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvFileName"
+            tools:text="备份时间" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_normal"
+            android:text="@{vm.formatBackupTime(item)}"
+            android:textColor="@color/appTextColorPrimary"
+            android:textSize="@dimen/app_text_size_medium"
+            app:layout_constraintBaseline_toBaselineOf="@id/tvTimeLabel"
+            app:layout_constraintStart_toEndOf="@id/tvTimeLabel"
+            tools:text="2019年5月19日 22:59" />
+
+        <TextView
+            android:id="@+id/tvSizeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:text="@string/backup_file_size"
+            android:textColor="@color/appTextColorThird"
+            android:textSize="@dimen/app_text_size_medium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvTimeLabel"
+            tools:text="文件大小" />
+
+        <TextView
+            android:id="@+id/tvSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_normal"
+            android:text="@{vm.formatBackupFileSize(item)}"
+            android:textColor="@color/appTextColorPrimary"
+            android:textSize="@dimen/app_text_size_medium"
+            app:layout_constraintBaseline_toBaselineOf="@id/tvSizeLabel"
+            app:layout_constraintStart_toEndOf="@id/tvSizeLabel"
+            tools:text="125KB" />
+
+        <TextView
+            android:id="@+id/tvDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_btn_rect_white"
+            android:onClick="@{() -> vm.onItemDeleteClick(item)}"
+            android:padding="@dimen/padding_normal"
+            android:text="@string/delete"
+            android:textColor="@color/warning"
+            android:textSize="@dimen/app_text_size_medium"
+            app:layout_constraintBaseline_toBaselineOf="@id/tvSizeLabel"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginEnd="@dimen/padding_normal"
+            android:background="@color/divider"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+</layout>
