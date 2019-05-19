@@ -89,7 +89,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/spacing_normal"
             android:gravity="right|center_vertical"
-            android:text="@{vm.formatCategroyDataAmount(data)}"
+            android:text="@{vm.formatCategoryDataAmount(data)}"
             android:textColor="@color/appTextColorPrimary"
             android:textSize="@dimen/app_text_size_medium"
             app:layout_constraintBottom_toBottomOf="parent"

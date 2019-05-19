@@ -3,8 +3,6 @@ package com.coderpage.mine.app.tally.module.home;
 import android.app.Activity;
 import android.content.res.Resources;
 
-import com.coderpage.base.utils.UIUtils;
-import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.module.home.model.HomeDisplayData;
 import com.coderpage.mine.app.tally.module.home.model.HomeMonthModel;
 import com.coderpage.mine.tally.module.home.MonthInfoItemBinding;
@@ -38,15 +36,15 @@ class ViewHolderMonthInfo extends BaseViewHolder {
             mBinding.setData(monthModel);
             mViewModel.setData(monthModel);
 
-            mBinding.topCategoryView.setData(monthModel.getMonthCategoryExpenseData());
-            mBinding.topCategoryView.setDrawTopCount(3);
-            mBinding.topCategoryView.setLabelTextColor(resources.getColor(R.color.appTextColorLabel));
-            mBinding.topCategoryView.setLabelTextSize(UIUtils.dp2px(mActivity, 9));
-            mBinding.topCategoryView.setColorArray(
-                    resources.getColor(R.color.categoryColor1),
-                    resources.getColor(R.color.categoryColor2),
-                    resources.getColor(R.color.categoryColor3),
-                    resources.getColor(R.color.categoryColor4));
+            // mBinding.topCategoryView.setData(monthModel.getMonthCategoryExpenseData());
+            // mBinding.topCategoryView.setDrawTopCount(3);
+            // mBinding.topCategoryView.setLabelTextColor(resources.getColor(R.color.appTextColorLabel));
+            // mBinding.topCategoryView.setLabelTextSize(UIUtils.dp2px(mActivity, 9));
+            // mBinding.topCategoryView.setColorArray(
+            //         resources.getColor(R.color.categoryColor1),
+            //         resources.getColor(R.color.categoryColor2),
+            //         resources.getColor(R.color.categoryColor3),
+            //         resources.getColor(R.color.categoryColor4));
 
             mBinding.executePendingBindings();
         }

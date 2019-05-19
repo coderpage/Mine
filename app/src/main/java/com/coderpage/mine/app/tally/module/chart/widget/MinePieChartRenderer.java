@@ -197,7 +197,7 @@ public class MinePieChartRenderer extends PieChartRenderer {
 
                     // 绘制 label
                     String label = j < data.getEntryCount() && entry.getLabel() != null ? entry.getLabel() : "";
-                    mValuePaint.setColor(valueTextColor);
+                    mValuePaint.setColor(dataSet.getValueLineColor());
                     c.drawText(label + " " + formatter.getFormattedValue(value, entry, 0, mViewPortHandler), labelPtx, labelPty, mValuePaint);
 
                     if (labelOnLeftSide) {

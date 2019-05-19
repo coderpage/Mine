@@ -50,6 +50,35 @@ public class DateUtils {
     }
 
     /**
+     * 返回指定日期开始和结束时间 unix ms
+     *
+     * @param year  年份
+     * @param month 月份 1~12
+     * @param day   天
+     * @return 返回时间区间
+     */
+    public static Pair<Long, Long> dayDateRange(int year, int month, int day) {
+        Calendar dayStartCalendar = Calendar.getInstance();
+        dayStartCalendar.set(Calendar.YEAR, year);
+        // month -1 的原因是, Calendar MONTH 从 0 开始计数，即 0 是一月
+        dayStartCalendar.set(Calendar.MONTH, month - 1);
+        dayStartCalendar.set(Calendar.DAY_OF_MONTH, day);
+        dayStartCalendar.set(Calendar.HOUR_OF_DAY, 0);
+        dayStartCalendar.set(Calendar.MINUTE, 0);
+        dayStartCalendar.set(Calendar.SECOND, 0);
+        dayStartCalendar.set(Calendar.MILLISECOND, 0);
+        long monthStartDate = dayStartCalendar.getTimeInMillis();
+
+        dayStartCalendar.set(Calendar.HOUR_OF_DAY, 23);
+        dayStartCalendar.set(Calendar.MINUTE, 59);
+        dayStartCalendar.set(Calendar.SECOND, 59);
+        dayStartCalendar.set(Calendar.MILLISECOND, 999);
+        long monthEndDate = dayStartCalendar.getTimeInMillis();
+
+        return new Pair<>(monthStartDate, monthEndDate);
+    }
+
+    /**
      * 返回指定年开始和结束时间 unix ms
      *
      * @param year 年份
@@ -63,6 +92,7 @@ public class DateUtils {
         yearStartCalendar.set(Calendar.HOUR_OF_DAY, 0);
         yearStartCalendar.set(Calendar.MINUTE, 0);
         yearStartCalendar.set(Calendar.SECOND, 0);
+        yearStartCalendar.set(Calendar.MILLISECOND, 0);
         long yearStartDate = yearStartCalendar.getTimeInMillis();
 
         yearStartCalendar.set(Calendar.MONTH, 11);
@@ -92,6 +122,7 @@ public class DateUtils {
         todayStart.set(Calendar.HOUR_OF_DAY, 0);
         todayStart.set(Calendar.MINUTE, 0);
         todayStart.set(Calendar.SECOND, 0);
+        todayStart.set(Calendar.MILLISECOND, 0);
         return todayStart.getTimeInMillis();
     }
 
@@ -138,7 +169,9 @@ public class DateUtils {
             return ResUtils.getString(context, R.string.date_format_today);
         }
         if (isInSameDay) {
-            return ResUtils.getString(context, R.string.date_format_y_m_d);
+            SimpleDateFormat dayFormat = new SimpleDateFormat(
+                    ResUtils.getString(context, R.string.date_format_y_m_d), Locale.getDefault());
+            return dayFormat.format(new Date(startTimeMills));
         }
 
         // 是否是同一个月

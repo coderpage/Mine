@@ -272,8 +272,10 @@ public class TallyChartActivity extends BaseActivity {
                 UIUtils.dp2px(self(), 40F),
                 UIUtils.dp2px(self(), 16F),
                 UIUtils.dp2px(self(), 16F));
+        MarkerViewDailyData markerView = new MarkerViewDailyData(self(), R.layout.tally_module_chart_marker_view);
+        markerView.setOnClickListener((v, e) -> mViewModel.onDailyMarkerViewClick(self(), (DailyData) e.getData()));
         mBarChart.setDrawMarkOnTop(true);
-        mBarChart.setMarker(new MarkerViewDailyData(self(), R.layout.tally_module_chart_marker_view));
+        mBarChart.setMarker(markerView);
         mBarChart.setNoDataText(ResUtils.getString(self(), R.string.tally_chart_empty_tip));
         mBarChart.setNoDataTextColor(ResUtils.getColor(self(), R.color.appTextColorPrimary));
         mBarChart.setScaleEnabled(false);
@@ -396,6 +398,8 @@ public class TallyChartActivity extends BaseActivity {
                 UIUtils.dp2px(self(), 40F),
                 UIUtils.dp2px(self(), 16F),
                 UIUtils.dp2px(self(), 16F));
+        MarkerViewMonthData markerView = new MarkerViewMonthData(self(), R.layout.tally_module_chart_marker_view);
+        markerView.setOnClickListener((v, e) -> mViewModel.onMonthlyMarkerViewClick(self(), (MonthlyEntryData) e.getData()));
         mLineChart.setNoDataText(ResUtils.getString(self(), R.string.tally_chart_empty_tip));
         mLineChart.setNoDataTextColor(ResUtils.getColor(self(), R.color.appTextColorPrimary));
         mLineChart.setDragEnabled(true);
@@ -408,7 +412,7 @@ public class TallyChartActivity extends BaseActivity {
         mLineChart.setScaleMinima(1, 1);
         mLineChart.setDrawMarkers(true);
         mLineChart.setDrawMarkOnTop(true);
-        mLineChart.setMarker(new MarkerViewMonthData(self(), R.layout.tally_module_chart_marker_view));
+        mLineChart.setMarker(markerView);
         mLineChart.setData(lineData);
         mLineChart.animateY(500);
     }
@@ -431,7 +435,7 @@ public class TallyChartActivity extends BaseActivity {
         }
 
         pieDataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
-        pieDataSet.setValueLineColor(getResources().getColor(R.color.colorHint));
+        pieDataSet.setValueLineColor(ResUtils.getColor(self(), R.color.appTextColorPrimary));
         pieDataSet.setValueTextColors(colorList);
         pieDataSet.setValueTextSize(9);
         pieDataSet.setValueTypeface(valueTypeface);

@@ -37,6 +37,7 @@ public class MineLineChart extends LineChart {
     @Override
     protected void init() {
         super.init();
+        mChartTouchListener = new MineLineChartTouchListener(this, mViewPortHandler.getMatrixTouch(), 3f);
         mRenderer = new MineLineChartRender(this, mAnimator, mViewPortHandler);
         ((MineLineChartRender) mRenderer).setValueGridLineColor(ResUtils.getColor(getContext(), R.color.chartGridLine));
     }

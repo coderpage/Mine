@@ -23,7 +23,7 @@ public class TimeUtils {
     public synchronized static String getRecordDisplayDate(long timeMillis) {
         if (mHourMinFormat == null) {
             String yearFormat = ResUtils.getString(MineApp.getAppContext(), R.string.date_format_y_m_d);
-            String monthFormat = ResUtils.getString(MineApp.getAppContext(), R.string.date_format_y_m);
+            String monthFormat = ResUtils.getString(MineApp.getAppContext(), R.string.date_format_m_d);
             String todayFormat = ResUtils.getString(MineApp.getAppContext(), R.string.date_format_today_time);
             mYearMonthDayFormat = new SimpleDateFormat(yearFormat, Locale.getDefault());
             mMonthDayFormat = new SimpleDateFormat(monthFormat, Locale.getDefault());

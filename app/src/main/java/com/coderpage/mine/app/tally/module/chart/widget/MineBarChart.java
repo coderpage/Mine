@@ -35,6 +35,7 @@ public class MineBarChart extends BarChart {
     @Override
     protected void init() {
         super.init();
+        mChartTouchListener = new MineLineChartTouchListener(this, mViewPortHandler.getMatrixTouch(), 3f);
         mRenderer = new MineBarChartRenderer(this, mAnimator, mViewPortHandler);
     }
 

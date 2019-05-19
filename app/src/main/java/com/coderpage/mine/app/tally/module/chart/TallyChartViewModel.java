@@ -30,6 +30,7 @@ import com.coderpage.mine.app.tally.module.chart.data.DailyData;
 import com.coderpage.mine.app.tally.module.chart.data.Month;
 import com.coderpage.mine.app.tally.module.chart.data.MonthlyData;
 import com.coderpage.mine.app.tally.module.chart.data.MonthlyDataList;
+import com.coderpage.mine.app.tally.module.chart.data.MonthlyEntryData;
 import com.coderpage.mine.app.tally.module.records.RecordQuery;
 import com.coderpage.mine.app.tally.module.records.RecordsActivity;
 import com.coderpage.mine.app.tally.ui.widget.MonthSelectDialog;
@@ -167,8 +168,32 @@ public class TallyChartViewModel extends BaseViewModel implements LifecycleObser
         }, currentMonth).show();
     }
 
+    /** 月账单 每日数据 点击 */
+    void onDailyMarkerViewClick(Activity activity, DailyData dailyData) {
+        Pair<Long, Long> dayTimeRange = DateUtils.dayDateRange(
+                dailyData.getYear(), dailyData.getMonth(), dailyData.getDayOfMonth());
+        RecordQuery query = new RecordQuery.Builder()
+                .setType(mDisplayExpenseChart.get() ? RecordQuery.TYPE_EXPENSE : RecordQuery.TYPE_INCOME)
+                .setStartTime(dayTimeRange.first)
+                .setEndTime(dayTimeRange.second)
+                .build();
+        RecordsActivity.open(activity, query);
+    }
+
+    /** 年账单 每月数据 点击 */
+    void onMonthlyMarkerViewClick(Activity activity, MonthlyEntryData monthlyData) {
+        Pair<Long, Long> dayTimeRange = DateUtils.monthDateRange(
+                monthlyData.getMonth().getYear(), monthlyData.getMonth().getMonth());
+        RecordQuery query = new RecordQuery.Builder()
+                .setType(mDisplayExpenseChart.get() ? RecordQuery.TYPE_EXPENSE : RecordQuery.TYPE_INCOME)
+                .setStartTime(dayTimeRange.first)
+                .setEndTime(dayTimeRange.second)
+                .build();
+        RecordsActivity.open(activity, query);
+    }
+
     /** 格式化分类数据金额 */
-    public String formatCategroyDataAmount(CategoryData data) {
+    public String formatCategoryDataAmount(CategoryData data) {
         return "¥" + TallyUtils.formatDisplayMoney(data.getAmount());
     }
 

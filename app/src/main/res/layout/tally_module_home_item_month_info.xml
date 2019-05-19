@@ -124,13 +124,31 @@
             app:srcCompat="@drawable/ic_eye_selector"
             tools:src="@drawable/ic_eye_open" />
 
-        <com.coderpage.mine.app.tally.ui.widget.TopLinearPercentView
-            android:id="@+id/topCategoryView"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivChart"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            app:srcCompat="@drawable/ic_chart"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintEnd_toStartOf="@id/tvChartTip"
+            android:tint="@color/colorAccent"
             android:layout_marginTop="@dimen/spacing_large"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvMonthIncome" />
+            app:layout_constraintTop_toBottomOf="@id/tvMonthIncome"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp" />
+
+        <TextView
+            android:textColor="@color/appTextColorThird"
+            android:text="@string/tally_module_home_check_chart"
+            app:layout_constraintTop_toTopOf="@id/ivChart"
+            android:id="@+id/tvChartTip"
+            app:layout_constraintBottom_toBottomOf="@id/ivChart"
+            app:layout_constraintStart_toEndOf="@id/ivChart"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:textSize="@dimen/app_text_size_small"
+            android:layout_height="wrap_content" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

@@ -15,6 +15,7 @@ import android.view.MenuItem;
 
 import com.coderpage.base.utils.ResUtils;
 import com.coderpage.base.utils.UIUtils;
+import com.coderpage.mine.BuildConfig;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.common.permission.PermissionReqHandler;
 import com.coderpage.mine.app.tally.module.debug.DebugActivity;
@@ -182,6 +183,8 @@ public class HomeActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_tally_main, menu);
+        MenuItem debugMenu = menu.findItem(R.id.menu_debug);
+        debugMenu.setVisible(BuildConfig.DEBUG);
         return true;
     }
 

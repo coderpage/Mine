@@ -62,6 +62,7 @@
     <string name="tally_module_home_budget_label">预算剩余</string>
     <string name="tally_module_home_non_budget_place_holder">未设置预算</string>
     <string name="tally_module_home_recent3day_tip">今日支出 %s&#160;&#160;&#160;收入 %s</string>
+    <string name="tally_module_home_check_chart">查看图表分析</string>
 
     <!-- tally chart activity -->
 
@@ -107,8 +108,8 @@
 
     <string name="edit_category">编辑分类</string>
     <string name="add_category">添加分类</string>
-    <string name="expense_category">消费</string>
-    <string name="income_category">支出</string>
+    <string name="expense_category">支出</string>
+    <string name="income_category">收入</string>
     <string name="save">保存</string>
     <string name="setting">设置</string>
     <string name="hour">时</string>
@@ -153,7 +154,7 @@
     <string name="tally_about_about_app_content">周末业余时间有点无聊，就写了这个应用，平时记记自己的消费支出，本着简单、干净、够用即可的原则（主要是水平有限），由于个人开发，难免有些问题，希望大家多多提意见，我也会一直维护下去的。</string>
     <string name="tally_about_title_developer_info">开发者</string>
     <string name="tally_about_title_about_me">关于我</string>
-    <string name="tally_about_about_me_content">坐标苏州，Android 程序员，目前卖彩票。</string>
+    <string name="tally_about_about_me_content">Android 程序员</string>
     <string name="tally_about_title_send_email">发送邮件</string>
     <string name="tally_about_send_email_content">我的个人邮箱 codenobug@163.com ，有问题可以给我发邮件。</string>
     <string name="tally_about_title_wechat">微信公众号</string>
@@ -211,6 +212,6 @@
     <string name="permission_storage">存储权限</string>
     <string name="permission_storage_desc">导出数据到磁盘或从磁盘中导入数据</string>
     <string name="permission_phone">手机/电话权限</string>
-    <string name="permission_phone_desc">通过IME&amp;IMSI码，统计崩溃信息</string>
+    <string name="permission_phone_desc">统计应用崩溃信息</string>
 
 </resources>

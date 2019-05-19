@@ -1,6 +1,8 @@
 package com.coderpage.mine.app.tally.module.chart.widget;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.view.View;
 import android.widget.TextView;
 
 import com.coderpage.base.utils.ResUtils;
@@ -10,7 +12,6 @@ import com.coderpage.mine.app.tally.databinding.CommonBindAdapter;
 import com.coderpage.mine.app.tally.module.chart.data.Month;
 import com.coderpage.mine.app.tally.module.chart.data.MonthlyEntryData;
 import com.coderpage.mine.common.Font;
-import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 
@@ -21,10 +22,12 @@ import com.github.mikephil.charting.highlight.Highlight;
  * 年账单折线图。每月的数据
  */
 
-public class MarkerViewMonthData extends MarkerView {
+public class MarkerViewMonthData extends MarkViewMine {
 
     private TextView mTvData;
     private TextView mTvDate;
+    private Entry mEntry;
+    private OnClickListener mListener;
 
     public MarkerViewMonthData(Context context, int layoutResource) {
         super(context, layoutResource);
@@ -32,10 +35,21 @@ public class MarkerViewMonthData extends MarkerView {
         mTvDate = findViewById(R.id.tvDate);
         CommonBindAdapter.setTypeFace(mTvData, Font.QUICKSAND_MEDIUM);
         CommonBindAdapter.setTypeFace(mTvDate, Font.QUICKSAND_BOLD);
+
+        setOnClickListener(v -> {
+            if (mListener != null && mEntry != null) {
+                mListener.onClick(v, mEntry);
+            }
+        });
+    }
+
+    public void setOnClickListener(OnClickListener l) {
+        mListener = l;
     }
 
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
+        mEntry = e;
         MonthlyEntryData entryData = (MonthlyEntryData) e.getData();
         Month month = entryData.getMonth();
         String monthInfo = ResUtils.getString(getContext(), R.string.tally_month_info_format,
@@ -46,5 +60,20 @@ public class MarkerViewMonthData extends MarkerView {
         mTvDate.setText(monthInfo);
         mTvData.setText(moneyInfo);
         super.refreshContent(e, highlight);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+    }
+
+    public interface OnClickListener {
+        /**
+         * 点击回调
+         *
+         * @param view  view
+         * @param entry 数据
+         */
+        void onClick(View view, Entry entry);
     }
 }
