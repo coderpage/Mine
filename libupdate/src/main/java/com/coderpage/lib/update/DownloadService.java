@@ -2,6 +2,7 @@ package com.coderpage.lib.update;
 
 import android.app.IntentService;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -24,9 +26,10 @@ import java.io.File;
 
 public class DownloadService extends IntentService {
 
-    private static final String TAG = DownloadService.class.getSimpleName();
     private static final int NOTIFY_ID_DOWNLOAD_APK = 10086;
-
+    private static final String CHANNEL_ID_DOWNLOAD_APK = "channel_id_download_apk";
+    private static final String CHANNEL_NAME_DOWNLOAD_APK = "安装包下载进度";
+    private static final String TAG = DownloadService.class.getSimpleName();
     private static final String ACTION_APK_DOWNLOAD = "com.coderpage.lib.update.service.action.ApkDownload";
 
     private static final String EXTRA_DOWNLOAD_URL = "extra_download_url";
@@ -83,8 +86,10 @@ public class DownloadService extends IntentService {
     }
 
     private void startDownload() {
+        // 下载进度通知
         NotifyRunnable notifyRunnable = new NotifyRunnable();
         mHandler.post(notifyRunnable);
+        // 下载 APK
         FileDownloader fileDownloader = new FileDownloader(this);
         Result<File, Error> result = fileDownloader.download(
                 mDownloadUrl,
@@ -92,8 +97,10 @@ public class DownloadService extends IntentService {
                 (bytesRead, contentLength, done) -> {
                     mProgress = Float.valueOf(((float) bytesRead / contentLength) * 100).intValue();
                 });
+        // 下载完成 关闭通知
         mNotificationManager.cancel(NOTIFY_ID_DOWNLOAD_APK);
         mHandler.removeCallbacks(notifyRunnable);
+        // 下载成功 安装
         if (result.isOk()) {
             Intent install = new Intent(Intent.ACTION_VIEW);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -111,6 +118,7 @@ public class DownloadService extends IntentService {
             startActivity(install);
         } else {
             Log.e(TAG, "download apk failed: " + result.error());
+            Toast.makeText(getApplicationContext(), "DownloadErr:" + result.error(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -118,7 +126,7 @@ public class DownloadService extends IntentService {
         NotificationCompat.Builder mBuilder;
 
         NotifyRunnable() {
-            mBuilder = new NotificationCompat.Builder(DownloadService.this);
+            mBuilder = new NotificationCompat.Builder(DownloadService.this, CHANNEL_ID_DOWNLOAD_APK);
             mBuilder.setSmallIcon(mNotifyIconResId);
             mBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), mNotifyIconResId));
             //禁止用户点击删除按钮删除
@@ -128,6 +136,14 @@ public class DownloadService extends IntentService {
             mBuilder.setShowWhen(false);
             mBuilder.setOngoing(true);
             mBuilder.setShowWhen(false);
+
+            // Android O 版本及以上需要适配 notification channel
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel channel = new NotificationChannel(CHANNEL_ID_DOWNLOAD_APK,
+                        CHANNEL_NAME_DOWNLOAD_APK, NotificationManager.IMPORTANCE_LOW);
+                mBuilder.setChannelId(CHANNEL_ID_DOWNLOAD_APK);
+                mNotificationManager.createNotificationChannel(channel);
+            }
         }
 
         @Override

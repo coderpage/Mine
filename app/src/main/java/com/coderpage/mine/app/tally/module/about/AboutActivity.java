@@ -1,9 +1,14 @@
 package com.coderpage.mine.app.tally.module.about;
 
+import android.content.ClipData;
+import android.content.ClipDescription;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.coderpage.lib.update.ApkModel;
@@ -45,6 +50,11 @@ public class AboutActivity extends BaseActivity {
         }
 
         findViewById(R.id.lyAppInfo).setOnClickListener(mOnClickListener);
+        findViewById(R.id.lyAppInfo).setOnLongClickListener(v -> {
+            Toast.makeText(this, BuildConfig.FLAVOR, Toast.LENGTH_SHORT).show();
+            return true;
+        });
+        findViewById(R.id.lyWeChatInfo).setOnClickListener(mOnClickListener);
     }
 
     @Override
@@ -67,6 +77,23 @@ public class AboutActivity extends BaseActivity {
                     }
                 });
                 break;
+
+            // 微信公众号点击
+            case R.id.lyWeChatInfo:
+                copyWeChatNumber();
+                Toast.makeText(this, R.string.tally_about_wechat_copied, Toast.LENGTH_SHORT).show();
+                break;
         }
     };
+
+    /** 复制微信公众号 */
+    public void copyWeChatNumber() {
+        ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        if (clipboardManager == null) {
+            return;
+        }
+        ClipData.Item clipItem = new ClipData.Item("MINE应用");
+        ClipData clipData = new ClipData("微信公众号", new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN}, clipItem);
+        clipboardManager.setPrimaryClip(clipData);
+    }
 }

@@ -156,7 +156,7 @@
     <string name="tally_about_check_new_version">检查更新</string>
     <string name="tally_about_find_new_version" formatted="false">新版本 %s(%d)</string>
     <string name="tally_about_title_about_app">关于应用</string>
-    <string name="tally_about_about_app_content">周末业余时间有点无聊，就写了这个应用，平时记记自己的消费支出，本着简单、干净、够用即可的原则（主要是水平有限），由于个人开发，难免有些问题，希望大家多多提意见，我也会一直维护下去的。</string>
+    <string name="tally_about_about_app_content">周末业余时间写了这个应用，平时记记自己的消费支出，本着简单、干净、够用即可的原则（主要是水平有限），由于个人开发，难免有些问题，希望大家多多提意见，我也会一直维护下去的。</string>
     <string name="tally_about_title_developer_info">开发者</string>
     <string name="tally_about_title_about_me">关于我</string>
     <string name="tally_about_about_me_content">Android 程序员</string>
@@ -164,6 +164,7 @@
     <string name="tally_about_send_email_content">我的个人邮箱 codenobug@163.com ，有问题可以给我发邮件。</string>
     <string name="tally_about_title_wechat">微信公众号</string>
     <string name="tally_about_wechat_content">微信公众号：MINE应用；可以通过公众号反馈意见或者BUG</string>
+    <string name="tally_about_wechat_copied">微信公众号已复制</string>
     <string name="tally_about_title_source_code">源代码</string>
     <string name="tally_about_source_code_content">代码已托管在 GitHub(https://github.com/coderpage/Mine) 上，欢迎吐槽我的渣渣代码。</string>
 
