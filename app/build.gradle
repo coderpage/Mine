@@ -65,7 +65,7 @@ android {
         huawei {
             dimension 'channel'
         }
-        offical {
+        official {
             dimension 'channel'
         }
     }
