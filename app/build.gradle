@@ -31,13 +31,13 @@ android {
             minifyEnabled false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField 'String', 'BUGLY_APP_ID', "\"$rootProject.buglyAppId\""
+            buildConfigField 'String', 'TALKING_DATA_APP_ID', "\"$rootProject.talkingDataId\""
         }
         debug {
             minifyEnabled false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField 'String', 'BUGLY_APP_ID', "\"$rootProject.buglyAppId\""
+            buildConfigField 'String', 'TALKING_DATA_APP_ID', "\"$rootProject.talkingDataId\""
         }
     }
     dataBinding {
@@ -115,7 +115,6 @@ dependencies {
     api rootProject.cardView
     api rootProject.materialCalendarview
     api rootProject.mpAndroidChart
-    api rootProject.buglyCrashReport
     api rootProject.fastjson
     api rootProject.retrofit
     api rootProject.retrofitConverterFastjson

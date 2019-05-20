@@ -24,7 +24,7 @@ import com.coderpage.mine.app.tally.common.permission.PermissionReqHandler;
 import com.coderpage.mine.app.tally.module.backup.Backup;
 import com.coderpage.mine.app.tally.module.backup.BackupModel;
 import com.coderpage.mine.app.tally.module.backup.BackupModelMetadata;
-import com.tencent.bugly.crashreport.CrashReport;
+import com.tendcloud.tenddata.TCAgent;
 
 import java.io.File;
 import java.util.Date;
@@ -247,7 +247,7 @@ public class SettingViewModel extends BaseViewModel {
             public void success(BackupModel backupModel) {
                 mProcessMessage.postValue(null);
                 if (backupModel == null) {
-                    CrashReport.postCatchedException(new IllegalStateException("备份文件读取失败"));
+                    TCAgent.onError(getApplication(), new IllegalStateException("备份文件读取失败"));
                     return;
                 }
                 runOnUiThread(() -> callback.success(backupModel));

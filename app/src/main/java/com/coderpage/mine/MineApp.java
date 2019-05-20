@@ -9,7 +9,7 @@ import com.coderpage.base.utils.UIUtils;
 import com.coderpage.base.widget.LoadingLayout;
 import com.coderpage.framework.Framework;
 import com.coderpage.mine.app.tally.update.UpdateUtils;
-import com.tencent.bugly.crashreport.CrashReport;
+import com.tendcloud.tenddata.TCAgent;
 
 /**
  * @author abner-l. 2017-02-05
@@ -31,10 +31,8 @@ public class MineApp extends Application {
             ARouter.openLog();
         }
         if (!BuildConfig.DEBUG) {
-            CrashReport.UserStrategy userStrategy = new CrashReport.UserStrategy(getApplicationContext());
-            userStrategy.setAppChannel(BuildConfig.FLAVOR);
-            CrashReport.initCrashReport(getApplicationContext(),
-                    BuildConfig.BUGLY_APP_ID, BuildConfig.DEBUG, userStrategy);
+            TCAgent.init(this, BuildConfig.TALKING_DATA_APP_ID, BuildConfig.FLAVOR);
+            TCAgent.setReportUncaughtExceptions(true);
         }
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         // 检查新版本
