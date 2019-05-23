@@ -56,6 +56,9 @@ android {
 
     productFlavors {
 
+        qh360 {
+            dimension 'channel'
+        }
         yingyongbao {
             dimension 'channel'
         }
