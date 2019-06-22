@@ -47,7 +47,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_touchable_white"
-                    android:onClick="@{() -> vm.onExportDataClick(activity)}"
+                    android:onClick="@{() -> vm.onBackupDataClick(activity)}"
                     android:paddingStart="@dimen/padding_normal"
                     android:paddingEnd="@dimen/padding_normal">
 
@@ -57,7 +57,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding_normal"
                         android:gravity="left|center_vertical"
-                        android:text="@string/tally_setting_btn_data_export"
+                        android:text="@string/tally_setting_btn_data_backup"
                         android:textColor="@color/appTextColorPrimary"
                         android:textSize="@dimen/app_text_size_large"
                         app:layout_constraintStart_toStartOf="parent"
@@ -68,7 +68,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_normal"
-                        android:text="@string/tally_setting_btn_data_export_tip"
+                        android:text="@string/tally_setting_btn_data_backup_tip"
                         android:textColor="@color/appTextColorThird"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tvExportData" />
@@ -86,37 +86,37 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_touchable_white"
-                    android:onClick="@{() -> vm.onImportDataClick(activity)}"
+                    android:onClick="@{() -> vm.onExportDataExcelClick(activity)}"
                     android:paddingStart="@dimen/padding_normal"
                     android:paddingEnd="@dimen/padding_normal">
 
                     <TextView
-                        android:id="@+id/tvImportData"
+                        android:id="@+id/tvExportCsv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding_normal"
                         android:gravity="left|center_vertical"
-                        android:text="@string/tally_setting_btn_data_import"
+                        android:text="@string/tally_setting_btn_data_export_csv"
                         android:textColor="@color/appTextColorPrimary"
                         android:textSize="@dimen/app_text_size_large"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/tvImportDataTip"
+                        android:id="@+id/tvExportCsvTip"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_normal"
-                        android:text="@string/tally_setting_btn_data_import_tip"
+                        android:text="@string/tally_setting_btn_data_export_csv_tip"
                         android:textColor="@color/appTextColorThird"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvImportData" />
+                        app:layout_constraintTop_toBottomOf="@id/tvExportCsv" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1px"
                         android:layout_marginTop="@dimen/padding_normal"
-                        app:layout_constraintTop_toBottomOf="@id/tvImportDataTip" />
+                        app:layout_constraintTop_toBottomOf="@id/tvExportCsvTip" />
                 </android.support.constraint.ConstraintLayout>
 
             </LinearLayout>

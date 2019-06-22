@@ -41,6 +41,7 @@ ext {
     archLifecycleRuntime = "android.arch.lifecycle:runtime:${archVersion}"
     archLifecycleCompiler = "android.arch.lifecycle:compiler:${archVersion}"
     archRoomCompiler = "android.arch.persistence.room:compiler:1.0.0"
+    multidex = "com.android.support:multidex:1.0.2"
 
     materialCalendarview = "com.prolificinteractive:material-calendarview:1.4.3"
     mpAndroidChart = "com.github.PhilJay:MPAndroidChart:v3.0.2"
@@ -49,6 +50,8 @@ ext {
     refreshLayout = 'com.lcodecorex:tkrefreshlayout:1.0.7'
     arounter = "com.alibaba:arouter-api:1.2.2"
     arounterProcessor = "com.alibaba:arouter-compiler:1.2.2"
+    csv = "org.apache.commons:commons-csv:1.7"
+    easyExcel = "com.alibaba:easyexcel:1.1.1"
 
     retrofit = 'com.squareup.retrofit2:retrofit:2.0.0'
     retrofitConverterGson = 'com.squareup.retrofit2:converter-gson:2.0.0'

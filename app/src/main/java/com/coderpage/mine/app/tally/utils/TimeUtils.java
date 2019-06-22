@@ -19,16 +19,15 @@ public class TimeUtils {
     private static SimpleDateFormat mHourMinFormat = null;
     private static SimpleDateFormat mYearMonthDayFormat = null;
     private static SimpleDateFormat mMonthDayFormat = null;
+    private static SimpleDateFormat mYearMonthDayHourMinuteFormat = null;
+
+    public synchronized static String getDatePreciseMinute(long timeMillis) {
+        ensureFormat();
+        return mYearMonthDayHourMinuteFormat.format(timeMillis);
+    }
 
     public synchronized static String getRecordDisplayDate(long timeMillis) {
-        if (mHourMinFormat == null) {
-            String yearFormat = ResUtils.getString(MineApp.getAppContext(), R.string.date_format_y_m_d);
-            String monthFormat = ResUtils.getString(MineApp.getAppContext(), R.string.date_format_m_d);
-            String todayFormat = ResUtils.getString(MineApp.getAppContext(), R.string.date_format_today_time);
-            mYearMonthDayFormat = new SimpleDateFormat(yearFormat, Locale.getDefault());
-            mMonthDayFormat = new SimpleDateFormat(monthFormat, Locale.getDefault());
-            mHourMinFormat = new SimpleDateFormat(todayFormat, Locale.getDefault());
-        }
+        ensureFormat();
 
         Calendar calendar = Calendar.getInstance();
         int currentYear = calendar.get(Calendar.YEAR);
@@ -73,5 +72,18 @@ public class TimeUtils {
             return 31;
         }
         return 30;
+    }
+
+    private static void ensureFormat() {
+        if (mHourMinFormat == null) {
+            String yearFormat = ResUtils.getString(MineApp.getAppContext(), R.string.date_format_y_m_d);
+            String monthFormat = ResUtils.getString(MineApp.getAppContext(), R.string.date_format_m_d);
+            String todayFormat = ResUtils.getString(MineApp.getAppContext(), R.string.date_format_today_time);
+            String yearMonthDayHourMinuteFormat = ResUtils.getString(MineApp.getAppContext(), R.string.date_format_y_m_d_hh_mm);
+            mYearMonthDayFormat = new SimpleDateFormat(yearFormat, Locale.getDefault());
+            mMonthDayFormat = new SimpleDateFormat(monthFormat, Locale.getDefault());
+            mHourMinFormat = new SimpleDateFormat(todayFormat, Locale.getDefault());
+            mYearMonthDayHourMinuteFormat = new SimpleDateFormat(yearMonthDayHourMinuteFormat, Locale.getDefault());
+        }
     }
 }

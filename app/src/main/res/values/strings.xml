@@ -73,8 +73,8 @@
     <string name="tally_month_info_format" formatted="false">%s年%s月</string>
     <string name="tally_day_info_format" formatted="false">%s年%s月%s日</string>
     <string name="tally_income_and_expense_format" formatted="false">收入 %s, 支出 %s</string>
-    <string name="tally_checkbox_expense">支出</string>
-    <string name="tally_checkbox_income">收入</string>
+    <string name="tally_expense">支出</string>
+    <string name="tally_income">收入</string>
     <string name="tally_switch_to_daily_chart">切换日账单</string>
     <string name="tally_switch_to_yearly_chart">切换年账单</string>
     <string name="tally_month_format">%d月</string>
@@ -94,6 +94,11 @@
     <string name="tally_setting_btn_data_export_tip">将账单数据备份到手机SD卡中，用于数据迁移</string>
     <string name="tally_setting_btn_data_import">导入数据</string>
     <string name="tally_setting_btn_data_import_tip">从手机SD卡中读取备份的账单数据</string>
+    <string name="tally_setting_btn_data_backup">备份数据</string>
+    <string name="tally_setting_btn_data_backup_tip">备份账单数据</string>
+    <string name="tally_setting_btn_data_export_csv">导出 CSV</string>
+    <string name="tally_setting_btn_data_export_csv_tip">将账单数据导出到 CSV，方便查看</string>
+
     <string name="tally_alert_backup">备份数据</string>
     <string name="tally_alert_restore_data">恢复数据</string>
     <string name="tally_alert_check_data_format">校验数据</string>

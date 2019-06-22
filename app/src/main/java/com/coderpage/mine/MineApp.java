@@ -1,6 +1,8 @@
 package com.coderpage.mine;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.SparseArray;
 
@@ -41,6 +43,12 @@ public class MineApp extends Application {
         initLoadingLayout();
         // 初始化 ARouter
         ARouter.init(this);
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     public static Application getAppContext() {

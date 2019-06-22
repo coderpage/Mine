@@ -10,6 +10,7 @@ android {
         versionName rootProject.appVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary true
+        multiDexEnabled true
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -128,9 +129,11 @@ dependencies {
     api rootProject.archViewmodel
     api rootProject.archLiveData
     api rootProject.archLifecycleRuntime
+    api rootProject.multidex
     api rootProject.refreshLayout
     api rootProject.constraintLayout
     api rootProject.arounter
+    api rootProject.csv
     annotationProcessor rootProject.archLifecycleCompiler
     annotationProcessor rootProject.archRoomCompiler
     annotationProcessor rootProject.arounterProcessor
