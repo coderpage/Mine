@@ -7,7 +7,7 @@ import java.io.File;
  * @since 0.6.2
  */
 
-public class BackupFileManagerItem {
+public class BackupFileItem {
 
     private long createTime;
     private long size;
@@ -15,7 +15,7 @@ public class BackupFileManagerItem {
     private String path;
     private File file;
 
-    public BackupFileManagerItem(File file) {
+    public BackupFileItem(File file) {
         this.file = file;
         if (file == null) {
             return;

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_dialog_bottom_sheet">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerFile"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/spacing_normal"
+        app:layout_constraintBottom_toTopOf="@id/viewDivider"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/viewDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:background="@color/divider"
+        app:layout_constraintBottom_toTopOf="@id/tvButtonCancel" />
+
+    <TextView
+        android:id="@+id/tvButtonCancel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_common_button"
+        android:gravity="center"
+        android:paddingTop="@dimen/padding_normal"
+        android:paddingBottom="@dimen/padding_normal"
+        android:text="@string/cancel"
+        android:textColor="@color/appTextColorSecondary"
+        android:textSize="@dimen/app_text_size_medium"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent="0.5" />
+
+    <TextView
+        android:id="@+id/tvButtonSelectFromLocal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_common_button"
+        android:gravity="center"
+        android:paddingTop="@dimen/padding_normal"
+        android:paddingBottom="@dimen/padding_normal"
+        android:text="@string/dialog_btn_choose_local_file"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/app_text_size_medium"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvButtonCancel"
+        app:layout_constraintWidth_percent="0.5" />
+
+</android.support.constraint.ConstraintLayout>

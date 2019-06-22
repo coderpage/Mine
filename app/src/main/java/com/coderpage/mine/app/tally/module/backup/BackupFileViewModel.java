@@ -116,30 +116,30 @@ public class BackupFileViewModel extends BaseViewModel {
     /** 显示备份文件列表 */
     private void showBackupFileSelectDialog(Activity activity) {
         List<File> fileList = Backup.listBackupFiles(getApplication());
+        new BackupFileSelectDialog(activity, fileList)
+                .setListener(new BackupFileSelectDialog.Listener() {
+                    @Override
+                    public void onCancelClick(BackupFileSelectDialog dialog) {
+                        dialog.dismiss();
+                    }
 
-        String[] fileItems = new String[fileList.size()];
-        for (int i = 0; i < fileItems.length; i++) {
-            fileItems[i] = fileList.get(i).getName();
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setItems(fileItems, (dialog, which) -> {
-            dialog.dismiss();
-            String filePath = fileList.get(which).getAbsolutePath();
-            // 弹框确认弹框
-            readDataFromBackupJsonFile(filePath, backupModel ->
-                    showRestoreDataConfirmDialog(activity, backupModel));
-        });
-        builder.setPositiveButton(
-                R.string.dialog_btn_choose_local_file, (dialog, which) -> {
-                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                    intent.setType("*/*");
-                    intent.addCategory(Intent.CATEGORY_OPENABLE);
-                    activity.startActivityForResult(intent, 1);
-                });
-        builder.setNegativeButton(R.string.dialog_btn_cancel, (dialog, which) -> {
-            dialog.dismiss();
-        });
-        builder.create().show();
+                    @Override
+                    public void onSelectFromLocalClick(BackupFileSelectDialog dialog) {
+                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                        intent.setType("*/*");
+                        intent.addCategory(Intent.CATEGORY_OPENABLE);
+                        activity.startActivityForResult(intent, 1);
+                    }
+
+                    @Override
+                    public void onFileSelect(BackupFileSelectDialog dialog, File file) {
+                        dialog.dismiss();
+                        String filePath = file.getAbsolutePath();
+                        // 弹框确认弹框
+                        readDataFromBackupJsonFile(filePath, backupModel ->
+                                showRestoreDataConfirmDialog(activity, backupModel));
+                    }
+                }).show();
     }
 
     /**
@@ -306,7 +306,7 @@ public class BackupFileViewModel extends BaseViewModel {
     // 生命周期
     ///////////////////////////////////////////////////////////////////////////
 
-    protected void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
+    void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             // Get the Uri of the selected file
             Uri uri = data.getData();
@@ -315,10 +315,10 @@ public class BackupFileViewModel extends BaseViewModel {
         }
     }
 
-    public void onRequestPermissionsResult(Activity activity,
-                                           int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    void onRequestPermissionsResult(Activity activity,
+                                    int requestCode,
+                                    @NonNull String[] permissions,
+                                    @NonNull int[] grantResults) {
         if (mPermissionReqHandler != null) {
             mPermissionReqHandler.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }

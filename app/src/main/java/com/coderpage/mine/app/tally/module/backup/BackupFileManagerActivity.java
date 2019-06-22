@@ -83,9 +83,9 @@ public class BackupFileManagerActivity extends BaseActivity {
 
     private class FileItemAadapter extends RecyclerView.Adapter<FileItemViewHolder> {
 
-        private List<BackupFileManagerItem> mDataList = new ArrayList<>();
+        private List<BackupFileItem> mDataList = new ArrayList<>();
 
-        private void setDataList(List<BackupFileManagerItem> list) {
+        private void setDataList(List<BackupFileItem> list) {
             if (list == null) {
                 return;
             }
@@ -121,7 +121,7 @@ public class BackupFileManagerActivity extends BaseActivity {
             mBinding = binding;
         }
 
-        void bind(BackupFileManagerItem item) {
+        void bind(BackupFileItem item) {
             mBinding.setVm(mViewModel);
             mBinding.setItem(item);
             mBinding.executePendingBindings();

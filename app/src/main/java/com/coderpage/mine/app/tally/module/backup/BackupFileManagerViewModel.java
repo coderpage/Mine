@@ -18,6 +18,7 @@ import com.coderpage.framework.BaseViewModel;
 import com.coderpage.framework.ViewReliedTask;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.common.permission.PermissionReqHandler;
+import com.coderpage.mine.app.tally.common.share.ShareProxy;
 import com.coderpage.mine.app.tally.ui.dialog.PermissionReqDialog;
 import com.coderpage.mine.utils.AndroidUtils;
 
@@ -39,7 +40,7 @@ import java.util.Locale;
 public class BackupFileManagerViewModel extends BaseViewModel implements LifecycleObserver {
 
     private SimpleDateFormat mFileTimeDateFormat;
-    private MutableLiveData<List<BackupFileManagerItem>> mBackupFileList = new MutableLiveData<>();
+    private MutableLiveData<List<BackupFileItem>> mBackupFileList = new MutableLiveData<>();
     private MutableLiveData<ViewReliedTask<Activity>> mViewReliedTask = new MutableLiveData<>();
 
     private PermissionReqHandler mPermissionReqHandler;
@@ -50,7 +51,7 @@ public class BackupFileManagerViewModel extends BaseViewModel implements Lifecyc
                 ResUtils.getString(application, R.string.date_format_y_m_d_hh_mm), Locale.getDefault());
     }
 
-    LiveData<List<BackupFileManagerItem>> getBackupFileList() {
+    LiveData<List<BackupFileItem>> getBackupFileList() {
         return mBackupFileList;
     }
 
@@ -58,12 +59,17 @@ public class BackupFileManagerViewModel extends BaseViewModel implements Lifecyc
         return mViewReliedTask;
     }
 
-    public void onItemDeleteClick(BackupFileManagerItem item) {
+    public void onItemDeleteClick(BackupFileItem item) {
         deleteBackupFile(item);
     }
 
+    /** 分享文件 */
+    public void onItemShareClick(BackupFileItem item) {
+        new ShareProxy().shareFile(getApplication(), item.getFile());
+    }
+
     /** 格式化文件时间 */
-    public synchronized String formatBackupTime(BackupFileManagerItem item) {
+    public synchronized String formatBackupTime(BackupFileItem item) {
         if (item == null || item.getFile() == null) {
             return "";
         }
@@ -71,7 +77,7 @@ public class BackupFileManagerViewModel extends BaseViewModel implements Lifecyc
     }
 
     /** 格式化文件大小 */
-    public String formatBackupFileSize(BackupFileManagerItem item) {
+    public String formatBackupFileSize(BackupFileItem item) {
         if (item == null || item.getFile() == null) {
             return "0 KB";
         }
@@ -98,8 +104,8 @@ public class BackupFileManagerViewModel extends BaseViewModel implements Lifecyc
                         public void onGranted(boolean grantedAll, String[] permissionArray) {
                             MineExecutors.ioExecutor().execute(() -> {
                                 List<File> fileList = Backup.listBackupFiles(getApplication());
-                                List<BackupFileManagerItem> resultList = new ArrayList<>(fileList.size());
-                                ArrayUtils.forEach(fileList, (count, index, item) -> resultList.add(new BackupFileManagerItem(item)));
+                                List<BackupFileItem> resultList = new ArrayList<>(fileList.size());
+                                ArrayUtils.forEach(fileList, (count, index, item) -> resultList.add(new BackupFileItem(item)));
                                 Collections.sort(resultList, (o1, o2) -> {
                                     if (o1.getCreateTime() == o2.getCreateTime()) {
                                         return 0;
@@ -145,7 +151,7 @@ public class BackupFileManagerViewModel extends BaseViewModel implements Lifecyc
      *
      * @param item 文件ITEM
      */
-    private void deleteBackupFile(BackupFileManagerItem item) {
+    private void deleteBackupFile(BackupFileItem item) {
         File file = item.getFile();
         if (file == null || !file.exists()) {
             return;
@@ -153,7 +159,7 @@ public class BackupFileManagerViewModel extends BaseViewModel implements Lifecyc
 
         boolean deleted = file.delete();
         if (deleted) {
-            List<BackupFileManagerItem> currentList = mBackupFileList.getValue();
+            List<BackupFileItem> currentList = mBackupFileList.getValue();
             ArrayUtils.remove(currentList, item1 -> item1 == item);
             mBackupFileList.setValue(currentList);
         }

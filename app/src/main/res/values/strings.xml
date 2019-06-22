@@ -7,6 +7,7 @@
     <string name="drag_2_order">拖拽排序</string>
     <string name="complete">完成</string>
     <string name="delete">删除</string>
+    <string name="share">分享</string>
     <string name="modify">修改</string>
     <string name="place_holder">--</string>
     <string name="string_format_date_y_m" formatted="false">%d年%d月</string>
@@ -130,7 +131,7 @@
 
     <!-- dialog -->
     <string name="dialog_btn_cancel">取消</string>
-    <string name="dialog_btn_choose_local_file">选择本地文件</string>
+    <string name="dialog_btn_choose_local_file">从本地文件选取</string>
     <string name="dialog_btn_delete">删除</string>
     <string name="dialog_title_delete_confirm">确定删除？</string>
     <string name="dialog_budget_set_title">设置预算</string>

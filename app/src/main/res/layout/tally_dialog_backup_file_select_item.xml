@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <data class=".module.backup.ItemBackupFileManagerBinding">
+    <data class=".module.backup.ItemBackupFileSelectBinding">
 
         <variable
             name="item"
@@ -9,7 +9,7 @@
 
         <variable
             name="vm"
-            type="com.coderpage.mine.app.tally.module.backup.BackupFileManagerViewModel" />
+            type="com.coderpage.mine.app.tally.module.backup.BackupFileSelectDialog.ItemViewModel" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -18,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_btn_rect_white"
+        android:onClick="@{() -> vm.onItemClick(item)}"
         android:paddingStart="@dimen/padding_normal"
         android:paddingTop="@dimen/padding_normal">
 
@@ -82,39 +83,12 @@
             app:layout_constraintStart_toEndOf="@id/tvSizeLabel"
             tools:text="125KB" />
 
-        <TextView
-            android:id="@+id/tvShare"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_btn_rect_white"
-            android:onClick="@{() -> vm.onItemShareClick(item)}"
-            android:padding="@dimen/padding_normal"
-            android:text="@string/share"
-            android:textColor="@color/appTextColorPrimary"
-            android:textSize="@dimen/app_text_size_medium"
-            app:layout_constraintBaseline_toBaselineOf="@id/tvSizeLabel"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tvDelete" />
-
-        <TextView
-            android:id="@+id/tvDelete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_btn_rect_white"
-            android:onClick="@{() -> vm.onItemDeleteClick(item)}"
-            android:padding="@dimen/padding_normal"
-            android:text="@string/delete"
-            android:textColor="@color/warning"
-            android:textSize="@dimen/app_text_size_medium"
-            app:layout_constraintBaseline_toBaselineOf="@id/tvSizeLabel"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
+            android:layout_marginTop="@dimen/padding_normal"
             android:layout_marginEnd="@dimen/padding_normal"
             android:background="@color/divider"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/tvSizeLabel" />
     </android.support.constraint.ConstraintLayout>
 </layout>

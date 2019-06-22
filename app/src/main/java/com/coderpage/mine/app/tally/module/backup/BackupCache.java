@@ -33,15 +33,13 @@ class BackupCache {
 
     private static final String TAG = makeLogTag(BackupCache.class);
     private static final String BACKUP_FOLDER_NAME = "backup";
-    private static final String BACKUP_FILE_NAME = "backup";
 
     private static String DATA_ROOT_PATH = null;
 
     private Context mContext;
-    private File backupFolder; // 备份文件夹
+    private File backupFolder;
     private String backupFolderPath = DATA_ROOT_PATH + File.separator + BACKUP_FOLDER_NAME;
-    private SimpleDateFormat backupFileDateFormat =
-            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+    private SimpleDateFormat backupFileDateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault());
 
     BackupCache(Context context) {
         mContext = context;
@@ -76,7 +74,6 @@ class BackupCache {
      *
      * @param backupModel 备份数据对象
      * @param callback    备份结果回调
-     *
      * @return 备份文件，如果备份成功返回文件对象，否则返回 null
      */
     File backup2JsonFile(BackupModel backupModel, Callback<Void, IError> callback) {
@@ -107,10 +104,10 @@ class BackupCache {
         return file;
     }
 
-    private String formatBackupJsonFileName() {
+    private synchronized String formatBackupJsonFileName() {
         Calendar calendar = Calendar.getInstance();
         String dateFormatted = backupFileDateFormat.format(calendar.getTime());
-        return BACKUP_FILE_NAME + "_" + dateFormatted + ".json";
+        return "BACKUP-" + dateFormatted + ".JSON";
     }
 
     private boolean createFileIfNotExists(File file) {
