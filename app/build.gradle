@@ -56,10 +56,6 @@ android {
     flavorDimensions 'channel'
 
     productFlavors {
-
-        qh360 {
-            dimension 'channel'
-        }
         yingyongbao {
             dimension 'channel'
         }
@@ -129,6 +125,7 @@ dependencies {
     api rootProject.archViewmodel
     api rootProject.archLiveData
     api rootProject.archLifecycleRuntime
+    api rootProject.archWork
     api rootProject.multidex
     api rootProject.refreshLayout
     api rootProject.constraintLayout

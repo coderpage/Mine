@@ -101,6 +101,21 @@ public class Backup {
     }
 
     /**
+     * 备份消费记录到 JSON 文件中；
+     *
+     * @param context  {@link Context}
+     * @param listener 备份回调
+     */
+    public static File backupToJsonFileSync(Context context, BackupProgressListener listener) {
+        listener.onProgressUpdate(BackupProgress.READ_DATA);
+        BackupModel backupModel = readData();
+
+        listener.onProgressUpdate(BackupProgress.WRITE_FILE);
+        return new BackupCache(context).backup2JsonFile(backupModel, listener);
+    }
+
+
+    /**
      * 读取备份的 JSON 文件。
      *
      * @param file     {@link File}备份文件
@@ -114,7 +129,7 @@ public class Backup {
                 return;
             }
 
-            LogUtils.LOGD(TAG,"Read backup json file: " + file.getAbsolutePath());
+            LogUtils.LOGD(TAG, "Read backup json file: " + file.getAbsolutePath());
 
             if (!file.exists()) {
                 listener.failure(new NonThrowError(ErrorCode.ILLEGAL_ARGS, "File not exist"));
