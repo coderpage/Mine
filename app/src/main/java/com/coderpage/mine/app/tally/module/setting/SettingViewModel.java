@@ -6,7 +6,9 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Intent;
+import android.databinding.ObservableBoolean;
 import android.support.annotation.NonNull;
+import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 
 import com.coderpage.base.cache.Cache;
 import com.coderpage.base.utils.LogUtils;
@@ -20,7 +22,9 @@ import com.coderpage.mine.app.tally.common.share.ShareProxy;
 import com.coderpage.mine.app.tally.common.utils.TallyUtils;
 import com.coderpage.mine.app.tally.module.backup.BackupFileActivity;
 import com.coderpage.mine.app.tally.persistence.model.Record;
+import com.coderpage.mine.app.tally.persistence.preference.SettingPreference;
 import com.coderpage.mine.app.tally.persistence.sql.TallyDatabase;
+import com.coderpage.mine.app.tally.ui.dialog.FingerprintAuthDialog;
 import com.coderpage.mine.app.tally.utils.TimeUtils;
 
 import org.apache.commons.csv.CSVFormat;
@@ -48,6 +52,11 @@ public class SettingViewModel extends BaseViewModel {
 
     private static final String TAG = LogUtils.makeLogTag(SettingViewModel.class);
 
+    /** 是否开启指纹密码 */
+    private ObservableBoolean mFingerprintSecretOpen = new ObservableBoolean(false);
+    /** 开启指纹密码 选项是否需要显示 */
+    private ObservableBoolean mFingerprintSecretOpenShow = new ObservableBoolean(false);
+
     /** 处理加载信息 */
     private MutableLiveData<String> mProcessMessage = new MutableLiveData<>();
 
@@ -55,6 +64,16 @@ public class SettingViewModel extends BaseViewModel {
 
     public SettingViewModel(Application application) {
         super(application);
+        mFingerprintSecretOpen.set(SettingPreference.isFingerprintSecretOpen(application));
+        mFingerprintSecretOpenShow.set(FingerprintManagerCompat.from(application).isHardwareDetected());
+    }
+
+    public ObservableBoolean getFingerprintSecretOpen() {
+        return mFingerprintSecretOpen;
+    }
+
+    public ObservableBoolean getFingerprintSecretOpenShow() {
+        return mFingerprintSecretOpenShow;
     }
 
     LiveData<String> getProcessMessage() {
@@ -80,6 +99,18 @@ public class SettingViewModel extends BaseViewModel {
                 showToastShort(R.string.permission_request_failed_write_external_storage);
             }
         });
+    }
+
+    /** 开启指纹密码点击 */
+    public void onFingerprintSecretClick(Activity activity) {
+        new FingerprintAuthDialog(activity).setListener(success -> {
+            if (success) {
+                boolean useFingerprint = mFingerprintSecretOpen.get();
+                SettingPreference.setFingerprintSecretOpen(getApplication(), useFingerprint);
+            } else {
+                mFingerprintSecretOpen.set(!mFingerprintSecretOpen.get());
+            }
+        }).show();
     }
 
     private void exportCsv() {

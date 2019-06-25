@@ -11,6 +11,10 @@
     <string name="modify">修改</string>
     <string name="place_holder">--</string>
     <string name="string_format_date_y_m" formatted="false">%d年%d月</string>
+    <string name="fingerprint_auth_tip">请验证指纹</string>
+    <string name="fingerprint_auth_err_no_hardware">未识别到指纹传感器</string>
+    <string name="fingerprint_auth_err_no_screen_lock">需要先设置系统锁屏</string>
+    <string name="fingerprint_auth_err_no_fingerprint">未添加指纹</string>
 
     <string name="permission_request_failed_read_external_storage">请授予读取手机存储权限</string>
     <string name="permission_request_failed_write_external_storage">请授予写入手机存储权限</string>
@@ -101,6 +105,7 @@
     <string name="tally_setting_btn_data_auto_backup_tip">每天自动备份账单数据到手机 SD 卡中</string>
     <string name="tally_setting_btn_data_export_csv">导出 CSV</string>
     <string name="tally_setting_btn_data_export_csv_tip">将账单数据导出到 CSV，方便查看</string>
+    <string name="tally_setting_btn_fingerprint_secret">开启指纹密码</string>
 
     <string name="tally_alert_backup">备份数据</string>
     <string name="tally_alert_restore_data">恢复数据</string>

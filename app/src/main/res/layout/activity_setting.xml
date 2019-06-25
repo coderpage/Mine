@@ -3,6 +3,8 @@
 
     <data class=".module.setting.SettingActivityBinding">
 
+        <import type="android.view.View" />
+
         <variable
             name="activity"
             type="android.app.Activity" />
@@ -117,6 +119,40 @@
                         android:layout_height="1px"
                         android:layout_marginTop="@dimen/padding_normal"
                         app:layout_constraintTop_toBottomOf="@id/tvExportCsvTip" />
+                </android.support.constraint.ConstraintLayout>
+
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/lyFingerprintSecret"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_normal"
+                    android:background="@drawable/bg_touchable_white"
+                    android:paddingStart="@dimen/padding_normal"
+                    android:paddingTop="@dimen/padding_normal"
+                    android:paddingEnd="@dimen/padding_normal"
+                    android:paddingBottom="@dimen/padding_normal"
+                    android:visibility="@{vm.fingerprintSecretOpenShow ? View.VISIBLE : View.GONE}">
+
+                    <TextView
+                        android:id="@+id/tvFingerprintSecret"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left|center_vertical"
+                        android:text="@string/tally_setting_btn_fingerprint_secret"
+                        android:textColor="@color/appTextColorPrimary"
+                        android:textSize="@dimen/app_text_size_large"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/switchFingerprintSecret"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="@={vm.fingerprintSecretOpen}"
+                        android:onClick="@{() -> vm.onFingerprintSecretClick(activity)}"
+                        app:layout_constraintBaseline_toBaselineOf="@id/tvAutoBackup"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
                 </android.support.constraint.ConstraintLayout>
 
             </LinearLayout>

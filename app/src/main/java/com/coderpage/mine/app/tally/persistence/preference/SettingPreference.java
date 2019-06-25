@@ -17,6 +17,7 @@ public class SettingPreference {
     private static final String KEY_HIDE_MONEY = "key_hide_money";
     private static final String KEY_BUDGET_MONTH = "key_budget_month";
     private static final String KEY_AUTO_BACKUP = "key_auto_backup";
+    private static final String KEY_FINGERPRINT_OPEN = "key_fingerprint_open";
 
     /** 是否隐藏金额 */
     public static boolean getHideMoney(Context context) {
@@ -46,6 +47,16 @@ public class SettingPreference {
     /** 设置自动备份 */
     public static void setAutoBackup(Context context, boolean autoBackup) {
         getPreference(context).edit().putBoolean(KEY_AUTO_BACKUP, autoBackup).apply();
+    }
+
+    /** 是否开启指纹密码 */
+    public static boolean isFingerprintSecretOpen(Context context) {
+        return getPreference(context).getBoolean(KEY_FINGERPRINT_OPEN, false);
+    }
+
+    /** 设置是否开启指纹密码 */
+    public static void setFingerprintSecretOpen(Context context, boolean fingerprintSecretOpen) {
+        getPreference(context).edit().putBoolean(KEY_FINGERPRINT_OPEN, fingerprintSecretOpen).apply();
     }
 
     private static SharedPreferences getPreference(Context context) {
