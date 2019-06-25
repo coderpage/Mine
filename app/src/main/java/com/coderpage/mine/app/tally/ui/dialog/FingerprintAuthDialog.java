@@ -125,7 +125,7 @@ public class FingerprintAuthDialog extends BaseDialog {
     }
 
     private void showErrorStyle() {
-        mFingerPrintIv.setImageResource(R.drawable.ic_fingerprint);
+        mFingerPrintIv.setImageResource(R.drawable.ic_fingerprint_error);
         mFingerPrintAuthTipTv.setTextColor(ResUtils.getColor(getContext(), R.color.warning));
     }
 

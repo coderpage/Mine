@@ -11,6 +11,7 @@ import com.coderpage.framework.BaseViewModel;
 import com.coderpage.framework.ViewReliedTask;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.common.router.TallyRouter;
+import com.coderpage.mine.app.tally.utils.SecurityUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,20 @@ public class MenuDialogViewModel extends BaseViewModel {
                 return;
             }
             dialog.dismiss();
-            ARouter.getInstance().build(item.getPath()).navigation(dialog.getActivity());
+
+            switch (item.getPath()) {
+
+                case TallyRouter.CHART:
+                case TallyRouter.RECORDS:
+                    SecurityUtils.executeAfterFingerprintAuth(dialog.getActivity(), () -> {
+                        ARouter.getInstance().build(item.getPath()).navigation(dialog.getActivity());
+                    });
+                    break;
+
+                default:
+                    ARouter.getInstance().build(item.getPath()).navigation(dialog.getActivity());
+                    break;
+            }
         });
     }
 

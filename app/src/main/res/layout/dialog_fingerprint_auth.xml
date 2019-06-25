@@ -8,8 +8,8 @@
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/ivFingerprint"
-        android:layout_width="60dp"
-        android:layout_height="70dp"
+        android:layout_width="45dp"
+        android:layout_height="60dp"
         app:layout_constraintBottom_toTopOf="@id/tvPleaseVerifyFingerprint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,7 +35,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:background="@drawable/bg_clickable_view_40dp"
-        android:padding="10dp"
+        android:padding="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_close" />

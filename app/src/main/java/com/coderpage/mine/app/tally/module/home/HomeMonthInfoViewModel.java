@@ -12,6 +12,7 @@ import com.coderpage.mine.app.tally.module.chart.TallyChartActivity;
 import com.coderpage.mine.app.tally.module.home.model.HomeMonthModel;
 import com.coderpage.mine.app.tally.persistence.preference.SettingPreference;
 import com.coderpage.mine.app.tally.ui.dialog.SetBudgetMonthDialog;
+import com.coderpage.mine.app.tally.utils.SecurityUtils;
 
 import java.text.DecimalFormat;
 
@@ -119,16 +120,20 @@ public class HomeMonthInfoViewModel extends BaseViewModel {
 
     /** 本月消费、收入数据模块点击 */
     public void onMonthInfoClick(Activity activity) {
-        activity.startActivity(new Intent(activity, TallyChartActivity.class));
+        SecurityUtils.executeAfterFingerprintAuth(activity, () -> {
+            activity.startActivity(new Intent(activity, TallyChartActivity.class));
+        });
     }
 
     /** 显示 or 隐藏金额点击 */
-    public void onShowOrHideMoneyClick() {
-        Boolean hideMoney = mHideMoney.get();
-        hideMoney = hideMoney == null ? false : hideMoney;
-        mHideMoney.set(!hideMoney);
-        SettingPreference.setHideMoney(getApplication(), !hideMoney);
-        refresh(mData);
+    public void onShowOrHideMoneyClick(Activity activity) {
+        SecurityUtils.executeAfterFingerprintAuth(activity, () -> {
+            Boolean hideMoney = mHideMoney.get();
+            hideMoney = hideMoney == null ? false : hideMoney;
+            mHideMoney.set(!hideMoney);
+            SettingPreference.setHideMoney(getApplication(), !hideMoney);
+            refresh(mData);
+        });
     }
 
     /** 预算金额点击 */

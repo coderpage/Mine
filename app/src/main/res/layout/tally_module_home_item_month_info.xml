@@ -115,7 +115,7 @@
             android:layout_width="60dp"
             android:layout_height="0dp"
             android:background="@drawable/bg_clickable_view_40dp"
-            android:onClick="@{() -> vm.onShowOrHideMoneyClick()}"
+            android:onClick="@{() -> vm.onShowOrHideMoneyClick(activity)}"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             app:layout_constraintBottom_toBottomOf="@id/tvMonthExpense"

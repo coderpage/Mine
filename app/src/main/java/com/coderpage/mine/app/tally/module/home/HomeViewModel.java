@@ -9,7 +9,6 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.OnLifecycleEvent;
-import android.databinding.ObservableField;
 import android.support.v4.app.FragmentActivity;
 import android.util.Pair;
 
@@ -21,7 +20,6 @@ import com.coderpage.mine.app.tally.module.home.model.HomeDisplayData;
 import com.coderpage.mine.app.tally.module.home.model.HomeMonthModel;
 import com.coderpage.mine.app.tally.module.home.model.HomeTodayDayRecordsModel;
 import com.coderpage.mine.app.tally.persistence.model.Record;
-import com.coderpage.mine.app.tally.persistence.preference.SettingPreference;
 import com.coderpage.mine.app.tally.ui.dialog.MenuDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -38,8 +36,6 @@ import java.util.List;
 
 public class HomeViewModel extends AndroidViewModel implements LifecycleObserver {
 
-    /** 是否隐藏金额 */
-    private ObservableField<Boolean> mHideMoney = new ObservableField<>(false);
     /** 刷新状态 */
     private MutableLiveData<Boolean> mRefreshing = new MutableLiveData<>();
 
@@ -51,12 +47,7 @@ public class HomeViewModel extends AndroidViewModel implements LifecycleObserver
     public HomeViewModel(Application application) {
         super(application);
         mRepository = new HomRepository();
-        mHideMoney.set(SettingPreference.getHideMoney(application));
         refresh();
-    }
-
-    public ObservableField<Boolean> getHideMoney() {
-        return mHideMoney;
     }
 
     LiveData<Boolean> observableRefreshing() {
@@ -65,14 +56,6 @@ public class HomeViewModel extends AndroidViewModel implements LifecycleObserver
 
     LiveData<List<HomeDisplayData>> observableDataList() {
         return mDataList;
-    }
-
-    /** 显示 or 隐藏金额点击 */
-    public void onShowOrHideMoneyClick() {
-        Boolean hideMoney = mHideMoney.get();
-        hideMoney = hideMoney == null ? false : hideMoney;
-        mHideMoney.set(!hideMoney);
-        SettingPreference.setHideMoney(getApplication(), !hideMoney);
     }
 
     /** 添加新纪录点击 */

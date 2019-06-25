@@ -24,6 +24,7 @@ import com.coderpage.mine.app.tally.module.search.SearchActivity;
 import com.coderpage.mine.app.tally.ui.dialog.PermissionReqDialog;
 import com.coderpage.mine.app.tally.ui.refresh.RefreshHeadView;
 import com.coderpage.mine.app.tally.update.UpdateUtils;
+import com.coderpage.mine.app.tally.utils.SecurityUtils;
 import com.coderpage.mine.ui.BaseActivity;
 import com.coderpage.mine.ui.widget.recyclerview.ItemMarginDecoration;
 import com.coderpage.mine.utils.AndroidUtils;
@@ -196,7 +197,9 @@ public class HomeActivity extends BaseActivity {
                 startActivity(new Intent(this, DebugActivity.class));
                 break;
             case R.id.menu_search:
-                startActivity(new Intent(this, SearchActivity.class));
+                SecurityUtils.executeAfterFingerprintAuth(self(), ()->{
+                    startActivity(new Intent(this, SearchActivity.class));
+                });
                 break;
             default:
                 break;

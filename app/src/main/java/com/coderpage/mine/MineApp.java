@@ -1,7 +1,9 @@
 package com.coderpage.mine;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.SparseArray;
@@ -10,6 +12,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.coderpage.base.utils.UIUtils;
 import com.coderpage.base.widget.LoadingLayout;
 import com.coderpage.framework.Framework;
+import com.coderpage.mine.app.tally.persistence.preference.SettingPreference;
 import com.coderpage.mine.app.tally.update.UpdateUtils;
 import com.tendcloud.tenddata.TCAgent;
 
@@ -21,6 +24,8 @@ import com.tendcloud.tenddata.TCAgent;
 public class MineApp extends Application {
 
     private static Application mAppContext;
+
+    private int mActivityCount = 0;
 
     @Override
     public void onCreate() {
@@ -43,6 +48,7 @@ public class MineApp extends Application {
         initLoadingLayout();
         // 初始化 ARouter
         ARouter.init(this);
+        registerActivityLifecycleCallbacks(mActivityLifecycleCallback);
     }
 
     @Override
@@ -78,6 +84,62 @@ public class MineApp extends Application {
         globalConfig.append(LoadingLayout.STATUS_LOADING, new LoadingLayout.Config());
         globalConfig.append(LoadingLayout.STATUS_EMPTY, emptyConfig);
         globalConfig.append(LoadingLayout.STATUS_ERROR, errorConfig);
+    }
+
+    private ActivityLifecycleCallbacks mActivityLifecycleCallback = new ActivityLifecycleCallbacks() {
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+            mActivityCount++;
+            if (mActivityCount == 1) {
+                onAppGoForeground();
+            }
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+            mActivityCount--;
+            if (mActivityCount == 0) {
+                onAppGoBackground();
+            }
+        }
+    };
+
+    /** 应用切换到后台 */
+    private void onAppGoBackground() {
+        // 打开了指纹密码验证，切换到后台时，重置指纹验证状态
+        if (SettingPreference.isFingerprintSecretOpen(getAppContext())) {
+            Global.getInstance().setNeedFingerprint(true);
+        }
+    }
+
+    /** 应用切换到前台 */
+    private void onAppGoForeground() {
+        Global.getInstance().setNeedFingerprint(SettingPreference.isFingerprintSecretOpen(getAppContext()));
     }
 
 //    private void logPhoneInfo(){
