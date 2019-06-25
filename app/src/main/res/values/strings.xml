@@ -97,6 +97,8 @@
     <string name="tally_setting_btn_data_import_tip">从手机SD卡中读取备份的账单数据</string>
     <string name="tally_setting_btn_data_backup">备份数据</string>
     <string name="tally_setting_btn_data_backup_tip">备份账单数据</string>
+    <string name="tally_setting_btn_data_auto_backup">自动备份</string>
+    <string name="tally_setting_btn_data_auto_backup_tip">每天自动备份账单数据到手机 SD 卡中</string>
     <string name="tally_setting_btn_data_export_csv">导出 CSV</string>
     <string name="tally_setting_btn_data_export_csv_tip">将账单数据导出到 CSV，方便查看</string>
 

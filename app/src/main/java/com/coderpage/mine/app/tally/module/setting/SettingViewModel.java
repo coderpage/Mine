@@ -6,7 +6,6 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Intent;
-import android.databinding.ObservableBoolean;
 import android.support.annotation.NonNull;
 
 import com.coderpage.base.cache.Cache;
@@ -21,11 +20,8 @@ import com.coderpage.mine.app.tally.common.share.ShareProxy;
 import com.coderpage.mine.app.tally.common.utils.TallyUtils;
 import com.coderpage.mine.app.tally.module.backup.BackupFileActivity;
 import com.coderpage.mine.app.tally.persistence.model.Record;
-import com.coderpage.mine.app.tally.persistence.preference.SettingPreference;
 import com.coderpage.mine.app.tally.persistence.sql.TallyDatabase;
 import com.coderpage.mine.app.tally.utils.TimeUtils;
-import com.coderpage.mine.app.tally.worker.AutoBackupTriggerWorker;
-import com.coderpage.mine.app.tally.worker.WorkerConst;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -37,15 +33,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
-
-import androidx.work.ExistingWorkPolicy;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
 
 import static com.coderpage.base.utils.LogUtils.LOGE;
 
@@ -58,9 +48,6 @@ public class SettingViewModel extends BaseViewModel {
 
     private static final String TAG = LogUtils.makeLogTag(SettingViewModel.class);
 
-    /** 是否自动备份 */
-    private ObservableBoolean mIsAutoBackup = new ObservableBoolean(false);
-
     /** 处理加载信息 */
     private MutableLiveData<String> mProcessMessage = new MutableLiveData<>();
 
@@ -68,11 +55,6 @@ public class SettingViewModel extends BaseViewModel {
 
     public SettingViewModel(Application application) {
         super(application);
-        mIsAutoBackup.set(SettingPreference.isAutoBackup(application));
-    }
-
-    public ObservableBoolean getIsAutoBackup() {
-        return mIsAutoBackup;
     }
 
     LiveData<String> getProcessMessage() {
@@ -186,38 +168,6 @@ public class SettingViewModel extends BaseViewModel {
     /** 备份数据点击 */
     public void onBackupDataClick(Activity activity) {
         activity.startActivity(new Intent(activity, BackupFileActivity.class));
-    }
-
-    /** 自动备份开关点击 */
-    public void onAutoBackupClick() {
-        boolean autoBackup = mIsAutoBackup.get();
-        mIsAutoBackup.set(!autoBackup);
-        SettingPreference.setAutoBackup(getApplication(), mIsAutoBackup.get());
-
-        // 取消自动备份
-        if (autoBackup) {
-            WorkManager.getInstance().cancelAllWorkByTag(WorkerConst.UNIQUE_NAME_AUTO_BACKUP_WORKER);
-            WorkManager.getInstance().cancelAllWorkByTag(WorkerConst.UNIQUE_NAME_AUTO_BACKUP_TRIGGER_WORKER);
-            return;
-        }
-
-        // 开始自动备份
-        Calendar calendar = Calendar.getInstance();
-        long currentTime = calendar.getTimeInMillis();
-
-        calendar.set(Calendar.HOUR, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.SECOND, 59);
-        calendar.set(Calendar.MILLISECOND, 999);
-
-        // 次日零点时间戳
-        long nextDayZeroTime = calendar.getTimeInMillis() + (24 * 60 * 60 * 1000);
-        long scheduleTime = nextDayZeroTime - currentTime;
-
-        OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(AutoBackupTriggerWorker.class)
-                .addTag(WorkerConst.UNIQUE_NAME_AUTO_BACKUP_TRIGGER_WORKER)
-                .setInitialDelay(scheduleTime, TimeUnit.MILLISECONDS).build();
-        WorkManager.getInstance().enqueueUniqueWork(WorkerConst.UNIQUE_NAME_AUTO_BACKUP_TRIGGER_WORKER, ExistingWorkPolicy.REPLACE, request);
     }
 
     ///////////////////////////////////////////////////////////////////////////

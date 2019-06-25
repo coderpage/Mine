@@ -6,6 +6,7 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Intent;
+import android.databinding.ObservableBoolean;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -20,11 +21,19 @@ import com.coderpage.base.utils.ResUtils;
 import com.coderpage.framework.BaseViewModel;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.common.permission.PermissionReqHandler;
+import com.coderpage.mine.app.tally.persistence.preference.SettingPreference;
+import com.coderpage.mine.app.tally.worker.AutoBackupWorker;
+import com.coderpage.mine.app.tally.worker.WorkerConst;
 import com.tendcloud.tenddata.TCAgent;
 
 import java.io.File;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 /**
  * @author lc. 2019-05-19 23:51
@@ -34,6 +43,8 @@ import java.util.List;
 
 public class BackupFileViewModel extends BaseViewModel {
 
+    /** 是否自动备份 */
+    private ObservableBoolean mIsAutoBackup = new ObservableBoolean(false);
     /** 处理加载信息 */
     private MutableLiveData<String> mProcessMessage = new MutableLiveData<>();
 
@@ -42,6 +53,11 @@ public class BackupFileViewModel extends BaseViewModel {
 
     public BackupFileViewModel(Application application) {
         super(application);
+        mIsAutoBackup.set(SettingPreference.isAutoBackup(application));
+    }
+
+    public ObservableBoolean getIsAutoBackup() {
+        return mIsAutoBackup;
     }
 
     LiveData<String> getProcessMessage() {
@@ -92,6 +108,26 @@ public class BackupFileViewModel extends BaseViewModel {
                 showToastShort(R.string.permission_request_failed_read_external_storage);
             }
         });
+    }
+
+    /** 自动备份开关点击 */
+    public void onAutoBackupClick() {
+        boolean autoBackup = mIsAutoBackup.get();
+        mIsAutoBackup.set(!autoBackup);
+        SettingPreference.setAutoBackup(getApplication(), mIsAutoBackup.get());
+
+        // 取消自动备份
+        if (autoBackup) {
+            WorkManager.getInstance().cancelAllWorkByTag(WorkerConst.UNIQUE_NAME_AUTO_BACKUP_WORKER);
+            return;
+        }
+
+        PeriodicWorkRequest request = new PeriodicWorkRequest.Builder(AutoBackupWorker.class, 1, TimeUnit.DAYS)
+                .addTag(WorkerConst.UNIQUE_NAME_AUTO_BACKUP_WORKER)
+                .build();
+        WorkManager.getInstance().enqueueUniquePeriodicWork(
+                WorkerConst.UNIQUE_NAME_AUTO_BACKUP_WORKER,
+                ExistingPeriodicWorkPolicy.KEEP, request);
     }
 
     /**

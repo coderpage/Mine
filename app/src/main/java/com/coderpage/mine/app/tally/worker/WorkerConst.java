@@ -7,6 +7,4 @@ package com.coderpage.mine.app.tally.worker;
 public class WorkerConst {
 
     public static final String UNIQUE_NAME_AUTO_BACKUP_WORKER = "tally_auto_backup_worker";
-    public static final String UNIQUE_NAME_AUTO_BACKUP_TRIGGER_WORKER = "tally_auto_backup_trigger_worker";
-
 }
