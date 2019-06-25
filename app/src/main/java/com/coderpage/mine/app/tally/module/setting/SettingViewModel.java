@@ -15,6 +15,7 @@ import com.coderpage.base.utils.LogUtils;
 import com.coderpage.base.utils.ResUtils;
 import com.coderpage.concurrency.MineExecutors;
 import com.coderpage.framework.BaseViewModel;
+import com.coderpage.mine.Global;
 import com.coderpage.mine.MineApp;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.common.permission.PermissionReqHandler;
@@ -106,6 +107,7 @@ public class SettingViewModel extends BaseViewModel {
         new FingerprintAuthDialog(activity).setListener(success -> {
             if (success) {
                 boolean useFingerprint = mFingerprintSecretOpen.get();
+                Global.getInstance().setNeedFingerprint(false);
                 SettingPreference.setFingerprintSecretOpen(getApplication(), useFingerprint);
             } else {
                 mFingerprintSecretOpen.set(!mFingerprintSecretOpen.get());

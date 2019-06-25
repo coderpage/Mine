@@ -1,6 +1,7 @@
 package com.coderpage.mine;
 
 import android.content.Context;
+import android.databinding.ObservableBoolean;
 
 import com.coderpage.mine.app.tally.persistence.preference.SettingPreference;
 
@@ -14,7 +15,7 @@ public class Global {
     private volatile static Global mInstance = null;
 
     /** 是否需要验证指纹 */
-    private boolean mNeedFingerprint;
+    private ObservableBoolean mNeedFingerprint = new ObservableBoolean(false);
 
     private Context mAppContext = null;
 
@@ -47,10 +48,14 @@ public class Global {
 
     /** 是否需要验证指纹 */
     public boolean isNeedFingerprint() {
-        return mNeedFingerprint;
+        return mNeedFingerprint.get();
     }
 
     public void setNeedFingerprint(boolean needFingerprint) {
-        mNeedFingerprint = needFingerprint;
+        mNeedFingerprint.set(needFingerprint);
+    }
+
+    public ObservableBoolean getNeedFingerprintAuth() {
+        return mNeedFingerprint;
     }
 }

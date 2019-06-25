@@ -2,6 +2,7 @@ package com.coderpage.mine.app.tally.module.records;
 
 import android.app.Activity;
 import android.app.Application;
+import android.databinding.ObservableBoolean;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 
@@ -10,12 +11,14 @@ import com.coderpage.base.common.IError;
 import com.coderpage.base.utils.CommonUtils;
 import com.coderpage.base.utils.UIUtils;
 import com.coderpage.framework.BaseViewModel;
+import com.coderpage.mine.Global;
 import com.coderpage.mine.R;
 import com.coderpage.mine.app.tally.eventbus.EventRecordDelete;
 import com.coderpage.mine.app.tally.module.chart.TallyChartActivity;
 import com.coderpage.mine.app.tally.module.detail.RecordDetailActivity;
 import com.coderpage.mine.app.tally.module.edit.RecordEditActivity;
 import com.coderpage.mine.app.tally.persistence.model.Record;
+import com.coderpage.mine.app.tally.utils.SecurityUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -32,9 +35,16 @@ public class RecordItemViewModel extends BaseViewModel {
 
     private RecordsRepository mRepository;
 
+    private ObservableBoolean mNeedFingerprint;
+
     public RecordItemViewModel(Application application) {
         super(application);
         mRepository = new RecordsRepository();
+        mNeedFingerprint = Global.getInstance().getNeedFingerprintAuth();
+    }
+
+    public ObservableBoolean getNeedFingerprint() {
+        return mNeedFingerprint;
     }
 
     /** 格式化金额 */
@@ -43,6 +53,13 @@ public class RecordItemViewModel extends BaseViewModel {
             return "--";
         }
         return "¥" + mMoneyFormat.format(record.getAmount());
+    }
+
+    /** 密码浮层点击 */
+    public void onLockCoverClick(Activity activity) {
+        SecurityUtils.executeAfterFingerprintAuth(activity, () -> {
+            // no-op
+        });
     }
 
     /**

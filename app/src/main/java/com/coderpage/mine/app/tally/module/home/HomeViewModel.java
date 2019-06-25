@@ -9,9 +9,11 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.OnLifecycleEvent;
+import android.databinding.ObservableBoolean;
 import android.support.v4.app.FragmentActivity;
 import android.util.Pair;
 
+import com.coderpage.mine.Global;
 import com.coderpage.mine.app.tally.eventbus.EventRecordAdd;
 import com.coderpage.mine.app.tally.eventbus.EventRecordDelete;
 import com.coderpage.mine.app.tally.eventbus.EventRecordUpdate;
@@ -36,6 +38,9 @@ import java.util.List;
 
 public class HomeViewModel extends AndroidViewModel implements LifecycleObserver {
 
+    /** 是否需要校验指纹 */
+    private ObservableBoolean mNeedFingerprint;
+
     /** 刷新状态 */
     private MutableLiveData<Boolean> mRefreshing = new MutableLiveData<>();
 
@@ -47,7 +52,12 @@ public class HomeViewModel extends AndroidViewModel implements LifecycleObserver
     public HomeViewModel(Application application) {
         super(application);
         mRepository = new HomRepository();
+        mNeedFingerprint = Global.getInstance().getNeedFingerprintAuth();
         refresh();
+    }
+
+    public ObservableBoolean getNeedFingerprint() {
+        return mNeedFingerprint;
     }
 
     LiveData<Boolean> observableRefreshing() {
