@@ -39,6 +39,8 @@ public abstract class TallyDatabase extends RoomDatabase {
     private static final int VERSION_0_4_0 = 40;
     /** db version of app version 0.6.0 */
     private static final int VERSION_0_6_0 = 60;
+    /** db version of app version 0.6.0 */
+    private static final int VERSION_0_7_0 = 70;
 
     private static TallyDatabase sInstance = null;
 
@@ -63,7 +65,7 @@ public abstract class TallyDatabase extends RoomDatabase {
                     sInstance = Room.databaseBuilder(
                             MineApp.getAppContext(),
                             TallyDatabase.class, DATABASE_NAME)
-                            .addMigrations(MIGRATION_010_040, MIGRATION_040_060)
+                            .addMigrations(MIGRATION_010_040, MIGRATION_040_060, MIGRATION_060_070)
                             .addCallback(mTallDatabaseCallback)
                             .allowMainThreadQueries()
                             .build();
@@ -119,6 +121,7 @@ public abstract class TallyDatabase extends RoomDatabase {
                 values.put("category_order", 0);
                 values.put("category_account_id", 0);
                 values.put("category_sync_status", 0);
+                values.put("category_status", CategoryEntity.STATUS_NORMAL);
                 long id = db.insert("category", SQLiteDatabase.CONFLICT_NONE, values);
 
                 LogUtils.LOGI("TallyDatabase", "insert expense category. id:" + id + " name:" + categoryItem.name);
@@ -260,6 +263,13 @@ public abstract class TallyDatabase extends RoomDatabase {
             }
             database.setTransactionSuccessful();
             database.endTransaction();
+        }
+    };
+
+    private static final Migration MIGRATION_060_070 = new Migration(VERSION_0_6_0, VERSION_0_7_0) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+
         }
     };
 

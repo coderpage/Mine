@@ -17,6 +17,11 @@ public class CategoryEntity {
     public static final int TYPE_EXPENSE = 0;
     public static final int TYPE_INCOME = 1;
 
+    /** 分类状态 - 正常 */
+    public static final int STATUS_NORMAL = 0;
+    /** 分类状态 - 已删除 */
+    public static final int STATUS_DELETE = 1;
+
     /** 分类记录 ID */
     @ColumnInfo(name = "category_id")
     @PrimaryKey(autoGenerate = true)
@@ -51,6 +56,10 @@ public class CategoryEntity {
     /** 同步状态 */
     @ColumnInfo(name = "category_sync_status")
     private int syncStatus;
+
+    /** 分类的状态 0-normal 1-delete */
+    @ColumnInfo(name = "category_status")
+    private int status;
 
     public long getId() {
         return id;
@@ -115,5 +124,13 @@ public class CategoryEntity {
 
     public void setSyncStatus(int syncStatus) {
         this.syncStatus = syncStatus;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

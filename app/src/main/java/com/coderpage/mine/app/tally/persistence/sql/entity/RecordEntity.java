@@ -61,6 +61,10 @@ public class RecordEntity {
     @ColumnInfo(name = "record_type")
     private int type;
 
+    /** TAG 标签 */
+    @ColumnInfo(name = "record_tag_array")
+    private String tagArray;
+
     public long getId() {
         return id;
     }
@@ -141,5 +145,13 @@ public class RecordEntity {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public String getTagArray() {
+        return tagArray;
+    }
+
+    public void setTagArray(String tagArray) {
+        this.tagArray = tagArray;
     }
 }
