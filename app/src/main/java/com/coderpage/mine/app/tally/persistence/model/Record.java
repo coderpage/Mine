@@ -1,8 +1,15 @@
 package com.coderpage.mine.app.tally.persistence.model;
 
 import android.arch.persistence.room.ColumnInfo;
+import android.text.TextUtils;
 
+import com.coderpage.base.utils.ArrayUtils;
+import com.coderpage.base.utils.StringJoiner;
 import com.coderpage.mine.app.tally.persistence.sql.entity.RecordEntity;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author lc.
@@ -62,6 +69,12 @@ public class Record {
     @ColumnInfo(name = "record_type")
     private int type;
 
+    /** 记录的 */
+    @ColumnInfo(name = "record_tag_array")
+    private String tagArrayStr;
+
+    private List<String> tagList;
+
     public RecordEntity createEntity() {
         RecordEntity entity = new RecordEntity();
         entity.setId(getId());
@@ -73,6 +86,8 @@ public class Record {
         entity.setTime(getTime());
         entity.setCategoryUniqueName(getCategoryUniqueName());
         entity.setType(getType());
+        entity.setTagArrayStr(formatTagArrayStr());
+        entity.setUpdateTime(System.currentTimeMillis());
         return entity;
     }
 
@@ -162,5 +177,36 @@ public class Record {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public String getTagArrayStr() {
+        return tagArrayStr;
+    }
+
+    public void setTagArrayStr(String tagArrayStr) {
+        this.tagArrayStr = tagArrayStr;
+
+        tagList = tagList == null ? new ArrayList<>(6) : tagList;
+
+        if (TextUtils.isEmpty(tagArrayStr)) {
+            return;
+        }
+        String[] tagArr = tagArrayStr.split(",");
+        tagList.clear();
+        tagList.addAll(Arrays.asList(tagArr));
+    }
+
+    public List<String> getTagList() {
+        return tagList;
+    }
+
+    public void setTagList(List<String> tagList) {
+        this.tagList = tagList;
+    }
+
+    private String formatTagArrayStr() {
+        StringJoiner stringJoiner = new StringJoiner(",");
+        ArrayUtils.forEach(tagList, (count, index, item) -> stringJoiner.add(item));
+        return stringJoiner.toString();
     }
 }

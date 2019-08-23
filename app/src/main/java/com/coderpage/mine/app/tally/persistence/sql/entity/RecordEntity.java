@@ -61,6 +61,18 @@ public class RecordEntity {
     @ColumnInfo(name = "record_type")
     private int type;
 
+    /** TAG 标签 */
+    @ColumnInfo(name = "record_tag_array")
+    private String tagArrayStr;
+
+    /** 修改时间 */
+    @ColumnInfo(name = "record_update_time")
+    private long updateTime;
+
+    /** 同步版本 */
+    @ColumnInfo(name = "record_sync_version")
+    private long syncVersion;
+
     public long getId() {
         return id;
     }
@@ -141,5 +153,29 @@ public class RecordEntity {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public String getTagArrayStr() {
+        return tagArrayStr;
+    }
+
+    public void setTagArrayStr(String tagArrayStr) {
+        this.tagArrayStr = tagArrayStr;
+    }
+
+    public long getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(long updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public long getSyncVersion() {
+        return syncVersion;
+    }
+
+    public void setSyncVersion(long syncVersion) {
+        this.syncVersion = syncVersion;
     }
 }

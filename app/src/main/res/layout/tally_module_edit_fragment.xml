@@ -87,36 +87,6 @@
                     app:layout_constraintTop_toTopOf="@id/lySelectCategoryIcon"
                     tools:text="其他" />
 
-                <TextView
-                    android:id="@+id/tv_money_unit"
-                    textTypeFace="@{Font.QUICKSAND_MEDIUM}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{vm.amountUnit}"
-                    android:textColor="?android:textColorPrimary"
-                    android:textSize="@dimen/app_text_size_medium"
-                    app:layout_constraintBaseline_toBaselineOf="@id/etAmount"
-                    app:layout_constraintEnd_toStartOf="@id/etAmount"
-                    tools:text="￥" />
-
-                <TextView
-                    android:id="@+id/etAmount"
-                    textTypeFace="@{Font.QUICKSAND_MEDIUM}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/padding_normal"
-                    android:background="@null"
-                    android:gravity="center"
-                    android:inputType="numberDecimal"
-                    android:text="@{vm.amountText}"
-                    android:textColor="?android:textColorPrimary"
-                    android:textCursorDrawable="@drawable/edit_cursor"
-                    android:textSize="@dimen/app_text_size_large"
-                    app:layout_constraintBaseline_toBaselineOf="@id/tvCategoryName"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    tools:text="100.00" />
-
                 <View
                     android:id="@+id/viewDividerHead"
                     android:layout_width="match_parent"
@@ -151,17 +121,58 @@
 
         </LinearLayout>
 
+        <!-- 分类列表 -->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerCategory"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/lyBottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <android.support.constraint.ConstraintLayout
+            android:id="@+id/lyBottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
             app:layout_constraintBottom_toBottomOf="parent">
 
-            <View
+            <!-- TAG 列表 -->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerTag"
                 android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/divider"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_height="36dp"
+                app:layout_constraintBottom_toTopOf="@id/tvDate"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <!-- 时间 -->
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:minHeight="45dp"
+                android:onClick="@{() -> vm.onDateClick(activity)}"
+                android:paddingStart="@dimen/padding_normal"
+                android:paddingEnd="@dimen/padding_normal"
+                android:text="@{vm.dateText}"
+                android:textSize="@dimen/app_text_size_small"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="2019年4月14日 15:08" />
+
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/ivIconDesc"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="@dimen/padding_normal"
+                app:layout_constraintBottom_toBottomOf="@id/tvDesc"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tvDesc"
+                app:srcCompat="@drawable/ic_desc" />
 
             <TextView
                 android:id="@+id/tvDesc"
@@ -181,24 +192,39 @@
                 android:text="@{vm.desc}"
                 android:textColor="?android:textColorSecondary"
                 android:textSize="@dimen/app_text_size_medium"
-                app:layout_constraintEnd_toStartOf="@id/tvDate"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tvMoneyUnit"
+                app:layout_constraintStart_toEndOf="@id/ivIconDesc"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tvDate"
+                android:id="@+id/tvMoneyUnit"
+                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
+                android:layout_height="wrap_content"
+                android:text="@{vm.amountUnit}"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="@dimen/app_text_size_medium"
+                app:layout_constraintBaseline_toBaselineOf="@id/etAmount"
+                app:layout_constraintEnd_toStartOf="@id/etAmount"
+                tools:text="￥" />
+
+            <TextView
+                android:id="@+id/etAmount"
+                textTypeFace="@{Font.QUICKSAND_MEDIUM}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/padding_normal"
+                android:background="@null"
                 android:gravity="center"
-                android:minHeight="45dp"
-                android:onClick="@{() -> vm.onDateClick(activity)}"
-                android:paddingStart="@dimen/padding_normal"
-                android:paddingEnd="@dimen/padding_normal"
-                android:text="@{vm.dateText}"
-                android:textSize="@dimen/app_text_size_small"
+                android:inputType="numberDecimal"
+                android:text="@{vm.amountText}"
+                android:textColor="?android:textColorPrimary"
+                android:textCursorDrawable="@drawable/edit_cursor"
+                android:textSize="@dimen/app_text_size_medium"
+                app:layout_constraintBaseline_toBaselineOf="@id/tvDesc"
                 app:layout_constraintEnd_toEndOf="parent"
-                tools:text="2019年4月14日 15:08" />
+                tools:text="100.00" />
 
             <!-- 键盘 -->
             <TextView

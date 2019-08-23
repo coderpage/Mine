@@ -39,6 +39,8 @@ public abstract class TallyDatabase extends RoomDatabase {
     private static final int VERSION_0_4_0 = 40;
     /** db version of app version 0.6.0 */
     private static final int VERSION_0_6_0 = 60;
+    /** db version of app version 0.7.0 */
+    private static final int VERSION_0_7_0 = 70;
 
     private static TallyDatabase sInstance = null;
 
@@ -63,7 +65,7 @@ public abstract class TallyDatabase extends RoomDatabase {
                     sInstance = Room.databaseBuilder(
                             MineApp.getAppContext(),
                             TallyDatabase.class, DATABASE_NAME)
-                            .addMigrations(MIGRATION_010_040, MIGRATION_040_060)
+                            .addMigrations(MIGRATION_010_040, MIGRATION_040_060, MIGRATION_060_070)
                             .addCallback(mTallDatabaseCallback)
                             .allowMainThreadQueries()
                             .build();
@@ -119,6 +121,7 @@ public abstract class TallyDatabase extends RoomDatabase {
                 values.put("category_order", 0);
                 values.put("category_account_id", 0);
                 values.put("category_sync_status", 0);
+                values.put("category_status", CategoryEntity.STATUS_NORMAL);
                 long id = db.insert("category", SQLiteDatabase.CONFLICT_NONE, values);
 
                 LogUtils.LOGI("TallyDatabase", "insert expense category. id:" + id + " name:" + categoryItem.name);
@@ -260,6 +263,36 @@ public abstract class TallyDatabase extends RoomDatabase {
             }
             database.setTransactionSuccessful();
             database.endTransaction();
+        }
+    };
+
+    private static final Migration MIGRATION_060_070 = new Migration(VERSION_0_6_0, VERSION_0_7_0) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+
+            // TAG 标签
+            database.execSQL("ALTER TABLE record ADD COLUMN record_tag_array TEXT");
+            // 修改时间
+            database.execSQL("ALTER TABLE record ADD COLUMN record_update_time INTEGER");
+            // 同步版本
+            database.execSQL("ALTER TABLE record ADD COLUMN record_sync_version INTEGER");
+            // 分类状态
+            database.execSQL("ALTER TABLE category ADD COLUMN category_status INTEGER");
+
+            // 创建 TAG表
+            database.execSQL("CREATE TABLE tag ("
+                    + "tag_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                    + "tag_name TEXT NOT NULL)"
+            );
+
+            // 创建 TAG_MAP表
+            database.execSQL("CREATE TABLE tag_map ("
+                    + "tag_map_id TEXT PRIMARY KEY,"
+                    + "tag_map_record_uuid TEXT NOT NULL,"
+                    + "tag_map_tag_name TEXT NOT NULL)"
+            );
+
+            database.execSQL("CREATE INDEX index_tag_map_tag_map_record_uuid on tag_map(tag_map_record_uuid)");
         }
     };
 
